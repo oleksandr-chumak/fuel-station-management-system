@@ -43,7 +43,7 @@ public class FuelStationEntity {
     @ElementCollection
     private List<FuelPriceEmbeddable> fuelPrices;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "fuelStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FuelTankEntity> fuelTanks;
 
     @OneToMany

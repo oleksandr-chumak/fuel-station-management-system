@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
@@ -12,7 +14,8 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTank;
 
-public class DomanFuelStationFactory implements FuelStationFactory{
+@Component
+public class DomainFuelStationFactory implements FuelStationFactory{
 
     @Override
     public FuelStation create(String street, String buildingNumber, String city, String postalCode, String country) {

@@ -11,6 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +36,10 @@ public class FuelTankEntity {
 
     @Column(name = "max_capacity", nullable = false)
     private float maxCapacity;
+
+    @ManyToOne
+    @JoinColumn(name = "fuel_station_id")
+    private FuelStationEntity fuelStation;
 
     @Column(name = "last_refill_date", nullable = true)
     private LocalDate lastRefillDate;
