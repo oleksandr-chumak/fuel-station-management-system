@@ -1,0 +1,9 @@
+com/fuelstation/managmentapi/common/domain/FuelGrade.class
+com/fuelstation/managmentapi/ManagmentapiApplication.class
+com/fuelstation/managmentapi/fuelstation/domain/models/FuelStationAddress.class
+com/fuelstation/managmentapi/fuelstation/domain/models/FuelTank.class
+com/fuelstation/managmentapi/fuelstation/domain/models/FuelStation.class
+com/fuelstation/managmentapi/fuelstation/domain/models/FuelPrice.class
+com/fuelstation/managmentapi/fuelstation/domain/FuelStationService.class
+com/fuelstation/managmentapi/fuelstation/domain/DomainFuelStationService.class
+com/fuelstation/managmentapi/fuelstation/domain/models/FuelStationStatus.class

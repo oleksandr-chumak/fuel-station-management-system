@@ -3,13 +3,13 @@ set -e
 
 cd "$(dirname "$0")"/.. || exit 1
 
-./gradlew clean build
+mvn clean package
 
-# Find the executable JAR (exclude *-plain.jar)
-JAR_FILE=$(ls -t build/libs/*.jar | grep -v "plain" | head -1)
+# Find the executable JAR (typically in target/ directory)
+JAR_FILE=$(ls -t target/*.jar | grep -v "original" | head -1)
 
 if [ -z "$JAR_FILE" ]; then
-  echo "Error: No executable JAR found in build/libs/"
+  echo "Error: No executable JAR found in target/"
   exit 1
 fi
 

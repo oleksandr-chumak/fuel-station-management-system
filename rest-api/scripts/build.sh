@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 
-# Navigate to the project root (where gradlew is located)
+# Navigate to the project root (where pom.xml is located)
 cd "$(dirname "$0")"/.. || exit 1
 
-./gradlew clean build
-echo "Build successful. JAR location: build/libs/"
+mvn clean package -e
+echo "Build successful. JAR location: target/"
