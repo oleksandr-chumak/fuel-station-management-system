@@ -1,8 +1,7 @@
-package com.fuelstation.management_api.fuel-station.domain
+package com.fuelstation.managmentapi.fuelstation.domain
 
+import com.fuelstation.managmentapi.common.domain.FuelGrade
 import org.springframework.stereotype.Service
-import com.fuelstation.managment_api.fuel.FuelStationService
-import com.fuelstation.management_api.common.domain.FuelGrade
 
 @Service
 class DomainFuelStationService : FuelStationService {

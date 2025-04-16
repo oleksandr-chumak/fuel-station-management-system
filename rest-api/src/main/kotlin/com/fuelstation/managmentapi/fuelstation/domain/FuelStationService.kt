@@ -1,6 +1,6 @@
-package com.fuelstation.managment_api.fuel
+package com.fuelstation.managmentapi.fuelstation.domain
 
-import com.fuelstation.management_api.common.domain.FuelGrade-station.domain
+import com.fuelstation.managmentapi.common.domain.FuelGrade
 
 interface FuelStationService {
     fun createFuelStation(street: String, buildinNumber: String, city: String, postalCode: String, country: String)

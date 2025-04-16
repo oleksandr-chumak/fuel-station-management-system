@@ -1,4 +1,4 @@
-package com.fuelstation.management_api
+package com.fuelstation.managmentapi
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

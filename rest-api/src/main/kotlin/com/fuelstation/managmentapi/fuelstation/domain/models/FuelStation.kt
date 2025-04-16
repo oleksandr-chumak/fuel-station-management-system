@@ -1,6 +1,8 @@
-package com.fuelstation.management_api.fuel-station.domain.models
+package com.fuelstation.managmentapi.fuelstation.domain.models
 
 import java.time.LocalDate
+import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus
+import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress
 
 data class FuelStation (
     val id: Long, 

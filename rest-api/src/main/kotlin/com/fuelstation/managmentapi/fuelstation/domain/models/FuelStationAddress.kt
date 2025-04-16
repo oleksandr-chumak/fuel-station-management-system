@@ -1,4 +1,4 @@
-package com.fuelstation.management_api.fuel
+package com.fuelstation.managmentapi.fuelstation.domain.models
 
 data class FuelStationAddress (
     val street: String,
