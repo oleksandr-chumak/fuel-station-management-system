@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: quiz.api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo_db
+    username: demo_user
+    password: demo_password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true

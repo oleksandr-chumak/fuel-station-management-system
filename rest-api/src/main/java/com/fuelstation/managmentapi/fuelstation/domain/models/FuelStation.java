@@ -11,9 +11,11 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class FuelStation {  
     private Long id;
     private FuelStationAddress address;
@@ -42,12 +44,12 @@ public class FuelStation {
     
             if (tankHasEnoughSpaceForAllRemainingFuel) {
                 fuelTank.setCurrentVolume(fuelTank.getCurrentVolume() + remainingFuel);
-                fuelTank.setLastRefilDate(Optional.of(LocalDate.now()));
+                fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
                 return;
             } else {
                 remainingFuel -= fuelTank.getAvailableVolume();
                 fuelTank.setCurrentVolume(fuelTank.getMaxCapacity());
-                fuelTank.setLastRefilDate(Optional.of(LocalDate.now()));
+                fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
             }
         }
     }
@@ -56,7 +58,7 @@ public class FuelStation {
         Optional<Long> managerId = assignedManagersIds.stream().filter((id) -> id == manager.getId()).findFirst();
 
         if(managerId.isPresent()) {
-            throw new IllegalArgumentException("Manager is already assigend to the fuel station");
+            throw new IllegalArgumentException("Manager is already assigned to the fuel station");
         }
 
         assignedManagersIds.add(manager.getId()); 

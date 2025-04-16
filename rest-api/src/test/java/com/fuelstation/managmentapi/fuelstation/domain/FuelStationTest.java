@@ -124,8 +124,8 @@ public class FuelStationTest {
             FuelTank updatedTank = fuelStation.getFuelTanks().get(0);
             assertEquals(8000, updatedTank.getCurrentVolume());
             assertEquals(2000, updatedTank.getAvailableVolume());
-            assertTrue(updatedTank.getLastRefilDate().isPresent());
-            assertFalse(updatedTank.getLastRefilDate().get().isBefore(beforeDelivery));
+            assertTrue(updatedTank.getLastRefillDate().isPresent());
+            assertFalse(updatedTank.getLastRefillDate().get().isBefore(beforeDelivery));
         }
 
         @Test
@@ -153,13 +153,13 @@ public class FuelStationTest {
             
             assertEquals(10000, firstTank.getCurrentVolume()); // First tank should be full
             assertEquals(0, firstTank.getAvailableVolume());
-            assertTrue(firstTank.getLastRefilDate().isPresent());
-            assertFalse(firstTank.getLastRefilDate().get().isBefore(beforeDelivery));
+            assertTrue(firstTank.getLastRefillDate().isPresent());
+            assertFalse(firstTank.getLastRefillDate().get().isBefore(beforeDelivery));
             
             assertEquals(5000, secondTank.getCurrentVolume()); // Second tank should have the remaining fuel
             assertEquals(2000, secondTank.getAvailableVolume());
-            assertTrue(secondTank.getLastRefilDate().isPresent());
-            assertFalse(secondTank.getLastRefilDate().get().isBefore(beforeDelivery));
+            assertTrue(secondTank.getLastRefillDate().isPresent());
+            assertFalse(secondTank.getLastRefillDate().get().isBefore(beforeDelivery));
         }
     }
 
@@ -171,7 +171,7 @@ public class FuelStationTest {
         @DisplayName("Should throw exception when trying to assign an already assigned manager")
         void shouldThrowExceptionWhenAssigningAlreadyAssignedManager() {
             // Given
-            Manager manager = new Manager(1L);
+            Manager manager = new Manager(1L, null, null, null, null,null);
             fuelStation.getAssignedManagersIds().add(manager.getId());
             
             // When & Then
@@ -179,14 +179,14 @@ public class FuelStationTest {
                 IllegalArgumentException.class,
                 () -> fuelStation.assignManager(manager)
             );
-            assertEquals("Manager is already assigend to the fuel station", exception.getMessage());
+            assertEquals("Manager is already assigned to the fuel station", exception.getMessage());
         }
         
         @Test
         @DisplayName("Should assign a new manager")
         void shouldAssignNewManager() {
             // Given
-            Manager newManager = new Manager(2L);
+            Manager newManager = new Manager(2L, null, null, null, null, null);
             assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getId()));
 
             // When
@@ -201,7 +201,7 @@ public class FuelStationTest {
         @DisplayName("Should unassign a manager")
         void shouldUnassignManager() {
             // Given
-            Manager manager = new Manager(3L);
+            Manager manager = new Manager(3L, null, null, null, null, null);
             fuelStation.getAssignedManagersIds().add(manager.getId());
             assertEquals(1, fuelStation.getAssignedManagersIds().size());
             
@@ -214,10 +214,10 @@ public class FuelStationTest {
         }
         
         @Test
-        @DisplayName("Should do nothing when unassigning a manager that isn't assigned")
+        @DisplayName("Should do nothing when unassign a manager that isn't assigned")
         void shouldDoNothingWhenUnassigningNonAssignedManager() {
             // Given
-            Manager manager = new Manager(4L);
+            Manager manager = new Manager(4L, null, null, null, null, null);
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
             
             // When
