@@ -19,6 +19,6 @@ public class DomainAdministratorService implements AdministratorService {
     @Override
     public Administrator createAdministrator(String email, String password) {
         Credentials credentials = credentialsService.createCredentials(email, password, UserRole.Administrator);
-        return administratorRepository.create(credentials.getId());
+        return administratorRepository.save(new Administrator(null, credentials.getId()));
     }
 }

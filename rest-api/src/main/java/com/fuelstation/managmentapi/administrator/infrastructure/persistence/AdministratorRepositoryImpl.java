@@ -7,10 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
 import com.fuelstation.managmentapi.administrator.domain.AdministratorRepository;
-import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsEntity;
-
-import jakarta.persistence.EntityManager;
-import jakarta.transaction.Transactional;
 
 @Repository
 public class AdministratorRepositoryImpl implements AdministratorRepository {
@@ -19,34 +15,22 @@ public class AdministratorRepositoryImpl implements AdministratorRepository {
     private JpaAdministratorRepository jpaAdministratorRepository;
 
     @Autowired
-    private EntityManager em;
+    private AdministratorMapper administratorMapper;
 
     @Override
     public Administrator save(Administrator administrator) {
-        AdministratorEntity entity = AdministratorMapper.toEntity(administrator);
+        AdministratorEntity entity = administratorMapper.toEntity(administrator);
         entity = jpaAdministratorRepository.save(entity);
-        return AdministratorMapper.toDomain(entity);
+        return administratorMapper.toDomain(entity);
     }
 
     @Override
     public Optional<Administrator> findById(Long id) {
-        return jpaAdministratorRepository.findById(id).map(entity -> AdministratorMapper.toDomain(entity));
+        return jpaAdministratorRepository.findById(id).map(administratorMapper::toDomain);
     }
 
     @Override
     public Optional<Administrator> findByEmail(String email) {
-        return jpaAdministratorRepository.findByCredentialsEmail(email).map(AdministratorMapper::toDomain);
+        return jpaAdministratorRepository.findByCredentialsEmail(email).map(administratorMapper::toDomain);
     }
-
-    @Override
-    @Transactional
-    public Administrator create(Long credentialsId) {
-        CredentialsEntity credentialsEntity = em.getReference(CredentialsEntity.class, credentialsId);
-        
-        AdministratorEntity administratorEntity = new AdministratorEntity(null, credentialsEntity);
-        administratorEntity = jpaAdministratorRepository.save(administratorEntity);
-        
-        return AdministratorMapper.toDomain(administratorEntity);
-    }   
 }
-    

@@ -20,23 +20,13 @@ public class ManagerMapper {
      * @return Manager domain object
      */
     public Manager toDomain(ManagerEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-
-        Manager manager = new Manager();
-        manager.setId(entity.getId());
-        manager.setFirstName(entity.getFirstName());
-        manager.setLastName(entity.getLastName());
-        manager.setStatus(entity.getStatus());
-        
-        // Set email from credentials
-        if (entity.getCredentials() != null) {
-            manager.setEmail(entity.getCredentials().getEmail());
-            manager.setCredentialsId(entity.getCredentials().getId());
-        }
-
-        return manager;
+        return new Manager(
+            entity.getId(),
+            entity.getFirstName(),
+            entity.getLastName(),
+            entity.getStatus(),
+            entity.getCredentials().getId() 
+        );
     }
 
     /**
@@ -46,17 +36,13 @@ public class ManagerMapper {
      * @return ManagerEntity
      */
     public ManagerEntity toEntity(Manager domain) {
-        if (domain == null) {
-            return null;
-        }
-
-        ManagerEntity entity = new ManagerEntity();
-        entity.setId(domain.getId());
-        entity.setFirstName(domain.getFirstName());
-        entity.setLastName(domain.getLastName());
-        entity.setStatus(domain.getStatus());
-        entity.setCredentials(em.getReference(CredentialsEntity.class, domain.getCredentialsId()));
-
-        return entity;
+        return new ManagerEntity(
+            domain.getId(),
+            domain.getFirstName(),
+            domain.getLastName(),
+            domain.getStatus(),
+            null,
+            em.getReference(CredentialsEntity.class, domain.getCredentialsId())
+        );
     }
 }

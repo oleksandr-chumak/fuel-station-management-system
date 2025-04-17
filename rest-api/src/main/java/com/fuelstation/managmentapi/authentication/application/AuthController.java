@@ -20,13 +20,13 @@ public class AuthController {
 
     @PostMapping("/login/admin") 
     public ResponseEntity<String> loginAdmin(@RequestBody AuthRequest authRequest) {
-        String accessToken = authService.authenticate(authRequest.getUsername(), authRequest.getPassword(), UserRole.Administrator);
+        String accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.Administrator);
         return new ResponseEntity<String>(accessToken, HttpStatus.OK);
     }
   
     @PostMapping("/login/manager") 
     public ResponseEntity<String> loginManager(@RequestBody AuthRequest authRequest) {
-        String accessToken = authService.authenticate(authRequest.getUsername(), authRequest.getPassword(), UserRole.Manager);
+        String accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.Manager);
         return new ResponseEntity<String>(accessToken, HttpStatus.OK);
     }
 }

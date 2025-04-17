@@ -24,8 +24,8 @@ public class AdminInitializer {
             .isPresent();
 
         if (!adminExists) {
-            Administrator admin = administratorService.createAdministrator(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD);
-            System.out.println("Default admin created: " + admin.getEmail());
+            administratorService.createAdministrator(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD);
+            System.out.println("Default admin created: " + DEFAULT_ADMIN_EMAIL);
         } else {
             System.out.println("Default admin already exists.");
         }

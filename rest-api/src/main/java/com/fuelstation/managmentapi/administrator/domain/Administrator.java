@@ -9,7 +9,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Administrator {
     private Long id;
-    // email need to be taken from credentials 
-    private String email;
     private Long credentialsId;
 }

@@ -12,7 +12,5 @@ public class Manager {
    private String firstName;
    private String lastName;
    private ManagerStatus status;
-   // email need to be taken from credentials
-   private String email; 
    private Long credentialsId; 
 }

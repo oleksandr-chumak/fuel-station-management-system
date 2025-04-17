@@ -1,31 +1,30 @@
 package com.fuelstation.managmentapi.administrator.infrastructure.persistence;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
-import com.fuelstation.managmentapi.authentication.domain.UserRole;
 import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsEntity;
 
+import jakarta.persistence.EntityManager;
+
+@Component
 public class AdministratorMapper {
-    public static Administrator toDomain(AdministratorEntity entity) {
-        if (entity == null) return null;
+
+    @Autowired
+    private EntityManager em;
+    
+    public Administrator toDomain(AdministratorEntity entity) {
         return new Administrator(
             entity.getId(),
-            entity.getCredentials().getEmail(),
             entity.getCredentials().getId()
         );
     }
 
-    public static AdministratorEntity toEntity(Administrator domain) {
-        if (domain == null) return null;
+    public AdministratorEntity toEntity(Administrator domain) {
         return new AdministratorEntity(
             domain.getId(),
-            new CredentialsEntity(
-                domain.getCredentialsId(), 
-                domain.getEmail(),
-                UserRole.Administrator,
-                null,
-                null,
-                null
-            )
+            em.getReference(CredentialsEntity.class, domain.getCredentialsId())
         );
     }
 }
