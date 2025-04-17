@@ -3,9 +3,11 @@ package com.fuelstation.managmentapi.fuelorder.domain;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 
+@Service
 public class DomainFuelOrderService implements FuelOrderService {
 
     @Autowired

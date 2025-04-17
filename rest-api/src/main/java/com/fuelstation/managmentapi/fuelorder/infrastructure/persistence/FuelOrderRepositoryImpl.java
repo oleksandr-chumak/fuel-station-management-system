@@ -32,6 +32,12 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
 
     @Override
     public float getUnconfirmedFuelAmount(Long gasStationId, FuelGrade fuelGrade) {
-        return jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(gasStationId, fuelGrade);
+        Float res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(gasStationId, fuelGrade);
+        return res != null ? res : 0f;
+    }
+
+    @Override
+    public void deleteAll() {
+        jpaFuelOrderRepository.deleteAll();
     }
 }

@@ -4,11 +4,13 @@ import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
+@Component
 public class DomainFuelOrderFactory implements FuelOrderFactory {
     @Autowired
     private FuelStationRepository fuelStationRepository;
