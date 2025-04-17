@@ -13,4 +13,11 @@ public class Manager {
    private String lastName;
    private ManagerStatus status;
    private Long credentialsId; 
+
+   public void terminate() {
+      if(status == ManagerStatus.Deactivated) {
+         throw new IllegalArgumentException("Manager is already terminated");
+      }
+      status = ManagerStatus.Deactivated;
+   }
 }
