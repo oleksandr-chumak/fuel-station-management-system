@@ -24,7 +24,6 @@ public class AdministratorMapper {
                 UserRole.Administrator,
                 null,
                 null,
-                null,
                 null
             )
         );

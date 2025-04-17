@@ -16,3 +16,14 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+
+security:
+  jwt:
+    # 256-bit key (32 bytes), encoded in Base64
+    secret-key: "N0JxZzNsbmFPa3Vlc2F3b2pXb2VjYjR2ZXh0eWx0aGdlcnJ5Y2F0Y2g="
+
+    # Access token expiration in milliseconds (e.g. 15 minutes)
+    access-token-expiration: 900000
+
+    # Refresh token expiration in milliseconds (e.g. 7 days)
+    refresh-token-expiration: 604800000

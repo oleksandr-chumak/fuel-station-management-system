@@ -56,7 +56,7 @@ public class FuelStationServiceIntegrationTest {
        
         // create credentials for a test manger
         
-        Credentials credentials = credentialsRepository.save(new Credentials(null,"test@email.com",UserRole.Administrator, "test", null ));
+        Credentials credentials = credentialsRepository.save(new Credentials(null,"test@email.com",UserRole.Administrator, "test"));
 
         // Create a test manager
         testManager = new Manager(null, "Test First Name", "John Doe", ManagerStatus.Active, credentials.getEmail(), credentials.getId());

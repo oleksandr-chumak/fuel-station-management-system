@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.CredentialsRepository;
+import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 @Repository
 public class CredentialsRepositoryImpl implements CredentialsRepository {
@@ -27,5 +28,15 @@ public class CredentialsRepositoryImpl implements CredentialsRepository {
     public Optional<Credentials> findById(Long id) {
         return jpaCredentialsRepository.findById(id)
                 .map(CredentialsMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Credentials> findByEmailAndRole(String email, UserRole role) {
+        return jpaCredentialsRepository.findByEmailAndRole(email, role).map(CredentialsMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Credentials> findByEmail(String email) {
+        return jpaCredentialsRepository.findByEmail(email).map(CredentialsMapper::toDomain);
     }
 }

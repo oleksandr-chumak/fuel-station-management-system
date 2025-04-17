@@ -25,7 +25,15 @@ public class AdministratorEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    // TODO idk is it right
+    @OneToOne(
+        cascade = { 
+            CascadeType.MERGE,      // Allow merging detached entities
+            CascadeType.REFRESH,    // Refresh from the database
+            CascadeType.DETACH      // Detach from persistence context
+        }, 
+        fetch = FetchType.EAGER
+    )
     @JoinColumn(name = "credentials_id", referencedColumnName = "id")
     private CredentialsEntity credentials;
 }

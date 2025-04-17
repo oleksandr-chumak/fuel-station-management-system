@@ -35,8 +35,6 @@ public class CredentialsEntity {
 
     private String password;
 
-    private String accessToken;
-
     @OneToOne(mappedBy = "credentials")
     private ManagerEntity manger;
 
