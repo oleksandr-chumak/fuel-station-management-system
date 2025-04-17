@@ -2,16 +2,19 @@ package com.fuelstation.managmentapi.fuelorder.domain;
 
 import java.time.LocalDate;
 
+import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FuelOrder {
+@EqualsAndHashCode(callSuper = false)
+public class FuelOrder extends AggregateRoot {
     private Long id;
     private FuelOrderStatus status; 
     private FuelGrade grade;
@@ -24,6 +27,7 @@ public class FuelOrder {
             throw new IllegalArgumentException("Cannot confirm fuel order because its current status is '" + status + "'. Only pending orders can be confirmed.");
         }
         status = FuelOrderStatus.Confirmed;
+        pushDomainEvent(new FuelOrderWasConfirmed(id));
     }
 
     public void reject() {
