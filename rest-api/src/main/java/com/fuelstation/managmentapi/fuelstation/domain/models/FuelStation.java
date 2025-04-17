@@ -25,21 +25,32 @@ public class FuelStation {
     private FuelStationStatus status;
     private LocalDate createdAt;
 
+    public List<FuelTank> getFuelTanksByFuelGrade(FuelGrade fuelGrade) {
+        return fuelTanks.stream()
+            .filter(ft -> ft.getFuelGrade() == fuelGrade)
+            .toList();
+    }
+
+    public long getAvailableVolume(FuelGrade fuelGrade) {
+        double totalAvailableAmount = getFuelTanksByFuelGrade(fuelGrade).stream()
+            .mapToDouble(FuelTank::getAvailableVolume)
+            .sum();
+    
+        return (long) totalAvailableAmount; 
+    }
+
     public void processFuelDelivery(FuelOrder fuelOrder) {
         if (fuelOrder.getStatus() != FuelOrderStatus.Confirmed) {
             throw new IllegalStateException("Fuel order must be in Confirmed status to process.");
         }
     
-        List<FuelTank> fuelTanksWithSpecifiedFuelGrade = fuelTanks.stream().filter(ft -> ft.getFuelGrade() == fuelOrder.getGrade()).toList();
     
-        double totalAvailableAmount = fuelTanksWithSpecifiedFuelGrade.stream().mapToDouble(FuelTank::getAvailableVolume).sum();
-    
-        if (totalAvailableAmount < fuelOrder.getAmount()) {
+        if (getAvailableVolume(fuelOrder.getGrade()) < fuelOrder.getAmount()) {
             throw new IllegalStateException("Not enough tank capacity to process fuel delivery.");
         }
     
         float remainingFuel = fuelOrder.getAmount();
-        for (FuelTank fuelTank : fuelTanksWithSpecifiedFuelGrade) {
+        for (FuelTank fuelTank : getFuelTanksByFuelGrade(fuelOrder.getGrade())) {
             boolean tankHasEnoughSpaceForAllRemainingFuel = (fuelTank.getAvailableVolume() - remainingFuel) >= 0;
     
             if (tankHasEnoughSpaceForAllRemainingFuel) {

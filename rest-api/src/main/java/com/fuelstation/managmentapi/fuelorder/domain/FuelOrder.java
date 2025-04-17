@@ -16,14 +16,20 @@ public class FuelOrder {
     private FuelOrderStatus status; 
     private FuelGrade grade;
     private float amount;
-    private Long gasStationId; 
+    private Long fuelStationId; 
     private LocalDate createdAt;
 
     public void confirm() {
+        if (status != FuelOrderStatus.Pending) {
+            throw new IllegalArgumentException("Cannot confirm fuel order because its current status is '" + status + "'. Only pending orders can be confirmed.");
+        }
         status = FuelOrderStatus.Confirmed;
     }
 
     public void reject() {
+        if (status != FuelOrderStatus.Pending) {
+            throw new IllegalArgumentException("Cannot confirm fuel order because its current status is '" + status + "'. Only pending orders can be rejected.");
+        }
         status = FuelOrderStatus.Rejected;
     }
 }

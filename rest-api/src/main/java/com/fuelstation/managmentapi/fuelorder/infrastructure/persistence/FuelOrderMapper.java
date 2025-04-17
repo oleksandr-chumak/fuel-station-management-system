@@ -10,7 +10,7 @@ public class FuelOrderMapper {
             entity.getStatus(),
             entity.getGrade(),
             entity.getAmount(),
-            entity.getFuelStationId(), // Changed field name to match the entity
+            entity.getFuelStationId(), 
             entity.getCreatedAt()
         );
     }
@@ -22,7 +22,7 @@ public class FuelOrderMapper {
             domain.getStatus(),
             domain.getGrade(),
             domain.getAmount(),
-            domain.getGasStationId(), // Domain model still uses gasStationId - this line maps it to fuelStationId in the entity
+            domain.getFuelStationId(), 
             domain.getCreatedAt()
         );
     }

@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
 
+import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderRepository;
 
@@ -27,5 +28,10 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
     public Optional<FuelOrder> findById(long id) {
         return jpaFuelOrderRepository.findById(id)
                 .map(FuelOrderMapper::toDomain);
+    }
+
+    @Override
+    public float getUnconfirmedFuelAmount(Long gasStationId, FuelGrade fuelGrade) {
+        return jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(gasStationId, fuelGrade);
     }
 }
