@@ -6,5 +6,6 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 public interface FuelStationRepository {
   public FuelStation save(FuelStation fuelStation);
-  public Optional<FuelStation> findById(Long id);          
+  public Optional<FuelStation> findById(Long id);        
+  public void deleteAll();  
 }

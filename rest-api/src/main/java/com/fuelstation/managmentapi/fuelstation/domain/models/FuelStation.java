@@ -67,6 +67,10 @@ public class FuelStation {
     public void unassignManager(Manager manager) {
         assignedManagersIds.removeIf((id) -> id == manager.getId());
     }
+    
+    public void unassignAllManagers() {
+        this.assignedManagersIds.clear();
+    }
 
     public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
         FuelPrice oldPrice = fuelPrices.stream()

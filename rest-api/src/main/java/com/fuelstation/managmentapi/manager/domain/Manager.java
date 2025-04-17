@@ -14,5 +14,5 @@ public class Manager {
    private ManagerStatus status;
    // email need to be taken from credentials
    private String email; 
-   private String credentialsId; 
+   private Long credentialsId; 
 }

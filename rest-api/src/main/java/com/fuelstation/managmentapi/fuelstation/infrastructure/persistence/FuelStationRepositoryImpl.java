@@ -28,4 +28,9 @@ public class FuelStationRepositoryImpl implements FuelStationRepository {
         Optional<FuelStationEntity> fuelStationEntity = jpaFuelStationRepository.findById(id);
         return fuelStationEntity.map(fuelStationMapper::toDomain);
     }
+
+    @Override
+    public void deleteAll() {
+        jpaFuelStationRepository.deleteAll();
+    }
 }
