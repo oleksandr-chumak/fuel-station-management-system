@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 @Injectable({ providedIn: "root" })
-export default class PublicApiService {
+export class ApiService {
     // TODO: Obtain baseUrl from environment variables
     private baseUrl = "http://localhost:8080";
 
@@ -17,11 +17,11 @@ export default class PublicApiService {
         return this.http.post<T>(this.getUrl(endpoint), body);
     }
 
-    put<T>(endpoint: string, body: Record<string, unknown>): Observable<T>   {
+    put<T>(endpoint: string, body?: Record<string, unknown>): Observable<T>   {
         return this.http.put<T>(this.getUrl(endpoint), body);
     }
 
-    patch<T>(endpoint: string, body: Record<string, unknown>): Observable<T>   {
+    patch<T>(endpoint: string, body?: Record<string, unknown>): Observable<T>   {
         return this.http.patch<T>(this.getUrl(endpoint), body);
     }
 

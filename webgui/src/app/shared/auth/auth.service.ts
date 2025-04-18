@@ -1,7 +1,7 @@
-import { Injectable } from "@angular/core";
-import PublicApiService from "../api/public-api.service";
+import { inject, Injectable } from "@angular/core";
 import { Observable, tap } from "rxjs";
 import { User, UserRole } from "./user.model";
+import { ApiService } from "../api";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -10,14 +10,14 @@ export class AuthService {
     // TODO: User must be observable? 
     private user: User | null = null;
 
-    constructor(private publicApiService: PublicApiService) {}
+    private apiService: ApiService = inject(ApiService);
 
     getUser(): User | null {
         return this.user;
     }
 
     getAccessToken(): String | null {
-        return this.accessToken
+        return this.accessToken;
     }
 
     isAuthorized(): boolean {
@@ -33,34 +33,23 @@ export class AuthService {
     }
 
     loginAdmin(email: string, password: string): Observable<string> {
-        return this.publicApiService.post<string>("api/auth/login/admin", { email, password })
-            .pipe(
-                tap((token) => {
-                    this.accessToken = token; 
-                    this.user = this.getUserByAccessToken(token);
-                })
-            )
+        return this.apiService.post<string>("api/auth/login/admin", { email, password }).pipe(tap(this.handleLogin));
     }
 
-    loginManager(email: string, password: string): void {
-        this.publicApiService.post<string>("api/auth/login/manager", { email, password })
-            .subscribe({
-                next: (token) => {
-                    this.accessToken = token; 
-                    this.user = this.getUserByAccessToken(token);
-                    this.saveAccessTokenToLocalStorage(token);
-                },
-                error: (err) => {
-                    // TODO: Handle this error. Idk how to do it in angular
-                    console.error('Login failed', err);
-                }
-            })  
+    loginManager(email: string, password: string): Observable<string> {
+        return this.apiService.post<string>("api/auth/login/admin", { email, password }).pipe(tap(this.handleLogin));
     }    
 
     logout(): void {
         this.accessToken = null;
         this.user = null;
         this.removeAccessTokenFromLocalStorage();
+    }
+    
+    private handleLogin(token: string) {
+        this.accessToken = token; 
+        this.user = this.getUserByAccessToken(token);
+        this.saveAccessTokenToLocalStorage(token);
     }
 
     private saveAccessTokenToLocalStorage(accessToken: string): void {
