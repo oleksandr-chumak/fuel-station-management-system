@@ -8,6 +8,6 @@ public interface FuelStationService {
     FuelStation assignManager(long fuelStationId, long managerId);
     FuelStation unassignManager(long fuelStationId, long managerId);
     FuelStation changeFuelPrice(long fuelStationId, FuelGrade fuelGrade, float newPrice);
-    FuelStation processFuelDelivery(long fuelStationId, long fuelOrderId);
+    FuelStation processFuelDelivery(long fuelOrderId);
     FuelStation deactivateFuelStation(long fuelStationId);
 }

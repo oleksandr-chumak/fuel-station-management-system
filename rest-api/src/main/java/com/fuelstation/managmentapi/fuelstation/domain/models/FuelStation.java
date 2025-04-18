@@ -1,22 +1,30 @@
 package com.fuelstation.managmentapi.fuelstation.domain.models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelDeliveryWasProcessed;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceWasChanged;
+import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerWasAssignedToFuelStation;
+import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerWasUnassignedFromFuelStation;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FuelStation {  
+@EqualsAndHashCode(callSuper = false)
+public class FuelStation extends AggregateRoot {  
     private Long id;
     private FuelStationAddress address;
     private List<FuelTank> fuelTanks;
@@ -63,6 +71,7 @@ public class FuelStation {
                 fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
             }
         }
+        pushDomainEvent(new FuelDeliveryWasProcessed(fuelOrder.getId()));
     }
 
     public void assignManager(Manager manager) {
@@ -73,14 +82,19 @@ public class FuelStation {
         }
 
         assignedManagersIds.add(manager.getId()); 
+        pushDomainEvent(new ManagerWasAssignedToFuelStation(id, manager.getId()));
     }
 
     public void unassignManager(Manager manager) {
         assignedManagersIds.removeIf((id) -> id == manager.getId());
+        pushDomainEvent(new ManagerWasUnassignedFromFuelStation(id, manager.getId()));
     }
     
     public void unassignAllManagers() {
-        this.assignedManagersIds.clear();
+        List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
+        for(long managerId : cloneAssignedManagersIds) {
+            unassignManager(new Manager(managerId, null, null, null, null));
+        }
     }
 
     public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
@@ -91,5 +105,6 @@ public class FuelStation {
 
         fuelPrices.remove(oldPrice);
         fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
+        pushDomainEvent(new FuelPriceWasChanged(id));
     }
 }

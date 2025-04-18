@@ -5,9 +5,12 @@ import java.util.NoSuchElementException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderRepository;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationWasCreated;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationWasDeactivated;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -28,10 +31,15 @@ public class DomainFuelStationService implements FuelStationService {
     @Autowired
     private FuelOrderRepository fuelOrderRepository;
 
+    @Autowired
+    private DomainEventPublisher domainEventPublisher;
+
     @Override
     public FuelStation createFuelStation(String street, String buildingNumber, String city, String postalCode, String country) {
         FuelStation fuelStation = fuelStationFactory.create(street, buildingNumber, city, postalCode, country);
-        return fuelStationRepository.save(fuelStation);
+        FuelStation savedFuelStation = fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publish(new FuelStationWasCreated(savedFuelStation.getId()));
+        return savedFuelStation;
     }
 
     @Override
@@ -39,7 +47,9 @@ public class DomainFuelStationService implements FuelStationService {
         FuelStation fuelStation = fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
         Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("Manager with id:" + managerId + "doesn't exist"));
         fuelStation.assignManager(manager);
-        return fuelStationRepository.save(fuelStation);
+        fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+        return fuelStation;
     }
 
     @Override
@@ -47,22 +57,28 @@ public class DomainFuelStationService implements FuelStationService {
         FuelStation fuelStation = fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
         Manager manager = managerRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("Manager with id:" + managerId + "doesn't exist"));
         fuelStation.unassignManager(manager);
-        return fuelStationRepository.save(fuelStation);
+        fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+        return fuelStation;
     }
 
     @Override
     public FuelStation changeFuelPrice(long fuelStationId, FuelGrade fuelGrade, float newPrice) {
         FuelStation fuelStation = fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
         fuelStation.changeFuelPrice(fuelGrade, newPrice);
-        return fuelStationRepository.save(fuelStation);
+        fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+        return fuelStation;
     }
 
     @Override
-    public FuelStation processFuelDelivery(long fuelStationId, long fuelOrderId) {
-        FuelStation fuelStation = fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
+    public FuelStation processFuelDelivery(long fuelOrderId) {
         FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId).orElseThrow(() -> new NoSuchElementException("Fuel order with id:" + fuelOrderId + "doesn't exist")); 
+        FuelStation fuelStation = fuelStationRepository.findById(fuelOrder.getFuelStationId()).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelOrder.getFuelStationId() + "doesn't exist"));
         fuelStation.processFuelDelivery(fuelOrder);
-        return fuelStationRepository.save(fuelStation);
+        fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+        return fuelStation;
     }
 
     @Override
@@ -70,6 +86,9 @@ public class DomainFuelStationService implements FuelStationService {
         FuelStation fuelStation = fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
         fuelStation.setStatus(FuelStationStatus.Deactivated);
         fuelStation.unassignAllManagers();
-        return fuelStationRepository.save(fuelStation);
+        fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+        domainEventPublisher.publish(new FuelStationWasDeactivated(fuelStationId));
+        return fuelStation;
     }
 }

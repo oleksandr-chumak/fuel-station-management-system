@@ -35,5 +35,6 @@ public class FuelOrder extends AggregateRoot {
             throw new IllegalArgumentException("Cannot confirm fuel order because its current status is '" + status + "'. Only pending orders can be rejected.");
         }
         status = FuelOrderStatus.Rejected;
+        pushDomainEvent(new FuelOrderWasRejected(id));
     }
 }

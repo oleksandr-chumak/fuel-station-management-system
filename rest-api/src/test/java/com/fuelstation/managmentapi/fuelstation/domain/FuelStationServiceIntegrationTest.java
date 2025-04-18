@@ -28,6 +28,7 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
 import com.fuelstation.managmentapi.manager.domain.ManagerStatus;
 
+// TODO Cover processFuelDelivery
 @SpringBootTest
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
