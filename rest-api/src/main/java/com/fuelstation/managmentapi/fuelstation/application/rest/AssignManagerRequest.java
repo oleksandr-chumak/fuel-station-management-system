@@ -1,14 +1,12 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class AssignManagerRequest {
     private Long managerId;
-
-    // Getters and Setters
-    public Long getManagerId() {
-        return managerId;
-    }
-
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
-    }
 }

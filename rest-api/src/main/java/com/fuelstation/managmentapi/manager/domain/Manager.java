@@ -5,11 +5,9 @@ import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Manager extends AggregateRoot {
    private Long id; 
