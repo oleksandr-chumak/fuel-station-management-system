@@ -114,7 +114,7 @@ public class FuelStationController {
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
-    @GetMapping
+    @GetMapping("/")
     public ResponseEntity<List<FuelStationResponse>> getFuelStations() {
         List<FuelStation> fuelStations = getAllFuelStations.process();
         List<FuelStationResponse> response = fuelStations.stream()

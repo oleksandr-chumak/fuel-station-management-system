@@ -30,10 +30,31 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
-                        req -> req.requestMatchers("/api/auth/login/**")
-                                .permitAll() // Allow access without authentication
-                                .requestMatchers("/admin/**").hasAuthority(UserRole.Administrator.name())
-                                .anyRequest().authenticated() // All other requests require authentication
+                        req -> req
+                                .requestMatchers("/api/auth/login/**").permitAll()
+                                .requestMatchers(
+                                    "/api/fuel-stations/{id}/deactivate",
+                                    "/api/fuel-stations/{id}/assign-manager",
+                                    "/api/fuel-stations/{id}/unassign-manager",
+                                    "/api/fuel-stations/{id}/change-fuel-price",
+                                    "/api/fuel-stations/{id}/unassign-manager",
+
+                                    "/api/managers/{id}/terminate",
+                                    "/api/managers/",
+                                    "/api/managers/{id}",
+
+                                    "/api/fuel-orders/{id}/confirm",
+                                    "/api/fuel-orders/{id}/reject",
+                                    "/api/fuel-orders/",
+                                    "/api/fuel-orders/{id}"
+                                ).hasAuthority(UserRole.Administrator.name())
+                                .requestMatchers( 
+                                    "/api/fuel-stations/{id}", 
+                                    "/api/fuel-stations/",
+                                    "/api/fuel-stations/{id}/managers",
+                                    "/api/fuel-stations/{id}/fuel-orders"
+                                ).hasAnyAuthority(UserRole.Administrator.name(), UserRole.Manager.name())
+                                .anyRequest().authenticated() 
                 ).userDetailsService(userDetailsServiceImp)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))

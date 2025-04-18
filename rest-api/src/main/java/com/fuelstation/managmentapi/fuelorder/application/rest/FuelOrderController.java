@@ -18,10 +18,7 @@ import com.fuelstation.managmentapi.fuelorder.application.usecases.GetAllFuelOrd
 import com.fuelstation.managmentapi.fuelorder.application.usecases.GetFuelOrderById;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.RejectFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.manager.application.usecases.GetAllManagers;
-import com.fuelstation.managmentapi.manager.application.usecases.GetManagerById;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController

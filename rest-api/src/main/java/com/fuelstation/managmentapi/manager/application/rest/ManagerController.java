@@ -18,8 +18,6 @@ import com.fuelstation.managmentapi.manager.application.usecases.GetManagerById;
 import com.fuelstation.managmentapi.manager.application.usecases.TerminateManager;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/managers")
