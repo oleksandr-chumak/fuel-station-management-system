@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.CredentialsService;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 
 @Service
 public class DomainManagerService implements ManagerService {
+
+    @Autowired
+    private DomainEventPublisher domainEventPublisher;
 
     @Autowired
     private CredentialsService credentialsService;
@@ -22,14 +26,18 @@ public class DomainManagerService implements ManagerService {
     @Override
     public Manager createManager(String firstName, String lastName, String email) {
         Credentials credentials = credentialsService.createCredentials(email, generateRandomPassword(10), UserRole.Manager);
-        return managerRepository.save(new Manager(null, firstName, lastName, ManagerStatus.Active, credentials.getId()));
+        Manager manger = managerRepository.save(new Manager(null, firstName, lastName, ManagerStatus.Active, credentials.getId()));
+        domainEventPublisher.publish(new ManagerWasCreated(manger.getId()));
+        return manger;
     }
 
     @Override
     public Manager terminateManager(Long managerId) {
         Manager manger = managerRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("Manager with id:" + managerId + "doesn't exist"));
         manger.terminate();
-        return managerRepository.save(manger);
+        managerRepository.save(manger);
+        domainEventPublisher.publishAll(manger.getDomainEvents());
+        return manger;
     }
     
     private String generateRandomPassword(int length) {

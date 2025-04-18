@@ -3,8 +3,12 @@ package com.fuelstation.managmentapi.authentication.domain;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
+
 @Service
 public class DomainCredentialsService implements CredentialsService {
+    @Autowired
+    private DomainEventPublisher domainEventPublisher;
 
     @Autowired
     private CredentialsFactory credentialsFactory;
@@ -16,6 +20,7 @@ public class DomainCredentialsService implements CredentialsService {
     public Credentials createCredentials(String email, String password, UserRole role) {
         Credentials credentials = credentialsFactory.create(email, password, role);
         Credentials savedCredentials = credentialsRepository.save(credentials); 
+        domainEventPublisher.publish(new CredentialsWasCreated(savedCredentials.getId(), email, password, role));
         return savedCredentials; 
     }
 }
