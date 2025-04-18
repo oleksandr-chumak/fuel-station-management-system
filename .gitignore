@@ -1,5 +1,9 @@
 .vscode/*
 
+# web-gui
+webgui/node_modules/**
+webgui/.vscode/*
+webgui/.angular/*
 
 # rest-api
 rest-api/target/**
