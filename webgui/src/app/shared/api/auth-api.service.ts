@@ -1,15 +1,15 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import AuthService from "../security/auth.service";
+import AuthService from "../auth/auth.service";
 
 @Injectable({ providedIn: "root" })
 export default class AuthApiService {
     // TODO: Obtain baseUrl from environment variables
     // TODO: Handle the case when the token has expired
-    private baseUrl = 'http://localhost:8080';
-
-    constructor(private http: HttpClient, private authService: AuthService) {}
+    private baseUrl = "http://localhost:8080";
+    private http = inject(HttpClient)
+    private authService = inject(AuthService);
 
     get<T>(endpoint: string): Observable<T> {
         return this.http.get<T>(this.getUrl(endpoint));
@@ -37,7 +37,7 @@ export default class AuthApiService {
 
     private getAuthHeaders(): HttpHeaders {
         return new HttpHeaders({
-            'Authorization': `Bearer ${this.authService}`,
+            'Authorization': `Bearer ${this.authService.getAccessToken()}`,
             'Content-Type': 'application/json'
         });
     }

@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 @Injectable({ providedIn: "root" })
 export default class PublicApiService {
     // TODO: Obtain baseUrl from environment variables
-    private baseUrl = 'http://localhost:8080';
+    private baseUrl = "http://localhost:8080";
 
     constructor(private http: HttpClient) {}
 

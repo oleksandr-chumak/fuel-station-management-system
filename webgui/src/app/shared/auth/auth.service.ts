@@ -1,12 +1,10 @@
 import { Injectable } from "@angular/core";
-import IAuthService from "./auth-service.interface";
-import User from "./user.model";
-import UserRole from "./user.enum";
 import PublicApiService from "../api/public-api.service";
+import { Observable, tap } from "rxjs";
+import { User, UserRole } from "./user.model";
 
 @Injectable({ providedIn: "root" })
-export default class AuthService implements IAuthService {
-
+export class AuthService {
     private ACCESS_TOKEN_KEY = "accessToken";
     private accessToken: string | null = this.getAccessTokenFromLocalStorage(); 
     // TODO: User must be observable? 
@@ -34,18 +32,14 @@ export default class AuthService implements IAuthService {
         return this.user?.role == UserRole.Manager;
     }
 
-    loginAdmin(email: string, password: string): void {
-        this.publicApiService.post<string>("api/auth/login/admin", { email, password })
-            .subscribe({
-                next: (token) => {
-                   this.accessToken = token; 
-                   this.user = this.getUserByAccessToken(token);
-                },
-                error: (err) => {
-                    // TODO: Handle this error. Idk how to do it in angular
-                    console.error('Login failed', err);
-                }
-            })
+    loginAdmin(email: string, password: string): Observable<string> {
+        return this.publicApiService.post<string>("api/auth/login/admin", { email, password })
+            .pipe(
+                tap((token) => {
+                    this.accessToken = token; 
+                    this.user = this.getUserByAccessToken(token);
+                })
+            )
     }
 
     loginManager(email: string, password: string): void {
@@ -84,7 +78,6 @@ export default class AuthService implements IAuthService {
     private getUserByAccessToken(accessToken: string): User {
         // TODO: Replace it with api call 
         // TODO: Implement api endpoint to fetch user by access token
-        return new User("test", UserRole.Admin)
+        return {email: "test", role: UserRole.Admin};
     }
-
 }
