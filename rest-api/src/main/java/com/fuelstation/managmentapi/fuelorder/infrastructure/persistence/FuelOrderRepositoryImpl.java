@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Repository;
@@ -39,5 +40,15 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
     @Override
     public void deleteAll() {
         jpaFuelOrderRepository.deleteAll();
+    }
+
+    @Override
+    public List<FuelOrder> findFuelOrdersByFuelStationId(Long fuelStationId) {
+        return jpaFuelOrderRepository.findByFuelStationId(fuelStationId).stream().map(FuelOrderMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<FuelOrder> findAll() {
+        return jpaFuelOrderRepository.findAll().stream().map(FuelOrderMapper::toDomain).toList();
     }
 }

@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,5 +33,10 @@ public class FuelStationRepositoryImpl implements FuelStationRepository {
     @Override
     public void deleteAll() {
         jpaFuelStationRepository.deleteAll();
+    }
+
+    @Override
+    public List<FuelStation> findAll() {
+        return jpaFuelStationRepository.findAll().stream().map(fuelStationMapper::toDomain).toList();
     }
 }

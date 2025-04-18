@@ -1,8 +1,12 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,12 +14,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
+import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPrice;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.DeactivateFuelStation;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetAllFuelStations;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationManagers;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationOrders;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
+import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
+import com.fuelstation.managmentapi.manager.domain.Manager;
+
 
 @RestController
 @RequestMapping("/api/fuel-stations")
@@ -35,6 +48,19 @@ public class FuelStationController {
     
     @Autowired
     private ChangeFuelPrice changeFuelPrice;
+     
+    @Autowired
+    private GetFuelStationById getFuelStationById;
+    
+    @Autowired
+    private GetAllFuelStations getAllFuelStations;
+    
+    @Autowired
+    private GetFuelStationManagers getFuelStationManagers;
+    
+    @Autowired
+    private GetFuelStationOrders getFuelStationOrders;
+
 
     @PostMapping
     public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody CreateFuelStationRequest request) {
@@ -81,4 +107,38 @@ public class FuelStationController {
         );
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FuelStationResponse> getFuelStation(@PathVariable("id") Long fuelStationId) {
+        FuelStation fuelStation = getFuelStationById.process(fuelStationId);
+        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FuelStationResponse>> getFuelStations() {
+        List<FuelStation> fuelStations = getAllFuelStations.process();
+        List<FuelStationResponse> response = fuelStations.stream()
+                .map(FuelStationResponse::fromDomain)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/{id}/managers")
+    public ResponseEntity<List<ManagerResponse>> getAssignedManagers(@PathVariable("id") Long fuelStationId) {
+        List<Manager> managers = getFuelStationManagers.process(fuelStationId);
+        List<ManagerResponse> response = managers.stream()
+                .map(ManagerResponse::fromDomain)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+    
+    @GetMapping("/{id}/fuel-orders")
+    public ResponseEntity<List<FuelOrderResponse>> getFuelOrders(@PathVariable("id") Long fuelStationId) {
+        List<FuelOrder> orders = getFuelStationOrders.process(fuelStationId);
+        List<FuelOrderResponse> response = orders.stream()
+                .map(FuelOrderResponse::fromDomain)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
+    }
+    
 }
