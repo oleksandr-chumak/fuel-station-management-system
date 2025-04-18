@@ -12,7 +12,7 @@ public class DeactivateFuelStation {
     @Autowired
     private FuelStationService fuelStationService;
     
-    public FuelStation process(Long fuelStationId) {
+    public FuelStation process(long fuelStationId) {
         return fuelStationService.deactivateFuelStation(fuelStationId); 
     }
 }

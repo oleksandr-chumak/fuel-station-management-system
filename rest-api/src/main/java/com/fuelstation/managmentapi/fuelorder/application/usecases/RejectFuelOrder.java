@@ -12,7 +12,7 @@ public class RejectFuelOrder {
     @Autowired
     private FuelOrderService fuelOrderService;
     
-    public FuelOrder process(Long fuelOrderId) {
+    public FuelOrder process(long fuelOrderId) {
         return fuelOrderService.rejectFuelOrder(fuelOrderId);
     }
 }

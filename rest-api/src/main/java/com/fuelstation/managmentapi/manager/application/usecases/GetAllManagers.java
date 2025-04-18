@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelstation.application.usecases;
+package com.fuelstation.managmentapi.manager.application.usecases;
 
 import java.util.List;
 
@@ -9,12 +9,13 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
 
 @Component
-public class GetFuelStationManagers {
-   
+public class GetAllManagers {
+    
     @Autowired
     private ManagerRepository managerRepository;
 
-    public List<Manager> process(long fuelStationId) {
-        return managerRepository.findManagersAssignedToFuelStation(fuelStationId);
+    public List<Manager> process() {
+        return managerRepository.findAll();
     }
+
 }

@@ -12,7 +12,7 @@ public class AssignManagerToFuelStation {
     @Autowired
     private FuelStationService fuelStationService;
 
-    public FuelStation process(Long fuelStationId, Long mangerId) {
+    public FuelStation process(long fuelStationId, long mangerId) {
         return fuelStationService.assignManager(0, 0);
     }
 

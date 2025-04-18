@@ -13,7 +13,7 @@ public class CreateFuelOrder {
     @Autowired
     private FuelOrderService fuelOrderService;
     
-    public FuelOrder process(Long gasStationId, String fuelGrade, float amount) {
+    public FuelOrder process(long gasStationId, String fuelGrade, float amount) {
         return fuelOrderService.createFuelOrder(gasStationId, getFuelGrade(fuelGrade), amount);
     }
     

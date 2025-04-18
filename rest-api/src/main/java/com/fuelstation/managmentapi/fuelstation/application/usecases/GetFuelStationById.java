@@ -14,7 +14,7 @@ public class GetFuelStationById {
     @Autowired
     private FuelStationRepository fuelStationRepository;
 
-    public FuelStation process(Long fuelStationId) {
+    public FuelStation process(long fuelStationId) {
         return fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
     }
 }

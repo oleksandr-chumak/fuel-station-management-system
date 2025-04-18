@@ -1,18 +1,21 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderService;
+import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderRepository;
 
 @Component
-public class ConfirmFuelOrder {
+public class GetAllFuelOrders {
     
     @Autowired
-    private FuelOrderService fuelOrderService;
-    
-    public FuelOrder process(long fuelOrderId) {
-        return fuelOrderService.confirmFuelOrder(fuelOrderId);
+    private FuelOrderRepository fuelOrderRepository;
+
+    public List<FuelOrder> process() {
+        return fuelOrderRepository.findAll();
     }
+
 }

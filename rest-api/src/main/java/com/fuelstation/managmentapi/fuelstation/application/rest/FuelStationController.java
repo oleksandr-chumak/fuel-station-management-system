@@ -75,14 +75,14 @@ public class FuelStationController {
     }
 
     @PutMapping("/{id}/deactivate")
-    public ResponseEntity<FuelStationResponse> deactivateFuelStation(@PathVariable("id") Long fuelStationId) {
+    public ResponseEntity<FuelStationResponse> deactivateFuelStation(@PathVariable("id") long fuelStationId) {
         FuelStation fuelStation = deactivateFuelStation.process(fuelStationId);
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @PutMapping("/{id}/assign-manager")
     public ResponseEntity<FuelStationResponse> assignManager(
-            @PathVariable("id") Long fuelStationId,
+            @PathVariable("id") long fuelStationId,
             @RequestBody AssignManagerRequest request) {
         FuelStation fuelStation = assignManagerToFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
@@ -90,7 +90,7 @@ public class FuelStationController {
 
     @PutMapping("/{id}/unassign-manager")
     public ResponseEntity<FuelStationResponse> unassignManager(
-            @PathVariable("id") Long fuelStationId,
+            @PathVariable("id") long fuelStationId,
             @RequestBody AssignManagerRequest request) {
         FuelStation fuelStation = unassignManagerToFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
@@ -98,7 +98,7 @@ public class FuelStationController {
 
     @PutMapping("/{id}/change-fuel-price")
     public ResponseEntity<FuelStationResponse> changeFuelPrice(
-            @PathVariable("id") Long fuelStationId,
+            @PathVariable("id") long fuelStationId,
             @RequestBody ChangeFuelPriceRequest request) {
         FuelStation fuelStation = changeFuelPrice.process(
             fuelStationId,
@@ -109,7 +109,7 @@ public class FuelStationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FuelStationResponse> getFuelStation(@PathVariable("id") Long fuelStationId) {
+    public ResponseEntity<FuelStationResponse> getFuelStation(@PathVariable("id") long fuelStationId) {
         FuelStation fuelStation = getFuelStationById.process(fuelStationId);
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
@@ -124,7 +124,7 @@ public class FuelStationController {
     }
     
     @GetMapping("/{id}/managers")
-    public ResponseEntity<List<ManagerResponse>> getAssignedManagers(@PathVariable("id") Long fuelStationId) {
+    public ResponseEntity<List<ManagerResponse>> getAssignedManagers(@PathVariable("id") long fuelStationId) {
         List<Manager> managers = getFuelStationManagers.process(fuelStationId);
         List<ManagerResponse> response = managers.stream()
                 .map(ManagerResponse::fromDomain)
@@ -133,7 +133,7 @@ public class FuelStationController {
     }
     
     @GetMapping("/{id}/fuel-orders")
-    public ResponseEntity<List<FuelOrderResponse>> getFuelOrders(@PathVariable("id") Long fuelStationId) {
+    public ResponseEntity<List<FuelOrderResponse>> getFuelOrders(@PathVariable("id") long fuelStationId) {
         List<FuelOrder> orders = getFuelStationOrders.process(fuelStationId);
         List<FuelOrderResponse> response = orders.stream()
                 .map(FuelOrderResponse::fromDomain)
