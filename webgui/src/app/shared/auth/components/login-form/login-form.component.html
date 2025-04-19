@@ -1,0 +1,24 @@
+<form class="flex flex-col gap-4" [formGroup]="loginForm">
+    <div class="flex flex-col gap-1">
+        <input 
+            id="email" 
+            type="text" 
+            aria-label="email" 
+            formControlName="email" 
+            [ngClass] = "{ 'ng-invalid ng-dirty': emailValid }"
+        />
+        <p-message *ngIf="emailValid" severity="error" variant="simple" size="small">Email is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            id="password"
+            type="password" 
+            aria-label="password" 
+            formControlName="password"
+            [ngClass] = "{ 'ng-invalid ng-dirty': passwordValid }"
+        />
+        />
+        <p-message *ngIf="passwordValid" severity="error" variant="simple" size="small">Password is invalid</p-message>
+    </div>
+    <p-button label="Login" [disabled]="!loginForm.valid" [loading]="loading"/> 
+</form>
