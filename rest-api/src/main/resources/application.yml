@@ -26,3 +26,6 @@ security:
 
     # Refresh token expiration in milliseconds (e.g. 7 days)
     refresh-token-expiration: 604800000
+
+client:
+  origin: http://localhost:4200
