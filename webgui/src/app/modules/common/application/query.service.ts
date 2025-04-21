@@ -30,6 +30,7 @@ export default class QueryService<T, Args extends any[]> {
         // Execute the method with the provided arguments
         this.subscription = this.method(...args).subscribe({
             next: (result) => {
+                console.log("Query result", result)
                 this.dataSubject.next(result);
                 this.loadingSubject.next(false);
             },

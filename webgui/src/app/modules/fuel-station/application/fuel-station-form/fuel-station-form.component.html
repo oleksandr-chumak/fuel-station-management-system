@@ -1,0 +1,48 @@
+<form class="flex flex-col gap-4" [formGroup]="fuelStationForm" (submit)="handleSubmit()">
+    <div class="flex flex-col gap-1">
+        <input 
+            type="street"
+            pInputText
+            placeholder="Street"
+            formControlName="street" 
+        />
+        <p-message *ngIf="streetInvalid" severity="error" variant="simple" size="small">Street is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            type="buildingNumber"
+            pInputText
+            placeholder="Building Number"
+            formControlName="buildingNumber" 
+        />
+        <p-message *ngIf="buildingNumberInvalid" severity="error" variant="simple" size="small">Building number is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            type="city"
+            pInputText
+            placeholder="City"
+            formControlName="city" 
+        />
+        <p-message *ngIf="cityInvalid" severity="error" variant="simple" size="small">City is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            type="postalCode"
+            pInputText
+            placeholder="Postal Code"
+            formControlName="postalCode" 
+        />
+        <p-message *ngIf="postalCodeInvalid" severity="error" variant="simple" size="small">Postal Code is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            type="country"
+            pInputText
+            placeholder="Country"
+            formControlName="country" 
+        />
+        <p-message *ngIf="countryInvalid" severity="error" variant="simple" size="small">Country is invalid</p-message>
+    </div>
+    <p-button type="submit" icon="pi pi-sign-in" styleClass="w-full" [label]="buttonText" [loading]="loading"/> 
+</form>

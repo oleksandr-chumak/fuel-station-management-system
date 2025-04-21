@@ -1,4 +1,8 @@
 <p-panel header="Fuel stations">  
+    <app-create-fuel-station-dialog [visible]="visible"></app-create-fuel-station-dialog>
+    <ng-template #icons>
+        <p-button severity="secondary" [outlined]="true" label="Create" (click)="openDialog()" />
+    </ng-template>
     <p-table
         showGridlines
         [loading]="fuelStationQueryService.loading$ | async"
@@ -12,13 +16,13 @@
                 <th>Action</th>
             </tr>
         </ng-template>
-        <ng-template *ngIf="fuelStationQueryService.fuelStations | async as fuelStations" #body >
-            <tr *ngFor="let fuelStation of fuelStations">
+        <tbody>
+            <tr *ngFor="let fuelStation of fuelStationQueryService.fuelStations$ | async">
                 <td>{{ fuelStation.id }}</td> 
                 <td>{{ fuelStation.address }}</td>
                 <td><p-tag [value]="fuelStation.status.toString()" [severity]="getSeverity(fuelStation)"/></td>
                 <td><p-button [outlined]="true">View</p-button></td> 
             </tr>
-        </ng-template>
+        </tbody>
     </p-table>
 </p-panel>

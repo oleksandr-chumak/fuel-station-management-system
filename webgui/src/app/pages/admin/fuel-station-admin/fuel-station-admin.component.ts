@@ -7,15 +7,19 @@ import { ButtonModule } from 'primeng/button';
 import FuelStationQueryService from '../../../modules/fuel-station/application/fuel-station-query.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { CreateFuelStationDialogComponent } from '../../../modules/fuel-station/application/create-fuel-station-dialog/create-fuel-station-dialog.component';
 
 @Component({
   selector: 'app-fuel-station-admin',
-  imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule],
+  imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule, DialogModule, CreateFuelStationDialogComponent],
   templateUrl: './fuel-station-admin.component.html',
 })
 export class FuelStationAdminComponent implements OnInit, OnDestroy {
   private messageService = inject(MessageService);
   fuelStationQueryService: FuelStationQueryService = inject(FuelStationQueryService);
+
+  visible: boolean = false;
 
   getSeverity(fuelStation: FuelStation): "success" | undefined {
     if(fuelStation.active) {
@@ -26,6 +30,9 @@ export class FuelStationAdminComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fuelStationQueryService.getFuelStations();
+    this.fuelStationQueryService.fuelStations$.subscribe((data) => {
+      console.log("DATA: ",data)
+    })
     this.fuelStationQueryService.error$.subscribe((err) => {
         if(!err) return;
         this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations." });
@@ -34,5 +41,9 @@ export class FuelStationAdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.fuelStationQueryService.destroy();
+  }
+
+  openDialog() {
+    this.visible = true;
   }
 }

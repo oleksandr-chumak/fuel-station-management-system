@@ -7,8 +7,6 @@ export class FuelTank {
       public currentVolume: number,
       public maxCapacity: number,
       public fuelGrade: FuelGrade,
-      public fuelTanks: FuelTank[] = [],
-      public fuelPrices: FuelPrice[] = [],
       public lastRefillDate: Date | null = null
     ) {}
   }

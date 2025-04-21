@@ -22,7 +22,7 @@ export default class FuelStationApiService {
 
     getFuelStations(): Observable<FuelStation[]> {
         return this.apiService.get("api/fuel-stations/")
-            .pipe(map((data) => plainToInstance(FuelStation, data as Object[])));
+            .pipe(map((data) => { console.log(data); return plainToInstance(FuelStation, data as Object[])}));
     }
     
     getFuelStationById(fuelStationId: number): Observable<FuelStation> {

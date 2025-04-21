@@ -12,7 +12,7 @@ export default class FuelStationQueryService {
         this.queryService.executeQuery()
     }
 
-    get fuelStations() {
+    get fuelStations$() {
         return this.queryService.data$;
     }
 
