@@ -12,7 +12,6 @@ import { Router } from '@angular/router';
   templateUrl: './admin-login.component.html',
 })
 export class AdminLoginComponent {
-
   private router: Router = inject(Router);
   private authService: AuthService = inject(AuthService);
   private messageService: MessageService = inject(MessageService);

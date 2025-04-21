@@ -1,1 +1,24 @@
-<p>fuel-station-admin works!</p>
+<p-panel header="Fuel stations">  
+    <p-table
+        showGridlines
+        [loading]="fuelStationQueryService.loading$ | async"
+        [tableStyle]="{ 'min-width': '50rem' }"
+    >
+        <ng-template #header>
+            <tr>
+                <th>Id</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </ng-template>
+        <ng-template *ngIf="fuelStationQueryService.fuelStations | async as fuelStations" #body >
+            <tr *ngFor="let fuelStation of fuelStations">
+                <td>{{ fuelStation.id }}</td> 
+                <td>{{ fuelStation.address }}</td>
+                <td><p-tag [value]="fuelStation.status.toString()" [severity]="getSeverity(fuelStation)"/></td>
+                <td><p-button [outlined]="true">View</p-button></td> 
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>
