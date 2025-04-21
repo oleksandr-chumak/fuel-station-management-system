@@ -24,7 +24,7 @@ public class FuelStationResponse {
     private List<FuelTank> fuelTanks;
     private List<FuelPrice> fuelPrices;
     private String country;
-    private boolean active;
+    private FuelStationStatus status;
     
     public static FuelStationResponse fromDomain(FuelStation fuelStation) {
         FuelStationResponse response = new FuelStationResponse();
@@ -37,8 +37,12 @@ public class FuelStationResponse {
         response.setPostalCode(fuelStation.getAddress().postalCode());
         response.setCountry(fuelStation.getAddress().country());
         response.setAssignedManagersIds(fuelStation.getAssignedManagersIds());
-        response.setActive(fuelStation.getStatus() == FuelStationStatus.Active);
+        response.setStatus(fuelStation.getStatus());
         return response;
+    }
+    
+    String getAddress() {
+        return String.format("%s %s, %s %s, %s", street, buildingNumber, postalCode, city, country);
     }
 
 }

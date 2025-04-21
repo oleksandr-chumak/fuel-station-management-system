@@ -62,7 +62,7 @@ public class FuelStationController {
     private GetFuelStationOrders getFuelStationOrders;
 
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody CreateFuelStationRequest request) {
         FuelStation fuelStation = createFuelStation.process(
             request.getStreet(),
