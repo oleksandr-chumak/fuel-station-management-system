@@ -1,13 +1,13 @@
 import { Routes } from '@angular/router';
-import { ManagerDashboardPage, ManagerLoginPage } from './pages/manager';
-import { AdminDashboardPage, AdminLoginPage } from './pages/admin';
+import { ManagerDashboardComponent } from './pages/manager-dashboard/manager-dashboard.component';
+import { AdminLoginComponent } from './pages/admin/admin-login/admin-login.component';
 
 export const routes: Routes = [
     // manager routes
-    { path: "", component: ManagerDashboardPage },
-    { path: "login", component: ManagerLoginPage },
+    { path: "", component: ManagerDashboardComponent },
+    // { path: "login", component: ManagerLoginPage },
 
     // admin routes
-    { path: "admin", component: AdminDashboardPage },
-    { path: "admin/login", component: AdminLoginPage },
+    // { path: "admin", component: AdminDashboardPage },
+    { path: "admin/login", component: AdminLoginComponent },
 ];

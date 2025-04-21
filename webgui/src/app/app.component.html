@@ -1,11 +1,28 @@
-<header>
-  header
-</header>
+<ng-container *ngIf="!(isLoading$ | async); else loadingTemplate">
+  <ng-template #notLoggedIn>
+    <app-not-logged-in-header/>
+  </ng-template>
 
-<main class="main">
-  <router-outlet />
-</main>
+  <ng-container *ngIf="user$ | async as user; else notLoggedIn">
+    <app-manager-header *ngIf="user && user.manager"/>
+    <app-admin-header *ngIf="user && user.admin"/>
+  </ng-container>
 
-<footer>
-  footer
-</footer>
+  <main class="h-screen">
+    <div class="container mx-auto">
+      <router-outlet />
+    </div>
+  </main>
+
+  <footer>
+    <div class="container mx-auto">
+      footer
+    </div>
+  </footer>
+</ng-container>
+
+<ng-template #loadingTemplate>
+  <div class="flex items-center justify-center h-screen">
+    <div>Loading...</div>
+  </div>
+</ng-template>
