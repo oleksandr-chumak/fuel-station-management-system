@@ -2,10 +2,13 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse
 import { inject, Injectable } from "@angular/core";
 import { Observable, catchError, throwError } from "rxjs";
 import { AuthService } from "../domain/auth.service";
+import { MessageService } from "primeng/api";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
     private authService: AuthService = inject(AuthService);
+    private messageService: MessageService = inject(MessageService);
+
 
     intercept(
         req: HttpRequest<any>,
@@ -27,6 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {
                     this.authService.logout();
+                    this.messageService.add({ summary: "Token is expired", severity: "warning", detail: "You was log out from your account"});
                 }
                 return throwError(() => error);
             })

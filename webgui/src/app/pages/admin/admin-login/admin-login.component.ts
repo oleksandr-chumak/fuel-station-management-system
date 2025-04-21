@@ -4,14 +4,12 @@ import { PanelModule } from 'primeng/panel';
 import { AuthService } from '../../../modules/auth/domain/auth.service';
 import { finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { Toast } from 'primeng/toast';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-login',
-  imports: [Toast, LoginFormComponent, PanelModule],
+  imports: [LoginFormComponent, PanelModule],
   templateUrl: './admin-login.component.html',
-  providers: [MessageService]
 })
 export class AdminLoginComponent {
 

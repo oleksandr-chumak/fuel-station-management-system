@@ -1,5 +1,18 @@
-<header>
+<header class="my-2" *ngIf="user$ | async as user">
     <div class="container mx-auto">
-        <p-menubar [model]="items"/>
+        <p-menubar [model]="menubarItems">
+            <ng-template #end>
+                <div class="card flex justify-center">
+                    <p-menu #menu [model]="menuItems" [popup]="true"/>
+                    <p-button (click)="menu.toggle($event)" variant="outlined" severity="secondary">
+                        <p-avatar icon="pi pi-user" styleClass="!h-11 !w-11" shape="circle" />
+                        <div class="flex flex-col gap-1 items-start">
+                            <span class="font-bold text-white">{{user.email}}</span>
+                            <span class="text-sm">Admin</span>
+                        </div>
+                    </p-button>
+                </div>
+            </ng-template>
+        </p-menubar>
     </div>
 </header>

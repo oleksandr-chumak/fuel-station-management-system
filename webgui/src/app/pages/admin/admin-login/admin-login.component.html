@@ -1,6 +1,5 @@
 <div class="h-screen flex items-center justify-center">
-    <p-toast />
     <p-panel header="Login">
-        <app-login-form (formSubmitted)="handleFormSubmission($event)"/>
+        <app-login-form [loading]="loading" (formSubmitted)="handleFormSubmission($event)"/>
     </p-panel>
 </div>

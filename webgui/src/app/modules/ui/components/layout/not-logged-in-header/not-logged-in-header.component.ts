@@ -15,8 +15,8 @@ export class NotLoggedInHeaderComponent {
   
   get items(): MenuItem[] {
     const admin = this.router.url.startsWith("/admin");
-    const loginUrl = admin ? "admin/login" : "login";
-    return [{label: "Login", url: loginUrl, icon: "pi pi-sign-in" }]
+    const loginUrl = admin ? "/admin/login" : "/login";
+    return [{label: "Login", route: loginUrl, icon: "pi pi-sign-in" }]
     
   }
 
