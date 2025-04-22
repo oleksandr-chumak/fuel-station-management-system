@@ -1,5 +1,8 @@
 <div class="flex flex-col gap-2"> 
-    <h2 class="text-2xl my-2 font-semibold">Fuel station Id: 1<br/> Location: test test test test Ukraine</h2>
+    <ng-template #loading>
+        <h2 class="text-2xl my-2 font-semibold">Loading...</h2>
+    </ng-template>
+    <h2 class="text-2xl my-2 font-semibold" *ngIf="ctx$ | async as ctx; else loading">Fuel station ID: {{ctx.fuelStation.id}}</h2>
     <div class="p-4 bg-zinc-900 rounded-lg">
         <p-tabs value="/dashboard">
             <p-tablist>

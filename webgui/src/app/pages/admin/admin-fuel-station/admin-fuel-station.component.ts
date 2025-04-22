@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import AdminFuelStationContextService from '../../../modules/fuel-order/domain/admin-fuel-station-context.service';
@@ -10,12 +10,12 @@ import { MessageService } from 'primeng/api';
   imports: [RouterModule, TabsModule, CommonModule],
   templateUrl: './admin-fuel-station.component.html'
 })
-export class AdminFuelStationComponent {
+export class AdminFuelStationComponent implements OnInit, OnDestroy {
   private paramsStationId: string = '';
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute)
   private messageService: MessageService = inject(MessageService);
-  private ctx: AdminFuelStationContextService = inject(AdminFuelStationContextService)
+  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService)
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -28,7 +28,7 @@ export class AdminFuelStationComponent {
         return;
       }
 
-      this.ctx.getFuelStation(stationId)
+      this.ctxService.getFuelStation(stationId)
         .subscribe({
           error: () => {
             this.messageService.add({severity: "error", summary: "Not found", detail: "Fuel station with id: " + stationId + " doesn't exist"})
@@ -36,6 +36,10 @@ export class AdminFuelStationComponent {
           }
         })
     });
+  }
+
+  ngOnDestroy(): void {
+    this.ctxService.resetContext();
   }
 
   get tabs() {
@@ -58,6 +62,10 @@ export class AdminFuelStationComponent {
         }
       ]
     )
+  }
+
+  get ctx$() {
+    return this.ctxService.getContext();
   }
 
 }
