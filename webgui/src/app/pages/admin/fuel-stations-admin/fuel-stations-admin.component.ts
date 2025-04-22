@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import { FuelStation } from '../../../modules/fuel-station/domain/fuel-station.model';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import FuelStationQueryService from '../../../modules/fuel-station/application/fuel-station-query.service';
+import FuelStationQueryService from '../../../modules/fuel-station/application/fuel-stations-query.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
@@ -13,9 +13,9 @@ import { CreateFuelStationDialogComponent } from '../../../modules/fuel-station/
 @Component({
   selector: 'app-fuel-station-admin',
   imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule, DialogModule, CreateFuelStationDialogComponent],
-  templateUrl: './fuel-station-admin.component.html',
+  templateUrl: './fuel-stations-admin.component.html',
 })
-export class FuelStationAdminComponent implements OnInit, OnDestroy {
+export class FuelStationsAdminComponent implements OnInit, OnDestroy {
   private messageService = inject(MessageService);
   fuelStationQueryService: FuelStationQueryService = inject(FuelStationQueryService);
 

@@ -5,7 +5,7 @@ import { FuelStationFormData } from '../fuel-station.model';
 import FuelStationApiService from '../../infrastructure/fuel-station-api.service';
 import { finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import FuelStationQueryService from '../fuel-station-query.service';
+import FuelStationQueryService from '../fuel-stations-query.service';
 
 @Component({
   selector: 'app-create-fuel-station-dialog',

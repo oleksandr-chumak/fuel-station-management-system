@@ -35,20 +35,20 @@ export default class FuelStationApiService {
     }
 
     // TODO Maybe change unassign-manager to managers/{managerId}/unassign
-    unassignManager(fuelStationId: number, managerId: number) {
+    unassignManager(fuelStationId: number, managerId: number): Observable<FuelStation> {
         return this.apiService.put("api/fuel-stations/" + fuelStationId + "/unassign-manager", { managerId });
     }
 
     // TODO Maybe change assign-manager to managers/{managerId}/assign
-    assignManager(fuelStationId: number, managerId: number) {
+    assignManager(fuelStationId: number, managerId: number): Observable<FuelStation> {
         return this.apiService.put("api/fuel-stations/" + fuelStationId + "/assign-manager", { managerId });
     }
 
-    deactivateFuelStation(fuelStationId: number) {
+    deactivateFuelStation(fuelStationId: number): Observable<FuelStation> {
         return this.apiService.put("api/fuel-stations/" + fuelStationId + "/deactivate")
     }
 
-    createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: string) {
+    createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: string): Observable<FuelStation> {
         return this.apiService.post("api/fuel-stations/", { street, buildingNumber, city, postalCode, country });
     }
 

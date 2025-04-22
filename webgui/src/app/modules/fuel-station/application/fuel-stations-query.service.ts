@@ -4,7 +4,7 @@ import FuelStationApiService from "../infrastructure/fuel-station-api.service";
 import { map } from "rxjs";
 
 @Injectable({ providedIn: "root" })
-export default class FuelStationQueryService {
+export default class FuelStationsQueryService {
     private fuelStationApi = inject(FuelStationApiService);
 
     private queryService = new QueryService(() => this.fuelStationApi.getFuelStations());
