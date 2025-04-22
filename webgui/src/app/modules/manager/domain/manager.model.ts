@@ -11,4 +11,8 @@ export default class Manager {
     terminate() {
         this.status = ManagerStatus.Deactivated;
     }
+
+    get fullName() {
+        return this.firstName + " " + this.lastName;
+    }
 }

@@ -3,12 +3,11 @@ import AdminFuelStationContextService from '../../../../modules/fuel-order/domai
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
-import { FloatLabelModule } from 'primeng/floatlabel';
 import { IftaLabelModule } from 'primeng/iftalabel';
 
 @Component({
   selector: 'app-admin-fuel-station-info',
-  imports: [CommonModule, PanelModule, InputTextModule, FloatLabelModule, IftaLabelModule],
+  imports: [CommonModule, PanelModule, InputTextModule, IftaLabelModule],
   templateUrl: './admin-fuel-station-info.component.html'
 })
 export class AdminFuelStationInfoComponent {

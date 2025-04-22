@@ -4,10 +4,11 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import AdminFuelStationContextService from '../../../modules/fuel-order/domain/admin-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
+import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   selector: 'app-admin-fuel-station',
-  imports: [RouterModule, TabsModule, CommonModule],
+  imports: [RouterModule, TabsModule, CommonModule, SkeletonModule],
   templateUrl: './admin-fuel-station.component.html'
 })
 export class AdminFuelStationComponent implements OnInit, OnDestroy {
