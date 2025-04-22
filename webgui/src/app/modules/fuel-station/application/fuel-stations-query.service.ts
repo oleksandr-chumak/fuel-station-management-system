@@ -1,7 +1,8 @@
 import { inject, Injectable } from "@angular/core";
 import QueryService from "../../common/application/query.service";
 import FuelStationApiService from "../infrastructure/fuel-station-api.service";
-import { map } from "rxjs";
+import { map, Observable } from "rxjs";
+import { FuelStation } from "../domain/fuel-station.model";
 
 @Injectable({ providedIn: "root" })
 export default class FuelStationsQueryService {
@@ -9,8 +10,8 @@ export default class FuelStationsQueryService {
 
     private queryService = new QueryService(() => this.fuelStationApi.getFuelStations());
 
-    getFuelStations(): void {
-        this.queryService.executeQuery()
+    getFuelStations(): Observable<FuelStation[]> {
+        return this.queryService.executeQuery()
     }
 
     get fuelStations$() {
@@ -20,12 +21,8 @@ export default class FuelStationsQueryService {
     get loading$() {
         return this.queryService.loading$;
     }
-
-    get error$() {
-        return this.queryService.error$;
-    }
     
-    destroy() {
-        this.queryService.destroy();
+    clear() {
+        this.queryService.clearQuery();
     }
 }

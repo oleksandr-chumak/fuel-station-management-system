@@ -1,20 +1,20 @@
-import { Component, inject } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
-import { MenubarModule } from 'primeng/menubar';
-import { AvatarModule } from 'primeng/avatar';
-import { AuthService } from '../../../../auth/domain/auth.service';
-import { Observable } from 'rxjs';
-import User from '../../../../auth/domain/user.model';
-import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { Menu } from 'primeng/menu';
-import { Router } from '@angular/router';
+import { Component, inject } from "@angular/core";
+import { MenuItem, MessageService } from "primeng/api";
+import { MenubarModule } from "primeng/menubar";
+import { AvatarModule } from "primeng/avatar";
+import { AuthService } from "../../../../auth/domain/auth.service";
+import { Observable } from "rxjs";
+import User from "../../../../auth/domain/user.model";
+import { CommonModule } from "@angular/common";
+import { ButtonModule } from "primeng/button";
+import { Menu } from "primeng/menu";
+import { Router, RouterModule } from "@angular/router";
 
 @Component({
-  selector: 'app-admin-header',
+  selector: "app-admin-header",
   standalone: true,
-  imports: [CommonModule, MenubarModule, Menu, AvatarModule, ButtonModule],
-  templateUrl: './admin-header.component.html',
+  imports: [CommonModule, MenubarModule, Menu, AvatarModule, ButtonModule, RouterModule],
+  templateUrl: "./admin-header.component.html",
 })
 export class AdminHeaderComponent {
 
@@ -25,11 +25,15 @@ export class AdminHeaderComponent {
   user$: Observable<User | null> = this.authService.getUser();
 
   get menubarItems(): MenuItem[] {
-    return [];
+    return [ 
+      { label: "Fuel Stations", routerLink: ["/admin"] },
+      { label: "Managers", routerLink: ["/admin/managers"] },
+      { label: "Fuel Orders", routerLink: ["/admin/fuel-orders"] },
+    ];
   }
 
   get menuItems(): MenuItem[] {
-    return [ { label: 'Logout', icon: 'pi pi-power-off', command: () => this.handleLogout() } ];
+    return [ { label: "Logout", icon: "pi pi-power-off", command: () => this.handleLogout() } ];
   }
 
   private handleLogout() {

@@ -35,16 +35,15 @@ export class FuelStationsAdminComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.fuelStationQueryService.getFuelStations();
+    this.fuelStationQueryService.getFuelStations()
+      .subscribe({
+        error: () => this.messageService.add({ severity: "error", "summary": "Error", detail: "An error occurred while fetching fuel stations"})
+      });
     this.fuelStationQueryService.fuelStations$.subscribe((data) => this.fuelStations = data ? data : []);
-    this.fuelStationQueryService.error$.subscribe((err) => {
-        if(!err) return;
-        this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations." });
-      })
   }
 
   ngOnDestroy(): void {
-    this.fuelStationQueryService.destroy();
+    this.fuelStationQueryService.clear();
   }
 
   openDialog() {

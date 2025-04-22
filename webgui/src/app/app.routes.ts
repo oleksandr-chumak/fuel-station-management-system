@@ -7,6 +7,8 @@ import { AdminFuelStationComponent } from './pages/admin/admin-fuel-station/admi
 import { AdminFuelStationInfoComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-info/admin-fuel-station-info.component';
 import { AdminFuelStationManagersComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-managers/admin-fuel-station-managers.component';
 import { AdminFuelStationFuelOrdersComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-fuel-orders/admin-fuel-station-fuel-orders.component';
+import { AdminManagersComponent } from './pages/admin/admin-managers/admin-managers.component';
+import { AdminFuelOrdersComponent } from './pages/admin/admin-fuel-orders/admin-fuel-orders.component';
 
 export const routes: Routes = [
     // manager routes
@@ -15,8 +17,8 @@ export const routes: Routes = [
 
     // admin routes
     { path: "admin/login", component: AdminLoginComponent },
+    // TODO rename this component
     { path: "admin", component: FuelStationsAdminComponent, canActivate: [adminGuard] },
-
     { 
         path: "admin/fuel-station/:id", 
         component: AdminFuelStationComponent, 
@@ -27,5 +29,7 @@ export const routes: Routes = [
             { path: "fuel-orders", component: AdminFuelStationFuelOrdersComponent },
             { path: "", redirectTo: "info", pathMatch: "full" }
         ]
-    }
+    },
+    { path: "admin/managers", component: AdminManagersComponent, canActivate: [adminGuard]},
+    { path: "admin/fuel-orders", component: AdminFuelOrdersComponent, canActivate: [adminGuard]}
 ];
