@@ -148,6 +148,7 @@ export default class AdminFuelStationContextService {
     }
 
     confirmFuelOrder(fuelOrderId: number): Observable<FuelOrder[]> {
+        this.contextValue;
         return this.withLoading(
             "confirmOrder",
             this.fuelOrderApi.confirmFuelOrder(fuelOrderId).pipe(
@@ -161,6 +162,7 @@ export default class AdminFuelStationContextService {
     }
 
     rejectFuelOrder(fuelOrderId: number): Observable<FuelOrder[]> {
+        this.contextValue;
         return this.withLoading(
             "rejectOrder",
             this.fuelOrderApi.rejectFuelOrder(fuelOrderId).pipe(
