@@ -4,7 +4,8 @@
         <p-button severity="secondary" [outlined]="true" label="Create" (click)="openDialog()" />
     </ng-template>
     <p-table
-        showGridlines
+        [value]="fuelStations"
+        size="small"
         [loading]="fuelStationQueryService.loading$ | async"
         [tableStyle]="{ 'min-width': '50rem' }"
     >
@@ -13,16 +14,16 @@
                 <th>Id</th>
                 <th>Address</th>
                 <th>Status</th>
-                <th>Action</th>
+                <th class="flex items-center justify-center">Action</th>
             </tr>
         </ng-template>
-        <tbody>
-            <tr *ngFor="let fuelStation of fuelStationQueryService.fuelStations$ | async">
+        <ng-template #body let-fuelStation>
+            <tr>
                 <td>{{ fuelStation.id }}</td> 
                 <td>{{ fuelStation.address }}</td>
                 <td><p-tag [value]="fuelStation.status.toString()" [severity]="getSeverity(fuelStation)"/></td>
-                <td><p-button [outlined]="true">View</p-button></td> 
+                <td><div class="flex items-center justify-center"><p-button size="small" severity="secondary" [outlined]="true">View</p-button></div></td> 
             </tr>
-        </tbody>
+        </ng-template>
     </p-table>
 </p-panel>

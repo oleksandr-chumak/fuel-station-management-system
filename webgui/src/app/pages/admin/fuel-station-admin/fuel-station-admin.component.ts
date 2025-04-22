@@ -20,6 +20,7 @@ export class FuelStationAdminComponent implements OnInit, OnDestroy {
   fuelStationQueryService: FuelStationQueryService = inject(FuelStationQueryService);
 
   visible: boolean = false;
+  fuelStations: FuelStation[] = [];
 
   getSeverity(fuelStation: FuelStation): "success" | undefined {
     if(fuelStation.active) {
@@ -30,9 +31,7 @@ export class FuelStationAdminComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fuelStationQueryService.getFuelStations();
-    this.fuelStationQueryService.fuelStations$.subscribe((data) => {
-      console.log("DATA: ",data)
-    })
+    this.fuelStationQueryService.fuelStations$.subscribe((data) => this.fuelStations = data ? data : []);
     this.fuelStationQueryService.error$.subscribe((err) => {
         if(!err) return;
         this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations." });

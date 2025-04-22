@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { ManagerDashboardComponent } from './pages/manager-dashboard/manager-dashboard.component';
 import { AdminLoginComponent } from './pages/admin/admin-login/admin-login.component';
 import { FuelStationAdminComponent } from './pages/admin/fuel-station-admin/fuel-station-admin.component';
+import adminGuard from './modules/auth/infrastructure/admin.guard';
 
 export const routes: Routes = [
     // manager routes
@@ -9,6 +10,6 @@ export const routes: Routes = [
     // { path: "login", component: ManagerLoginPage },
 
     // admin routes
-    { path: "admin", component: FuelStationAdminComponent  },
+    { path: "admin", component: FuelStationAdminComponent, canActivate: [adminGuard] },
     { path: "admin/login", component: AdminLoginComponent },
 ];

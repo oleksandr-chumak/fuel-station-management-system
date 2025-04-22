@@ -30,7 +30,7 @@ export class AuthInterceptor implements HttpInterceptor {
             catchError((error: HttpErrorResponse) => {
                 if (error.status === 401) {
                     this.authService.logout();
-                    this.messageService.add({ summary: "Token is expired", severity: "warning", detail: "You was log out from your account"});
+                    this.messageService.add({ summary: "Token Expired", severity: "error", detail: "You were logged out of your account." });
                 }
                 return throwError(() => error);
             })

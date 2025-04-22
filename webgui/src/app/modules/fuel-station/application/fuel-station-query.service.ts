@@ -1,6 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import QueryService from "../../common/application/query.service";
 import FuelStationApiService from "../infrastructure/fuel-station-api.service";
+import { map } from "rxjs";
 
 @Injectable({ providedIn: "root" })
 export default class FuelStationQueryService {
