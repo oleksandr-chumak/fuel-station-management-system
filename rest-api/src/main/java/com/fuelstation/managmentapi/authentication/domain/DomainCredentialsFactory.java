@@ -18,7 +18,7 @@ public class DomainCredentialsFactory implements CredentialsFactory{
     @Override
     public Credentials create(String email, String password, UserRole userRole) {
         Optional<Credentials> foundCredentials = credentialsRepository.findByEmailAndRole(email, userRole);
-        
+        // TODO Conflict exception should be sent
         if(foundCredentials.isPresent()) {
             throw new IllegalArgumentException("User with email:" + email + "and role:" + userRole.toString() + "already exist");
         }

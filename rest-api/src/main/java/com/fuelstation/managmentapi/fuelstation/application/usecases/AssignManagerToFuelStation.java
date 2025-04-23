@@ -13,7 +13,7 @@ public class AssignManagerToFuelStation {
     private FuelStationService fuelStationService;
 
     public FuelStation process(long fuelStationId, long mangerId) {
-        return fuelStationService.assignManager(0, 0);
+        return fuelStationService.assignManager(fuelStationId, mangerId);
     }
 
 }

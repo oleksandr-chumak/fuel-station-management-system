@@ -17,7 +17,7 @@ public class DomainManagerService implements ManagerService {
     @Autowired
     private DomainEventPublisher domainEventPublisher;
 
-    @Autowired
+    @Autowired  
     private CredentialsService credentialsService;
 
     @Autowired
@@ -25,6 +25,7 @@ public class DomainManagerService implements ManagerService {
 
     @Override
     public Manager createManager(String firstName, String lastName, String email) {
+
         Credentials credentials = credentialsService.createCredentials(email, generateRandomPassword(10), UserRole.Manager);
         Manager manger = managerRepository.save(new Manager(null, firstName, lastName, ManagerStatus.Active, credentials.getId()));
         domainEventPublisher.publish(new ManagerWasCreated(manger.getId()));

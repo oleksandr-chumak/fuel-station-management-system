@@ -35,7 +35,7 @@ public class ManagerController {
     @Autowired 
     private GetManagerById getManagerById;
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<ManagerResponse> createManager(@RequestBody CreateManagerRequest request) {
         Manager manager = createManager.process(
             request.getFirstName(),
