@@ -28,8 +28,12 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Copy the build output to replace the default nginx contents
 COPY --from=build /app/dist/webgui/browser/ /usr/share/nginx/html/
 
+# Copy and make entrypoint script executable
+COPY docker-entrypoint.sh /
+RUN chmod +x /docker-entrypoint.sh
+
 # Expose port 80
 EXPOSE 80
 
-# Start Nginx server
-CMD ["nginx", "-g", "daemon off;"]
+# Start with our entrypoint script
+ENTRYPOINT ["/docker-entrypoint.sh"]

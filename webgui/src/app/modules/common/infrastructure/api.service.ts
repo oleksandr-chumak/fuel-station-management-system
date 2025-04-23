@@ -1,13 +1,18 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
+import { AppConfigService } from "./app-config.service";
 
 @Injectable({ providedIn: "root" })
 export class ApiService {
-    // TODO: Obtain baseUrl from environment variables
-    private baseUrl = "http://localhost:8080";
-
     private http: HttpClient = inject(HttpClient);
+    
+    constructor(private appConfigService: AppConfigService) {
+    }
+
+    private get baseUrl() {
+        return this.appConfigService.getConfig().apiUrl;
+    }
 
     get<T>(endpoint: string): Observable<T>   {
         return this.http.get<T>(this.getUrl(endpoint));
@@ -30,6 +35,7 @@ export class ApiService {
     }
 
     private getUrl(endpoint: string) {
+        console.log("baseUrl", this.baseUrl)
         return this.baseUrl + "/" + endpoint;
     }
 }
