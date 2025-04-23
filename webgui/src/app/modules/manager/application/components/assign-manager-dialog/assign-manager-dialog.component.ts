@@ -33,7 +33,10 @@ export class AssignManagerDialogComponent {
       const formData = this.assignManagerForm.value as { manager: Manager};
       this.fuelStationContext.assignManager(formData.manager.id)
         .subscribe({
-          next: () => this.visible = false,
+          next: () => {
+            this.messageService.add({ severity: "success", summary: "Assigned", detail: "Manager was successfully assigned" });
+            this.visible = false;
+          },
           error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while assigning manager"})
         });
     }

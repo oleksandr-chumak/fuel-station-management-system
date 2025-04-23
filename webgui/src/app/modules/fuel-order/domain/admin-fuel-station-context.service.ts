@@ -123,7 +123,10 @@ export default class AdminFuelStationContextService {
         return this.withLoading(
             "assignManager",
             this.fuelStationApi.assignManager(fuelStation.id, managerId).pipe(
-                switchMap(() => this.getAssignedManagers()),
+                switchMap(() => {
+                    this.updateContext({ managers: [] })
+                    return this.getAssignedManagers()
+                }),
                 catchError(error => {
                     console.error("Error assigning manager:", error);
                     return throwError(() => new Error(`Failed to assign manager with ID ${managerId}`));
@@ -138,7 +141,10 @@ export default class AdminFuelStationContextService {
         return this.withLoading(
             "unassignManager",
             this.fuelStationApi.unassignManager(fuelStation.id, managerId).pipe(
-                switchMap(() => this.getAssignedManagers()),
+                switchMap(() => {
+                    this.updateContext({ managers: [] })
+                    return this.getAssignedManagers()
+                }),
                 catchError(error => {
                     console.error("Error unassigning manager:", error);
                     return throwError(() => new Error(`Failed to unassign manager with ID ${managerId}`));

@@ -23,16 +23,19 @@ export class AdminFuelStationManagersComponent implements OnInit {
   skeletonCols = new Array(5).fill(null);
   
   ngOnInit(): void {
-    let managers = [];
-    this.ctx$.subscribe((ctx) => managers = ctx ? ctx.managers : [])
-    if(managers.length != 0) {
-      return;
-    }
     this.getManagers();
   }
 
   openDialog() { 
     this.visible = true;
+  }
+
+  unassignManger(managerId: number) {
+    this.ctxService.unassignManager(managerId)
+      .subscribe({
+        next: () => this.messageService.add({ severity: "success", summary: "Unassigned", detail: "Manager was successfully unassigned" }),
+        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while unassign manager"})
+      })
   }
 
   get ctx$() {
@@ -42,6 +45,11 @@ export class AdminFuelStationManagersComponent implements OnInit {
   get loading$() {
     return this.ctxService.loading.managers;
   }
+
+  get loadingUnassignManager$() {
+    return this.ctxService.loading.unassignManager;
+  }
+
 
   private getManagers() {
     this.ctxService.getAssignedManagers()
