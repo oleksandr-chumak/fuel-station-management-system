@@ -6,10 +6,11 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
+import { AssignManagerDialogComponent } from '../../../../modules/manager/application/components/assign-manager-dialog/assign-manager-dialog.component';
 
 @Component({
   selector: 'app-admin-fuel-station-managers',
-  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
+  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, AssignManagerDialogComponent],
   templateUrl: './admin-fuel-station-managers.component.html'
 })
 export class AdminFuelStationManagersComponent implements OnInit {
@@ -17,6 +18,7 @@ export class AdminFuelStationManagersComponent implements OnInit {
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
+  visible = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
   
@@ -27,6 +29,10 @@ export class AdminFuelStationManagersComponent implements OnInit {
       return;
     }
     this.getManagers();
+  }
+
+  openDialog() { 
+    this.visible = true;
   }
 
   get ctx$() {

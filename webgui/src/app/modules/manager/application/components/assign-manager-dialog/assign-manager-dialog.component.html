@@ -1,0 +1,9 @@
+<p-dialog (visibleChange)="visible = $event" [visible]="visible" header="Assign manager dialog">
+    <form class="flex flex-col gap-4" [formGroup]="assignManagerForm" (submit)="handleFormSubmission()">
+        <div class="flex flex-col gap-1">
+            <app-manager-select (managerSelected)="handleMangerAssigned($event)"></app-manager-select>
+            <p-message *ngIf="managerInvalid" severity="error" variant="simple" size="small">Manager is invalid</p-message>
+        </div>
+        <p-button type="submit" styleClass="w-full" label="Assign Manager" [loading]="loading$ | async"/> 
+    </form>
+</p-dialog>  
