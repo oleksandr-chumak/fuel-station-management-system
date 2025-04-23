@@ -23,12 +23,15 @@ export class CreateFuelStationDialogComponent {
 
   handleFormSubmission(e: FuelStationFormData) {
     this.loading = true;
-    console.log(e)
     this.fuelStationApiService.createFuelStation(e.street, e.buildingNumber, e.city, e.postalCode, e.country)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: () => {
-          this.fuelStationQueryService.getFuelStations();
+        next: (d) => {
+          // TODO This logic should be handled inside service 
+          this.fuelStationQueryService.getFuelStations()
+            .subscribe({
+              error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations"})
+            });
           this.messageService.add({ severity: "success", summary: "Created", detail: "A new fuel station was created"});
           this.visible = false;
         },

@@ -1,6 +1,7 @@
+<app-create-manager-dialog [visible]="visible"></app-create-manager-dialog>
 <p-panel header="Fuel stations">
     <ng-template #icons>
-        <p-button severity="secondary" [outlined]="true" label="Create Manager" />
+        <p-button (onClick)="openDialog()" severity="secondary" [outlined]="true" label="Create Manager" />
     </ng-template>
     <p-table [value]="managers" size="small" [loading]="loading$ | async" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">

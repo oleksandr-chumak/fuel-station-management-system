@@ -9,10 +9,11 @@ import { PanelModule } from 'primeng/panel';
 import Manager from '../../../modules/manager/domain/manager.model';
 import { TagModule } from 'primeng/tag';
 import ManagerStatus from '../../../modules/manager/domain/manager-status.enum';
+import { CreateManagerDialogComponent } from '../../../modules/manager/application/components/create-manager-dialog/create-manager-dialog.component';
 
 @Component({
   selector: 'app-admin-managers',
-  imports: [CommonModule, ButtonModule, TableModule, SkeletonModule, PanelModule, TagModule],
+  imports: [CommonModule, ButtonModule, TableModule, SkeletonModule, PanelModule, TagModule, CreateManagerDialogComponent],
   templateUrl: './admin-managers.component.html'
 })
 export class AdminManagersComponent implements OnInit {
@@ -20,6 +21,7 @@ export class AdminManagersComponent implements OnInit {
   private managersQueryService: ManagersQueryService = inject(ManagersQueryService);
   private messageService: MessageService = inject(MessageService);
 
+  visible: boolean = false;
   managers: Manager[] = [];
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(6).fill(null);
@@ -37,6 +39,10 @@ export class AdminManagersComponent implements OnInit {
       return "success";
     }
     return undefined;
+  }
+
+  openDialog() {
+    this.visible = true;
   }
 
   get loading$() {

@@ -4,6 +4,7 @@
 webgui/node_modules/**
 webgui/.vscode/*
 webgui/.angular/*
+webgui/dist/**
 
 # rest-api
 rest-api/target/**

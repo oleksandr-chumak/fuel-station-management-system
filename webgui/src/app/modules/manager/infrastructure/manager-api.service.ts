@@ -21,6 +21,6 @@ export class ManagerApiService {
     }
 
     createManager(firstName: string, lastName: string, email: string) {
-        return this.apiService.put("api/managers/", { firstName, lastName, email });
+        return this.apiService.post("api/managers/", { firstName, lastName, email });
     }
 }

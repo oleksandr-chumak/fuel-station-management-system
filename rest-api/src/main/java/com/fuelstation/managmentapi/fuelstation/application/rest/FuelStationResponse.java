@@ -2,6 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
@@ -41,6 +42,7 @@ public class FuelStationResponse {
         return response;
     }
     
+    @JsonProperty("address")
     String getAddress() {
         return String.format("%s %s, %s %s, %s", street, buildingNumber, postalCode, city, country);
     }

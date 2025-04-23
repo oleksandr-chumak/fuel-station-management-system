@@ -1,0 +1,30 @@
+<form class="flex flex-col gap-4" [formGroup]="managerForm" (submit)="handleSubmit()">
+    <div class="flex flex-col gap-1">
+        <input 
+            type="firstName"
+            pInputText
+            placeholder="First"
+            formControlName="firstName" 
+        />
+        <p-message *ngIf="firstNameInvalid" severity="error" variant="simple" size="small">First Name is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            type="lastName"
+            pInputText
+            placeholder="Last Name"
+            formControlName="lastName" 
+        />
+        <p-message *ngIf="lastNameInvalid" severity="error" variant="simple" size="small">Last Name is invalid</p-message>
+    </div>
+    <div class="flex flex-col gap-1">
+        <input 
+            type="email"
+            pInputText
+            placeholder="Email"
+            formControlName="email" 
+        />
+        <p-message *ngIf="emailInvalid" severity="error" variant="simple" size="small">Email is invalid</p-message>
+    </div>
+    <p-button type="submit" icon="pi pi-sign-in" styleClass="w-full" [label]="buttonText" [loading]="loading"/> 
+</form>
