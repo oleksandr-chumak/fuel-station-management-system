@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CredentialsResponse {
     private String email; 
-    private UserRole userRole; 
+    private UserRole role; 
 
     public static CredentialsResponse fromDomain(Credentials credentials) {
         return new CredentialsResponse(credentials.getEmail(), credentials.getRole());

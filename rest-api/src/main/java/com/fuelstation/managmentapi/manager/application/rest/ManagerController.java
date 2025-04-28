@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationResponse;
 import com.fuelstation.managmentapi.manager.application.usecases.CreateManager;
 import com.fuelstation.managmentapi.manager.application.usecases.GetAllManagers;
 import com.fuelstation.managmentapi.manager.application.usecases.GetManagerById;
+import com.fuelstation.managmentapi.manager.application.usecases.GetManagerFuelStations;
 import com.fuelstation.managmentapi.manager.application.usecases.TerminateManager;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,9 @@ public class ManagerController {
 
     @Autowired
     private GetAllManagers getAllManagers;
+
+    @Autowired
+    private GetManagerFuelStations getManagerFuelStations;
 
     @Autowired 
     private GetManagerById getManagerById;
@@ -59,6 +64,11 @@ public class ManagerController {
     @GetMapping("/{id}")
     public ResponseEntity<ManagerResponse> getManagerById(@PathVariable("id") long managerId) {
         return ResponseEntity.ok(ManagerResponse.fromDomain(getManagerById.process(managerId)));
+    }
+
+    @GetMapping("/{id}/fuel-stations")
+    public ResponseEntity<List<FuelStationResponse>> getManagerFuelStations(@PathVariable("id") long managerId) {
+        return ResponseEntity.ok(getManagerFuelStations.process(managerId).stream().map(FuelStationResponse::fromDomain).toList());
     }
     
 }

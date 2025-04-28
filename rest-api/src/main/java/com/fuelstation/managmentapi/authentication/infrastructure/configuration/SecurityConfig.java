@@ -44,11 +44,13 @@ public class SecurityConfig {
                     req -> req
                             .requestMatchers("/api/auth/login/**").permitAll()
                             .requestMatchers(
+                                "/api/fuel-stations/",
                                 "/api/fuel-stations/{id}/deactivate",
                                 "/api/fuel-stations/{id}/assign-manager",
                                 "/api/fuel-stations/{id}/unassign-manager",
                                 "/api/fuel-stations/{id}/change-fuel-price",
                                 "/api/fuel-stations/{id}/unassign-manager",
+
 
                                 "/api/managers/{id}/terminate",
                                 "/api/managers/",
@@ -61,9 +63,10 @@ public class SecurityConfig {
                             ).hasAuthority(UserRole.Administrator.name())
                             .requestMatchers( 
                                 "/api/fuel-stations/{id}", 
-                                "/api/fuel-stations/",
                                 "/api/fuel-stations/{id}/managers",
-                                "/api/fuel-stations/{id}/fuel-orders"
+                                "/api/fuel-stations/{id}/fuel-orders",
+                                
+                                "/api/manager/{id}/fuel-stations"
                             ).hasAnyAuthority(UserRole.Administrator.name(), UserRole.Manager.name())
                             .anyRequest().authenticated() 
             ).userDetailsService(userDetailsServiceImp)

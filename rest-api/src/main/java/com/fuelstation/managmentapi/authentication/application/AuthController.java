@@ -43,6 +43,6 @@ public class AuthController {
     public ResponseEntity<CredentialsResponse> getCurrentUser(Authentication authentication) {
         Credentials credentials = credentialsRepository.findByEmail(authentication.getName())
             .orElseThrow(() -> new NoSuchElementException("User doesn't exist"));
-        return new ResponseEntity<>(CredentialsResponse.fromDomain(credentials), HttpStatus.OK);
+        return ResponseEntity.ok(CredentialsResponse.fromDomain(credentials));
     }
 }
