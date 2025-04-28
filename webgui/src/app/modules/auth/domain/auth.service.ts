@@ -1,34 +1,32 @@
 import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, Observable, of, tap } from "rxjs";
+import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap } from "rxjs";
 import User from "./user.model";
 import AuthApiService from "../infrastructure/auth-api.service";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
     private ACCESS_TOKEN_KEY = "accessToken";
-    private accessToken: string | null = this.getAccessTokenFromLocalStorage(); 
+    private accessToken: string | null = this.getAccessTokenFromLocalStorage();
     private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
     private user$: Observable<User | null> = this.userSubject.asObservable();
-
     private authApiService: AuthApiService = inject(AuthApiService);
 
-    loadUserData(): Observable<User | null> {
+    loadUserData(): Promise<User | null> {
         const token = this.getAccessToken();
-        if (token) {
-            return this.authApiService.getMe(token as string)
-                .pipe(
-                    tap(user => {
-                        this.userSubject.next(user);
-                    }),
-                    catchError(err => {
-                        console.log("Error happened while fetching user", err);
-                        this.logout();
-                        return of(null);
-                    })
-                );
-        } else {
-            return of(null);
+        if(!token) {
+            return Promise.resolve(null);
         }
+        return firstValueFrom(this.authApiService.getMe()
+            .pipe(
+                tap(user => {
+                    this.userSubject.next(user);
+                }),
+                catchError(err => {
+                    console.log("Error happened while fetching user", err);
+                    this.logout();
+                    return of(null);
+                })
+            ))
     }
 
     getUser(): Observable<User | null> {
@@ -39,32 +37,39 @@ export class AuthService {
         return this.accessToken;
     }
 
-    loginAdmin(email: string, password: string): Observable<string> {
-        return this.authApiService.loginAdmin(email, password).pipe(tap((token) => this.handleLogin(token)));
+    loginAdmin(email: string, password: string): Observable<User | null> {
+        return this.authApiService.loginAdmin(email, password).pipe(
+            tap((token) => this.saveAccessTokenAndSetState(token)),
+            switchMap(() => this.authApiService.getMe()),
+            tap(user => this.userSubject.next(user)),
+            catchError(err => {
+                console.log("Error happened while fetching user", err);
+                return of(null);
+            })
+        );
     }
 
-    loginManager(email: string, password: string): Observable<string> {
-        return this.authApiService.loginManager(email, password).pipe(tap((token) => this.handleLogin(token)));
-    }    
+    loginManager(email: string, password: string): Observable<User | null> {
+        return this.authApiService.loginManager(email, password).pipe(
+            tap((token) => this.saveAccessTokenAndSetState(token)),
+            switchMap(() => this.authApiService.getMe()),
+            tap(user => this.userSubject.next(user)),
+            catchError(err => {
+                console.log("Error happened while fetching user", err);
+                return of(null);
+            })
+        );
+    }
 
     logout(): void {
         this.accessToken = null;
         this.userSubject.next(null);
         this.removeAccessTokenFromLocalStorage();
     }
-    
-    private handleLogin(token: string) {
-        this.accessToken = token; 
+
+    private saveAccessTokenAndSetState(token: string): void {
+        this.accessToken = token;
         this.saveAccessTokenToLocalStorage(token);
-        this.authApiService.getMe(token)
-            .subscribe({
-                next: (user) => {
-                    this.userSubject.next(user);
-                },
-                error: (err) => {
-                   console.log("Error happened while fetching user", err); 
-                }
-            });
     }
 
     private saveAccessTokenToLocalStorage(accessToken: string): void {

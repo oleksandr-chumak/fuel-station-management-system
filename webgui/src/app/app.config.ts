@@ -5,17 +5,20 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { AuthInterceptor } from './modules/auth/infrastructure/auth.interceptor';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './modules/common/infrastructure/app-config.service';
+import { AuthService } from './modules/auth/domain/auth.service';
 
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideAppInitializer(() => {
+    provideAppInitializer(async () => {
       const appConfigService: AppConfigService = inject(AppConfigService);
-      return appConfigService.loadConfig(); 
+      const authService: AuthService = inject(AuthService);
+      await appConfigService.loadConfig(); 
+      return authService.loadUserData();
     }), 
     provideHttpClient(withInterceptorsFromDi()),
     provideZoneChangeDetection({ eventCoalescing: true }), 

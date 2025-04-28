@@ -1,8 +1,8 @@
 import { inject, Injectable } from "@angular/core";
 import { ApiService } from "../../common/infrastructure/api.service";
-import { Observable, of } from "rxjs";
+import { map, Observable } from "rxjs";
 import User from "../domain/user.model";
-import UserRole from "../domain/user-role.enum";
+import { plainToInstance } from "class-transformer";
 
 @Injectable({ providedIn: "root" })
 export default class AuthApiService {
@@ -17,10 +17,9 @@ export default class AuthApiService {
         return this.apiService.post<string>("api/auth/login/manager", { email, password });
     }    
 
-    getMe(accessToken: string): Observable<User> {
-        // TODO implement endpoint on api
-        const mockUser = new User("test@test.com", UserRole.Admin);
-        return of(mockUser);
+    getMe(): Observable<User> {
+        return this.apiService.get<User>("api/auth/me")
+            .pipe(map((user) => plainToInstance(User, user)));
     }
     
 }

@@ -32,17 +32,6 @@ export class AppComponent implements OnInit {
   private authService: AuthService = inject(AuthService); 
   
   ngOnInit(): void {
-    this.isLoading.next(true);
-    
     this.user$ = this.authService.getUser();
-    
-    this.authService.loadUserData().subscribe({
-      next: () => {
-        this.isLoading.next(false);
-      },
-      error: () => {
-        this.isLoading.next(false);
-      }
-    });
   }
 }
