@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Credentials implements UserDetails {
-   private Long id;
+   private Long credentialsId;
+   private Long userId;
    private String email;
    private UserRole role;
    private String password;

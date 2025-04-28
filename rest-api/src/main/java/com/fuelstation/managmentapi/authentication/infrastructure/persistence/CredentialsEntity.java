@@ -7,6 +7,7 @@ import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerEn
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,9 +36,9 @@ public class CredentialsEntity {
 
     private String password;
 
-    @OneToOne(mappedBy = "credentials")
-    private ManagerEntity manger;
+    @OneToOne(mappedBy = "credentials", fetch = FetchType.EAGER)
+    private ManagerEntity manager;
 
-    @OneToOne(mappedBy = "credentials")
+    @OneToOne(mappedBy = "credentials", fetch = FetchType.EAGER)
     private AdministratorEntity administrator;
 }

@@ -42,11 +42,7 @@ public class ManagerController {
 
     @PostMapping("/")
     public ResponseEntity<ManagerResponse> createManager(@RequestBody CreateManagerRequest request) {
-        Manager manager = createManager.process(
-            request.getFirstName(),
-            request.getLastName(),
-            request.getEmail()
-        );
+        Manager manager = createManager.process(request.getFirstName(), request.getLastName(), request.getEmail());
         return new ResponseEntity<>(ManagerResponse.fromDomain(manager), HttpStatus.CREATED);
     }
 

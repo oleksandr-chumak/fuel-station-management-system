@@ -61,7 +61,6 @@ public class FuelStationController {
     @Autowired
     private GetFuelStationOrders getFuelStationOrders;
 
-
     @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody CreateFuelStationRequest request) {
         FuelStation fuelStation = createFuelStation.process(
@@ -81,25 +80,19 @@ public class FuelStationController {
     }
 
     @PutMapping("/{id}/assign-manager")
-    public ResponseEntity<FuelStationResponse> assignManager(
-            @PathVariable("id") long fuelStationId,
-            @RequestBody AssignManagerRequest request) {
+    public ResponseEntity<FuelStationResponse> assignManager(@PathVariable("id") long fuelStationId,@RequestBody AssignManagerRequest request) {
         FuelStation fuelStation = assignManagerToFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @PutMapping("/{id}/unassign-manager")
-    public ResponseEntity<FuelStationResponse> unassignManager(
-            @PathVariable("id") long fuelStationId,
-            @RequestBody AssignManagerRequest request) {
+    public ResponseEntity<FuelStationResponse> unassignManager(@PathVariable("id") long fuelStationId, @RequestBody AssignManagerRequest request) {
         FuelStation fuelStation = unassignManagerToFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @PutMapping("/{id}/change-fuel-price")
-    public ResponseEntity<FuelStationResponse> changeFuelPrice(
-            @PathVariable("id") long fuelStationId,
-            @RequestBody ChangeFuelPriceRequest request) {
+    public ResponseEntity<FuelStationResponse> changeFuelPrice(@PathVariable("id") long fuelStationId, @RequestBody ChangeFuelPriceRequest request) {
         FuelStation fuelStation = changeFuelPrice.process(
             fuelStationId,
             request.getFuelGrade(),
@@ -117,27 +110,21 @@ public class FuelStationController {
     @GetMapping("/")
     public ResponseEntity<List<FuelStationResponse>> getFuelStations() {
         List<FuelStation> fuelStations = getAllFuelStations.process();
-        List<FuelStationResponse> response = fuelStations.stream()
-                .map(FuelStationResponse::fromDomain)
-                .collect(Collectors.toList());
+        List<FuelStationResponse> response = fuelStations.stream().map(FuelStationResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/{id}/managers")
     public ResponseEntity<List<ManagerResponse>> getAssignedManagers(@PathVariable("id") long fuelStationId) {
         List<Manager> managers = getFuelStationManagers.process(fuelStationId);
-        List<ManagerResponse> response = managers.stream()
-                .map(ManagerResponse::fromDomain)
-                .collect(Collectors.toList());
+        List<ManagerResponse> response = managers.stream().map(ManagerResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
     
     @GetMapping("/{id}/fuel-orders")
     public ResponseEntity<List<FuelOrderResponse>> getFuelOrders(@PathVariable("id") long fuelStationId) {
         List<FuelOrder> orders = getFuelStationOrders.process(fuelStationId);
-        List<FuelOrderResponse> response = orders.stream()
-                .map(FuelOrderResponse::fromDomain)
-                .collect(Collectors.toList());
+        List<FuelOrderResponse> response = orders.stream().map(FuelOrderResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
     

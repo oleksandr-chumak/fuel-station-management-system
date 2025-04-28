@@ -20,7 +20,7 @@ public class DomainCredentialsService implements CredentialsService {
     public Credentials createCredentials(String email, String password, UserRole role) {
         Credentials credentials = credentialsFactory.create(email, password, role);
         Credentials savedCredentials = credentialsRepository.save(credentials); 
-        domainEventPublisher.publish(new CredentialsWasCreated(savedCredentials.getId(), email, password, role));
+        domainEventPublisher.publish(new CredentialsWasCreated(savedCredentials.getCredentialsId(), email, password, role));
         return savedCredentials; 
     }
 }

@@ -25,9 +25,8 @@ public class DomainManagerService implements ManagerService {
 
     @Override
     public Manager createManager(String firstName, String lastName, String email) {
-
         Credentials credentials = credentialsService.createCredentials(email, generateRandomPassword(10), UserRole.Manager);
-        Manager manger = managerRepository.save(new Manager(null, firstName, lastName, ManagerStatus.Active, credentials.getId()));
+        Manager manger = managerRepository.save(new Manager(null, firstName, lastName, ManagerStatus.Active, credentials.getCredentialsId()));
         domainEventPublisher.publish(new ManagerWasCreated(manger.getId()));
         return manger;
     }

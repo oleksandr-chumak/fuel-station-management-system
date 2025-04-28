@@ -11,11 +11,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CredentialsResponse {
+    private long userId;
     private String email; 
     private UserRole role; 
 
     public static CredentialsResponse fromDomain(Credentials credentials) {
-        return new CredentialsResponse(credentials.getEmail(), credentials.getRole());
+        return new CredentialsResponse(
+            credentials.getUserId(),
+            credentials.getEmail(), 
+            credentials.getRole()
+        );
     }
 
 }

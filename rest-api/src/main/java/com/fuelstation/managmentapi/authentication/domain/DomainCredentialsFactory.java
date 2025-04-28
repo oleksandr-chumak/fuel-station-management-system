@@ -23,6 +23,6 @@ public class DomainCredentialsFactory implements CredentialsFactory{
             throw new IllegalArgumentException("User with email:" + email + "and role:" + userRole.toString() + "already exist");
         }
 
-        return new Credentials(null, email, userRole, passwordEncoder.encode(password));
+        return new Credentials(null, null, email, userRole, passwordEncoder.encode(password));
     }
 }
