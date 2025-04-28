@@ -15,32 +15,6 @@ services:
     networks:
       - demo_network
 
-  springboot-app:
-    build: .
-    container_name: springboot_demo
-    ports:
-      - "8080:8080"
-    environment:
-      # Database config
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/demo_db
-      SPRING_DATASOURCE_USERNAME: demo_user
-      SPRING_DATASOURCE_PASSWORD: demo_password
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SPRING_JPA_SHOW_SQL: "true"
-
-      # JWT security config
-      SECURITY_JWT_SECRET_KEY: "N0JxZzNsbmFPa3Vlc2F3b2pXb2VjYjR2ZXh0eWx0aGdlcnJ5Y2F0Y2g="
-      SECURITY_JWT_ACCESS_TOKEN_EXPIRATION: 900000
-      SECURITY_JWT_REFRESH_TOKEN_EXPIRATION: 604800000
-
-      # Client origin (CORS)
-      CLIENT_ORIGIN: http://localhost:4200
-
-    depends_on:
-      - postgres
-    networks:
-      - demo_network
-
 volumes:
   postgres_data:
 
