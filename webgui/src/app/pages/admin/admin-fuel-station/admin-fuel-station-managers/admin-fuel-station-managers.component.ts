@@ -18,16 +18,11 @@ export class AdminFuelStationManagersComponent implements OnInit {
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
-  visible = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
   
   ngOnInit(): void {
     this.getManagers();
-  }
-
-  openDialog() { 
-    this.visible = true;
   }
 
   unassignManger(managerId: number) {

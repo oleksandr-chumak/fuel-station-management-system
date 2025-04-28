@@ -22,7 +22,6 @@ export class FuelStationsAdminComponent implements OnInit, OnDestroy {
   private router: Router = inject(Router);
   fuelStationQueryService: FuelStationQueryService = inject(FuelStationQueryService);
 
-  visible: boolean = false;
   fuelStations: FuelStation[] = [];
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
@@ -44,10 +43,6 @@ export class FuelStationsAdminComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.fuelStationQueryService.clear();
-  }
-
-  openDialog() {
-    this.visible = true;
   }
 
   handleViewClick(fuelStationId: number) {

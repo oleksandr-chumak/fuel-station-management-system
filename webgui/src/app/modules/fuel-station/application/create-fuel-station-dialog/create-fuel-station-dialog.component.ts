@@ -6,15 +6,14 @@ import FuelStationApiService from '../../infrastructure/fuel-station-api.service
 import { finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import FuelStationQueryService from '../fuel-stations-query.service';
+import BasicDialog from '../../../common/application/basic-dialog.component';
 
 @Component({
   selector: 'app-create-fuel-station-dialog',
   imports: [DialogModule, FuelStationFormComponent],
   templateUrl: './create-fuel-station-dialog.component.html'
 })
-export class CreateFuelStationDialogComponent {
-  @Input() visible: boolean = false;
-
+export class CreateFuelStationDialogComponent extends BasicDialog {
   private fuelStationQueryService: FuelStationQueryService = inject(FuelStationQueryService);
   private fuelStationApiService: FuelStationApiService = inject(FuelStationApiService);
   private messageService: MessageService = inject(MessageService);
@@ -33,7 +32,7 @@ export class CreateFuelStationDialogComponent {
               error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations"})
             });
           this.messageService.add({ severity: "success", summary: "Created", detail: "A new fuel station was created"});
-          this.visible = false;
+          this.closeDialog();
         },
         error: (err) => {
           console.error("Error: ", err);

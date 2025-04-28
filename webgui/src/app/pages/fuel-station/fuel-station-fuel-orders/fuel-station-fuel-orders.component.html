@@ -1,1 +1,34 @@
-<p>fuel-station-fuel-orders works!</p>
+<app-create-fuel-order-dialog #dialog></app-create-fuel-order-dialog>
+<p-panel header="Assigned Managers" *ngIf="ctx$ | async as ctx">
+    <ng-template #icons>
+        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
+    </ng-template>
+    <p-table [value]="ctx.fuelOrders" size="small" [loading]="loading$ | async" [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Grade</th>
+                <th>Amount</th>
+                <th>Created At</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-manager>
+            <tr>
+                <td>{{ manager.id }}</td>
+                <td>{{ manager.status }}</td>
+                <td>{{ manager.grade }}</td>
+                <td>{{ manager.amount }}</td>
+                <td>{{ manager.createdAt }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr *ngFor="let row of skeletonRows" style="height:46px">
+                <td *ngFor="let col of skeletonCols">
+                    <p-skeleton></p-skeleton>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>

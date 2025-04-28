@@ -1,4 +1,3 @@
-
 <p-panel header="Assigned Managers" *ngIf="ctx$ | async as ctx">
     <p-table [value]="ctx.managers" size="small" [loading]="loading$ | async" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">

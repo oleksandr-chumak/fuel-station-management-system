@@ -1,7 +1,7 @@
-<app-assign-manager-dialog [visible]="visible"></app-assign-manager-dialog>
+<app-assign-manager-dialog #dialog></app-assign-manager-dialog>
 <p-panel header="Assigned Managers" *ngIf="ctx$ | async as ctx">
     <ng-template #icons>
-        <p-button (onClick)="openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
+        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
     </ng-template>
     <p-table [value]="ctx.managers" size="small" [loading]="loading$ | async" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">

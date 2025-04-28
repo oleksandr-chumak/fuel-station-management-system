@@ -21,7 +21,6 @@ export class AdminManagersComponent implements OnInit {
   private managersQueryService: ManagersQueryService = inject(ManagersQueryService);
   private messageService: MessageService = inject(MessageService);
 
-  visible: boolean = false;
   managers: Manager[] = [];
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(6).fill(null);
@@ -39,10 +38,6 @@ export class AdminManagersComponent implements OnInit {
       return "success";
     }
     return undefined;
-  }
-
-  openDialog() {
-    this.visible = true;
   }
 
   get loading$() {

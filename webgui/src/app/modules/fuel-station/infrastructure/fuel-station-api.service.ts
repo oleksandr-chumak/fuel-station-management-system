@@ -13,7 +13,7 @@ export default class FuelStationApiService {
     private apiService = inject(ApiService);
     
     getFuelStationOrders(fuelStationId: number): Observable<FuelOrder[]> {
-        return this.apiService.get("api/fuel-stations/" + fuelStationId + "fuel-orders")
+        return this.apiService.get("api/fuel-stations/" + fuelStationId + "/fuel-orders")
             .pipe(map((data) => plainToInstance(FuelOrder, data as Object[])));
     }
 

@@ -6,14 +6,14 @@ import { MessageService } from 'primeng/api';
 import { ManagerApiService } from '../../../infrastructure/manager-api.service';
 import { ManagerFormData } from '../../manager.model';
 import { finalize } from 'rxjs';
+import BasicDialog from '../../../../common/application/basic-dialog.component';
 
 @Component({
   selector: 'app-create-manager-dialog',
   imports: [DialogModule, ManagerFormComponent],
   templateUrl: './create-manager-dialog.component.html'
 })
-export class CreateManagerDialogComponent {
-  @Input() visible: boolean = false;
+export class CreateManagerDialogComponent extends BasicDialog {
 
   private managersQueryService: ManagersQueryService = inject(ManagersQueryService);
   private managerApiService: ManagerApiService = inject(ManagerApiService);
@@ -33,7 +33,7 @@ export class CreateManagerDialogComponent {
               error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error while fetching manager"})
             });
           this.messageService.add({ severity: "success", summary: "Created", detail: "A new manager was created"});
-          this.visible = false;
+          this.openDialog();
         },
         error: (err) => {
           console.error("Error: ", err);

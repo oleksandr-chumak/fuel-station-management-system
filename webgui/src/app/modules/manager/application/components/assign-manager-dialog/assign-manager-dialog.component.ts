@@ -10,15 +10,14 @@ import AdminFuelStationContextService from '../../../../fuel-station/domain/admi
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import BasicDialog from '../../../../common/application/basic-dialog.component';
 
 @Component({
   selector: 'app-assign-manager-dialog',
   imports: [CommonModule ,ReactiveFormsModule, DialogModule, ManagerSelectComponent, ButtonModule, MessageModule, InputTextModule],
   templateUrl: './assign-manager-dialog.component.html'
 })
-export class AssignManagerDialogComponent {
-
-  @Input() visible: boolean = false;
+export class AssignManagerDialogComponent extends BasicDialog{
 
   private fuelStationContext: AdminFuelStationContextService = inject(AdminFuelStationContextService);
   private messageService: MessageService = inject(MessageService);
@@ -35,7 +34,7 @@ export class AssignManagerDialogComponent {
         .subscribe({
           next: () => {
             this.messageService.add({ severity: "success", summary: "Assigned", detail: "Manager was successfully assigned" });
-            this.visible = false;
+            this.closeDialog();
           },
           error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while assigning manager"})
         });
@@ -51,7 +50,6 @@ export class AssignManagerDialogComponent {
   get managerInvalid() {
     return this.isFieldInvalid(this.assignManagerForm, "manager");
   }
-
 
   get loading$(): Observable<boolean> {
     return this.fuelStationContext.loading.assignManager;
