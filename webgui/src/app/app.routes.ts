@@ -11,11 +11,26 @@ import { AdminManagersComponent } from './pages/admin/admin-managers/admin-manag
 import { AdminFuelOrdersComponent } from './pages/admin/admin-fuel-orders/admin-fuel-orders.component';
 import { ManagerLoginComponent } from './pages/manager-login/manager-login.component';
 import managerGuard from './modules/auth/infrastructure/manager.guard';
+import { FuelStationComponent } from './pages/fuel-station/fuel-station.component';
+import { FuelStationInfoComponent } from './pages/fuel-station/fuel-station-info/fuel-station-info.component';
+import { FuelStationManagersComponent } from './pages/fuel-station/fuel-station-managers/fuel-station-managers.component';
+import { FuelStationFuelOrdersComponent } from './pages/fuel-station/fuel-station-fuel-orders/fuel-station-fuel-orders.component';
 
 export const routes: Routes = [
     // manager routes
     { path: "", component: ManagerDashboardComponent, canActivate: [managerGuard] },
     { path: "login", component: ManagerLoginComponent },
+    { 
+        path: "fuel-station/:id", 
+        component: FuelStationComponent, 
+        canActivate: [managerGuard],
+        children: [
+            { path: "info", component: FuelStationInfoComponent },
+            { path: "managers", component: FuelStationManagersComponent },
+            { path: "fuel-orders", component: FuelStationFuelOrdersComponent },
+            { path: "", redirectTo: "info", pathMatch: "full" }
+        ]
+    },
 
     // admin routes
     { path: "admin/login", component: AdminLoginComponent },

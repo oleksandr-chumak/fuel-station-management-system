@@ -1,0 +1,29 @@
+
+<p-panel header="Assigned Managers" *ngIf="ctx$ | async as ctx">
+    <p-table [value]="ctx.managers" size="small" [loading]="loading$ | async" [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Full Name</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-manager>
+            <tr>
+                <td>{{ manager.id }}</td>
+                <td>{{ manager.firstName }}</td>
+                <td>{{ manager.lastName }}</td>
+                <td>{{ manager.fullName }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr *ngFor="let row of skeletonRows" style="height:46px">
+                <td *ngFor="let col of skeletonCols">
+                    <p-skeleton></p-skeleton>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>
