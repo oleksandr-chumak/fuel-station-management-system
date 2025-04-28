@@ -14,7 +14,7 @@ export default class AuthApiService {
     }
 
     loginManager(email: string, password: string): Observable<string> {
-        return this.apiService.post<string>("api/auth/login/manager", { email, password });
+        return this.apiService.post<string>("api/auth/login/manager", { email, password }, { responseType: "text" });
     }    
 
     getMe(): Observable<User> {

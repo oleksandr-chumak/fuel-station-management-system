@@ -3,6 +3,7 @@ import { map, Observable } from "rxjs";
 import { ApiService } from "../../common/infrastructure/api.service";
 import Manager from "../domain/manager.model";
 import { plainToInstance } from "class-transformer";
+import { FuelStation } from "../../fuel-station/domain/fuel-station.model";
 
 @Injectable({ providedIn: "root" })
 export class ManagerApiService {
@@ -17,6 +18,11 @@ export class ManagerApiService {
     getManagers(): Observable<Manager[]> {
         return this.apiService.get("api/managers/")
             .pipe(map((data) => plainToInstance(Manager, data as Object[])));
+    }
+
+    getManagerFuelStations(managerId: number): Observable<FuelStation[]> {
+        return this.apiService.get("api/managers/" + managerId + "/fuel-stations")
+            .pipe(map((data) => plainToInstance(FuelStation, data as Object[])));
     }
 
     terminateManager(managerId: number): Observable<Manager> {

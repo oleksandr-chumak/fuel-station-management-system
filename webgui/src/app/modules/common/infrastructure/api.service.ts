@@ -1,18 +1,13 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { AppConfigService } from "./app-config.service";
 
 @Injectable({ providedIn: "root" })
 export class ApiService {
-    private http: HttpClient = inject(HttpClient);
-    
-    constructor(private appConfigService: AppConfigService) {
-    }
 
-    private get baseUrl() {
-        return this.appConfigService.getConfig().apiUrl;
-    }
+    private http: HttpClient = inject(HttpClient);
+    private appConfigService: AppConfigService = inject(AppConfigService);
 
     get<T>(endpoint: string): Observable<T>   {
         return this.http.get<T>(this.getUrl(endpoint));
@@ -34,8 +29,11 @@ export class ApiService {
         return this.http.delete<T>(this.getUrl(endpoint));
     }
 
+    private get baseUrl() {
+        return this.appConfigService.getConfig().apiUrl;
+    }
+
     private getUrl(endpoint: string) {
-        console.log("baseUrl", this.baseUrl)
         return this.baseUrl + "/" + endpoint;
     }
 }

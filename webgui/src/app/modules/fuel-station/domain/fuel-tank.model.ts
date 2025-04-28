@@ -1,5 +1,4 @@
 import FuelGrade from "../../common/domain/fuel-grade.enum";
-import FuelPrice from "./fuel-price.model";
 
 export class FuelTank {
     constructor(

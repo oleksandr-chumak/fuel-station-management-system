@@ -1,6 +1,6 @@
-import { FuelStation } from "../../fuel-station/domain/fuel-station.model";
+import { FuelStation } from "./fuel-station.model";
 import Manager from "../../manager/domain/manager.model";
-import FuelOrder from "./fuel-order.model";
+import FuelOrder from "../../fuel-order/domain/fuel-order.model";
 
 export default class FuelStationContext {
   constructor(

@@ -1,6 +1,6 @@
 enum UserRole {
     Manager,
-    Admin
+    Administrator
 }
 
 export default UserRole;

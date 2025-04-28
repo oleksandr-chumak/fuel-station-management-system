@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
-import AdminFuelStationContextService from '../../../modules/fuel-order/domain/admin-fuel-station-context.service';
+import AdminFuelStationContextService from '../../../modules/fuel-station/domain/admin-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
 

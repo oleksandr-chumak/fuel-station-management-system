@@ -21,8 +21,8 @@ const roleGuard = (
             return false;
           }
           
-          const hasRole = allowedRoles.some(role => user.role = role);
-          
+          const hasRole = allowedRoles.some(role => user.role === role);
+
           if (!hasRole) {
             router.navigate([unauthorizedPageUrl]);
             return false;

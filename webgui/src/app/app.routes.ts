@@ -9,11 +9,13 @@ import { AdminFuelStationManagersComponent } from './pages/admin/admin-fuel-stat
 import { AdminFuelStationFuelOrdersComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-fuel-orders/admin-fuel-station-fuel-orders.component';
 import { AdminManagersComponent } from './pages/admin/admin-managers/admin-managers.component';
 import { AdminFuelOrdersComponent } from './pages/admin/admin-fuel-orders/admin-fuel-orders.component';
+import { ManagerLoginComponent } from './pages/manager-login/manager-login.component';
+import managerGuard from './modules/auth/infrastructure/manager.guard';
 
 export const routes: Routes = [
     // manager routes
-    { path: "", component: ManagerDashboardComponent },
-    // { path: "login", component: ManagerLoginPage },
+    { path: "", component: ManagerDashboardComponent, canActivate: [managerGuard] },
+    { path: "login", component: ManagerLoginComponent },
 
     // admin routes
     { path: "admin/login", component: AdminLoginComponent },

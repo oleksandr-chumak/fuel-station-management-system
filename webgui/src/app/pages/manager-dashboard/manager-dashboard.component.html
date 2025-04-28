@@ -1,1 +1,32 @@
-<p>manager-dashboard works!</p>
+<p-panel header="Fuel stations">
+    <p-table [value]="fuelStations" size="small" [loading]="loading" [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr>
+                <th>Id</th>
+                <th>Address</th>
+                <th>Status</th>
+                <th class="flex items-center justify-center">Action</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-fuelStation>
+            <tr>
+                <td>{{ fuelStation.id }}</td>
+                <td>{{ fuelStation.address }}</td>
+                <td><p-tag [value]="fuelStation.status.toString()" [severity]="getSeverity(fuelStation)" /></td>
+                <td>
+                    <div class="flex items-center justify-center">
+                        <p-button (onClick)="handleViewClick(fuelStation.id)" size="small" severity="secondary" [outlined]="true">View</p-button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr *ngFor="let row of skeletonRows" style="height:46px">
+                <td *ngFor="let col of skeletonCols">
+                    <p-skeleton></p-skeleton>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>

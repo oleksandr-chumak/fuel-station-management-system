@@ -10,12 +10,12 @@ import {
 } from "rxjs";
 
 import FuelStationContext from "./fuel-station-context.model";
-import FuelStationApiService from "../../fuel-station/infrastructure/fuel-station-api.service";
-import { FuelOrderApiService } from "../infrastructure/fuel-order-api.service";
-import { FuelStation } from "../../fuel-station/domain/fuel-station.model";
+import FuelStationApiService from "../infrastructure/fuel-station-api.service";
+import { FuelOrderApiService } from "../../fuel-order/infrastructure/fuel-order-api.service";
+import { FuelStation } from "./fuel-station.model";
 import Manager from "../../manager/domain/manager.model";
 import FuelGrade from "../../common/domain/fuel-grade.enum";
-import FuelOrder from "./fuel-order.model";
+import FuelOrder from "../../fuel-order/domain/fuel-order.model";
 
 type LoadingKey = 'fuelStation' | 'managers' | 'fuelOrders' | 'assignManager' | 'unassignManager' | 'confirmOrder' | 'rejectOrder' | 'changeFuelPrice' | 'deactivateFuelStation';
 

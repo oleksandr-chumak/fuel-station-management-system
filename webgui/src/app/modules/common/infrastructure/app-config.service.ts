@@ -13,11 +13,7 @@ export class AppConfigService {
   private http: HttpClient = inject(HttpClient);
 
   async loadConfig(): Promise<AppConfig> {
-    console.log("load config");
-    return firstValueFrom(this.http.get<AppConfig>("/assets/app.config.json").pipe(tap(data => {
-      console.log('my data ' + JSON.stringify(data));
-      this.config  = data;
-    })));
+    return firstValueFrom(this.http.get<AppConfig>("/assets/app.config.json").pipe(tap(data => {this.config  = data;})));
   }
   
   getConfig(): AppConfig {

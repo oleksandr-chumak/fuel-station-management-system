@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import AdminFuelStationContextService from '../../../../modules/fuel-order/domain/admin-fuel-station-context.service';
+import AdminFuelStationContextService from '../../../../modules/fuel-station/domain/admin-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';

@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap } from "rxjs";
+import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap, throwError } from "rxjs";
 import User from "./user.model";
 import AuthApiService from "../infrastructure/auth-api.service";
 
@@ -33,30 +33,34 @@ export class AuthService {
         return this.user$;
     }
 
+    getUserValue(): User | null {
+        return this.userSubject.value;
+    }
+
     getAccessToken(): String | null {
         return this.accessToken;
     }
 
-    loginAdmin(email: string, password: string): Observable<User | null> {
+    loginAdmin(email: string, password: string): Observable<User> {
         return this.authApiService.loginAdmin(email, password).pipe(
             tap((token) => this.saveAccessTokenAndSetState(token)),
             switchMap(() => this.authApiService.getMe()),
             tap(user => this.userSubject.next(user)),
             catchError(err => {
                 console.log("Error happened while fetching user", err);
-                return of(null);
+                return throwError(() => new Error("Error happened while fetching user" + err)); 
             })
         );
     }
 
-    loginManager(email: string, password: string): Observable<User | null> {
+    loginManager(email: string, password: string): Observable<User> {
         return this.authApiService.loginManager(email, password).pipe(
             tap((token) => this.saveAccessTokenAndSetState(token)),
             switchMap(() => this.authApiService.getMe()),
             tap(user => this.userSubject.next(user)),
             catchError(err => {
                 console.log("Error happened while fetching user", err);
-                return of(null);
+                return throwError(() => new Error("Error happened while fetching user" + err)); 
             })
         );
     }

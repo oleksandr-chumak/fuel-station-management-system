@@ -6,7 +6,7 @@ import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import Manager from '../../../domain/manager.model';
-import AdminFuelStationContextService from '../../../../fuel-order/domain/admin-fuel-station-context.service';
+import AdminFuelStationContextService from '../../../../fuel-station/domain/admin-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
