@@ -61,6 +61,16 @@ export class FuelStationComponent {
           label: 'Fuel Orders',
           icon: 'pi pi-shopping-cart',
           route: `/fuel-station/${this.paramsStationId}/fuel-orders`
+        },
+        {
+          label: "Fuel Tanks", 
+          icon: "pi pi-box",
+          route: `/fuel-station/${this.paramsStationId}/fuel-tanks`
+        },
+        {
+          label: "Fuel Prices", 
+          icon: "pi pi-dollar",
+          route: `/fuel-station/${this.paramsStationId}/fuel-prices`
         }
       ]
     )

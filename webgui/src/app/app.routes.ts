@@ -17,6 +17,8 @@ import { FuelStationManagersComponent } from './pages/fuel-station/fuel-station-
 import { FuelStationFuelOrdersComponent } from './pages/fuel-station/fuel-station-fuel-orders/fuel-station-fuel-orders.component';
 import { AdminFuelStationFuelTanksComponent } from './pages/admin/admin-fuel-station/components/admin-fuel-station-fuel-tanks/admin-fuel-station-fuel-tanks.component';
 import { AdminFuelStationFuelPricesComponent } from './pages/admin/admin-fuel-station/components/admin-fuel-station-fuel-prices/admin-fuel-station-fuel-prices.component';
+import { FuelStationFuelTanksComponent } from './pages/fuel-station/fuel-station-fuel-tanks/fuel-station-fuel-tanks.component';
+import { FuelStationFuelPricesComponent } from './pages/fuel-station/fuel-station-fuel-prices/fuel-station-fuel-prices.component';
 
 export const routes: Routes = [
     // manager routes
@@ -30,6 +32,8 @@ export const routes: Routes = [
             { path: "info", component: FuelStationInfoComponent },
             { path: "managers", component: FuelStationManagersComponent },
             { path: "fuel-orders", component: FuelStationFuelOrdersComponent },
+            { path: "fuel-tanks", component: FuelStationFuelTanksComponent },
+            { path: "fuel-prices", component: FuelStationFuelPricesComponent },
             { path: "", redirectTo: "info", pathMatch: "full" }
         ]
     },
