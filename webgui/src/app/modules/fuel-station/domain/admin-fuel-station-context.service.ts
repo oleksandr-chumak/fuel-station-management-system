@@ -72,6 +72,10 @@ export default class AdminFuelStationContextService {
         return this.context$;
     }
 
+    getContextValue(): FuelStationContext | null {
+        return this.contextSubject.value;
+    }
+
     getFuelStation(id: number): Observable<FuelStation> {
         return this.withLoading(
             "fuelStation",

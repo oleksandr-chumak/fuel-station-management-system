@@ -8,4 +8,5 @@ export default class FuelStationContext {
     public managers: Manager[],
     public fuelOrders: FuelOrder[]
   ) {}
+
 }

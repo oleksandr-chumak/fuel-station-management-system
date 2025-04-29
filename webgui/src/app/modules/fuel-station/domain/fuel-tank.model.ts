@@ -19,6 +19,7 @@ export class FuelTank {
       }
   })
   fuelGrade: FuelGrade;
+  @Transform(({value}) => value ? new Date(value) : null)
   lastRefillDate: Date | null;
 
   constructor(id: number, currentVolume: number, maxCapacity: number, fuelGrade: FuelGrade, lastRefillDate: Date | null = null) {
@@ -28,5 +29,17 @@ export class FuelTank {
     this.fuelGrade = fuelGrade; 
     this.lastRefillDate = lastRefillDate;
   }
+
+  clone(): FuelTank {
+    const clonedLastRefillDate = this.lastRefillDate ? new Date(this.lastRefillDate.getTime()) : null;
+    
+    return new FuelTank(
+      this.id,
+      this.currentVolume,
+      this.maxCapacity,
+      this.fuelGrade,
+      clonedLastRefillDate
+    );
+  } 
 
 }

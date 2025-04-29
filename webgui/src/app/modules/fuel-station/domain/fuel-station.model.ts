@@ -51,4 +51,24 @@ export class FuelStation {
   get deactivated() {
     return this.status === FuelStationStatus.Deactivated;
   }
+  
+  clone(): FuelStation {
+    const clonedFuelPrices = this.fuelPrices.map(fuelPrice => fuelPrice.clone());
+    const clonedFuelTanks = this.fuelTanks.map(fuelTank => fuelTank.clone())
+    const clonedManagerIds = [...this.assignedManagersIds];
+    
+    return new FuelStation(
+      this.id,
+      this.street,
+      this.buildingNumber,
+      this.city,
+      this.postalCode,
+      this.country,
+      this.address,
+      clonedFuelPrices,
+      clonedFuelTanks,
+      clonedManagerIds,
+      this.status
+    );
+  }
 }

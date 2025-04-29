@@ -16,7 +16,7 @@
                 <td>{{ fuelTank.currentVolume }}</td>
                 <td>{{ fuelTank.maxCapacity }}</td>
                 <td>{{ getFuelGradeValue(fuelTank.fuelGrade) }}</td>
-                <td>{{ fuelTank.lastRefillDate }}</td>
+                <td>{{ fuelTank.lastRefillDate | date: 'mediumDate' }}</td>
             </tr>
         </ng-template>
         <ng-template #loadingbody>

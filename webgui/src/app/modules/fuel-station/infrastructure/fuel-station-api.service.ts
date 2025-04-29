@@ -34,7 +34,7 @@ export default class FuelStationApiService {
 
     changeFuelPrice(fuelStationId: number, fuelGrade: FuelGrade, newFuelPrice: number): Observable<FuelStation> {
         // TODO: Change change-fuel-price to fuel-prices/:fuelGrade
-        return this.apiService.put("api/fuel-stations/" + fuelStationId + "/change-fuel-price", { fuelGrade, newFuelPrice })
+        return this.apiService.put("api/fuel-stations/" + fuelStationId + "/change-fuel-price", { fuelGrade: this.fuelGradeToSlug(fuelGrade), newPrice: newFuelPrice })
             .pipe(map((data) => plainToInstance(FuelStation, data)));
     }
 
@@ -60,4 +60,16 @@ export default class FuelStationApiService {
             .pipe(map((data) => plainToInstance(FuelStation, data)));
     }
 
+    private fuelGradeToSlug(fuelGrade: FuelGrade): string {
+        switch(fuelGrade) {
+            case FuelGrade.Diesel:
+                return "diesel";
+            case FuelGrade.RON_92:
+                return "ron-92";
+            case FuelGrade.RON_95:
+                return "ron-95";
+            default:
+                throw new Error("Cannot transform FuelGrade: " + fuelGrade + " to slug");
+        }
+    }
 }

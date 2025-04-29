@@ -1,1 +1,79 @@
-<p>admin-fuel-station-fuel-prices works!</p>
+<p-panel header="Fuel Prices" *ngIf="ctx$ | async as ctx">
+    <p-table [value]="clonedFuelPrices" dataKey="fuelGrade" size="small" [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }" editMode="row">
+        <ng-template #header>
+            <tr>
+                <th>Fuel Grade</th>
+                <th>Price Per Liter</th>
+                <th>Action</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-fuelPrice let-editing="editing" let-ri="rowIndex">
+            <tr [pEditableRow]="fuelPrice">
+                <td>{{ getFuelGradeValue(fuelPrice.fuelGrade) }}</td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <input
+                                pInputText
+                                type="text"
+                                [(ngModel)]="fuelPrice.pricePerLiter" 
+                            />
+                        </ng-template>
+                        <ng-template #output>
+                            {{fuelPrice.pricePerLiter | currency: 'USD'}}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex items-center justify-center gap-2">
+                        <button
+                            *ngIf="!editing"
+                            pButton
+                            pRipple
+                            type="button"
+                            pInitEditableRow
+                            icon="pi pi-pencil"
+                            (click)="onRowEditInit()"
+                            [loading]="loading"
+                            text
+                            rounded
+                            severity="secondary"
+                        ></button>
+                        <button
+                            *ngIf="editing"
+                            pButton
+                            pRipple
+                            type="button"
+                            pSaveEditableRow
+                            icon="pi pi-check"
+                            (click)="onRowEditSave(fuelPrice)"
+                            text
+                            rounded
+                            severity="secondary"
+                        ></button>
+                        <button
+                            *ngIf="editing"
+                            pButton
+                            pRipple
+                            type="button"
+                            pCancelEditableRow
+                            icon="pi pi-times"
+                            (click)="onRowEditCancel()"
+                            text
+                            rounded
+                            severity="secondary"
+                        ></button>
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr *ngFor="let row of skeletonRows" style="height:46px">
+                <td *ngFor="let col of skeletonCols">
+                    <p-skeleton></p-skeleton>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>
