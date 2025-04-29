@@ -1,9 +1,20 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationEntity;
+
+import jakarta.persistence.EntityManager;
+
+@Component
 public class FuelOrderMapper {
-    public static FuelOrder toDomain(FuelOrderEntity entity) {
+
+    @Autowired
+    private EntityManager em;
+
+    public FuelOrder toDomain(FuelOrderEntity entity) {
         if (entity == null) return null;
         return new FuelOrder(
             entity.getId(),
@@ -15,13 +26,14 @@ public class FuelOrderMapper {
         );
     }
 
-    public static FuelOrderEntity toEntity(FuelOrder domain) {
+    public FuelOrderEntity toEntity(FuelOrder domain) {
         if (domain == null) return null;
         return new FuelOrderEntity(
             domain.getId(),
             domain.getStatus(),
             domain.getGrade(),
             domain.getAmount(),
+            em.getReference(FuelStationEntity.class, domain.getFuelStationId()),
             domain.getFuelStationId(), 
             domain.getCreatedAt()
         );

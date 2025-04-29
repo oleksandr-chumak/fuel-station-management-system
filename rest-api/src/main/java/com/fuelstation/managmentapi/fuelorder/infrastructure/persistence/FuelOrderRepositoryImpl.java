@@ -3,6 +3,7 @@ package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
@@ -12,23 +13,23 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderRepository;
 @Repository
 public class FuelOrderRepositoryImpl implements FuelOrderRepository {
 
-    private final JpaFuelOrderRepository jpaFuelOrderRepository;
+    @Autowired
+    private JpaFuelOrderRepository jpaFuelOrderRepository;
 
-    public FuelOrderRepositoryImpl(JpaFuelOrderRepository jpaFuelOrderRepository) {
-        this.jpaFuelOrderRepository = jpaFuelOrderRepository;
-    }
+    @Autowired
+    private FuelOrderMapper fuelOrderMapper;
 
     @Override
     public FuelOrder save(FuelOrder fuelOrder) {
-        FuelOrderEntity entity = FuelOrderMapper.toEntity(fuelOrder);
+        FuelOrderEntity entity = fuelOrderMapper.toEntity(fuelOrder);
         entity = jpaFuelOrderRepository.save(entity);
-        return FuelOrderMapper.toDomain(entity);
+        return fuelOrderMapper.toDomain(entity);
     }
 
     @Override
     public Optional<FuelOrder> findById(long id) {
         return jpaFuelOrderRepository.findById(id)
-                .map(FuelOrderMapper::toDomain);
+                .map(fuelOrderMapper::toDomain);
     }
 
     @Override
@@ -44,11 +45,11 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
 
     @Override
     public List<FuelOrder> findFuelOrdersByFuelStationId(Long fuelStationId) {
-        return jpaFuelOrderRepository.findByFuelStationId(fuelStationId).stream().map(FuelOrderMapper::toDomain).toList();
+        return jpaFuelOrderRepository.findByFuelStationId(fuelStationId).stream().map(fuelOrderMapper::toDomain).toList();
     }
 
     @Override
     public List<FuelOrder> findAll() {
-        return jpaFuelOrderRepository.findAll().stream().map(FuelOrderMapper::toDomain).toList();
+        return jpaFuelOrderRepository.findAll().stream().map(fuelOrderMapper::toDomain).toList();
     }
 }

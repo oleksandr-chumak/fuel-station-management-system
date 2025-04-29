@@ -46,8 +46,7 @@ public class FuelStationEntity {
     @OneToMany(mappedBy = "fuelStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<FuelTankEntity> fuelTanks;
 
-    @OneToMany
-    @JoinColumn(name = "fuel_station_id")
+    @OneToMany(mappedBy = "fuelStation", cascade = CascadeType.ALL)
     private List<FuelOrderEntity> fuelOrders;
 
     @ManyToMany
