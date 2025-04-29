@@ -47,19 +47,29 @@ export class AdminFuelStationComponent implements OnInit, OnDestroy {
     return (
       [
         {
-          label: 'Info',
-          icon: 'pi pi-info-circle',
+          label: "Info",
+          icon: "pi pi-info-circle",
           route: `/admin/fuel-station/${this.paramsStationId}/info`
         },
         {
-          label: 'Managers',
-          icon: 'pi pi-users',
+          label: "Managers",
+          icon: "pi pi-users",
           route: `/admin/fuel-station/${this.paramsStationId}/managers`
         },
         {
-          label: 'Fuel Orders',
-          icon: 'pi pi-shopping-cart',
+          label: "Fuel Orders",
+          icon: "pi pi-list",
           route: `/admin/fuel-station/${this.paramsStationId}/fuel-orders`
+        },
+        {
+          label: "Fuel Tanks", 
+          icon: "pi pi-box",
+          route: `/admin/fuel-station/${this.paramsStationId}/fuel-tanks`
+        },
+        {
+          label: "Fuel Prices", 
+          icon: "pi pi-dollar",
+          route: `/admin/fuel-station/${this.paramsStationId}/fuel-prices`
         }
       ]
     )
