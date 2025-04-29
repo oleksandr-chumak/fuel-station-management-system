@@ -44,11 +44,16 @@ export default class FuelOrder {
         this.createdAt = createdAt;
     }
 
-    confirm() {
-        this.status = FuelOrderStatus.Confirmed;
+    get pending() {
+        return this.status === FuelOrderStatus.Pending;
     }
 
-    reject() {
-        this.status = FuelOrderStatus.Rejected;
+    get confirmed() {
+        return this.status === FuelOrderStatus.Confirmed;
     }
+
+    get rejected() {
+        return this.status === FuelOrderStatus.Rejected;
+    }
+    
 }

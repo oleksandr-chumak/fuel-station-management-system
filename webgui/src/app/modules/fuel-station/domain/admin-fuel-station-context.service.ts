@@ -158,7 +158,10 @@ export default class AdminFuelStationContextService {
         return this.withLoading(
             "confirmOrder",
             this.fuelOrderApi.confirmFuelOrder(fuelOrderId).pipe(
-                switchMap(() => this.getFuelOrders()),
+                switchMap(() => {
+                    this.updateContext({ fuelOrders: [] })
+                    return this.getFuelOrders();
+                }),
                 catchError(error => {
                     console.error("Error confirming fuel order:", error);
                     return throwError(() => new Error(`Failed to confirm fuel order with ID ${fuelOrderId}`));
@@ -172,7 +175,10 @@ export default class AdminFuelStationContextService {
         return this.withLoading(
             "rejectOrder",
             this.fuelOrderApi.rejectFuelOrder(fuelOrderId).pipe(
-                switchMap(() => this.getFuelOrders()),
+                switchMap(() => {
+                    this.updateContext({ fuelOrders: [] })
+                    return this.getFuelOrders()
+                }),
                 catchError(error => {
                     console.error("Error rejecting fuel order:", error);
                     return throwError(() => new Error(`Failed to reject fuel order with ID ${fuelOrderId}`));
