@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateFuelOrderRequest {
-    private Long gasStationId;
+    private Long fuelStationId;
     private String fuelGrade;
     private float amount;
 }

@@ -40,11 +40,10 @@ public class FuelOrderController {
     @Autowired
     private GetFuelOrderById getFuelOrderById;
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody CreateFuelOrderRequest request) {
-        // TODO change gas station to fuel station
         FuelOrder fuelOrder = createFuelOrder.process(
-            request.getGasStationId(),
+            request.getFuelStationId(),
             request.getFuelGrade(),
             request.getAmount()
         );

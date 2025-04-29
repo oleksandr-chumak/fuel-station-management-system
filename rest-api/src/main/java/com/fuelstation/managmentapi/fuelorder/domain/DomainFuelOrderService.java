@@ -21,7 +21,7 @@ public class DomainFuelOrderService implements FuelOrderService {
     private DomainEventPublisher domainEventPublisher; 
 
     @Override
-    public FuelOrder createFuelOrder(Long gasStationId, FuelGrade fuelGrade, float amount) {
+    public FuelOrder createFuelOrder(long gasStationId, FuelGrade fuelGrade, float amount) {
         FuelOrder fuelOrder = fuelOrderFactory.create(gasStationId, fuelGrade, amount); 
         FuelOrder savedFuelOrder = fuelOrderRepository.save(fuelOrder);
         domainEventPublisher.publish(new FuelOrderWasCreated(savedFuelOrder.getId()));
@@ -29,7 +29,7 @@ public class DomainFuelOrderService implements FuelOrderService {
     }
 
     @Override
-    public FuelOrder confirmFuelOrder(Long fuelOrderId) {
+    public FuelOrder confirmFuelOrder(long fuelOrderId) {
         FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId).orElseThrow(() -> new NoSuchElementException("Fuel order with id:" + fuelOrderId + "doesn't exist"));
         fuelOrder.confirm();
         fuelOrderRepository.save(fuelOrder);
@@ -38,7 +38,7 @@ public class DomainFuelOrderService implements FuelOrderService {
     }
 
     @Override
-    public FuelOrder rejectFuelOrder(Long fuelOrderId) {
+    public FuelOrder rejectFuelOrder(long fuelOrderId) {
         FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId).orElseThrow(() -> new NoSuchElementException("Fuel order with id:" + fuelOrderId + "doesn't exist"));
         fuelOrder.reject();
         fuelOrderRepository.save(fuelOrder);

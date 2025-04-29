@@ -14,7 +14,6 @@ public class ManagerResponse {
     private String firstName;
     private String lastName;
     private String status;
-    private Long credentialsId;
 
     public static ManagerResponse fromDomain(Manager manager) {
         ManagerResponse response = new ManagerResponse();
@@ -22,7 +21,6 @@ public class ManagerResponse {
         response.setFirstName(manager.getFirstName());
         response.setLastName(manager.getLastName());
         response.setStatus(manager.getStatus().toString());
-        response.setCredentialsId(manager.getCredentialsId());
         return response;
     }
 }

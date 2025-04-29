@@ -51,20 +51,20 @@ public class SecurityConfig {
                                 "/api/fuel-stations/{id}/change-fuel-price",
                                 "/api/fuel-stations/{id}/unassign-manager",
 
-
                                 "/api/managers/{id}/terminate",
                                 "/api/managers/",
                                 "/api/managers/{id}",
 
                                 "/api/fuel-orders/{id}/confirm",
                                 "/api/fuel-orders/{id}/reject",
-                                "/api/fuel-orders/",
                                 "/api/fuel-orders/{id}"
                             ).hasAuthority(UserRole.Administrator.name())
                             .requestMatchers( 
                                 "/api/fuel-stations/{id}", 
                                 "/api/fuel-stations/{id}/managers",
                                 "/api/fuel-stations/{id}/fuel-orders",
+
+                                "/api/fuel-orders/",
                                 
                                 "/api/manager/{id}/fuel-stations"
                             ).hasAnyAuthority(UserRole.Administrator.name(), UserRole.Manager.name())

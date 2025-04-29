@@ -13,9 +13,25 @@ public class CreateFuelOrder {
     @Autowired
     private FuelOrderService fuelOrderService;
     
-    public FuelOrder process(long gasStationId, String fuelGrade, float amount) {
-        return fuelOrderService.createFuelOrder(gasStationId, getFuelGrade(fuelGrade), amount);
+    public FuelOrder process(Long fuelStationId, String fuelGrade, Float amount) {
+        requireNonNull(fuelStationId, "Fuel station ID cannot be null");
+        requireNonNull(fuelGrade, "Fuel grade cannot be null");
+        requireNonNull(amount, "Amount cannot be null");
+        
+        return fuelOrderService.createFuelOrder(fuelStationId.longValue(), getFuelGrade(fuelGrade), amount.floatValue());
     }
+
+    /**
+     * TODO make it util
+     * Utility method to check for null and throw IllegalArgumentException
+     */
+    private <T> T requireNonNull(T obj, String message) {
+        if (obj == null) {
+            throw new IllegalArgumentException(message);
+        }
+        return obj;
+    }
+
     
     // fuelGrade can be ron-92, ron-95, diesel
     private FuelGrade getFuelGrade(String fuelGrade) {
