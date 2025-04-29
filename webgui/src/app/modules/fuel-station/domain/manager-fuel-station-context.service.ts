@@ -4,6 +4,7 @@ import {
     Observable,
     catchError,
     finalize,
+    switchMap,
     tap,
     throwError
 } from "rxjs";
@@ -13,8 +14,10 @@ import FuelStationApiService from "../infrastructure/fuel-station-api.service";
 import { FuelStation } from "./fuel-station.model";
 import Manager from "../../manager/domain/manager.model";
 import FuelOrder from "../../fuel-order/domain/fuel-order.model";
+import FuelGrade from "../../common/domain/fuel-grade.enum";
+import { FuelOrderApiService } from "../../fuel-order/infrastructure/fuel-order-api.service";
 
-type LoadingKey = 'fuelStation' | 'managers' | 'fuelOrders';
+type LoadingKey = 'fuelStation' | 'managers' | 'fuelOrders' | 'createFuelOrder';
 
 @Injectable({ providedIn: "root" })
 export default class ManagerFuelStationContextService {
@@ -22,17 +25,20 @@ export default class ManagerFuelStationContextService {
     context$ = this.contextSubject.asObservable();
 
     private fuelStationApi = inject(FuelStationApiService);
+    private fuelOrderApi = inject(FuelOrderApiService);
 
     private loadingSubjects: Record<LoadingKey, BehaviorSubject<boolean>> = {
         fuelStation: new BehaviorSubject<boolean>(false),
         managers: new BehaviorSubject<boolean>(false),
         fuelOrders: new BehaviorSubject<boolean>(false),
+        createFuelOrder: new BehaviorSubject<boolean>(false)
     };
 
     loading = {
         fuelStation: this.loadingSubjects.fuelStation.asObservable(),
         managers: this.loadingSubjects.managers.asObservable(),
         fuelOrders: this.loadingSubjects.fuelOrders.asObservable(),
+        createFuelOrder: this.loadingSubjects.createFuelOrder.asObservable()
     };
 
     private get contextValue(): FuelStationContext {
@@ -92,6 +98,7 @@ export default class ManagerFuelStationContextService {
         return this.withLoading(
             "fuelOrders",
             this.fuelStationApi.getFuelStationOrders(fuelStation.id).pipe(
+                tap(console.log),
                 tap(fuelOrders => this.updateContext({ fuelOrders })),
                 catchError(error => {
                     console.error("Error fetching orders:", error);
@@ -101,7 +108,25 @@ export default class ManagerFuelStationContextService {
         );
     }
 
+    createFuelOrder(fuelGrade: FuelGrade, amount: number): Observable<FuelOrder[]> {
+        const { fuelStation } = this.contextValue;
+        return this.withLoading("createFuelOrder", 
+            this.fuelOrderApi.createFuelOrder(fuelStation.id, fuelGrade, amount).pipe(
+                // TODO refactor to tap? 
+                switchMap(() => {
+                    this.updateContext({ fuelOrders: [] });
+                    return this.getFuelOrders(); 
+                }),
+                catchError(error => {
+                    console.error("Error creating fuel order", error);
+                    return throwError(() => new Error("Failed to create fuel order"));
+                })
+            )
+        ) 
+    }
+
     resetContext(): void {
         this.contextSubject.next(null);
     }
+
 }

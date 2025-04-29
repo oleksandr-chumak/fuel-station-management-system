@@ -1,7 +1,7 @@
 <app-create-fuel-order-dialog #dialog></app-create-fuel-order-dialog>
-<p-panel header="Assigned Managers" *ngIf="ctx$ | async as ctx">
+<p-panel header="Fuel Orders" *ngIf="ctx$ | async as ctx">
     <ng-template #icons>
-        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
+        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Create fuel order" />
     </ng-template>
     <p-table [value]="ctx.fuelOrders" size="small" [loading]="loading$ | async" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
@@ -14,13 +14,13 @@
                 <th>Created At</th>
             </tr>
         </ng-template>
-        <ng-template #body let-manager>
+        <ng-template #body let-fuelOrder>
             <tr>
-                <td>{{ manager.id }}</td>
-                <td>{{ manager.status }}</td>
-                <td>{{ manager.grade }}</td>
-                <td>{{ manager.amount }}</td>
-                <td>{{ manager.createdAt }}</td>
+                <td>{{ fuelOrder.id }}</td>
+                <td><p-tag [value]="getValue(fuelOrder.status)" [severity]="getSeverity(fuelOrder.status)" /></td>
+                <td>{{ getFuelGradeValue(fuelOrder.fuelGrade) }}</td>
+                <td>{{ fuelOrder.amount }}L</td>
+                <td>{{ fuelOrder.createdAt }}</td>
             </tr>
         </ng-template>
         <ng-template #loadingbody>

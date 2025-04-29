@@ -33,7 +33,7 @@ export class CreateManagerDialogComponent extends BasicDialog {
               error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error while fetching manager"})
             });
           this.messageService.add({ severity: "success", summary: "Created", detail: "A new manager was created"});
-          this.openDialog();
+          this.closeDialog();
         },
         error: (err) => {
           console.error("Error: ", err);

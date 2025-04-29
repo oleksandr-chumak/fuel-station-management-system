@@ -1,1 +1,20 @@
-<p>create-fuel-order-dialog works!</p>
+<p-dialog (visibleChange)="handleStateChange($event)" [visible]="open" header="Assign manager dialog">
+    <form class="flex flex-col gap-4" [formGroup]="createFuelOrderForm" (submit)="handleFormSubmission()">
+        <div class="flex flex-col gap-1">
+            <p-select [options]="fuelGrades" formControlName="fuelGrade"  placeholder="Select Fuel Grade" class="w-full">
+                <ng-template #selectedItem let-selectedOption>
+                    <div *ngIf="selectedOption">{{ selectedOption.label }}</div>
+                </ng-template>
+                <ng-template let-fuelGrade #item>
+                    <div>{{ fuelGrade.label }}</div>
+                </ng-template>
+            </p-select>
+            <p-message *ngIf="fuelGradeInvalid" severity="error" variant="simple" size="small">Fuel grade is invalid</p-message>
+        </div>
+        <div class="flex flex-col gap-1">
+            <p-input-number inputId="amount" suffix="L" formControlName="amount" placeholder="Amount"></p-input-number>
+            <p-message *ngIf="amountInvalid" severity="error" variant="simple" size="small">Amount is invalid</p-message>
+        </div>
+        <p-button type="submit" styleClass="w-full" label="Create Fuel Order" [loading]="loading$ | async"/> 
+    </form>
+</p-dialog>  

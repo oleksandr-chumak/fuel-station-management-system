@@ -9,10 +9,13 @@ import { SkeletonModule } from 'primeng/skeleton';
 import FuelStationContext from '../../../modules/fuel-station/domain/fuel-station-context.model';
 import { CreateFuelOrderDialogComponent } from '../../../modules/fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { ButtonModule } from 'primeng/button';
+import FuelOrderStatus from '../../../modules/fuel-order/domain/fuel-order-status.enum';
+import { TagModule } from 'primeng/tag';
+import FuelGrade from '../../../modules/common/domain/fuel-grade.enum';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',
-  imports: [CommonModule, TableModule, PanelModule, SkeletonModule, ButtonModule, CreateFuelOrderDialogComponent],
+  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, CreateFuelOrderDialogComponent],
   templateUrl: './fuel-station-fuel-orders.component.html'
 })
 export class FuelStationFuelOrdersComponent implements OnInit {
@@ -25,6 +28,27 @@ export class FuelStationFuelOrdersComponent implements OnInit {
   
   ngOnInit(): void {
     this.getFuelOrders();
+  }
+
+  getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
+    switch(fuelOrderStatus) {
+      case FuelOrderStatus.Confirmed:
+        return "success";
+      case FuelOrderStatus.Pending:
+        return "info";
+      case FuelOrderStatus.Rejected:
+        return "danger";
+      default:
+        return undefined
+    }
+  }
+  
+  getValue(fuelOrderStatus: FuelOrderStatus) {
+    return FuelOrderStatus[fuelOrderStatus];
+  }
+
+  getFuelGradeValue(fuelGrade: FuelGrade) {
+    return FuelGrade[fuelGrade];
   }
 
   get loading$(): Observable<boolean> {
