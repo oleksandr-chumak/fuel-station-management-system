@@ -15,8 +15,8 @@ import { FuelStationComponent } from './pages/fuel-station/fuel-station.componen
 import { FuelStationInfoComponent } from './pages/fuel-station/fuel-station-info/fuel-station-info.component';
 import { FuelStationManagersComponent } from './pages/fuel-station/fuel-station-managers/fuel-station-managers.component';
 import { FuelStationFuelOrdersComponent } from './pages/fuel-station/fuel-station-fuel-orders/fuel-station-fuel-orders.component';
-import { AdminFuelStationFuelTanksComponent } from './pages/admin/admin-fuel-station/components/admin-fuel-station-fuel-tanks/admin-fuel-station-fuel-tanks.component';
-import { AdminFuelStationFuelPricesComponent } from './pages/admin/admin-fuel-station/components/admin-fuel-station-fuel-prices/admin-fuel-station-fuel-prices.component';
+import { AdminFuelStationFuelTanksComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-fuel-tanks/admin-fuel-station-fuel-tanks.component';
+import { AdminFuelStationFuelPricesComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-fuel-prices/admin-fuel-station-fuel-prices.component';
 import { FuelStationFuelTanksComponent } from './pages/fuel-station/fuel-station-fuel-tanks/fuel-station-fuel-tanks.component';
 import { FuelStationFuelPricesComponent } from './pages/fuel-station/fuel-station-fuel-prices/fuel-station-fuel-prices.component';
 
