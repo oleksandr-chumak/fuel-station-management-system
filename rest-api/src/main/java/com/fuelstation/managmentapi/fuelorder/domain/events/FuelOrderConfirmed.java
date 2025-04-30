@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelorder.domain;
+package com.fuelstation.managmentapi.fuelorder.domain.events;
 
 import com.fuelstation.managmentapi.common.domain.DomainEvent;
 
@@ -7,6 +7,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FuelOrderWasConfirmed implements DomainEvent {
+public class FuelOrderConfirmed implements DomainEvent {
     private Long fuelOrderId;
 }

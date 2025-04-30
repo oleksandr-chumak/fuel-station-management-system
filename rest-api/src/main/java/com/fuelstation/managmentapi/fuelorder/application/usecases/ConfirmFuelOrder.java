@@ -1,18 +1,29 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderService;
+import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 
 @Component
 public class ConfirmFuelOrder {
-    
+
     @Autowired
-    private FuelOrderService fuelOrderService;
+    private FuelOrderRepository fuelOrderRepository;
+
+    @Autowired
+    private DomainEventPublisher domainEventPublisher;
     
     public FuelOrder process(long fuelOrderId) {
-        return fuelOrderService.confirmFuelOrder(fuelOrderId);
+        FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId)
+            .orElseThrow(() -> new NoSuchElementException("Fuel order with id:" + fuelOrderId + "doesn't exist"));
+        fuelOrder.confirm();
+        fuelOrderRepository.save(fuelOrder);
+        domainEventPublisher.publishAll(fuelOrder.getDomainEvents());
+        return fuelOrder;
     }
 }

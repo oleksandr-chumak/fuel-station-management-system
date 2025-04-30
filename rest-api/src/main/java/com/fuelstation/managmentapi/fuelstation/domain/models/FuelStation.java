@@ -46,7 +46,7 @@ public class FuelStation extends AggregateRoot {
     }
 
     public void processFuelDelivery(FuelOrder fuelOrder) {
-        if (fuelOrder.getStatus() != FuelOrderStatus.Confirmed) {
+        if (fuelOrder.getStatus() != FuelOrderStatus.CONFIRMED) {
             throw new IllegalStateException("Fuel order must be in Confirmed status to process.");
         }
     

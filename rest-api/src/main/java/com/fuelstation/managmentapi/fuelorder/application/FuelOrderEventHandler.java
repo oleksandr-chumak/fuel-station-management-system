@@ -6,9 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderWasConfirmed;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderWasCreated;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderWasRejected;
+import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderCreated;
+import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
+import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelStationService;
 
 @Component
@@ -20,18 +20,18 @@ public class FuelOrderEventHandler {
     private static final Logger logger = LoggerFactory.getLogger(FuelOrderEventHandler.class);
 
     @EventListener
-    public void handle(FuelOrderWasCreated event) {
+    public void handle(FuelOrderCreated event) {
         logger.info("Fuel order was created ID:" + event.getFuelOrderId());
     }
     
     @EventListener
-    public void handle(FuelOrderWasConfirmed event) {
+    public void handle(FuelOrderConfirmed event) {
         logger.info("Fuel order was confirmed ID:" + event.getFuelOrderId());
         fuelStationService.processFuelDelivery(event.getFuelOrderId());
     }
 
     @EventListener
-    public void handle(FuelOrderWasRejected event) {
+    public void handle(FuelOrderRejected event) {
         logger.info("Fuel order was rejected ID" + event.getFuelOrderId());
     }
 }

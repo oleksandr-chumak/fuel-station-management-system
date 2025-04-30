@@ -22,12 +22,12 @@ public class DomainFuelStationFactory implements FuelStationFactory{
         FuelStationAddress address = new FuelStationAddress(street, buildingNumber, city, postalCode, country);
 
         List<FuelTank> fuelTanks = new ArrayList<>();
-        fuelTanks.add(new FuelTank(null, FuelGrade.Diesel, 0f, 35000f, Optional.empty()));
+        fuelTanks.add(new FuelTank(null, FuelGrade.DIESEL, 0f, 35000f, Optional.empty()));
         fuelTanks.add(new FuelTank(null, FuelGrade.RON_92, 0f, 35000f, Optional.empty()));
         fuelTanks.add(new FuelTank(null, FuelGrade.RON_95, 0f, 35000f, Optional.empty()));
 
         List<FuelPrice> fuelPrices = new ArrayList<>();
-        fuelPrices.add(new FuelPrice(FuelGrade.Diesel, 1.21f));
+        fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, 1.21f));
         fuelPrices.add(new FuelPrice(FuelGrade.RON_92, 1.78f));
         fuelPrices.add(new FuelPrice(FuelGrade.RON_95, 2.31f));
 

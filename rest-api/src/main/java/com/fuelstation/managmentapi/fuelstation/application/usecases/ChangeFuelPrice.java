@@ -25,7 +25,7 @@ public class ChangeFuelPrice {
             case "ron-95":
                 return FuelGrade.RON_95;
             case "diesel":
-                return FuelGrade.Diesel;
+                return FuelGrade.DIESEL;
             default:
                 throw new IllegalArgumentException("Fuel grade can only be: ron-92, ron-95, diesel");
         }

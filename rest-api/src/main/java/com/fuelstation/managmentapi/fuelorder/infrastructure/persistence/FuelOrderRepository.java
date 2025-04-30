@@ -1,9 +1,10 @@
-package com.fuelstation.managmentapi.fuelorder.domain;
+package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 
 public interface FuelOrderRepository {
     public FuelOrder save(FuelOrder fuelOrder);

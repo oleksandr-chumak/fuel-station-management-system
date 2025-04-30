@@ -44,12 +44,12 @@ public class FuelStationTest {
         fuelTanks = new ArrayList<>();
         fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, 5000, 10000, Optional.empty()));
         fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, 2000, 8000, Optional.empty()));
-        fuelTanks.add(new FuelTank(3L, FuelGrade.Diesel, 3000, 12000, Optional.empty()));
+        fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, 3000, 12000, Optional.empty()));
         
         fuelPrices = new ArrayList<>();
         fuelPrices.add(new FuelPrice(FuelGrade.RON_92, 3.5f));
         fuelPrices.add(new FuelPrice(FuelGrade.RON_95, 4.0f));
-        fuelPrices.add(new FuelPrice(FuelGrade.Diesel, 3.8f));
+        fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, 3.8f));
         
         assignedManagersIds = new ArrayList<>();
         createdAt = LocalDate.now();
@@ -75,7 +75,7 @@ public class FuelStationTest {
             // Given
             FuelOrder pendingOrder = new FuelOrder();
             pendingOrder.setId(1L);
-            pendingOrder.setStatus(FuelOrderStatus.Pending);
+            pendingOrder.setStatus(FuelOrderStatus.PENDING);
             pendingOrder.setGrade(FuelGrade.RON_92);
             pendingOrder.setAmount(1000);
 
@@ -93,7 +93,7 @@ public class FuelStationTest {
             // Given
             FuelOrder confirmedOrder = new FuelOrder();
             confirmedOrder.setId(1L);
-            confirmedOrder.setStatus(FuelOrderStatus.Confirmed);
+            confirmedOrder.setStatus(FuelOrderStatus.CONFIRMED);
             confirmedOrder.setGrade(FuelGrade.RON_92);
             confirmedOrder.setAmount(6000); // Available volume is only 5000
 
@@ -111,7 +111,7 @@ public class FuelStationTest {
             // Given
             FuelOrder confirmedOrder = new FuelOrder();
             confirmedOrder.setId(1L);
-            confirmedOrder.setStatus(FuelOrderStatus.Confirmed);
+            confirmedOrder.setStatus(FuelOrderStatus.CONFIRMED);
             confirmedOrder.setGrade(FuelGrade.RON_92);
             confirmedOrder.setAmount(3000);
             
@@ -138,7 +138,7 @@ public class FuelStationTest {
             
             FuelOrder confirmedOrder = new FuelOrder();
             confirmedOrder.setId(1L);
-            confirmedOrder.setStatus(FuelOrderStatus.Confirmed);
+            confirmedOrder.setStatus(FuelOrderStatus.CONFIRMED);
             confirmedOrder.setGrade(FuelGrade.RON_92);
             confirmedOrder.setAmount(8000); // More than the capacity of the first tank
             
@@ -242,7 +242,7 @@ public class FuelStationTest {
             // When & Then
             IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> fuelStation.changeFuelPrice(FuelGrade.Diesel, 4.2f)
+                () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, 4.2f)
             );
             assertEquals("Cannot find fuel price with specified fuel grade", exception.getMessage());
         }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderRepository;
+import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationWasCreated;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationWasDeactivated;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
