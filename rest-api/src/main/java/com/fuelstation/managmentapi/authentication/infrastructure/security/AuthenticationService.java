@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.authentication.infrastructure.services;
+package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 

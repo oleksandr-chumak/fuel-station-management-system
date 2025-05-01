@@ -1,12 +1,12 @@
-package com.fuelstation.managmentapi.authentication.infrastructure.services;
+package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
-import com.fuelstation.managmentapi.authentication.domain.CredentialsRepository;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService{
@@ -30,6 +30,6 @@ public class AuthenticationServiceImpl implements AuthenticationService{
             throw new IllegalArgumentException("Invalid credentials");
         }
 
-        return jwtTokenService.generateAccessToken(credentials);
+        return jwtTokenService.generateAccessToken(new SecurityUserDetails(credentials));
     }
 }

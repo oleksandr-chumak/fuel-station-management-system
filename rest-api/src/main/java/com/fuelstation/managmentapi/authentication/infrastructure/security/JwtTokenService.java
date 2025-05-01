@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.authentication.infrastructure.services;
+package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
 import java.util.Date;
 import java.util.function.Function;
@@ -6,6 +6,7 @@ import java.util.function.Function;
 import javax.crypto.SecretKey;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
@@ -26,17 +27,17 @@ public class JwtTokenService {
     @Value("${security.jwt.refresh-token-expiration}")
     private long refreshTokenExpire;
 
-    public String generateAccessToken(Credentials user) {
+    public String generateAccessToken(SecurityUserDetails user) {
         return Jwts.builder()
                 .subject(user.getUsername())
-                .claim("roles", user.getRole().name().toString())
+                .claim("roles", user.getDomainCredentials().getRole().name().toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpire))
                 .signWith(getSigninKey())
                 .compact();
     }
 
-    public String generateRefreshToken(Credentials user) {
+    public String generateRefreshToken(SecurityUserDetails user) {
         return Jwts.builder()
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))

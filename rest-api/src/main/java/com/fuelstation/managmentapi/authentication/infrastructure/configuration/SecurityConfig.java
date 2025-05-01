@@ -21,8 +21,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
-import com.fuelstation.managmentapi.authentication.infrastructure.services.JwtTokenFilter;
-import com.fuelstation.managmentapi.authentication.infrastructure.services.UserDetailsServiceImp;
+import com.fuelstation.managmentapi.authentication.infrastructure.security.JwtTokenFilter;
+import com.fuelstation.managmentapi.authentication.infrastructure.security.UserDetailsServiceImp;
 
 @Configuration
 public class SecurityConfig {
@@ -58,7 +58,7 @@ public class SecurityConfig {
                                 "/api/fuel-orders/{id}/confirm",
                                 "/api/fuel-orders/{id}/reject",
                                 "/api/fuel-orders/{id}"
-                            ).hasAuthority(UserRole.Administrator.name())
+                            ).hasAuthority(UserRole.ADMINISTRATOR.name())
                             .requestMatchers( 
                                 "/api/fuel-stations/{id}", 
                                 "/api/fuel-stations/{id}/managers",
@@ -67,7 +67,7 @@ public class SecurityConfig {
                                 "/api/fuel-orders/",
                                 
                                 "/api/manager/{id}/fuel-stations"
-                            ).hasAnyAuthority(UserRole.Administrator.name(), UserRole.Manager.name())
+                            ).hasAnyAuthority(UserRole.ADMINISTRATOR.name(), UserRole.MANAGER.name())
                             .anyRequest().authenticated() 
             ).userDetailsService(userDetailsServiceImp)
             .sessionManagement(session -> session

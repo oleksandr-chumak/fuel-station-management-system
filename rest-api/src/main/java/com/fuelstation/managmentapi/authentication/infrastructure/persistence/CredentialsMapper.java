@@ -26,9 +26,9 @@ public class CredentialsMapper {
     }
 
     private static Long getUserId(CredentialsEntity credentials) {
-        if(credentials.getRole() == UserRole.Manager && credentials.getManager() != null) {
+        if(credentials.getRole() == UserRole.MANAGER && credentials.getManager() != null) {
             return credentials.getManager().getId();
-        } else if(credentials.getRole() == UserRole.Administrator && credentials.getAdministrator() != null){
+        } else if(credentials.getRole() == UserRole.ADMINISTRATOR && credentials.getAdministrator() != null){
             return credentials.getAdministrator().getId();
         } else {
             return null;

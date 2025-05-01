@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
-import com.fuelstation.managmentapi.authentication.domain.CredentialsRepository;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
-import com.fuelstation.managmentapi.authentication.infrastructure.services.AuthenticationService;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
+import com.fuelstation.managmentapi.authentication.infrastructure.security.AuthenticationService;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -29,13 +29,13 @@ public class AuthController {
 
     @PostMapping("/login/admin") 
     public ResponseEntity<String> loginAdmin(@RequestBody AuthRequest authRequest) {
-        String accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.Administrator);
+        String accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.ADMINISTRATOR);
         return new ResponseEntity<String>(accessToken, HttpStatus.OK);
     }
   
     @PostMapping("/login/manager") 
     public ResponseEntity<String> loginManager(@RequestBody AuthRequest authRequest) {
-        String accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.Manager);
+        String accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.MANAGER);
         return new ResponseEntity<String>(accessToken, HttpStatus.OK);
     }
 

@@ -5,8 +5,8 @@ import java.security.SecureRandom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fuelstation.managmentapi.authentication.application.usecases.CreateCredentials;
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
-import com.fuelstation.managmentapi.authentication.domain.CredentialsService;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -18,7 +18,7 @@ import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRe
 public class CreateManager {
     
     @Autowired
-    private CredentialsService credentialsService;
+    private CreateCredentials createCredentials;
 
     @Autowired
     private ManagerRepository managerRepository;
@@ -31,7 +31,7 @@ public class CreateManager {
     
     // TODO if manager creation fails delete credentials
     public Manager process(String firstName, String lastName, String email) {
-        Credentials credentials = credentialsService.createCredentials(email, generateRandomPassword(10), UserRole.Manager);
+        Credentials credentials = createCredentials.process(email, generateRandomPassword(10), UserRole.MANAGER);
         Manager createdManager = managerFactory.create(firstName, lastName, credentials.getCredentialsId()); 
         Manager savedManager = managerRepository.save(createdManager);
         domainEventPublisher.publish(new ManagerCreated(savedManager.getId()));

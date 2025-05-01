@@ -1,18 +1,18 @@
-package com.fuelstation.managmentapi.authentication.infrastructure.services;
+package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fuelstation.managmentapi.authentication.domain.CredentialsRepository;
+import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -46,8 +46,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             UserRole role = jwtTokenService.getUserRoleFromToken(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails =  credentialsRepository.findByEmailAndRole(username, role)
+                Credentials credentials =  credentialsRepository.findByEmailAndRole(username, role)
                     .orElseThrow(() -> new UsernameNotFoundException("User with email:" + username + "and role:" + role.name() + "doesn't exist"));
+                SecurityUserDetails userDetails = new SecurityUserDetails(credentials);    
                 if (jwtTokenService.isValidAccessToken(token, userDetails.getUsername())) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

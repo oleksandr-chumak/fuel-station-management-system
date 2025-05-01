@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CredentialsWasCreated implements DomainEvent {
+public class CredentialsCreated implements DomainEvent {
     private long credentialsId;
     private String email;
     private String plainPassword;

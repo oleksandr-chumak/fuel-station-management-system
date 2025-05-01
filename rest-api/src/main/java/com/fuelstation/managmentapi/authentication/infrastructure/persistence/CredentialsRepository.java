@@ -1,6 +1,9 @@
-package com.fuelstation.managmentapi.authentication.domain;
+package com.fuelstation.managmentapi.authentication.infrastructure.persistence;
 
 import java.util.Optional;
+
+import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 public interface CredentialsRepository {
     public Credentials save(Credentials credentials);
