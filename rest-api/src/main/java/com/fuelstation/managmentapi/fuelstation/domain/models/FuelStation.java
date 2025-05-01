@@ -11,6 +11,10 @@ import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.TankCapacityExceededException;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class FuelStation extends AggregateRoot {  
+public class FuelStation extends AggregateRoot {
     private Long id;
     private FuelStationAddress address;
     private List<FuelTank> fuelTanks;
@@ -30,26 +34,28 @@ public class FuelStation extends AggregateRoot {
 
     public List<FuelTank> getFuelTanksByFuelGrade(FuelGrade fuelGrade) {
         return fuelTanks.stream()
-            .filter(ft -> ft.getFuelGrade() == fuelGrade)
-            .toList();
+                .filter(ft -> ft.getFuelGrade() == fuelGrade)
+                .toList();
     }
 
     public long getAvailableVolume(FuelGrade fuelGrade) {
         double totalAvailableAmount = getFuelTanksByFuelGrade(fuelGrade).stream()
-            .mapToDouble(FuelTank::getAvailableVolume)
-            .sum();
-    
-        return (long) totalAvailableAmount; 
+                .mapToDouble(FuelTank::getAvailableVolume)
+                .sum();
+
+        return (long) totalAvailableAmount;
     }
 
     public void assignManager(long managerId) {
-        Optional<Long> foundManagerId = assignedManagersIds.stream().filter((id) -> id == managerId).findFirst();
+        Optional<Long> foundManagerId = assignedManagersIds.stream()
+                .filter((id) -> id == managerId)
+                .findFirst();
 
-        if(foundManagerId.isPresent()) {
-            throw new IllegalArgumentException("Manager is already assigned to the fuel station");
+        if (foundManagerId.isPresent()) {
+            throw new ManagerAlreadyAssignedException(managerId, this.id);
         }
 
-        assignedManagersIds.add(managerId); 
+        assignedManagersIds.add(managerId);
         pushDomainEvent(new ManagerAssignedToFuelStation(id, managerId));
     }
 
@@ -60,29 +66,34 @@ public class FuelStation extends AggregateRoot {
 
     public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
         FuelPrice oldPrice = fuelPrices.stream()
-            .filter(fp -> fp.fuelGrade() == fuelGrade)
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Cannot find fuel price with specified fuel grade"));
+                .filter(fp -> fp.fuelGrade() == fuelGrade)
+                .findFirst()
+                .orElseThrow(() -> new FuelGradeNotFoundException(fuelGrade.toString(), this.id));
 
         fuelPrices.remove(oldPrice);
         fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
         pushDomainEvent(new FuelPriceChanged(id));
     }
-    
+
     public void refillFuelTank(FuelTank fuelTank, float volume) {
-        if(fuelTank.getCurrentVolume() + volume > fuelTank.getMaxCapacity()) {
-            throw new IllegalArgumentException();
+        float totalVolume = fuelTank.getCurrentVolume() + volume;
+        if (totalVolume > fuelTank.getMaxCapacity()) {
+            throw new TankCapacityExceededException(
+                    fuelTank.getId(), 
+                    totalVolume, 
+                    fuelTank.getMaxCapacity()
+            );
         }
 
-        fuelTank.setCurrentVolume(fuelTank.getCurrentVolume() + volume);
+        fuelTank.setCurrentVolume(totalVolume);
         fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
     }
 
     public void deactivate() {
-        if(status == FuelStationStatus.Deactivated) {
-            throw new IllegalArgumentException();
+        if (status == FuelStationStatus.Deactivated) {
+            throw new FuelStationAlreadyDeactivatedException(this.id);
         }
-        
+
         this.status = FuelStationStatus.Deactivated;
         this.unassignAllManagers();
         pushDomainEvent(new FuelStationDeactivated(id));
@@ -90,7 +101,7 @@ public class FuelStation extends AggregateRoot {
 
     private void unassignAllManagers() {
         List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
-        for(long managerId : cloneAssignedManagersIds) {
+        for (long managerId : cloneAssignedManagersIds) {
             unassignManager(managerId);
         }
     }
