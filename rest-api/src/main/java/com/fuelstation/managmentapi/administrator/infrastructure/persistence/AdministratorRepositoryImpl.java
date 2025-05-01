@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
-import com.fuelstation.managmentapi.administrator.domain.AdministratorRepository;
 
 @Repository
 public class AdministratorRepositoryImpl implements AdministratorRepository {

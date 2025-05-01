@@ -1,14 +1,16 @@
-package com.fuelstation.managmentapi.administrator.domain;
+package com.fuelstation.managmentapi.administrator.application.usecases;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import com.fuelstation.managmentapi.administrator.domain.Administrator;
+import com.fuelstation.managmentapi.administrator.infrastructure.persistence.AdministratorRepository;
 import com.fuelstation.managmentapi.authentication.application.usecases.CreateCredentials;
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
-@Service 
-public class DomainAdministratorService implements AdministratorService {
+@Component
+public class CreateAdministrator {
 
     @Autowired
     private CreateCredentials createCredentials;
@@ -16,9 +18,9 @@ public class DomainAdministratorService implements AdministratorService {
     @Autowired
     private AdministratorRepository administratorRepository;
 
-    @Override
-    public Administrator createAdministrator(String email, String password) {
+    public Administrator process(String email, String password) {
         Credentials credentials = createCredentials.process(email, password, UserRole.ADMINISTRATOR);
         return administratorRepository.save(new Administrator(null, credentials.getCredentialsId()));
     }
+    
 }

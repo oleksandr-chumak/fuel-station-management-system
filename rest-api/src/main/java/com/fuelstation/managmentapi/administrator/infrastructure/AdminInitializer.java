@@ -1,7 +1,10 @@
-package com.fuelstation.managmentapi.administrator.domain;
+package com.fuelstation.managmentapi.administrator.infrastructure;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.fuelstation.managmentapi.administrator.application.usecases.CreateAdministrator;
+import com.fuelstation.managmentapi.administrator.infrastructure.persistence.AdministratorRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -15,7 +18,7 @@ public class AdminInitializer {
     private AdministratorRepository administratorRepository;
 
     @Autowired
-    private AdministratorService administratorService;
+    private CreateAdministrator createAdministrator;
 
     @PostConstruct
     public void initAdminIfNotExists() {
@@ -24,7 +27,7 @@ public class AdminInitializer {
             .isPresent();
 
         if (!adminExists) {
-            administratorService.createAdministrator(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD);
+            createAdministrator.process(DEFAULT_ADMIN_EMAIL, DEFAULT_ADMIN_PASSWORD);
             System.out.println("Default admin created: " + DEFAULT_ADMIN_EMAIL);
         } else {
             System.out.println("Default admin already exists.");
