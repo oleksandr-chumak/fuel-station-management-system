@@ -7,12 +7,10 @@ import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
-import com.fuelstation.managmentapi.manager.domain.Manager;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,9 +42,6 @@ public class FuelStation extends AggregateRoot {
         return (long) totalAvailableAmount; 
     }
 
-    public void processFuelDelivery(FuelOrder fuelOrder) {
-    }
-
     public void assignManager(long managerId) {
         Optional<Long> foundManagerId = assignedManagersIds.stream().filter((id) -> id == managerId).findFirst();
 
@@ -58,9 +53,9 @@ public class FuelStation extends AggregateRoot {
         pushDomainEvent(new ManagerAssignedToFuelStation(id, managerId));
     }
 
-    public void unassignManager(Manager manager) {
-        assignedManagersIds.removeIf((id) -> id == manager.getId());
-        pushDomainEvent(new ManagerUnassignedFromFuelStation(id, manager.getId()));
+    public void unassignManager(long managerId) {
+        assignedManagersIds.removeIf((id) -> id == managerId);
+        pushDomainEvent(new ManagerUnassignedFromFuelStation(id, managerId));
     }
 
     public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
@@ -96,7 +91,7 @@ public class FuelStation extends AggregateRoot {
     private void unassignAllManagers() {
         List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
         for(long managerId : cloneAssignedManagersIds) {
-            unassignManager(new Manager(managerId, null, null, null, null));
+            unassignManager(managerId);
         }
     }
 }
