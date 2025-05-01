@@ -9,7 +9,7 @@ import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.manager.domain.Manager;
-import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
+import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;
 
 @Component
 public class UnassignManagerFromFuelStation {

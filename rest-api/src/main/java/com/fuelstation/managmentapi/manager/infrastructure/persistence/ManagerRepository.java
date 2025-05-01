@@ -1,9 +1,10 @@
-package com.fuelstation.managmentapi.manager.domain;
+package com.fuelstation.managmentapi.manager.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
+import com.fuelstation.managmentapi.manager.domain.Manager;
 
 public interface ManagerRepository {
    public Manager save(Manager manager);

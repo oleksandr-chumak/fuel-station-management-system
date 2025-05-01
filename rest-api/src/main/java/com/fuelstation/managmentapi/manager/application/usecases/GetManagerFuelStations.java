@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
+import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;
 
 @Component
 public class GetManagerFuelStations {

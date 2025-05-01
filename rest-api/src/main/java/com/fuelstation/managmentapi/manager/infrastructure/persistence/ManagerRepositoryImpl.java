@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationMapper;
 import com.fuelstation.managmentapi.manager.domain.Manager;
-import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
 
 @Repository
 public class ManagerRepositoryImpl implements ManagerRepository {

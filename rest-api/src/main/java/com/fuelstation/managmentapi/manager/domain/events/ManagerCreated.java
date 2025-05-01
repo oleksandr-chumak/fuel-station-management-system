@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.manager.domain;
+package com.fuelstation.managmentapi.manager.domain.events;
 
 import com.fuelstation.managmentapi.common.domain.DomainEvent;
 
@@ -7,6 +7,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ManagerWasTerminated implements DomainEvent {
+public class ManagerCreated implements DomainEvent {
     private long mangerId;
 }
