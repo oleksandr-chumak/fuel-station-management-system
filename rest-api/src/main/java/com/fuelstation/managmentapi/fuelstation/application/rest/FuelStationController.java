@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
@@ -24,7 +25,7 @@ import com.fuelstation.managmentapi.fuelstation.application.usecases.GetAllFuelS
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationManagers;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationOrders;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerToFuelStation;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerFromFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -44,7 +45,7 @@ public class FuelStationController {
     private AssignManagerToFuelStation assignManagerToFuelStation;
     
     @Autowired
-    private UnassignManagerToFuelStation unassignManagerToFuelStation;
+    private UnassignManagerFromFuelStation unassignManagerFromFuelStation;
     
     @Autowired
     private ChangeFuelPrice changeFuelPrice;
@@ -87,15 +88,16 @@ public class FuelStationController {
 
     @PutMapping("/{id}/unassign-manager")
     public ResponseEntity<FuelStationResponse> unassignManager(@PathVariable("id") long fuelStationId, @RequestBody AssignManagerRequest request) {
-        FuelStation fuelStation = unassignManagerToFuelStation.process(fuelStationId, request.getManagerId());
+        FuelStation fuelStation = unassignManagerFromFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @PutMapping("/{id}/change-fuel-price")
     public ResponseEntity<FuelStationResponse> changeFuelPrice(@PathVariable("id") long fuelStationId, @RequestBody ChangeFuelPriceRequest request) {
+        // TODO fix fuel Grade
         FuelStation fuelStation = changeFuelPrice.process(
             fuelStationId,
-            request.getFuelGrade(),
+            FuelGrade.DIESEL,
             request.getNewPrice()
         );
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));

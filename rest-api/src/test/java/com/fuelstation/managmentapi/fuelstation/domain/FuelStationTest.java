@@ -177,10 +177,9 @@ public class FuelStationTest {
             // When & Then
             IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> fuelStation.assignManager(manager)
+                () -> fuelStation.assignManager(manager.getId())
             );
-            assertEquals("Manager is already assigned to the fuel station", exception.getMessage());
-        }
+            assertEquals("Manager is already assigned to the fuel station", exception.getMessage()); }
         
         @Test
         @DisplayName("Should assign a new manager")
@@ -190,7 +189,7 @@ public class FuelStationTest {
             assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getId()));
 
             // When
-            fuelStation.assignManager(newManager);
+            fuelStation.assignManager(newManager.getId());
 
             // Then
             assertTrue(fuelStation.getAssignedManagersIds().contains(newManager.getId()));

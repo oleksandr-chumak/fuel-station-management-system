@@ -9,13 +9,13 @@ import org.springframework.stereotype.Component;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderCreated;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationService;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.ProcessFuelDelivery;
 
 @Component
 public class FuelOrderEventHandler {
 
     @Autowired
-    private FuelStationService fuelStationService;
+    private ProcessFuelDelivery processFuelDelivery;
 
     private static final Logger logger = LoggerFactory.getLogger(FuelOrderEventHandler.class);
 
@@ -27,7 +27,7 @@ public class FuelOrderEventHandler {
     @EventListener
     public void handle(FuelOrderConfirmed event) {
         logger.info("Fuel order was confirmed ID:" + event.getFuelOrderId());
-        fuelStationService.processFuelDelivery(event.getFuelOrderId());
+        processFuelDelivery.process(event.getFuelOrderId());
     }
 
     @EventListener

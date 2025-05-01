@@ -1,33 +1,31 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationService;
+import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 @Component
 public class ChangeFuelPrice {
    
     @Autowired
-    private FuelStationService fuelStationService;
+    private FuelStationRepository fuelStationRepository;
 
-    public FuelStation process(long fuelStationId, String fuelGrade, float newPrice) {
-        return fuelStationService.changeFuelPrice(fuelStationId, getFuelGrade(fuelGrade), newPrice);
+    @Autowired
+    private DomainEventPublisher domainEventPublisher;
+
+    public FuelStation process(long fuelStationId, FuelGrade fuelGrade, float newPrice) {
+        FuelStation fuelStation = fuelStationRepository.findById(fuelStationId)
+            .orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
+        fuelStation.changeFuelPrice(fuelGrade, newPrice);
+        fuelStationRepository.save(fuelStation);
+        domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+        return fuelStation;
     }
 
-    // fuelGrade can be ron-92, ron-95, diesel
-    private FuelGrade getFuelGrade(String fuelGrade) {
-        switch (fuelGrade) {
-            case "ron-92":
-                return FuelGrade.RON_92;
-            case "ron-95":
-                return FuelGrade.RON_95;
-            case "diesel":
-                return FuelGrade.DIESEL;
-            default:
-                throw new IllegalArgumentException("Fuel grade can only be: ron-92, ron-95, diesel");
-        }
-    }
 }

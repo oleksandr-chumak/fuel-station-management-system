@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ManagerWasUnassignedFromFuelStation implements DomainEvent {
+public class ManagerUnassignedFromFuelStation implements DomainEvent {
     private long fuelStationId;    
     private long managerId;
 }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class AggregateRoot {
    private transient List<DomainEvent> domainEvents = new ArrayList<>();
 
-   protected void pushDomainEvent(DomainEvent domainEvent) {
+   public void pushDomainEvent(DomainEvent domainEvent) {
         domainEvents.add(domainEvent);
    }
 }

@@ -12,7 +12,7 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
 
 @Component
-public class AssignManagerToFuelStation {
+public class UnassignManagerFromFuelStation {
     
     @Autowired
     private FuelStationRepository fuelStationRepository;
@@ -23,15 +23,15 @@ public class AssignManagerToFuelStation {
     @Autowired
     private DomainEventPublisher domainEventPublisher;
 
+
     public FuelStation process(long fuelStationId, long managerId) {
         FuelStation fuelStation = fuelStationRepository.findById(fuelStationId)
             .orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
         Manager manager = managerRepository.findById(managerId)
             .orElseThrow(() -> new NoSuchElementException("Manager with id:" + managerId + "doesn't exist"));
-        fuelStation.assignManager(manager.getId());
+        fuelStation.unassignManager(manager);
         fuelStationRepository.save(fuelStation);
         domainEventPublisher.publishAll(fuelStation.getDomainEvents());
         return fuelStation;
     }
-
 }

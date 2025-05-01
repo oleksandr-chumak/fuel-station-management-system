@@ -7,6 +7,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FuelPriceWasChanged implements DomainEvent{
+public class ManagerAssignedToFuelStation implements DomainEvent{
     private long fuelStationId;
+    private long managerId;
 }
