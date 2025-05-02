@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
+import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderNotFoundException;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelDeliveryService;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
@@ -29,7 +30,7 @@ public class ProcessFuelDelivery {
 
     public FuelStation process(long fuelOrderId) {
         FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId)
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(() -> new FuelOrderNotFoundException(fuelOrderId));
 
         FuelStation fuelStation = fuelStationRepository.findById(fuelOrder.getFuelStationId())
             .orElseThrow(() -> new FuelStationNotFoundException(fuelOrderId));
