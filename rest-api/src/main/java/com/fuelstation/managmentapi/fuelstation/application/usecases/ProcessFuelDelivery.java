@@ -8,6 +8,7 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelDeliveryService;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 @Component
@@ -31,7 +32,7 @@ public class ProcessFuelDelivery {
             .orElseThrow(() -> new IllegalArgumentException());
 
         FuelStation fuelStation = fuelStationRepository.findById(fuelOrder.getFuelStationId())
-            .orElseThrow(() -> new IllegalArgumentException());
+            .orElseThrow(() -> new FuelStationNotFoundException(fuelOrderId));
 
         fuelDeliveryService.processFuelDelivery(fuelStation, fuelOrder);
 
