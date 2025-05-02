@@ -10,6 +10,7 @@ import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.CredentialsFactory;
 import com.fuelstation.managmentapi.authentication.domain.CredentialsCreated;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.authentication.domain.exceptions.CredentialsAlreadyExistsException;
 import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 
@@ -32,7 +33,7 @@ public class CreateCredentials {
         Optional<Credentials> foundCredentials = credentialsRepository.findByEmailAndRole(email, role);
 
         if(foundCredentials.isPresent()) {
-            throw new IllegalArgumentException("User with email:" + email + "and role:" + role.toString() + "already exist");
+            throw new CredentialsAlreadyExistsException(email, role);
         }
 
         Credentials credentials = credentialsFactory.create(email, passwordEncoder.encode(password), role);
