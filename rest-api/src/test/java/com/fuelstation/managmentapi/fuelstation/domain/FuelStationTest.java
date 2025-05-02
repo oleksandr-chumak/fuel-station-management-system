@@ -18,6 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress;
@@ -75,11 +77,11 @@ public class FuelStationTest {
             fuelStation.getAssignedManagersIds().add(manager.getId());
             
             // When & Then
-            IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+            assertThrows(
+                ManagerAlreadyAssignedException.class,
                 () -> fuelStation.assignManager(manager.getId())
             );
-            assertEquals("Manager is already assigned to the fuel station", exception.getMessage()); }
+        }
         
         @Test
         @DisplayName("Should assign a new manager")
@@ -139,11 +141,10 @@ public class FuelStationTest {
             fuelStation.getFuelPrices().add(new FuelPrice(FuelGrade.RON_92, 3.5f));
             
             // When & Then
-            IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
+            assertThrows(
+                FuelGradeNotFoundException.class,
                 () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, 4.2f)
             );
-            assertEquals("Cannot find fuel price with specified fuel grade", exception.getMessage());
         }
         
         @Test
