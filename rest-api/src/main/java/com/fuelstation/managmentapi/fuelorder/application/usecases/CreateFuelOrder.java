@@ -10,9 +10,9 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderFactory;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderCreated;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class CreateFuelOrder {

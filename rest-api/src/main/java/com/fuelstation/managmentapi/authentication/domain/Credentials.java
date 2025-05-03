@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Credentials {
    private Long credentialsId;
-   private Long userId;
    private String email;
    private UserRole role;
    private String password;

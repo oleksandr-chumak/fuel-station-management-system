@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelstation.domain;
+package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence;
 
 import java.util.List;
 import java.util.Optional;

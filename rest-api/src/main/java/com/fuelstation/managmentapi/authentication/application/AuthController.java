@@ -43,6 +43,21 @@ public class AuthController {
     public ResponseEntity<CredentialsResponse> getCurrentUser(Authentication authentication) {
         Credentials credentials = credentialsRepository.findByEmail(authentication.getName())
             .orElseThrow(() -> new NoSuchElementException("User doesn't exist"));
-        return ResponseEntity.ok(CredentialsResponse.fromDomain(credentials));
+        
+        long userId = -1;
+        
+        switch (credentials.getRole()) {
+            case UserRole.MANAGER:
+                // TODO get manager by credentials id 
+                break;
+            case UserRole.ADMINISTRATOR:
+                // TODO get administrator by credentials id
+                break;
+            default:
+                // TODO internal server error
+                break;
+        }
+        
+        return ResponseEntity.ok(CredentialsResponse.fromDomain(credentials, userId));
     }
 }

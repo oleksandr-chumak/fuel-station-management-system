@@ -15,9 +15,9 @@ public class CredentialsResponse {
     private String email; 
     private UserRole role; 
 
-    public static CredentialsResponse fromDomain(Credentials credentials) {
+    public static CredentialsResponse fromDomain(Credentials credentials, long userId) {
         return new CredentialsResponse(
-            credentials.getUserId(),
+            userId,
             credentials.getEmail(), 
             credentials.getRole()
         );

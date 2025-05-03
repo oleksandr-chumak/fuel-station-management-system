@@ -1,14 +1,12 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import com.fuelstation.managmentapi.manager.domain.exceptions.ManagerNotFoundException;
 import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;

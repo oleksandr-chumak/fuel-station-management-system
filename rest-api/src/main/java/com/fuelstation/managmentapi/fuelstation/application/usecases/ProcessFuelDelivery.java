@@ -8,9 +8,9 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderNotFoundException;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelDeliveryService;
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class ProcessFuelDelivery {
