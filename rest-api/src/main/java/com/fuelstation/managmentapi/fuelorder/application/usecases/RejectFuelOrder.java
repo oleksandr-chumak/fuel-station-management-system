@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderNotFoundException;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 
 @Component
@@ -16,10 +15,12 @@ public class RejectFuelOrder {
 
     @Autowired
     private DomainEventPublisher domainEventPublisher;
+
+    @Autowired
+    private GetFuelOrderById getFuelOrderById;
     
     public FuelOrder process(long fuelOrderId) {
-        FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId)
-            .orElseThrow(() -> new FuelOrderNotFoundException(fuelOrderId));
+        FuelOrder fuelOrder = getFuelOrderById.process(fuelOrderId);
         fuelOrder.reject();
         fuelOrderRepository.save(fuelOrder);
         domainEventPublisher.publishAll(fuelOrder.getDomainEvents());

@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
@@ -17,10 +16,12 @@ public class ChangeFuelPrice {
 
     @Autowired
     private DomainEventPublisher domainEventPublisher;
+    
+    @Autowired
+    private GetFuelStationById getFuelStationById;
 
     public FuelStation process(long fuelStationId, FuelGrade fuelGrade, float newPrice) {
-        FuelStation fuelStation = fuelStationRepository.findById(fuelStationId)
-            .orElseThrow(() -> new FuelStationNotFoundException(fuelStationId));
+        FuelStation fuelStation = getFuelStationById.process(fuelStationId);
         fuelStation.changeFuelPrice(fuelGrade, newPrice);
         fuelStationRepository.save(fuelStation);
         domainEventPublisher.publishAll(fuelStation.getDomainEvents());

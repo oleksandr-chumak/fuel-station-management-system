@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.manager.domain.Manager;
-import com.fuelstation.managmentapi.manager.domain.exceptions.ManagerNotFoundException;
 import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;
 
 @Component
@@ -17,9 +16,11 @@ public class TerminateManager {
     @Autowired
     private DomainEventPublisher domainEventPublisher;
     
+    @Autowired
+    private GetManagerById getManagerById;
+    
     public Manager process(long managerId) {
-        Manager manger = managerRepository.findById(managerId)
-            .orElseThrow(() -> new ManagerNotFoundException(managerId));
+        Manager manger = getManagerById.process(managerId);
         manger.terminate();
         managerRepository.save(manger);
         domainEventPublisher.publishAll(manger.getDomainEvents());

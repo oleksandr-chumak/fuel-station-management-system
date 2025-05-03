@@ -4,19 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
+import com.fuelstation.managmentapi.fuelorder.application.usecases.GetFuelOrderById;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderNotFoundException;
-import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelDeliveryService;
-import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class ProcessFuelDelivery {
-
-    @Autowired
-    private FuelOrderRepository fuelOrderRepository;
 
     @Autowired
     private FuelStationRepository fuelStationRepository;
@@ -26,14 +21,16 @@ public class ProcessFuelDelivery {
 
     @Autowired
     private DomainEventPublisher domainEventPublisher;
+
+    @Autowired
+    private GetFuelStationById getFuelStationById;
     
+    @Autowired
+    private GetFuelOrderById getFuelOrderById;
 
     public FuelStation process(long fuelOrderId) {
-        FuelOrder fuelOrder = fuelOrderRepository.findById(fuelOrderId)
-            .orElseThrow(() -> new FuelOrderNotFoundException(fuelOrderId));
-
-        FuelStation fuelStation = fuelStationRepository.findById(fuelOrder.getFuelStationId())
-            .orElseThrow(() -> new FuelStationNotFoundException(fuelOrderId));
+        FuelOrder fuelOrder = getFuelOrderById.process(fuelOrderId);
+        FuelStation fuelStation = getFuelStationById.process(fuelOrder.getFuelStationId());
 
         fuelDeliveryService.processFuelDelivery(fuelStation, fuelOrder);
 

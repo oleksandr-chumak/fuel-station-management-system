@@ -10,9 +10,8 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderFactory;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderCreated;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
-import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class CreateFuelOrder {
@@ -21,7 +20,7 @@ public class CreateFuelOrder {
     private FuelOrderRepository fuelOrderRepository;
 
     @Autowired
-    private FuelStationRepository fuelStationRepository;
+    private GetFuelStationById getFuelStationById;
 
     @Autowired 
     private FuelOrderFactory fuelOrderFactory;
@@ -34,8 +33,7 @@ public class CreateFuelOrder {
      * minus the amount of fuel already ordered for that grade which hasn't been confirmed or rejected.
      */
     public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, float amount) {
-        FuelStation fuelStation = fuelStationRepository.findById(fuelStationId)
-            .orElseThrow(() -> new FuelStationNotFoundException(fuelStationId));
+        FuelStation fuelStation = getFuelStationById.process(fuelStationId);
 
         float availableVolume = fuelStation.getAvailableVolume(fuelGrade);
         float pendingAmount = fuelOrderRepository.getUnconfirmedFuelAmount(fuelStationId, fuelGrade);
