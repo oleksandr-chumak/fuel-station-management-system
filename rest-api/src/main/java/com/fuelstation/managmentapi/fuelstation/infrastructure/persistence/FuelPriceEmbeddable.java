@@ -18,7 +18,4 @@ public class FuelPriceEmbeddable {
     private FuelGrade fuelGrade;
 
     private float pricePerLiter;
-
-    // TODO Remove it 
-    private Long fuelStationId;
 }

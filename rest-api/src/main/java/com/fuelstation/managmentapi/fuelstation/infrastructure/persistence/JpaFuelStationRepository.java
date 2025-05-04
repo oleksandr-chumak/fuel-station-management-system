@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface JpaFuelStationRepository extends JpaRepository<FuelStationEntity, Long> {
 
-    @Query(value = "SELECT * FROM fuel_stations WHERE :managerId = ANY (assigned_managers)", nativeQuery = true)
+    @Query("SELECT f FROM FuelStationEntity f JOIN f.assignedManagers m WHERE m = :managerId")
     List<FuelStationEntity> findByManagerId(@Param("managerId") Long managerId);
-    
+
 }

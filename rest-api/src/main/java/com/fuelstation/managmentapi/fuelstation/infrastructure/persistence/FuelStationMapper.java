@@ -11,8 +11,6 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTank;
 
-import io.jsonwebtoken.lang.Arrays;
-
 @Component
 public class FuelStationMapper {
 
@@ -45,7 +43,7 @@ public class FuelStationMapper {
             ))
             .collect(Collectors.toList());
 
-        List<Long> managerIds = Arrays.asList(entity.getAssignedManagers());
+        List<Long> managerIds = entity.getAssignedManagers();
 
         return new FuelStation(
             entity.getId(),
@@ -78,13 +76,12 @@ public class FuelStationMapper {
         List<FuelPriceEmbeddable> fuelPriceEmbeddables = domain.getFuelPrices().stream()
             .map(price -> new FuelPriceEmbeddable(
                 price.fuelGrade(),
-                price.pricePerLiter(),
-                domain.getId()
+                price.pricePerLiter()
             ))
             .collect(Collectors.toList());
         entity.setFuelPrices(fuelPriceEmbeddables);
 
-        entity.setAssignedManagers(domain.getAssignedManagersIds().toArray(new Long[domain.getAssignedManagersIds().size()]));
+        entity.setAssignedManagers(domain.getAssignedManagersIds());
 
         List<FuelTankEntity> fuelTankEntities = domain.getFuelTanks().stream()
             .map(tank -> {
