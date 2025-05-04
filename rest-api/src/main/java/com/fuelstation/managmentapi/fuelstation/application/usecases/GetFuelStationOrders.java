@@ -14,7 +14,11 @@ public class GetFuelStationOrders {
     @Autowired
     private FuelOrderRepository fuelOrderRepository;
 
+    @Autowired
+    private GetFuelStationById getFuelStationById;
+
     public List<FuelOrder> process(long fuelStationId) {
+        getFuelStationById.process(fuelStationId);
         return fuelOrderRepository.findFuelOrdersByFuelStationId(fuelStationId);
     }
 }

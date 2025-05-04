@@ -36,7 +36,7 @@ public class FuelOrderEntity {
     @Column(name = "amount", nullable = false)
     private float amount;
 
-    @Column(name = "fuel_station_id", insertable = false, updatable = false)
+    @Column(name = "fuel_station_id", nullable = false)
     private long fuelStationId;
 
     @Column(name = "created_at", nullable = false)

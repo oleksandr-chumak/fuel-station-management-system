@@ -31,7 +31,7 @@ public class DomainFuelStationFactory implements FuelStationFactory{
         fuelPrices.add(new FuelPrice(FuelGrade.RON_92, 1.78f));
         fuelPrices.add(new FuelPrice(FuelGrade.RON_95, 2.31f));
 
-        return new FuelStation(null, address, fuelTanks, fuelPrices, new ArrayList<>(), FuelStationStatus.Active, LocalDate.now());
+        return new FuelStation(null, address, fuelTanks, fuelPrices, new ArrayList<>(), FuelStationStatus.ACTIVE, LocalDate.now());
     }
     
 }

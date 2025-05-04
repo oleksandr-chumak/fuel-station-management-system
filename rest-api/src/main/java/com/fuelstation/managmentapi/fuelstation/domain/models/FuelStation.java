@@ -90,11 +90,11 @@ public class FuelStation extends AggregateRoot {
     }
 
     public void deactivate() {
-        if (status == FuelStationStatus.Deactivated) {
+        if (status == FuelStationStatus.DEACTIVATED) {
             throw new FuelStationAlreadyDeactivatedException(this.id);
         }
 
-        this.status = FuelStationStatus.Deactivated;
+        this.status = FuelStationStatus.DEACTIVATED;
         this.unassignAllManagers();
         pushDomainEvent(new FuelStationDeactivated(id));
     }

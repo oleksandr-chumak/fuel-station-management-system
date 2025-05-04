@@ -60,7 +60,7 @@ public class FuelStationTest {
             fuelTanks,
             fuelPrices,
             assignedManagersIds,
-            FuelStationStatus.Active,
+            FuelStationStatus.ACTIVE,
             createdAt
         );
     }

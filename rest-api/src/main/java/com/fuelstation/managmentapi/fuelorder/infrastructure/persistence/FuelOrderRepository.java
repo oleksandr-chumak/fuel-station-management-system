@@ -10,7 +10,7 @@ public interface FuelOrderRepository {
     public FuelOrder save(FuelOrder fuelOrder);
     public Optional<FuelOrder> findById(long id);
     public List<FuelOrder> findAll();
-    public List<FuelOrder> findFuelOrdersByFuelStationId(Long fuelStationId);
-    public float getUnconfirmedFuelAmount(Long gasStationId, FuelGrade fuelGrade);
+    public List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId);
+    public float getUnconfirmedFuelAmount(long gasStationId, FuelGrade fuelGrade);
     public void deleteAll();
 }
