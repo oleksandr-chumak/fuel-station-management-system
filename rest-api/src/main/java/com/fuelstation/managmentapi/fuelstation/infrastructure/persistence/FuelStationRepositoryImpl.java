@@ -38,4 +38,9 @@ public class FuelStationRepositoryImpl implements FuelStationRepository {
     public List<FuelStation> findAll() {
         return jpaFuelStationRepository.findAll().stream().map(fuelStationMapper::toDomain).toList();
     }
+
+    @Override
+    public List<FuelStation> findFuelStationsByManagerId(long managerId) {
+        return jpaFuelStationRepository.findByManagerId(managerId).stream().map(fuelStationMapper::toDomain).toList();
+    }
 }

@@ -6,20 +6,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class GetManagerFuelStations {
     
     @Autowired
-    public ManagerRepository managerRepository;
+    private GetManagerById getManagerById;
 
     @Autowired
-    public GetManagerById getManagerById;
+    private FuelStationRepository fuelStationRepository;
+
 
     public List<FuelStation> process(long managerId) {
         getManagerById.process(managerId);
-        return this.managerRepository.findManagerFuelStation(managerId);
+        return fuelStationRepository.findFuelStationsByManagerId(managerId);
     }
     
 }

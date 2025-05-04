@@ -6,8 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationMapper;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 @Repository
@@ -18,9 +16,6 @@ public class ManagerRepositoryImpl implements ManagerRepository {
 
     @Autowired
     private ManagerMapper managerMapper;
-
-    @Autowired 
-    private FuelStationMapper fuelStationMapper;
     
     @Override
     public Manager save(Manager manager) {
@@ -39,13 +34,8 @@ public class ManagerRepositoryImpl implements ManagerRepository {
     }
 
     @Override
-    public List<Manager> findManagersAssignedToFuelStation(long fuelStationId) {
-        return jpaManagerRepository.findManagersByFuelStationId(fuelStationId).stream().map(managerMapper::toDomain).toList();
+    public List<Manager> findManagersByIds(List<Long> assignedManagerIds) {
+        return jpaManagerRepository.findAllById(assignedManagerIds).stream().map(managerMapper::toDomain).toList();
     }
 
-    @Override
-    public List<FuelStation> findManagerFuelStation(long managerId) {
-        return jpaManagerRepository.findFuelStationsByManagerId(managerId).stream().map(fuelStationMapper::toDomain).toList();
-    }
-    
 }

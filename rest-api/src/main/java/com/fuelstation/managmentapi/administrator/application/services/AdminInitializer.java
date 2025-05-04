@@ -1,10 +1,11 @@
-package com.fuelstation.managmentapi.administrator.infrastructure;
+package com.fuelstation.managmentapi.administrator.application.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.administrator.application.usecases.CreateAdministrator;
-import com.fuelstation.managmentapi.administrator.infrastructure.persistence.AdministratorRepository;
+import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
 
 import jakarta.annotation.PostConstruct;
 
@@ -15,15 +16,14 @@ public class AdminInitializer {
     private static final String DEFAULT_ADMIN_PASSWORD = "1234";
 
     @Autowired
-    private AdministratorRepository administratorRepository;
+    private CreateAdministrator createAdministrator;
 
     @Autowired
-    private CreateAdministrator createAdministrator;
+    private CredentialsRepository credentialsRepository;
 
     @PostConstruct
     public void initAdminIfNotExists() {
-        boolean adminExists = administratorRepository
-            .findByEmail(DEFAULT_ADMIN_EMAIL) 
+        boolean adminExists = credentialsRepository.findByEmailAndRole(DEFAULT_ADMIN_EMAIL, UserRole.ADMINISTRATOR)
             .isPresent();
 
         if (!adminExists) {
