@@ -11,12 +11,12 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
+import com.fuelstation.managmentapi.manager.application.rest.ManagerNotFoundException;
 import com.fuelstation.managmentapi.manager.application.usecases.CreateManager;
 import com.fuelstation.managmentapi.manager.domain.Manager;
-import com.fuelstation.managmentapi.manager.domain.exceptions.ManagerNotFoundException;
 
 import jakarta.transaction.Transactional;
 

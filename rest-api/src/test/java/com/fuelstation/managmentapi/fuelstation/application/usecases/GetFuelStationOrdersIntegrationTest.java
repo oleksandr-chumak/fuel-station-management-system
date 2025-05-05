@@ -17,7 +17,7 @@ import org.springframework.test.context.ActiveProfiles;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.CreateFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 import jakarta.transaction.Transactional;
@@ -66,7 +66,5 @@ public class GetFuelStationOrdersIntegrationTest {
             getFuelStationOrders.process(nonExistentFuelStationId);
         });
     }
-    
-
     
 }

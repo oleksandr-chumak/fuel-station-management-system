@@ -31,7 +31,11 @@ public class CreateManager {
     
     // TODO if manager creation fails delete credentials
     public Manager process(String firstName, String lastName, String email) {
-        Credentials credentials = createCredentials.process(email, generateRandomPassword(10), UserRole.MANAGER);
+        return process(firstName, lastName, email, generateRandomPassword(10));
+    }
+
+    public Manager process(String firstName, String lastName, String email, String password) {
+        Credentials credentials = createCredentials.process(email, password, UserRole.MANAGER);
         Manager createdManager = managerFactory.create(firstName, lastName, credentials.getCredentialsId()); 
         Manager savedManager = managerRepository.save(createdManager);
         domainEventPublisher.publish(new ManagerCreated(savedManager.getId()));

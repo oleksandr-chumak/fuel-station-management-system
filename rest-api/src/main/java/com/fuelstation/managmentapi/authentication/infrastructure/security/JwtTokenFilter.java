@@ -29,9 +29,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
 
-        // JWT validation is Skipped for these public endpoints
         String path = request.getRequestURI();
         if (path.startsWith("/api/auth/login/**")) {
             filterChain.doFilter(request, response);
@@ -42,23 +41,29 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             String token = authorizationHeader.substring(7);
-            String username = jwtTokenService.getUsernameFromToken(token);
-            UserRole role = jwtTokenService.getUserRoleFromToken(token);
 
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                Credentials credentials =  credentialsRepository.findByEmailAndRole(username, role)
-                    .orElseThrow(() -> new UsernameNotFoundException("User with email:" + username + "and role:" + role.name() + "doesn't exist"));
-                SecurityUserDetails userDetails = new SecurityUserDetails(credentials);    
-                if (jwtTokenService.isValidAccessToken(token, userDetails.getUsername())) {
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            try {
+                String username = jwtTokenService.getUsernameFromToken(token);
+                UserRole role = jwtTokenService.getUserRoleFromToken(token);
 
-                    authenticationToken.setDetails(
-                            new WebAuthenticationDetailsSource().buildDetails(request)
-                    );
+                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    Credentials credentials = credentialsRepository.findByEmailAndRole(username, role)
+                            .orElseThrow(() -> new UsernameNotFoundException(
+                                    "User with email: " + username + " and role: " + role.name() + " doesn't exist"));
+                    SecurityUserDetails userDetails = new SecurityUserDetails(credentials);
+                    if (jwtTokenService.isValidAccessToken(token, userDetails.getUsername())) {
+                        UsernamePasswordAuthenticationToken authenticationToken =
+                                new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                        authenticationToken.setDetails(
+                                new WebAuthenticationDetailsSource().buildDetails(request));
+
+                        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                    }
                 }
+            } catch (io.jsonwebtoken.JwtException e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
+                return;
             }
         }
 

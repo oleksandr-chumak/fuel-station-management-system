@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.common.application;
 
+import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,7 +22,13 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
+import com.fuelstation.managmentapi.common.application.exceptions.NotFoundException;
 import com.fuelstation.managmentapi.common.application.models.ErrorResponseEntity;
+import com.fuelstation.managmentapi.common.domain.DomainException;
+
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends BaseExceptionHandler {
@@ -77,7 +85,7 @@ public class GlobalExceptionHandler extends BaseExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ExceptionHandler({ MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class })
     public ResponseEntity<ErrorResponseEntity> handleMethodArgumentTypeMismatch(
             MethodArgumentTypeMismatchException ex, WebRequest request) {
         
@@ -160,6 +168,15 @@ public class GlobalExceptionHandler extends BaseExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ErrorResponseEntity handleNotFoundException(NotFoundException ex) {
+        return new ErrorResponseEntity(ex.getMessage(), ex.getCode(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DomainException.class)
+    public ErrorResponseEntity handleDomainException(DomainException ex) {
+        return ErrorResponseEntity.fromDomain(ex, HttpStatus.CONFLICT);
+    }
     
     /**
      * Internal server error (500)

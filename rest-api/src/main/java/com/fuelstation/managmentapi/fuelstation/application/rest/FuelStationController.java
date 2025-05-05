@@ -29,6 +29,8 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/api/fuel-stations")
@@ -80,7 +82,7 @@ public class FuelStationController {
     }
 
     @PutMapping("/{id}/assign-manager")
-    public ResponseEntity<FuelStationResponse> assignManager(@PathVariable("id") long fuelStationId,@RequestBody AssignManagerRequest request) {
+    public ResponseEntity<FuelStationResponse> assignManager(@PathVariable("id") long fuelStationId,@RequestBody @Valid AssignManagerRequest request) {
         FuelStation fuelStation = assignManagerToFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }

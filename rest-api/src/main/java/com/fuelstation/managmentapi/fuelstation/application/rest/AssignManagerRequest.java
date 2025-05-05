@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AssignManagerRequest {
-    private Long managerId;
+    private long managerId;
 }
