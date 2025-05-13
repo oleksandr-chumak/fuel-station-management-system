@@ -4,7 +4,7 @@ import { TableModule } from 'primeng/table';
 import { FuelStation } from '../../../modules/fuel-station/domain/fuel-station.model';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import FuelStationQueryService from '../../../modules/fuel-station/application/fuel-stations-query.service';
+import FuelStationQueryService from '../../../modules/fuel-station/services/fuel-stations-query.service';
 import { CommonModule } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';

@@ -7,10 +7,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize } from 'rxjs';
-import FuelGrade from '../../../modules/common/domain/fuel-grade.enum';
-import FuelOrderStatus from '../../../modules/fuel-order/domain/fuel-order-status.enum';
-import { FuelOrderApiService } from '../../../modules/fuel-order/infrastructure/fuel-order-api.service';
-import FuelOrder from '../../../modules/fuel-order/domain/fuel-order.model';
+import FuelGrade from '../../../modules/common/fuel-grade.enum';
+import FuelOrderStatus from '../../../modules/fuel-order/models/fuel-order-status.enum';
+import { FuelOrderApiService } from '../../../modules/fuel-order/services/fuel-order-api.service';
+import FuelOrder from '../../../modules/fuel-order/models/fuel-order.model';
 
 @Component({
   selector: 'app-admin-fuel-orders',

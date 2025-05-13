@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import ManagerFuelStationContextService from '../../../modules/fuel-station/domain/manager-fuel-station-context.service';
+import ManagerFuelStationContextService from '../../../modules/fuel-station/services/manager-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -9,9 +9,9 @@ import { SkeletonModule } from 'primeng/skeleton';
 import FuelStationContext from '../../../modules/fuel-station/domain/fuel-station-context.model';
 import { CreateFuelOrderDialogComponent } from '../../../modules/fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { ButtonModule } from 'primeng/button';
-import FuelOrderStatus from '../../../modules/fuel-order/domain/fuel-order-status.enum';
+import FuelOrderStatus from '../../../modules/fuel-order/models/fuel-order-status.enum';
 import { TagModule } from 'primeng/tag';
-import FuelGrade from '../../../modules/common/domain/fuel-grade.enum';
+import FuelGrade from '../../../modules/common/fuel-grade.enum';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',

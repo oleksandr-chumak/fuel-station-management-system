@@ -8,7 +8,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { FuelStation } from '../../modules/fuel-station/domain/fuel-station.model';
 import { ManagerApiService } from '../../modules/manager';
-import { AuthService } from '../../modules/auth/domain/auth.service';
+import { AuthService } from '../../modules/auth/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { Router } from '@angular/router';

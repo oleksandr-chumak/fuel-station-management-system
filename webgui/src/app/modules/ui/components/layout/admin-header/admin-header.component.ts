@@ -2,7 +2,7 @@ import { Component, inject } from "@angular/core";
 import { MenuItem, MessageService } from "primeng/api";
 import { MenubarModule } from "primeng/menubar";
 import { AvatarModule } from "primeng/avatar";
-import { AuthService } from "../../../../auth/domain/auth.service";
+import { AuthService } from "../../../../auth/services/auth.service";
 import { Observable } from "rxjs";
 import User from "../../../../auth/domain/user.model";
 import { CommonModule } from "@angular/common";

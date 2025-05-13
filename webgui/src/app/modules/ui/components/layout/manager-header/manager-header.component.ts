@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MessageService, MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../../../auth/domain/auth.service';
+import { AuthService } from '../../../../auth/services/auth.service';
 import User from '../../../../auth/domain/user.model';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
