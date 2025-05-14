@@ -24,6 +24,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fuelstation.managmentapi.administrator.application.usecases.CreateAdministrator;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 import com.fuelstation.managmentapi.authentication.infrastructure.security.AuthenticationService;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;

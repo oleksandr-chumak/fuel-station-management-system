@@ -24,8 +24,13 @@ public class AdministratorRepositoryImpl implements AdministratorRepository {
     }
 
     @Override
-    public Optional<Administrator> findById(Long id) {
+    public Optional<Administrator> findById(long id) {
         return jpaAdministratorRepository.findById(id).map(administratorMapper::toDomain);
+    }
+
+    @Override
+    public Optional<Administrator> findByCredentialsId(long id) {
+        return jpaAdministratorRepository.findByCredentialsId(id).map(administratorMapper::toDomain);
     }
 
 }

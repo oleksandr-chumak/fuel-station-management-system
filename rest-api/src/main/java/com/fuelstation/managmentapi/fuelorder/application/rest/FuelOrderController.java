@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.ConfirmFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.CreateFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.GetAllFuelOrders;
@@ -42,10 +41,9 @@ public class FuelOrderController {
 
     @PostMapping("/")
     public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody CreateFuelOrderRequest request) {
-        // TODO replace fuel grade
         FuelOrder fuelOrder = createFuelOrder.process(
             request.getFuelStationId(),
-            FuelGrade.DIESEL,
+            request.getFuelGrade(),
             request.getAmount()
         );
         return new ResponseEntity<>(FuelOrderResponse.fromDomain(fuelOrder), HttpStatus.CREATED);
