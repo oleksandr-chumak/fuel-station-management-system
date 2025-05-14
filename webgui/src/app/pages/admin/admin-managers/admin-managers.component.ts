@@ -1,15 +1,15 @@
 import { Component, inject, OnInit } from '@angular/core';
-import ManagersQueryService from '../../../modules/manager/application/managers-query.service';
+import ManagersQueryService from '../../../modules/manager/services/managers-query.service';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { SkeletonModule } from 'primeng/skeleton';
 import { PanelModule } from 'primeng/panel';
-import Manager from '../../../modules/manager/domain/manager.model';
+import Manager from '../../../modules/manager/models/manager.model';
 import { TagModule } from 'primeng/tag';
-import ManagerStatus from '../../../modules/manager/domain/manager-status.enum';
-import { CreateManagerDialogComponent } from '../../../modules/manager/application/components/create-manager-dialog/create-manager-dialog.component';
+import ManagerStatus from '../../../modules/manager/models/manager-status.enum';
+import { CreateManagerDialogComponent } from '../../../modules/manager/components/create-manager-dialog/create-manager-dialog.component';
 
 @Component({
   selector: 'app-admin-managers',

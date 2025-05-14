@@ -220,7 +220,7 @@ public class FuelStationControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(testFuelStation.getId()))
                 .andExpect(jsonPath("$.assignedManagersIds", hasItem(testManager.getId().intValue())))
-                .andExpect(jsonPath("$.status").value("ACTIVE"));
+                .andExpect(jsonPath("$.status").value("active"));
         }
     }
     

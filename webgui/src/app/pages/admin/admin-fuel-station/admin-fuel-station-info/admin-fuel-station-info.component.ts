@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import AdminFuelStationContextService from '../../../../modules/fuel-station/domain/admin-fuel-station-context.service';
+import AdminFuelStationContextService from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';

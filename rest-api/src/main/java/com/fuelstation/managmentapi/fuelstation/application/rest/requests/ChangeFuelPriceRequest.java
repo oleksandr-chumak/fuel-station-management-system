@@ -17,6 +17,6 @@ public class ChangeFuelPriceRequest {
     private FuelGrade fuelGrade;
 
     @Positive(message = "New price must be a positive number")
-    private float newPrice;
+    private Float newPrice;
 
 }

@@ -23,7 +23,7 @@ public class FuelOrderResponse {
         FuelOrderResponse response = new FuelOrderResponse();
         response.setId(fuelOrder.getId());
         response.setFuelStationId(fuelOrder.getFuelStationId());
-        response.setFuelGrade(fuelOrder.getGrade().name());
+        response.setFuelGrade(fuelOrder.getGrade().toString());
         response.setAmount(fuelOrder.getAmount());
         response.setStatus(fuelOrder.getStatus().toString());
         response.setCreatedAt(fuelOrder.getCreatedAt());

@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 public class CredentialsResponse {
     private long userId;
     private String email; 
-    private UserRole role; 
+    private String role; 
 
     public static CredentialsResponse fromDomain(Credentials credentials, long userId) {
         return new CredentialsResponse(
             userId,
             credentials.getEmail(), 
-            credentials.getRole()
+            credentials.getRole().toString()
         );
     }
 

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
-import ManagerFuelStationContextService from '../../modules/fuel-station/domain/manager-fuel-station-context.service';
+import ManagerFuelStationContextService from '../../modules/fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station',

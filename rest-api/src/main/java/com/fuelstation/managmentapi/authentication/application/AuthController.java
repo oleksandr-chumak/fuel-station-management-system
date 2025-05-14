@@ -62,13 +62,13 @@ public class AuthController {
         switch (credentials.getRole()) {
             case UserRole.MANAGER:
                 // TODO handle a case when manager is not found 
-                Manager manager = managerRepository.findByCredentialsId(userId)
+                Manager manager = managerRepository.findByCredentialsId(credentials.getCredentialsId())
                     .orElseThrow(() -> new IllegalStateException("Manager not found by credentials id"));
                 userId = manager.getId();
                 break;
             case UserRole.ADMINISTRATOR:
                 // TODO handle a case when administrator is not found 
-                Administrator administrator = administratorRepository.findByCredentialsId(userId)
+                Administrator administrator = administratorRepository.findByCredentialsId(credentials.getCredentialsId())
                     .orElseThrow(() -> new IllegalStateException("Administrator not found by credentials id"));
                 userId = administrator.getId();
                 break;
