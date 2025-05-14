@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 @Repository
@@ -38,5 +37,10 @@ public class FuelStationRepositoryImpl implements FuelStationRepository {
     @Override
     public List<FuelStation> findAll() {
         return jpaFuelStationRepository.findAll().stream().map(fuelStationMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<FuelStation> findFuelStationsByManagerId(long managerId) {
+        return jpaFuelStationRepository.findByManagerId(managerId).stream().map(fuelStationMapper::toDomain).toList();
     }
 }

@@ -18,8 +18,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress;
@@ -44,12 +44,12 @@ public class FuelStationTest {
         fuelTanks = new ArrayList<>();
         fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, 5000, 10000, Optional.empty()));
         fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, 2000, 8000, Optional.empty()));
-        fuelTanks.add(new FuelTank(3L, FuelGrade.Diesel, 3000, 12000, Optional.empty()));
+        fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, 3000, 12000, Optional.empty()));
         
         fuelPrices = new ArrayList<>();
         fuelPrices.add(new FuelPrice(FuelGrade.RON_92, 3.5f));
         fuelPrices.add(new FuelPrice(FuelGrade.RON_95, 4.0f));
-        fuelPrices.add(new FuelPrice(FuelGrade.Diesel, 3.8f));
+        fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, 3.8f));
         
         assignedManagersIds = new ArrayList<>();
         createdAt = LocalDate.now();
@@ -60,107 +60,9 @@ public class FuelStationTest {
             fuelTanks,
             fuelPrices,
             assignedManagersIds,
-            FuelStationStatus.Active,
+            FuelStationStatus.ACTIVE,
             createdAt
         );
-    }
-
-    @Nested
-    @DisplayName("processFuelDelivery Tests")
-    class ProcessFuelDeliveryTests {
-        
-        @Test
-        @DisplayName("Should throw exception when fuel order is not confirmed")
-        void shouldThrowExceptionWhenFuelOrderIsNotConfirmed() {
-            // Given
-            FuelOrder pendingOrder = new FuelOrder();
-            pendingOrder.setId(1L);
-            pendingOrder.setStatus(FuelOrderStatus.Pending);
-            pendingOrder.setGrade(FuelGrade.RON_92);
-            pendingOrder.setAmount(1000);
-
-            // When & Then
-            IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> fuelStation.processFuelDelivery(pendingOrder)
-            );
-            assertEquals("Fuel order must be in Confirmed status to process.", exception.getMessage());
-        }
-
-        @Test
-        @DisplayName("Should throw exception when there is not enough tank capacity")
-        void shouldThrowExceptionWhenNotEnoughTankCapacity() {
-            // Given
-            FuelOrder confirmedOrder = new FuelOrder();
-            confirmedOrder.setId(1L);
-            confirmedOrder.setStatus(FuelOrderStatus.Confirmed);
-            confirmedOrder.setGrade(FuelGrade.RON_92);
-            confirmedOrder.setAmount(6000); // Available volume is only 5000
-
-            // When & Then
-            IllegalStateException exception = assertThrows(
-                IllegalStateException.class,
-                () -> fuelStation.processFuelDelivery(confirmedOrder)
-            );
-            assertEquals("Not enough tank capacity to process fuel delivery.", exception.getMessage());
-        }
-
-        @Test
-        @DisplayName("Should process fuel delivery when there is enough capacity in a single tank")
-        void shouldProcessFuelDeliveryWithSingleTank() {
-            // Given
-            FuelOrder confirmedOrder = new FuelOrder();
-            confirmedOrder.setId(1L);
-            confirmedOrder.setStatus(FuelOrderStatus.Confirmed);
-            confirmedOrder.setGrade(FuelGrade.RON_92);
-            confirmedOrder.setAmount(3000);
-            
-            LocalDate beforeDelivery = LocalDate.now();
-
-            // When
-            fuelStation.processFuelDelivery(confirmedOrder);
-
-            // Then
-            FuelTank updatedTank = fuelStation.getFuelTanks().get(0);
-            assertEquals(8000, updatedTank.getCurrentVolume());
-            assertEquals(2000, updatedTank.getAvailableVolume());
-            assertTrue(updatedTank.getLastRefillDate().isPresent());
-            assertFalse(updatedTank.getLastRefillDate().get().isBefore(beforeDelivery));
-        }
-
-        @Test
-        @DisplayName("Should fill multiple tanks when needed")
-        void shouldFillMultipleTanksWhenNeeded() {
-            // Given
-            // Create a new tank with the same fuel grade
-            FuelTank additionalTank = new FuelTank(4L, FuelGrade.RON_92, 2000, 7000, Optional.empty());
-            fuelStation.getFuelTanks().add(additionalTank);
-            
-            FuelOrder confirmedOrder = new FuelOrder();
-            confirmedOrder.setId(1L);
-            confirmedOrder.setStatus(FuelOrderStatus.Confirmed);
-            confirmedOrder.setGrade(FuelGrade.RON_92);
-            confirmedOrder.setAmount(8000); // More than the capacity of the first tank
-            
-            LocalDate beforeDelivery = LocalDate.now();
-
-            // When
-            fuelStation.processFuelDelivery(confirmedOrder);
-
-            // Then
-            FuelTank firstTank = fuelStation.getFuelTanks().get(0);
-            FuelTank secondTank = fuelStation.getFuelTanks().get(3);
-            
-            assertEquals(10000, firstTank.getCurrentVolume()); // First tank should be full
-            assertEquals(0, firstTank.getAvailableVolume());
-            assertTrue(firstTank.getLastRefillDate().isPresent());
-            assertFalse(firstTank.getLastRefillDate().get().isBefore(beforeDelivery));
-            
-            assertEquals(5000, secondTank.getCurrentVolume()); // Second tank should have the remaining fuel
-            assertEquals(2000, secondTank.getAvailableVolume());
-            assertTrue(secondTank.getLastRefillDate().isPresent());
-            assertFalse(secondTank.getLastRefillDate().get().isBefore(beforeDelivery));
-        }
     }
 
     @Nested
@@ -175,11 +77,10 @@ public class FuelStationTest {
             fuelStation.getAssignedManagersIds().add(manager.getId());
             
             // When & Then
-            IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> fuelStation.assignManager(manager)
+            assertThrows(
+                ManagerAlreadyAssignedException.class,
+                () -> fuelStation.assignManager(manager.getId())
             );
-            assertEquals("Manager is already assigned to the fuel station", exception.getMessage());
         }
         
         @Test
@@ -190,7 +91,7 @@ public class FuelStationTest {
             assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getId()));
 
             // When
-            fuelStation.assignManager(newManager);
+            fuelStation.assignManager(newManager.getId());
 
             // Then
             assertTrue(fuelStation.getAssignedManagersIds().contains(newManager.getId()));
@@ -206,7 +107,7 @@ public class FuelStationTest {
             assertEquals(1, fuelStation.getAssignedManagersIds().size());
             
             // When
-            fuelStation.unassignManager(manager);
+            fuelStation.unassignManager(manager.getId());
             
             // Then
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
@@ -221,7 +122,7 @@ public class FuelStationTest {
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
             
             // When
-            fuelStation.unassignManager(manager);
+            fuelStation.unassignManager(manager.getId());
             
             // Then
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
@@ -240,11 +141,10 @@ public class FuelStationTest {
             fuelStation.getFuelPrices().add(new FuelPrice(FuelGrade.RON_92, 3.5f));
             
             // When & Then
-            IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> fuelStation.changeFuelPrice(FuelGrade.Diesel, 4.2f)
+            assertThrows(
+                FuelGradeNotFoundException.class,
+                () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, 4.2f)
             );
-            assertEquals("Cannot find fuel price with specified fuel grade", exception.getMessage());
         }
         
         @Test

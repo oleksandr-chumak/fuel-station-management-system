@@ -1,12 +1,11 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
-import java.util.NoSuchElementException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fuelstation.managmentapi.fuelstation.domain.FuelStationRepository;
+import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class GetFuelStationById {
@@ -15,6 +14,7 @@ public class GetFuelStationById {
     private FuelStationRepository fuelStationRepository;
 
     public FuelStation process(long fuelStationId) {
-        return fuelStationRepository.findById(fuelStationId).orElseThrow(() -> new NoSuchElementException("Fuel station with id:" + fuelStationId + "doesn't exist"));
+        return fuelStationRepository.findById(fuelStationId)
+            .orElseThrow(() -> new FuelStationNotFoundException(fuelStationId));
     }
 }

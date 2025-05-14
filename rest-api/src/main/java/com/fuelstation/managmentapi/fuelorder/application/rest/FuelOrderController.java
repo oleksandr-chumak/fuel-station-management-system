@@ -20,7 +20,6 @@ import com.fuelstation.managmentapi.fuelorder.application.usecases.RejectFuelOrd
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import org.springframework.web.bind.annotation.GetMapping;
 
-
 @RestController
 @RequestMapping("/api/fuel-orders")
 public class FuelOrderController {

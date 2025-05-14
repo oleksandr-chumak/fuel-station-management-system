@@ -5,7 +5,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
-import com.fuelstation.managmentapi.authentication.domain.CredentialsRepository;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 @Repository

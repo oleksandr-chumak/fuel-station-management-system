@@ -7,13 +7,14 @@ import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
-import com.fuelstation.managmentapi.fuelstation.domain.events.FuelDeliveryWasProcessed;
-import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceWasChanged;
-import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerWasAssignedToFuelStation;
-import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerWasUnassignedFromFuelStation;
-import com.fuelstation.managmentapi.manager.domain.Manager;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
+import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
+import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.TankCapacityExceededException;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class FuelStation extends AggregateRoot {  
+public class FuelStation extends AggregateRoot {
     private Long id;
     private FuelStationAddress address;
     private List<FuelTank> fuelTanks;
@@ -33,76 +34,75 @@ public class FuelStation extends AggregateRoot {
 
     public List<FuelTank> getFuelTanksByFuelGrade(FuelGrade fuelGrade) {
         return fuelTanks.stream()
-            .filter(ft -> ft.getFuelGrade() == fuelGrade)
-            .toList();
+                .filter(ft -> ft.getFuelGrade() == fuelGrade)
+                .toList();
     }
 
     public long getAvailableVolume(FuelGrade fuelGrade) {
         double totalAvailableAmount = getFuelTanksByFuelGrade(fuelGrade).stream()
-            .mapToDouble(FuelTank::getAvailableVolume)
-            .sum();
-    
-        return (long) totalAvailableAmount; 
+                .mapToDouble(FuelTank::getAvailableVolume)
+                .sum();
+
+        return (long) totalAvailableAmount;
     }
 
-    public void processFuelDelivery(FuelOrder fuelOrder) {
-        if (fuelOrder.getStatus() != FuelOrderStatus.Confirmed) {
-            throw new IllegalStateException("Fuel order must be in Confirmed status to process.");
+    public void assignManager(long managerId) {
+        Optional<Long> foundManagerId = assignedManagersIds.stream()
+                .filter((id) -> id == managerId)
+                .findFirst();
+
+        if (foundManagerId.isPresent()) {
+            throw new ManagerAlreadyAssignedException(managerId, this.id);
         }
-    
-    
-        if (getAvailableVolume(fuelOrder.getGrade()) < fuelOrder.getAmount()) {
-            throw new IllegalStateException("Not enough tank capacity to process fuel delivery.");
-        }
-    
-        float remainingFuel = fuelOrder.getAmount();
-        for (FuelTank fuelTank : getFuelTanksByFuelGrade(fuelOrder.getGrade())) {
-            boolean tankHasEnoughSpaceForAllRemainingFuel = (fuelTank.getAvailableVolume() - remainingFuel) >= 0;
-    
-            if (tankHasEnoughSpaceForAllRemainingFuel) {
-                fuelTank.setCurrentVolume(fuelTank.getCurrentVolume() + remainingFuel);
-                fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
-                return;
-            } else {
-                remainingFuel -= fuelTank.getAvailableVolume();
-                fuelTank.setCurrentVolume(fuelTank.getMaxCapacity());
-                fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
-            }
-        }
-        pushDomainEvent(new FuelDeliveryWasProcessed(fuelOrder.getId()));
+
+        assignedManagersIds.add(managerId);
+        pushDomainEvent(new ManagerAssignedToFuelStation(id, managerId));
     }
 
-    public void assignManager(Manager manager) {
-        Optional<Long> managerId = assignedManagersIds.stream().filter((id) -> id == manager.getId()).findFirst();
-
-        if(managerId.isPresent()) {
-            throw new IllegalArgumentException("Manager is already assigned to the fuel station");
-        }
-
-        assignedManagersIds.add(manager.getId()); 
-        pushDomainEvent(new ManagerWasAssignedToFuelStation(id, manager.getId()));
-    }
-
-    public void unassignManager(Manager manager) {
-        assignedManagersIds.removeIf((id) -> id == manager.getId());
-        pushDomainEvent(new ManagerWasUnassignedFromFuelStation(id, manager.getId()));
-    }
-    
-    public void unassignAllManagers() {
-        List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
-        for(long managerId : cloneAssignedManagersIds) {
-            unassignManager(new Manager(managerId, null, null, null, null));
-        }
+    public void unassignManager(long managerId) {
+        assignedManagersIds.removeIf((id) -> id == managerId);
+        pushDomainEvent(new ManagerUnassignedFromFuelStation(id, managerId));
     }
 
     public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
         FuelPrice oldPrice = fuelPrices.stream()
-            .filter(fp -> fp.fuelGrade() == fuelGrade)
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Cannot find fuel price with specified fuel grade"));
+                .filter(fp -> fp.fuelGrade() == fuelGrade)
+                .findFirst()
+                .orElseThrow(() -> new FuelGradeNotFoundException(fuelGrade.toString(), this.id));
 
         fuelPrices.remove(oldPrice);
         fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
-        pushDomainEvent(new FuelPriceWasChanged(id));
+        pushDomainEvent(new FuelPriceChanged(id));
+    }
+
+    public void refillFuelTank(FuelTank fuelTank, float volume) {
+        float totalVolume = fuelTank.getCurrentVolume() + volume;
+        if (totalVolume > fuelTank.getMaxCapacity()) {
+            throw new TankCapacityExceededException(
+                    fuelTank.getId(), 
+                    totalVolume, 
+                    fuelTank.getMaxCapacity()
+            );
+        }
+
+        fuelTank.setCurrentVolume(totalVolume);
+        fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
+    }
+
+    public void deactivate() {
+        if (status == FuelStationStatus.DEACTIVATED) {
+            throw new FuelStationAlreadyDeactivatedException(this.id);
+        }
+
+        this.status = FuelStationStatus.DEACTIVATED;
+        this.unassignAllManagers();
+        pushDomainEvent(new FuelStationDeactivated(id));
+    }
+
+    private void unassignAllManagers() {
+        List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
+        for (long managerId : cloneAssignedManagersIds) {
+            unassignManager(managerId);
+        }
     }
 }

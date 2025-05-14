@@ -4,6 +4,10 @@ import java.time.LocalDate;
 
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
+import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;
+import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeConfirmedException;
+import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeRejectedException;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,18 +27,18 @@ public class FuelOrder extends AggregateRoot {
     private LocalDate createdAt;
 
     public void confirm() {
-        if (status != FuelOrderStatus.Pending) {
-            throw new IllegalArgumentException("Cannot confirm fuel order because its current status is '" + status + "'. Only pending orders can be confirmed.");
+        if (status != FuelOrderStatus.PENDING) {
+            throw new FuelOrderCannotBeConfirmedException(id, status);
         }
-        status = FuelOrderStatus.Confirmed;
-        pushDomainEvent(new FuelOrderWasConfirmed(id));
+        status = FuelOrderStatus.CONFIRMED;
+        pushDomainEvent(new FuelOrderConfirmed(id));
     }
 
     public void reject() {
-        if (status != FuelOrderStatus.Pending) {
-            throw new IllegalArgumentException("Cannot confirm fuel order because its current status is '" + status + "'. Only pending orders can be rejected.");
+        if (status != FuelOrderStatus.PENDING) {
+            throw new FuelOrderCannotBeRejectedException(id, status);
         }
-        status = FuelOrderStatus.Rejected;
-        pushDomainEvent(new FuelOrderWasRejected(id));
+        status = FuelOrderStatus.REJECTED;
+        pushDomainEvent(new FuelOrderRejected(id));
     }
 }

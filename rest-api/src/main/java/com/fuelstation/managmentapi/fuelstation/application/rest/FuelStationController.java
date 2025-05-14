@@ -1,7 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPrice;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStation;
@@ -24,10 +26,12 @@ import com.fuelstation.managmentapi.fuelstation.application.usecases.GetAllFuelS
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationManagers;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationOrders;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerToFuelStation;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerFromFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.domain.Manager;
+
+import jakarta.validation.Valid;
 
 
 @RestController
@@ -44,7 +48,7 @@ public class FuelStationController {
     private AssignManagerToFuelStation assignManagerToFuelStation;
     
     @Autowired
-    private UnassignManagerToFuelStation unassignManagerToFuelStation;
+    private UnassignManagerFromFuelStation unassignManagerFromFuelStation;
     
     @Autowired
     private ChangeFuelPrice changeFuelPrice;
@@ -80,14 +84,14 @@ public class FuelStationController {
     }
 
     @PutMapping("/{id}/assign-manager")
-    public ResponseEntity<FuelStationResponse> assignManager(@PathVariable("id") long fuelStationId,@RequestBody AssignManagerRequest request) {
+    public ResponseEntity<FuelStationResponse> assignManager(@PathVariable("id") long fuelStationId,@RequestBody @Valid AssignManagerRequest request) {
         FuelStation fuelStation = assignManagerToFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @PutMapping("/{id}/unassign-manager")
     public ResponseEntity<FuelStationResponse> unassignManager(@PathVariable("id") long fuelStationId, @RequestBody AssignManagerRequest request) {
-        FuelStation fuelStation = unassignManagerToFuelStation.process(fuelStationId, request.getManagerId());
+        FuelStation fuelStation = unassignManagerFromFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 

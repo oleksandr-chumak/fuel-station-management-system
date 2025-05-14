@@ -1,6 +1,8 @@
 package com.fuelstation.managmentapi.manager.domain;
 
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
+import com.fuelstation.managmentapi.manager.domain.events.ManagerTerminated;
+import com.fuelstation.managmentapi.manager.domain.exceptions.ManagerAlreadyTerminatedException;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,10 +19,10 @@ public class Manager extends AggregateRoot {
    private Long credentialsId; 
 
    public void terminate() {
-      if(status == ManagerStatus.Deactivated) {
-         throw new IllegalArgumentException("Manager is already terminated");
+      if(status == ManagerStatus.TERMINATED) {
+         throw new ManagerAlreadyTerminatedException(id);
       }
-      status = ManagerStatus.Deactivated;
-      pushDomainEvent(new ManagerWasTerminated(id));
+      status = ManagerStatus.TERMINATED;
+      pushDomainEvent(new ManagerTerminated(id));
    }
 }

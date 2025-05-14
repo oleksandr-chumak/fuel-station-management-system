@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
-import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderRepository;
 
 @Repository
 public class FuelOrderRepositoryImpl implements FuelOrderRepository {
@@ -33,8 +32,8 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
     }
 
     @Override
-    public float getUnconfirmedFuelAmount(Long gasStationId, FuelGrade fuelGrade) {
-        Float res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(gasStationId, fuelGrade);
+    public float getUnconfirmedFuelAmount(long fuelStationId, FuelGrade fuelGrade) {
+        Float res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(fuelStationId, fuelGrade);
         return res != null ? res : 0f;
     }
 
@@ -44,7 +43,7 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
     }
 
     @Override
-    public List<FuelOrder> findFuelOrdersByFuelStationId(Long fuelStationId) {
+    public List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId) {
         return jpaFuelOrderRepository.findByFuelStationId(fuelStationId).stream().map(fuelOrderMapper::toDomain).toList();
     }
 

@@ -5,19 +5,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-import com.fuelstation.managmentapi.authentication.domain.CredentialsWasCreated;
+import com.fuelstation.managmentapi.authentication.domain.CredentialsCreated;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 @Component
 public class CredentialsEventHandler {
 
-    private Logger logger = LoggerFactory.getLogger(CredentialsWasCreated.class);
+    private Logger logger = LoggerFactory.getLogger(CredentialsCreated.class);
     
     @EventListener
-    public void handle(CredentialsWasCreated event) {
+    public void handle(CredentialsCreated event) {
         logger.info("Credentials was created ID:" + event.getCredentialsId());
 
-        if (event.getRole() == UserRole.Manager) {
+        // TODO move this from credentials 
+        if (event.getRole() == UserRole.MANAGER) {
             // TODO implement id with EmailService and do not log credentials to console
             logger.info("Credentials was sent to the manager EMAIL:" + event.getEmail() + "PASSWORD:" + event.getPlainPassword());
             

@@ -1,17 +1,13 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.persistence;
 
-import com.fuelstation.managmentapi.administrator.infrastructure.persistence.AdministratorEntity;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
-import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,10 +31,4 @@ public class CredentialsEntity {
     private UserRole role;
 
     private String password;
-
-    @OneToOne(mappedBy = "credentials", fetch = FetchType.EAGER)
-    private ManagerEntity manager;
-
-    @OneToOne(mappedBy = "credentials", fetch = FetchType.EAGER)
-    private AdministratorEntity administrator;
 }

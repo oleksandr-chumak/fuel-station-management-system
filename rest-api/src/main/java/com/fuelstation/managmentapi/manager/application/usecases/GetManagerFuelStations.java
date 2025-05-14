@@ -1,23 +1,26 @@
 package com.fuelstation.managmentapi.manager.application.usecases;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.manager.domain.ManagerRepository;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
 @Component
 public class GetManagerFuelStations {
     
     @Autowired
-    public ManagerRepository managerRepository;
+    private GetManagerById getManagerById;
+
+    @Autowired
+    private FuelStationRepository fuelStationRepository;
+
 
     public List<FuelStation> process(long managerId) {
-        managerRepository.findById(managerId).orElseThrow(() -> new NoSuchElementException("Manager with id: " + managerId + " doesn't exist"));
-        return this.managerRepository.findManagerFuelStation(managerId);
+        getManagerById.process(managerId);
+        return fuelStationRepository.findFuelStationsByManagerId(managerId);
     }
     
 }
