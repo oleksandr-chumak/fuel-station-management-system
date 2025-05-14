@@ -38,4 +38,9 @@ public class ManagerRepositoryImpl implements ManagerRepository {
         return jpaManagerRepository.findAllById(assignedManagerIds).stream().map(managerMapper::toDomain).toList();
     }
 
+    @Override
+    public Optional<Manager> findByCredentialsId(long id) {
+        return jpaManagerRepository.findByCredentialsId(id).map(managerMapper::toDomain);
+    }
+
 }

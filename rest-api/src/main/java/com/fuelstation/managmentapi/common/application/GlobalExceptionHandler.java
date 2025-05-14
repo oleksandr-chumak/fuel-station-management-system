@@ -1,6 +1,5 @@
 package com.fuelstation.managmentapi.common.application;
 
-import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,10 +24,6 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import com.fuelstation.managmentapi.common.application.exceptions.NotFoundException;
 import com.fuelstation.managmentapi.common.application.models.ErrorResponseEntity;
 import com.fuelstation.managmentapi.common.domain.DomainException;
-
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends BaseExceptionHandler {
