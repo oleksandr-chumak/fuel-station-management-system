@@ -66,7 +66,7 @@ public class FuelStationController {
     private GetFuelStationOrders getFuelStationOrders;
 
     @PostMapping("/")
-    public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody CreateFuelStationRequest request) {
+    public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody @Valid CreateFuelStationRequest request) {
         FuelStation fuelStation = createFuelStation.process(
             request.getStreet(),
             request.getBuildingNumber(),
@@ -90,13 +90,13 @@ public class FuelStationController {
     }
 
     @PutMapping("/{id}/unassign-manager")
-    public ResponseEntity<FuelStationResponse> unassignManager(@PathVariable("id") long fuelStationId, @RequestBody AssignManagerRequest request) {
+    public ResponseEntity<FuelStationResponse> unassignManager(@PathVariable("id") long fuelStationId, @RequestBody @Valid AssignManagerRequest request) {
         FuelStation fuelStation = unassignManagerFromFuelStation.process(fuelStationId, request.getManagerId());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @PutMapping("/{id}/change-fuel-price")
-    public ResponseEntity<FuelStationResponse> changeFuelPrice(@PathVariable("id") long fuelStationId, @RequestBody ChangeFuelPriceRequest request) {
+    public ResponseEntity<FuelStationResponse> changeFuelPrice(@PathVariable("id") long fuelStationId, @RequestBody @Valid ChangeFuelPriceRequest request) {
         FuelStation fuelStation = changeFuelPrice.process(
             fuelStationId,
             request.getFuelGrade(),

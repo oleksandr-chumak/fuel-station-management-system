@@ -17,7 +17,7 @@
             <tr>
                 <td>{{ fuelStation.id }}</td>
                 <td>{{ fuelStation.address }}</td>
-                <td><p-tag [value]="fuelStation.status.toString()" [severity]="getSeverity(fuelStation)" /></td>
+                <td><p-tag [value]="fuelStation.status" [severity]="getSeverity(fuelStation)" /></td>
                 <td>
                     <div class="flex items-center justify-center">
                         <p-button (onClick)="handleViewClick(fuelStation.id)" size="small" severity="secondary" [outlined]="true">View</p-button>

@@ -3,12 +3,12 @@ import { Router, RouterModule } from '@angular/router';
 import { MessageService, MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../../auth/services/auth.service';
-import User from '../../../../auth/domain/user.model';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
+import User from '../../../../auth/models/user.model';
 
 @Component({
   selector: 'app-manager-header',

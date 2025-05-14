@@ -80,7 +80,7 @@ public class GlobalExceptionHandler extends BaseExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 
-    @ExceptionHandler({ MethodArgumentTypeMismatchException.class, HttpMessageNotReadableException.class })
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ResponseEntity<ErrorResponseEntity> handleMethodArgumentTypeMismatch(
             MethodArgumentTypeMismatchException ex, WebRequest request) {
         
@@ -95,6 +95,30 @@ public class GlobalExceptionHandler extends BaseExceptionHandler {
         ErrorResponseEntity errorResponse = new ErrorResponseEntity(
                 details.toString(), 
                 "TYPE_MISMATCH", 
+                HttpStatus.BAD_REQUEST);
+        
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseEntity> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex, WebRequest request) {
+        
+        Map<String, Object> requestDetails = getRequestDetails(request);
+        logger.warn("Message not readable: {}, Request details: {}", ex.getMessage(), requestDetails);
+        
+        Map<String, Object> details = new HashMap<>();
+        details.put("error", "Invalid request body");
+        
+        String message = ex.getMessage();
+        if (message != null && message.contains("not one of the values accepted for Enum class")) {
+            String enumInfo = message.substring(message.indexOf("Enum class:"));
+            details.put("enumError", enumInfo);
+        }
+        
+        ErrorResponseEntity errorResponse = new ErrorResponseEntity(
+                details.toString(), 
+                "INVALID_REQUEST_BODY", 
                 HttpStatus.BAD_REQUEST);
         
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);

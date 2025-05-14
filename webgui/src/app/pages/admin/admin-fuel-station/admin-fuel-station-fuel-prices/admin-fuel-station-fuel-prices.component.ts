@@ -6,10 +6,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import AdminFuelStationContextService from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 import FuelGrade from '../../../../modules/common/fuel-grade.enum';
-import FuelPrice from '../../../../modules/fuel-station/domain/fuel-price.model';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
+import FuelPrice from '../../../../modules/fuel-station/models/fuel-price.model';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-prices',

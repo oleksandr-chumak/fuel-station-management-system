@@ -12,8 +12,9 @@ interface FuelPriceJson {
 
 interface FuelTankJson {
   id: number;
-  capacity: number;
-  currentLevel: number;
+  maxCapacity: number;
+  currentVolume: number;
+  lastRefillDate: string | null;
   fuelGrade: string;
 }
 
@@ -82,11 +83,15 @@ export class FuelStationMapper {
 
   private parseStatus(status: string | number): FuelStationStatus {
     if (typeof status === 'string') {
-      const enumVal = FuelStationStatus[status as keyof typeof FuelStationStatus];
-      if (enumVal === undefined) {
-        throw new Error(`Invalid status string: ${status}`);
+      switch(status) {
+        case "active":
+          return FuelStationStatus.Active;
+        case "deactivated":
+          return FuelStationStatus.Deactivated
+        default:
+          throw new Error(`Unsupported status type: ${typeof status}`);
+
       }
-      return enumVal;
     } 
 
     throw new Error(`Unsupported status type: ${typeof status}`);
@@ -122,9 +127,10 @@ export class FuelStationMapper {
       
       return new FuelTank(
         tankJson.id,
-        tankJson.capacity,
-        tankJson.currentLevel,
-        fuelGrade
+        tankJson.currentVolume,
+        tankJson.maxCapacity,
+        fuelGrade,
+        tankJson.lastRefillDate ? new Date(tankJson.lastRefillDate) : null
       );
     });
   }
@@ -132,11 +138,14 @@ export class FuelStationMapper {
   private isFuelTankJson(json: unknown): json is FuelTankJson {
     if (typeof json !== 'object' || json === null) return false;
 
+    const typedJson = json as Partial<FuelTankJson>
+
     return (
-      'id' in json && typeof (json as { id: unknown }).id === 'number' &&
-      'capacity' in json && typeof (json as { capacity: unknown }).capacity === 'number' &&
-      'currentLevel' in json && typeof (json as { currentLevel: unknown }).currentLevel === 'number' &&
-      'fuelGrade' in json && typeof (json as { fuelGrade: unknown }).fuelGrade === 'string'
+      'id' in json && typeof typedJson.id === 'number' &&
+      'maxCapacity' in json && typeof typedJson.maxCapacity === 'number' &&
+      'currentVolume' in json && typeof typedJson.currentVolume === 'number' &&
+      'fuelGrade' in json && typeof typedJson.fuelGrade === 'string' &&
+      'lastRefillDate' in json && (typeof typedJson.lastRefillDate === 'string' || json.lastRefillDate === null)
     );
   }
 }

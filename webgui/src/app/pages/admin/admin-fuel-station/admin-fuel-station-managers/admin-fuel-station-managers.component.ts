@@ -6,7 +6,7 @@ import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import { AssignManagerDialogComponent } from '../../../../modules/manager/interfaces/components/assign-manager-dialog/assign-manager-dialog.component';
+import { AssignManagerDialogComponent } from '../../../../modules/manager/components/assign-manager-dialog/assign-manager-dialog.component';
 
 @Component({
   selector: 'app-admin-fuel-station-managers',

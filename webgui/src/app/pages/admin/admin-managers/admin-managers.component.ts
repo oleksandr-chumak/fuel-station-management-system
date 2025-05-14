@@ -9,7 +9,7 @@ import { PanelModule } from 'primeng/panel';
 import Manager from '../../../modules/manager/models/manager.model';
 import { TagModule } from 'primeng/tag';
 import ManagerStatus from '../../../modules/manager/models/manager-status.enum';
-import { CreateManagerDialogComponent } from '../../../modules/manager/interfaces/components/create-manager-dialog/create-manager-dialog.component';
+import { CreateManagerDialogComponent } from '../../../modules/manager/components/create-manager-dialog/create-manager-dialog.component';
 
 @Component({
   selector: 'app-admin-managers',

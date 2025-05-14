@@ -11,11 +11,11 @@ export class FuelGradeMapper {
         }
 
         switch (grade) {
-            case "Diesel":
+            case "diesel":
                 return FuelGrade.Diesel;
-            case "RON_95":
+            case "ron-95":
                 return FuelGrade.RON_95;
-            case "RON_92":
+            case "ron-92":
                 return FuelGrade.RON_92;
             default:
                 throw new Error(`Cannot transform value: ${grade} to FuelGrade enum`);

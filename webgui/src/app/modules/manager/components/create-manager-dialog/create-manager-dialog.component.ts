@@ -1,12 +1,12 @@
 import { Component, inject, Input } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ManagerFormComponent } from '../manager-form/manager-form.component';
-import ManagersQueryService from '../../managers-query.service';
 import { MessageService } from 'primeng/api';
-import { ManagerApiService } from '../../../infrastructure/manager-api.service';
-import { ManagerFormData } from '../../manager.model';
 import { finalize } from 'rxjs';
-import BasicDialog from '../../../../common/basic-dialog.component';
+import BasicDialog from '../../../common/basic-dialog.component';
+import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
+import { ManagerApiService } from '../../services/manager-api.service';
+import ManagersQueryService from '../../services/managers-query.service';
 
 @Component({
   selector: 'app-create-manager-dialog',

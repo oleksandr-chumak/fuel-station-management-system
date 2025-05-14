@@ -1,12 +1,12 @@
 import { Component, inject, Input } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FuelStationFormComponent } from '../fuel-station-form/fuel-station-form.component';
-import { FuelStationFormData } from '../fuel-station-form-data.interface';
 import FuelStationApiService from '../../services/fuel-station-api.service';
 import { finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
 import FuelStationQueryService from '../../services/fuel-stations-query.service';
 import BasicDialog from '../../../common/basic-dialog.component';
+import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.interface';
 
 @Component({
   selector: 'app-create-fuel-station-dialog',

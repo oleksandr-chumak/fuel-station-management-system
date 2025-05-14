@@ -1,6 +1,6 @@
 enum ManagerStatus {
-    Active,
-    Deactivated
+    Active = "Active",
+    Deactivated = "Deactivated"
 }
 
 export default ManagerStatus;

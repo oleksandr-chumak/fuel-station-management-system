@@ -1,18 +1,17 @@
 import { Component, inject } from '@angular/core';
-import BasicDialog from '../../../../common/basic-dialog.component';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { ManagerSelectComponent } from '../../../../manager/application/components/manager-select/manager-select.component';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import ManagerFuelStationContextService from '../../../../fuel-station/domain/manager-fuel-station-context.service';
-import FuelGrade from '../../../../common/fuel-grade.enum';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
+import BasicDialog from '../../../common/basic-dialog.component';
+import FuelGrade from '../../../common/fuel-grade.enum';
+import ManagerFuelStationContextService from '../../../fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-create-fuel-order-dialog',

@@ -6,12 +6,12 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { FuelStation } from '../../modules/fuel-station/domain/fuel-station.model';
-import { ManagerApiService } from '../../modules/manager';
 import { AuthService } from '../../modules/auth/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { Router } from '@angular/router';
+import { FuelStation } from '../../modules/fuel-station/models/fuel-station.model';
+import { ManagerApiService } from '../../modules/manager/services/manager-api.service';
 
 @Component({
   selector: 'app-manager-dashboard',
@@ -41,10 +41,10 @@ export class ManagerDashboardComponent implements OnInit {
     this.managerApiService.getManagerFuelStations(user.userId)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: (data) => {
+        next: (data: FuelStation[]) => {
           this.fuelStations = data;
         }, 
-        error: (err) => {
+        error: (err: unknown) => {
           console.error("An error occurred while fetching fuel stations", err);
           this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations"});
         }

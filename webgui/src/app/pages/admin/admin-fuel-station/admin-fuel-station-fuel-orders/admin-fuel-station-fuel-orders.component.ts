@@ -10,7 +10,7 @@ import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import FuelGrade from '../../../../modules/common/fuel-grade.enum';
 import FuelOrderStatus from '../../../../modules/fuel-order/models/fuel-order-status.enum';
-import FuelStationContext from '../../../../modules/fuel-station/domain/fuel-station-context.model';
+import FuelStationContext from '../../../../modules/fuel-station/models/fuel-station-context.model';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-orders',

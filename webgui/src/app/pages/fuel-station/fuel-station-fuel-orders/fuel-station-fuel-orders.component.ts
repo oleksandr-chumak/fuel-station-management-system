@@ -6,12 +6,12 @@ import { CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
-import FuelStationContext from '../../../modules/fuel-station/domain/fuel-station-context.model';
-import { CreateFuelOrderDialogComponent } from '../../../modules/fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { ButtonModule } from 'primeng/button';
 import FuelOrderStatus from '../../../modules/fuel-order/models/fuel-order-status.enum';
 import { TagModule } from 'primeng/tag';
 import FuelGrade from '../../../modules/common/fuel-grade.enum';
+import { CreateFuelOrderDialogComponent } from '../../../modules/fuel-order/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
+import FuelStationContext from '../../../modules/fuel-station/models/fuel-station-context.model';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',

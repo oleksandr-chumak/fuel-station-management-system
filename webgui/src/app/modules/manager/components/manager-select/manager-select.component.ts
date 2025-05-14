@@ -1,11 +1,11 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { Select, SelectChangeEvent } from 'primeng/select';
-import Manager from '../../../domain/manager.model';
-import { ManagerApiService } from '../../../infrastructure/manager-api.service';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import Manager from '../../models/manager.model';
+import { ManagerApiService } from '../../services/manager-api.service';
 
 // TODO refactor this
 @Component({
@@ -37,7 +37,7 @@ export class ManagerSelectComponent implements OnInit {
     this.managerApiService.getManagers()
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: (data) => {
+        next: (data: Manager[]) => {
           this.managers = data;
         },
         error: () => {

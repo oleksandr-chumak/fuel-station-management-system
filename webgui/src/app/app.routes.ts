@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { ManagerDashboardComponent } from './pages/manager-dashboard/manager-dashboard.component';
 import { AdminLoginComponent } from './pages/admin/admin-login/admin-login.component';
-import adminGuard from './modules/auth/infrastructure/admin.guard';
 import { FuelStationsAdminComponent } from './pages/admin/fuel-stations-admin/fuel-stations-admin.component';
 import { AdminFuelStationComponent } from './pages/admin/admin-fuel-station/admin-fuel-station.component';
 import { AdminFuelStationInfoComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-info/admin-fuel-station-info.component';
@@ -10,7 +9,6 @@ import { AdminFuelStationFuelOrdersComponent } from './pages/admin/admin-fuel-st
 import { AdminManagersComponent } from './pages/admin/admin-managers/admin-managers.component';
 import { AdminFuelOrdersComponent } from './pages/admin/admin-fuel-orders/admin-fuel-orders.component';
 import { ManagerLoginComponent } from './pages/manager-login/manager-login.component';
-import managerGuard from './modules/auth/infrastructure/manager.guard';
 import { FuelStationComponent } from './pages/fuel-station/fuel-station.component';
 import { FuelStationInfoComponent } from './pages/fuel-station/fuel-station-info/fuel-station-info.component';
 import { FuelStationManagersComponent } from './pages/fuel-station/fuel-station-managers/fuel-station-managers.component';
@@ -19,6 +17,8 @@ import { AdminFuelStationFuelTanksComponent } from './pages/admin/admin-fuel-sta
 import { AdminFuelStationFuelPricesComponent } from './pages/admin/admin-fuel-station/admin-fuel-station-fuel-prices/admin-fuel-station-fuel-prices.component';
 import { FuelStationFuelTanksComponent } from './pages/fuel-station/fuel-station-fuel-tanks/fuel-station-fuel-tanks.component';
 import { FuelStationFuelPricesComponent } from './pages/fuel-station/fuel-station-fuel-prices/fuel-station-fuel-prices.component';
+import adminGuard from './modules/auth/guards/admin.guard';
+import managerGuard from './modules/auth/guards/manager.guard';
 
 export const routes: Routes = [
     // manager routes

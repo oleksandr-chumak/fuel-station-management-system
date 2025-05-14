@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
-import { FuelStationFormData } from '../fuel-station-form-data.interface';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.interface';
 
 @Component({
   selector: 'app-fuel-station-form',

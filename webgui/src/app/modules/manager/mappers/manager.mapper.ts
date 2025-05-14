@@ -6,7 +6,7 @@ interface ManagerJson {
   id: number;
   firstName: string;
   lastName: string;
-  status: string | number;
+  status: string;
 }
 
 @Injectable({ providedIn: "root" })
@@ -40,11 +40,14 @@ export class ManagerMapper {
 
   private parseStatus(status: unknown): ManagerStatus {
     if (typeof status === 'string') {
-      const enumVal = ManagerStatus[status as keyof typeof ManagerStatus];
-      if (enumVal === undefined) {
-        throw new Error(`Invalid status string: ${status}`);
+      switch(status) {
+        case "active": 
+          return ManagerStatus.Active;
+        case "deactivated":
+          return ManagerStatus.Deactivated;
+        default:
+          throw new Error(`Unsupported status type: ${typeof status}`);
       }
-      return enumVal;
     }
 
     throw new Error(`Unsupported status type: ${typeof status}`);

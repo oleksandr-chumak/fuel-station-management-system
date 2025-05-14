@@ -1,6 +1,6 @@
 enum FuelStationStatus {
-    Active,
-    Deactivated
+    Active = "Active",
+    Deactivated = "Deactivated"
 }
 
 export default FuelStationStatus;
