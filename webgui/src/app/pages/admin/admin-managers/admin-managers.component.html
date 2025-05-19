@@ -1,5 +1,5 @@
 <app-create-manager-dialog #dialog></app-create-manager-dialog>
-<p-panel header="Fuel stations">
+<p-panel header="Managers">
     <ng-template #icons>
         <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Create Manager" />
     </ng-template>
@@ -12,7 +12,6 @@
                 <th>Last Name</th>
                 <th>Full Name</th>
                 <th>Status</th>
-                <th class="flex items-center justify-center">Action</th>
             </tr>
         </ng-template>
         <ng-template #body let-manager>
@@ -22,11 +21,6 @@
                 <td>{{ manager.lastName }}</td>
                 <td>{{ manager.fullName }}</td>
                 <td><p-tag [value]="manager.status.toString()" [severity]="getSeverity(manager)" /></td>
-                <td>
-                    <div class="flex items-center justify-center">
-                        <p-button size="small" severity="secondary" [outlined]="true">View</p-button>
-                    </div>
-                </td>
             </tr>
         </ng-template>
         <ng-template #loadingbody>
