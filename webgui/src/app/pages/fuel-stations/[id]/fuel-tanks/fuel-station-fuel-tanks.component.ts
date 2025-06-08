@@ -4,17 +4,17 @@ import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import AdminFuelStationContextService from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
 import FuelGrade from '../../../../modules/common/fuel-grade.enum';
 
 @Component({
-  selector: 'app-admin-fuel-station-fuel-tanks',
+  selector: 'app-fuel-station-fuel-tanks',
   imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
-  templateUrl: './admin-fuel-station-fuel-tanks.component.html'
+  templateUrl: './fuel-station-fuel-tanks.component.html'
 })
-export class AdminFuelStationFuelTanksComponent {
+export class FuelStationFuelTanksComponent {
 
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
+  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
   visible = false;
   skeletonRows = new Array(5).fill(null);

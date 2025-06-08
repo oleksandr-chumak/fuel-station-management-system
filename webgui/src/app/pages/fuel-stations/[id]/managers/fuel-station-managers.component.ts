@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import ManagerFuelStationContextService from '../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 
 @Component({

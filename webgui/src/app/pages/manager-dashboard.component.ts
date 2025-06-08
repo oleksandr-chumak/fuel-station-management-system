@@ -6,12 +6,12 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { AuthService } from '../../modules/auth/services/auth.service';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { Router } from '@angular/router';
-import { FuelStation } from '../../modules/fuel-station/models/fuel-station.model';
-import { ManagerApiService } from '../../modules/manager/services/manager-api.service';
+import { AuthService } from '../modules/auth/services/auth.service';
+import { FuelStation } from '../modules/fuel-station/models/fuel-station.model';
+import { ManagerApiService } from '../modules/manager/services/manager-api.service';
 
 @Component({
   selector: 'app-manager-dashboard',

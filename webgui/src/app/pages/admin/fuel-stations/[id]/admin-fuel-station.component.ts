@@ -1,23 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, OnDestroy } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TabsModule } from 'primeng/tabs';
+import AdminFuelStationContextService from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
-import { TabsModule } from 'primeng/tabs';
-import ManagerFuelStationContextService from '../../modules/fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
-  selector: 'app-fuel-station',
+  selector: 'app-admin-fuel-station',
   imports: [RouterModule, TabsModule, CommonModule, SkeletonModule],
-  templateUrl: './fuel-station.component.html'
+  templateUrl: './admin-fuel-station.component.html'
 })
-export class FuelStationComponent implements OnInit, OnDestroy {
+export class AdminFuelStationComponent implements OnInit, OnDestroy {
   private paramsStationId = '';
-
-  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
-  private messageService: MessageService = inject(MessageService);
   private router: Router = inject(Router);
-  private route: ActivatedRoute = inject(ActivatedRoute);
+  private route: ActivatedRoute = inject(ActivatedRoute)
+  private messageService: MessageService = inject(MessageService);
+  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService)
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -48,29 +47,29 @@ export class FuelStationComponent implements OnInit, OnDestroy {
     return (
       [
         {
-          label: 'Info',
-          icon: 'pi pi-info-circle',
-          route: `/fuel-station/${this.paramsStationId}/info`
+          label: "Info",
+          icon: "pi pi-info-circle",
+          route: `/admin/fuel-station/${this.paramsStationId}/info`
         },
         {
-          label: 'Managers',
-          icon: 'pi pi-users',
-          route: `/fuel-station/${this.paramsStationId}/managers`
+          label: "Managers",
+          icon: "pi pi-users",
+          route: `/admin/fuel-station/${this.paramsStationId}/managers`
         },
         {
-          label: 'Fuel Orders',
-          icon: 'pi pi-shopping-cart',
-          route: `/fuel-station/${this.paramsStationId}/fuel-orders`
+          label: "Fuel Orders",
+          icon: "pi pi-list",
+          route: `/admin/fuel-station/${this.paramsStationId}/fuel-orders`
         },
         {
           label: "Fuel Tanks", 
           icon: "pi pi-box",
-          route: `/fuel-station/${this.paramsStationId}/fuel-tanks`
+          route: `/admin/fuel-station/${this.paramsStationId}/fuel-tanks`
         },
         {
           label: "Fuel Prices", 
           icon: "pi pi-dollar",
-          route: `/fuel-station/${this.paramsStationId}/fuel-prices`
+          route: `/admin/fuel-station/${this.paramsStationId}/fuel-prices`
         }
       ]
     )
@@ -79,4 +78,5 @@ export class FuelStationComponent implements OnInit, OnDestroy {
   get ctx$() {
     return this.ctxService.getContext();
   }
+
 }

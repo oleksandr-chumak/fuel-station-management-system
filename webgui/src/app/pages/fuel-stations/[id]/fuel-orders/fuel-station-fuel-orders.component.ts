@@ -1,36 +1,33 @@
-import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { PanelModule } from 'primeng/panel';
-import { SkeletonModule } from 'primeng/skeleton';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
-import AdminFuelStationContextService from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import FuelGrade from '../../../../modules/common/fuel-grade.enum';
+import { CommonModule } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { PanelModule } from 'primeng/panel';
+import { SkeletonModule } from 'primeng/skeleton';
+import { ButtonModule } from 'primeng/button';
 import FuelOrderStatus from '../../../../modules/fuel-order/models/fuel-order-status.enum';
+import { TagModule } from 'primeng/tag';
+import FuelGrade from '../../../../modules/common/fuel-grade.enum';
+import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import FuelStationContext from '../../../../modules/fuel-station/models/fuel-station-context.model';
 
 @Component({
-  selector: 'app-admin-fuel-station-fuel-orders',
-  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
-  templateUrl: './admin-fuel-station-fuel-orders.component.html'
+  selector: 'app-fuel-station-fuel-orders',
+  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, CreateFuelOrderDialogComponent],
+  templateUrl: './fuel-station-fuel-orders.component.html'
 })
-export class AdminFuelStationFuelOrdersComponent implements OnInit {
+export class FuelStationFuelOrdersComponent implements OnInit {
 
   private messageService: MessageService = inject(MessageService);
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
+  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
-  actionLoading = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
-
+  
   ngOnInit(): void {
     this.getFuelOrders();
-    
-    this.ctxService.loading.rejectOrder.subscribe((value) => this.actionLoading = value)
-    this.ctxService.loading.confirmOrder.subscribe((value) => this.actionLoading = value);
   }
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
@@ -44,16 +41,6 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
     default:
       return undefined
     }
-  }
-
-  confirmFuelOrder(fuelOrderId: number) {
-    // TODO add error handling
-    this.ctxService.confirmFuelOrder(fuelOrderId).subscribe();
-  }
-
-  rejectFuelOrder(fuelOrderId: number) {
-    // TODO add error handling
-    this.ctxService.rejectFuelOrder(fuelOrderId).subscribe();
   }
   
   getValue(fuelOrderStatus: FuelOrderStatus) {
@@ -80,4 +67,5 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
         }
       }) 
   }
+
 }
