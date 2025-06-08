@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -7,19 +7,19 @@ import {
   switchMap,
   tap,
   throwError
-} from "rxjs";
+} from 'rxjs';
 
-import FuelStationApiService from "./fuel-station-api.service";
-import Manager from "../../manager/models/manager.model";
-import FuelOrder from "../../fuel-order/models/fuel-order.model";
-import FuelGrade from "../../common/fuel-grade.enum";
-import { FuelOrderApiService } from "../../fuel-order/services/fuel-order-api.service";
-import FuelStationContext from "../models/fuel-station-context.model";
-import { FuelStation } from "../models/fuel-station.model";
+import FuelStationApiService from './fuel-station-api.service';
+import Manager from '../../manager/models/manager.model';
+import FuelOrder from '../../fuel-order/models/fuel-order.model';
+import FuelGrade from '../../common/fuel-grade.enum';
+import { FuelOrderApiService } from '../../fuel-order/services/fuel-order-api.service';
+import FuelStationContext from '../models/fuel-station-context.model';
+import { FuelStation } from '../models/fuel-station.model';
 
 type LoadingKey = 'fuelStation' | 'managers' | 'fuelOrders' | 'createFuelOrder';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export default class ManagerFuelStationContextService {
   private contextSubject = new BehaviorSubject<FuelStationContext | null>(null);
   context$ = this.contextSubject.asObservable();
@@ -43,7 +43,7 @@ export default class ManagerFuelStationContextService {
 
   private get contextValue(): FuelStationContext {
     const ctx = this.contextSubject.value;
-    if (!ctx) throw new Error("Fuel station context is not initialized.");
+    if (!ctx) throw new Error('Fuel station context is not initialized.');
     return ctx;
   }
 
@@ -64,13 +64,13 @@ export default class ManagerFuelStationContextService {
 
   getFuelStation(id: number): Observable<FuelStation> {
     return this.withLoading(
-      "fuelStation",
+      'fuelStation',
       this.fuelStationApi.getFuelStationById(id).pipe(
         tap(fuelStation =>
           this.contextSubject.next(new FuelStationContext(fuelStation, [], []))
         ),
         catchError(error => {
-          console.error("Error fetching fuel station:", error);
+          console.error('Error fetching fuel station:', error);
           return throwError(() => new Error(`Failed to fetch fuel station with ID ${id}`));
         })
       )
@@ -81,12 +81,12 @@ export default class ManagerFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      "managers",
+      'managers',
       this.fuelStationApi.getAssignedManagers(fuelStation.id).pipe(
         tap(managers => this.updateContext({ managers })),
         catchError(error => {
-          console.error("Error fetching managers:", error);
-          return throwError(() => new Error("Failed to fetch assigned managers"));
+          console.error('Error fetching managers:', error);
+          return throwError(() => new Error('Failed to fetch assigned managers'));
         })
       )
     );
@@ -96,13 +96,13 @@ export default class ManagerFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      "fuelOrders",
+      'fuelOrders',
       this.fuelStationApi.getFuelStationOrders(fuelStation.id).pipe(
         tap(console.log),
         tap(fuelOrders => this.updateContext({ fuelOrders })),
         catchError(error => {
-          console.error("Error fetching orders:", error);
-          return throwError(() => new Error("Failed to fetch fuel orders"));
+          console.error('Error fetching orders:', error);
+          return throwError(() => new Error('Failed to fetch fuel orders'));
         })
       )
     );
@@ -110,7 +110,7 @@ export default class ManagerFuelStationContextService {
 
   createFuelOrder(fuelGrade: FuelGrade, amount: number): Observable<FuelOrder[]> {
     const { fuelStation } = this.contextValue;
-    return this.withLoading("createFuelOrder", 
+    return this.withLoading('createFuelOrder', 
       this.fuelOrderApi.createFuelOrder(fuelStation.id, fuelGrade, amount).pipe(
         // TODO refactor to tap? 
         switchMap(() => {
@@ -118,8 +118,8 @@ export default class ManagerFuelStationContextService {
           return this.getFuelOrders(); 
         }),
         catchError(error => {
-          console.error("Error creating fuel order", error);
-          return throwError(() => new Error("Failed to create fuel order"));
+          console.error('Error creating fuel order', error);
+          return throwError(() => new Error('Failed to create fuel order'));
         })
       )
     ) 

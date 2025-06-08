@@ -28,14 +28,14 @@ export class AdminManagersComponent implements OnInit {
   ngOnInit(): void {
     this.managersQueryService.getManagers()
       .subscribe({
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching managers" })
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers' })
       })
     this.managersQueryService.managers$.subscribe((data) => this.managers = data)
   }
 
-  getSeverity(manager: Manager): "success" | undefined {
+  getSeverity(manager: Manager): 'success' | undefined {
     if(manager.status === ManagerStatus.Active) {
-      return "success";
+      return 'success';
     }
     return undefined;
   }

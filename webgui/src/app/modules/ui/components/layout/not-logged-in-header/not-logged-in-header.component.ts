@@ -21,9 +21,9 @@ export class NotLoggedInHeaderComponent {
   mobileMenuVisible = false;
   
   get items(): MenuItem[] {
-    const admin = this.router.url.startsWith("/admin");
-    const loginUrl = admin ? "/admin/login" : "/login";
-    return [{label: "Login", routerLink: loginUrl, icon: "pi pi-sign-in" }];
+    const admin = this.router.url.startsWith('/admin');
+    const loginUrl = admin ? '/admin/login' : '/login';
+    return [{label: 'Login', routerLink: loginUrl, icon: 'pi pi-sign-in' }];
   }
   
   toggleMobileMenu() {

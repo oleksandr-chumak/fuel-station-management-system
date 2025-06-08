@@ -26,9 +26,9 @@ export class FuelStationsAdminComponent implements OnInit, OnDestroy {
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
 
-  getSeverity(fuelStation: FuelStation): "success" | undefined {
+  getSeverity(fuelStation: FuelStation): 'success' | undefined {
     if(fuelStation.active) {
-      return "success";
+      return 'success';
     }
     return undefined;
   }
@@ -36,7 +36,7 @@ export class FuelStationsAdminComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fuelStationQueryService.getFuelStations()
       .subscribe({
-        error: () => this.messageService.add({ severity: "error", "summary": "Error", detail: "An error occurred while fetching fuel stations"})
+        error: () => this.messageService.add({ severity: 'error', 'summary': 'Error', detail: 'An error occurred while fetching fuel stations'})
       });
     this.fuelStationQueryService.fuelStations$.subscribe((data) => this.fuelStations = data ? data : []);
   }
@@ -46,6 +46,6 @@ export class FuelStationsAdminComponent implements OnInit, OnDestroy {
   }
 
   handleViewClick(fuelStationId: number) {
-    this.router.navigate(["admin/fuel-station/" + fuelStationId + "/info"]);
+    this.router.navigate(['admin/fuel-station/' + fuelStationId + '/info']);
   }
 }

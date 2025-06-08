@@ -20,7 +20,7 @@ import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.int
 })
 export class FuelStationFormComponent {
   @Input() loading = false;
-  @Input() buttonText = "";
+  @Input() buttonText = '';
   @Input() disabled = false;
   @Output() formSubmitted = new EventEmitter<FuelStationFormData>();
 
@@ -40,23 +40,23 @@ export class FuelStationFormComponent {
   }
 
   get streetInvalid() {
-    return this.isFieldInvalid(this.fuelStationForm, "street");
+    return this.isFieldInvalid(this.fuelStationForm, 'street');
   }
 
   get buildingNumberInvalid() {
-    return this.isFieldInvalid(this.fuelStationForm, "buildingNumber");
+    return this.isFieldInvalid(this.fuelStationForm, 'buildingNumber');
   }
 
   get cityInvalid() {
-    return this.isFieldInvalid(this.fuelStationForm, "city");
+    return this.isFieldInvalid(this.fuelStationForm, 'city');
   }
 
   get postalCodeInvalid() {
-    return this.isFieldInvalid(this.fuelStationForm, "postalCode");
+    return this.isFieldInvalid(this.fuelStationForm, 'postalCode');
   }
 
   get countryInvalid() {
-    return this.isFieldInvalid(this.fuelStationForm, "country");
+    return this.isFieldInvalid(this.fuelStationForm, 'country');
   }
 
   // TODO rewrite it to util

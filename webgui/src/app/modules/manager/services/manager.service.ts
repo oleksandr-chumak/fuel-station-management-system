@@ -1,9 +1,9 @@
-import { inject, Injectable } from "@angular/core";
-import { ManagerApiService } from "./manager-api.service";
-import { Observable, tap } from "rxjs";
-import Manager from "../models/manager.model";
+import { inject, Injectable } from '@angular/core';
+import { ManagerApiService } from './manager-api.service';
+import { Observable, tap } from 'rxjs';
+import Manager from '../models/manager.model';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export default class ManagerService {
 
   private managerApiService: ManagerApiService = inject(ManagerApiService);

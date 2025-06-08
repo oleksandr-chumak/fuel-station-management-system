@@ -1,6 +1,6 @@
-import FuelOrder from "../models/fuel-order.model";
-import FuelOrderStatus from "../models/fuel-order-status.enum";
-import { FuelGradeMapper } from "../../common/fuel-grade.mapper";
+import FuelOrder from '../models/fuel-order.model';
+import FuelOrderStatus from '../models/fuel-order-status.enum';
+import { FuelGradeMapper } from '../../common/fuel-grade.mapper';
 
 export class FuelOrderMapper {
 
@@ -23,11 +23,11 @@ export class FuelOrderMapper {
   private static parseFuelOrderStatus(status: unknown): FuelOrderStatus {
     if (typeof status === 'string') {
       switch (status) {
-      case "pending":
+      case 'pending':
         return FuelOrderStatus.Pending;
-      case "confirmed":
+      case 'confirmed':
         return FuelOrderStatus.Confirmed;
-      case "rejected":
+      case 'rejected':
         return FuelOrderStatus.Rejected;
       default:
         throw new Error(`Invalid status string: ${status}`);

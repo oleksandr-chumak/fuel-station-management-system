@@ -41,7 +41,7 @@ export class ManagerSelectComponent implements OnInit {
           this.managers = data;
         },
         error: () => {
-          this.messageService.add({ severity: "error", detail: "Error", summary: "An error occurred while fetching managers"});
+          this.messageService.add({ severity: 'error', detail: 'Error', summary: 'An error occurred while fetching managers'});
         }
       })
   }

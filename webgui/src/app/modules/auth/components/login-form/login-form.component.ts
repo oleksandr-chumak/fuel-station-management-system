@@ -41,11 +41,11 @@ export class LoginFormComponent {
   }
 
   get emailInvalid(): boolean {
-    return this.isFieldInvalid(this.loginForm, "email");
+    return this.isFieldInvalid(this.loginForm, 'email');
   }
 
   get passwordInvalid(): boolean {
-    return this.isFieldInvalid(this.loginForm, "password");
+    return this.isFieldInvalid(this.loginForm, 'password');
   }
 
   // TODO rewrite it to util

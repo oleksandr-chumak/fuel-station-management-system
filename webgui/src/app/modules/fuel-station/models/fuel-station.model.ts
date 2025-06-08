@@ -1,6 +1,6 @@
-import FuelPrice from "./fuel-price.model";
-import FuelStationStatus from "./fuel-station-status.enum";
-import { FuelTank } from "./fuel-tank.model";
+import FuelPrice from './fuel-price.model';
+import FuelStationStatus from './fuel-station-status.enum';
+import { FuelTank } from './fuel-tank.model';
 
 export class FuelStation {
   

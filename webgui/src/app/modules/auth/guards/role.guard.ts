@@ -1,13 +1,13 @@
-import { inject } from "@angular/core";
-import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from "@angular/router";
-import { map, take } from "rxjs";
-import { AuthService } from "../services/auth.service";
-import UserRole from "../models/user-role.enum";
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { map, take } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import UserRole from '../models/user-role.enum';
 
 const roleGuard = (
   allowedRoles: UserRole[],
-  loginPageUrl = "/login", 
-  unauthorizedPageUrl = "/unauthorized"
+  loginPageUrl = '/login', 
+  unauthorizedPageUrl = '/unauthorized'
 ) => {
   return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
     const router = inject(Router);

@@ -30,14 +30,14 @@ export class FuelStationFuelOrdersComponent implements OnInit {
     this.getFuelOrders();
   }
 
-  getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
+  getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
     switch(fuelOrderStatus) {
     case FuelOrderStatus.Confirmed:
-      return "success";
+      return 'success';
     case FuelOrderStatus.Pending:
-      return "info";
+      return 'info';
     case FuelOrderStatus.Rejected:
-      return "danger";
+      return 'danger';
     default:
       return undefined
     }
@@ -63,7 +63,7 @@ export class FuelStationFuelOrdersComponent implements OnInit {
     this.ctxService.getFuelOrders()
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel orders"})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'})
         }
       }) 
   }

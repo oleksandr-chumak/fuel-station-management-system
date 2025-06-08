@@ -33,12 +33,12 @@ export class ManagerHeaderComponent {
   
   get menubarItems(): MenuItem[] {
     return [ 
-      { label: "Fuel Stations", routerLink: ["/"] },
+      { label: 'Fuel Stations', routerLink: ['/'] },
     ];
   }
   
   get menuItems(): MenuItem[] {
-    return [ { label: "Logout", icon: "pi pi-power-off", command: () => this.handleLogout() } ];
+    return [ { label: 'Logout', icon: 'pi pi-power-off', command: () => this.handleLogout() } ];
   }
   
   toggleMobileMenu() {
@@ -50,8 +50,8 @@ export class ManagerHeaderComponent {
   }
   
   private handleLogout() {
-    this.messageService.add({ severity: "success", summary: "Success", detail: "You were logged out" });
+    this.messageService.add({ severity: 'success', summary: 'Success', detail: 'You were logged out' });
     this.authService.logout();
-    this.router.navigate(["/login"]);
+    this.router.navigate(['/login']);
   }
 }

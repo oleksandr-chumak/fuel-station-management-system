@@ -1,4 +1,4 @@
-import { Observable, BehaviorSubject, tap, finalize, catchError, throwError } from "rxjs";
+import { Observable, BehaviorSubject, tap, finalize, catchError, throwError } from 'rxjs';
 
 export default class QueryService<T, Args extends unknown[]> {
   private method: (...args: Args) => Observable<T>;
@@ -19,8 +19,8 @@ export default class QueryService<T, Args extends unknown[]> {
       .pipe(
         tap((result) => this.dataSubject.next(result)),
         catchError((err) => {
-          console.error("An error occurred: ", err)
-          return throwError(() => new Error("An error occurred while executing query"))
+          console.error('An error occurred: ', err)
+          return throwError(() => new Error('An error occurred while executing query'))
         }),
         finalize(() => this.loadingSubject.next(false)),
       )

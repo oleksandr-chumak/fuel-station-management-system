@@ -1,10 +1,10 @@
-import { inject, Injectable } from "@angular/core";
-import QueryService from "../../common/query.service";
-import FuelStationApiService from "./fuel-station-api.service";
-import { Observable } from "rxjs";
-import { FuelStation } from "../models/fuel-station.model";
+import { inject, Injectable } from '@angular/core';
+import QueryService from '../../common/query.service';
+import FuelStationApiService from './fuel-station-api.service';
+import { Observable } from 'rxjs';
+import { FuelStation } from '../models/fuel-station.model';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export default class FuelStationsQueryService {
   private fuelStationApi = inject(FuelStationApiService);
 

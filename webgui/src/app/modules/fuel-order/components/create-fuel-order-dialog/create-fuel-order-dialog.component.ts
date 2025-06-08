@@ -23,9 +23,9 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
   private messageService: MessageService = inject(MessageService);
 
   fuelGrades = [
-    { label: "Diesel", value: FuelGrade.Diesel },
-    { label: "RON 95", value: FuelGrade.RON_95 },
-    { label: "RON 92", value: FuelGrade.RON_92 }
+    { label: 'Diesel', value: FuelGrade.Diesel },
+    { label: 'RON 95', value: FuelGrade.RON_95 },
+    { label: 'RON 92', value: FuelGrade.RON_92 }
   ]
   createFuelOrderForm = new FormGroup({
     fuelGrade: new FormControl<{ label: string, value: FuelGrade } | null>(null, Validators.required),
@@ -43,10 +43,10 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
       this.fuelStationContext.createFuelOrder(formData.fuelGrade, formData.amount)
         .subscribe({
           next: () => {
-            this.messageService.add({ severity: "success", summary: "Created", detail: "Fuel order was successfully assigned" });
+            this.messageService.add({ severity: 'success', summary: 'Created', detail: 'Fuel order was successfully assigned' });
             this.closeDialog();
           },
-          error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while creating fuel order"})
+          error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while creating fuel order'})
         });
     }
 
@@ -54,11 +54,11 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
   }
 
   get fuelGradeInvalid() {
-    return this.isFieldInvalid(this.createFuelOrderForm, "fuelGrade");
+    return this.isFieldInvalid(this.createFuelOrderForm, 'fuelGrade');
   }
 
   get amountInvalid() {
-    return this.isFieldInvalid(this.createFuelOrderForm, "amount");
+    return this.isFieldInvalid(this.createFuelOrderForm, 'amount');
   }
 
   get loading$(): Observable<boolean> {

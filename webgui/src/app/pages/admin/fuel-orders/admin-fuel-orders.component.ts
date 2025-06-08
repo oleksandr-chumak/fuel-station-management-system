@@ -32,14 +32,14 @@ export class AdminFuelOrdersComponent implements OnInit {
     this.getFuelOrders();
   }
 
-  getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
+  getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
     switch(fuelOrderStatus) {
     case FuelOrderStatus.Confirmed:
-      return "success";
+      return 'success';
     case FuelOrderStatus.Pending:
-      return "info";
+      return 'info';
     case FuelOrderStatus.Rejected:
-      return "danger";
+      return 'danger';
     default:
       return undefined
     }
@@ -51,11 +51,11 @@ export class AdminFuelOrdersComponent implements OnInit {
       .pipe(finalize(() => this.actionLoading = false))
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while confirming fuel order"})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while confirming fuel order'})
         },
         next: () => {
           this.getFuelOrders();
-          this.messageService.add({ severity: "success", summary: "Confirmed", detail: "Fuel orders was successfully confirmed"})
+          this.messageService.add({ severity: 'success', summary: 'Confirmed', detail: 'Fuel orders was successfully confirmed'})
         }
       })
   }
@@ -66,11 +66,11 @@ export class AdminFuelOrdersComponent implements OnInit {
       .pipe(finalize(() => this.actionLoading = false))
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while rejecting fuel order"})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while rejecting fuel order'})
         },
         next: () => {
           this.getFuelOrders();
-          this.messageService.add({ severity: "success", summary: "Rejected", detail: "Fuel orders was successfully rejected"})
+          this.messageService.add({ severity: 'success', summary: 'Rejected', detail: 'Fuel orders was successfully rejected'})
         }
       })
   }
@@ -89,7 +89,7 @@ export class AdminFuelOrdersComponent implements OnInit {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel orders"})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'})
         },
         next: (data) => {
           this.fuelOrders = data;

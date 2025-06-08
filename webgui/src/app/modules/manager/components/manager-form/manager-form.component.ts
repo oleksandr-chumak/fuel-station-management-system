@@ -20,7 +20,7 @@ import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
 export class ManagerFormComponent {
 
   @Input() loading = false;
-  @Input() buttonText = "";
+  @Input() buttonText = '';
   @Output() formSubmitted = new EventEmitter<ManagerFormData>();
 
   managerForm = new FormGroup({
@@ -37,15 +37,15 @@ export class ManagerFormComponent {
   }
 
   get firstNameInvalid() {
-    return this.isFieldInvalid(this.managerForm, "firstName");
+    return this.isFieldInvalid(this.managerForm, 'firstName');
   }
 
   get lastNameInvalid() {
-    return this.isFieldInvalid(this.managerForm, "lastName");
+    return this.isFieldInvalid(this.managerForm, 'lastName');
   }
 
   get emailInvalid() {
-    return this.isFieldInvalid(this.managerForm, "email");
+    return this.isFieldInvalid(this.managerForm, 'email');
   }
 
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {

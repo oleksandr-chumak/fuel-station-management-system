@@ -1,15 +1,15 @@
-import { inject, Injectable } from "@angular/core";
-import { map, Observable } from "rxjs";
-import { ApiService } from "../../common/api.service";
-import FuelGrade from "../../common/fuel-grade.enum";
-import FuelOrder from "../../fuel-order/models/fuel-order.model";
-import Manager from "../../manager/models/manager.model";
-import { FuelStation } from "../models/fuel-station.model";
-import { FuelStationMapper } from "../mappers/fuel-station.mapper";
-import { ManagerMapper } from "../../manager/mappers/manager.mapper";
-import { FuelOrderMapper } from "../../fuel-order/mappers/fuel-order.mapper";
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { ApiService } from '../../common/api.service';
+import FuelGrade from '../../common/fuel-grade.enum';
+import FuelOrder from '../../fuel-order/models/fuel-order.model';
+import Manager from '../../manager/models/manager.model';
+import { FuelStation } from '../models/fuel-station.model';
+import { FuelStationMapper } from '../mappers/fuel-station.mapper';
+import { ManagerMapper } from '../../manager/mappers/manager.mapper';
+import { FuelOrderMapper } from '../../fuel-order/mappers/fuel-order.mapper';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export default class FuelStationApiService {
     
   private apiService = inject(ApiService);
@@ -25,7 +25,7 @@ export default class FuelStationApiService {
   }
 
   getFuelStations(): Observable<FuelStation[]> {
-    return this.apiService.get("api/fuel-stations/")
+    return this.apiService.get('api/fuel-stations/')
       .pipe(map(data => this.apiService.assertArray(data, FuelStationMapper.fromJson)));
   }
     
@@ -59,18 +59,18 @@ export default class FuelStationApiService {
   }
 
   createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: string): Observable<FuelStation> {
-    return this.apiService.post("api/fuel-stations/", { street, buildingNumber, city, postalCode, country })
+    return this.apiService.post('api/fuel-stations/', { street, buildingNumber, city, postalCode, country })
       .pipe(map(data => FuelStationMapper.fromJson(data)));
   }
 
   private fuelGradeToSlug(fuelGrade: FuelGrade): string {
     switch(fuelGrade) {
     case FuelGrade.Diesel:
-      return "diesel";
+      return 'diesel';
     case FuelGrade.RON_92:
-      return "ron-92";
+      return 'ron-92';
     case FuelGrade.RON_95:
-      return "ron-95";
+      return 'ron-95';
     default:
       throw new Error(`Cannot transform FuelGrade: ${fuelGrade} to slug`);
     }

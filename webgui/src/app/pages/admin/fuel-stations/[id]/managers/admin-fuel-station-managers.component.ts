@@ -28,8 +28,8 @@ export class AdminFuelStationManagersComponent implements OnInit {
   unassignManger(managerId: number) {
     this.ctxService.unassignManager(managerId)
       .subscribe({
-        next: () => this.messageService.add({ severity: "success", summary: "Unassigned", detail: "Manager was successfully unassigned" }),
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while unassign manager"})
+        next: () => this.messageService.add({ severity: 'success', summary: 'Unassigned', detail: 'Manager was successfully unassigned' }),
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while unassign manager'})
       })
   }
 
@@ -49,7 +49,7 @@ export class AdminFuelStationManagersComponent implements OnInit {
   private getManagers() {
     this.ctxService.getAssignedManagers()
       .subscribe({
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching managers"})
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers'})
       })
   }
 

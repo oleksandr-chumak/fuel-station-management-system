@@ -1,4 +1,4 @@
-import { inject, Injectable } from "@angular/core";
+import { inject, Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
@@ -7,19 +7,19 @@ import {
   switchMap,
   tap,
   throwError
-} from "rxjs";
+} from 'rxjs';
 
-import FuelStationApiService from "./fuel-station-api.service";
-import { FuelOrderApiService } from "../../fuel-order/services/fuel-order-api.service";
-import Manager from "../../manager/models/manager.model";
-import FuelGrade from "../../common/fuel-grade.enum";
-import FuelOrder from "../../fuel-order/models/fuel-order.model";
-import FuelStationContext from "../models/fuel-station-context.model";
-import { FuelStation } from "../models/fuel-station.model";
+import FuelStationApiService from './fuel-station-api.service';
+import { FuelOrderApiService } from '../../fuel-order/services/fuel-order-api.service';
+import Manager from '../../manager/models/manager.model';
+import FuelGrade from '../../common/fuel-grade.enum';
+import FuelOrder from '../../fuel-order/models/fuel-order.model';
+import FuelStationContext from '../models/fuel-station-context.model';
+import { FuelStation } from '../models/fuel-station.model';
 
 type LoadingKey = 'fuelStation' | 'managers' | 'fuelOrders' | 'assignManager' | 'unassignManager' | 'confirmOrder' | 'rejectOrder' | 'changeFuelPrice' | 'deactivateFuelStation';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export default class AdminFuelStationContextService {
   private contextSubject = new BehaviorSubject<FuelStationContext | null>(null);
   context$ = this.contextSubject.asObservable();
@@ -53,7 +53,7 @@ export default class AdminFuelStationContextService {
 
   private get contextValue(): FuelStationContext {
     const ctx = this.contextSubject.value;
-    if (!ctx) throw new Error("Fuel station context is not initialized.");
+    if (!ctx) throw new Error('Fuel station context is not initialized.');
     return ctx;
   }
 
@@ -78,13 +78,13 @@ export default class AdminFuelStationContextService {
 
   getFuelStation(id: number): Observable<FuelStation> {
     return this.withLoading(
-      "fuelStation",
+      'fuelStation',
       this.fuelStationApi.getFuelStationById(id).pipe(
         tap(fuelStation =>
           this.contextSubject.next(new FuelStationContext(fuelStation, [], []))
         ),
         catchError(error => {
-          console.error("Error fetching fuel station:", error);
+          console.error('Error fetching fuel station:', error);
           return throwError(() => new Error(`Failed to fetch fuel station with ID ${id}`));
         })
       )
@@ -95,12 +95,12 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      "managers",
+      'managers',
       this.fuelStationApi.getAssignedManagers(fuelStation.id).pipe(
         tap(managers => this.updateContext({ managers })),
         catchError(error => {
-          console.error("Error fetching managers:", error);
-          return throwError(() => new Error("Failed to fetch assigned managers"));
+          console.error('Error fetching managers:', error);
+          return throwError(() => new Error('Failed to fetch assigned managers'));
         })
       )
     );
@@ -110,12 +110,12 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      "fuelOrders",
+      'fuelOrders',
       this.fuelStationApi.getFuelStationOrders(fuelStation.id).pipe(
         tap(fuelOrders => this.updateContext({ fuelOrders })),
         catchError(error => {
-          console.error("Error fetching orders:", error);
-          return throwError(() => new Error("Failed to fetch fuel orders"));
+          console.error('Error fetching orders:', error);
+          return throwError(() => new Error('Failed to fetch fuel orders'));
         })
       )
     );
@@ -125,14 +125,14 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      "assignManager",
+      'assignManager',
       this.fuelStationApi.assignManager(fuelStation.id, managerId).pipe(
         switchMap(() => {
           this.updateContext({ managers: [] })
           return this.getAssignedManagers()
         }),
         catchError(error => {
-          console.error("Error assigning manager:", error);
+          console.error('Error assigning manager:', error);
           return throwError(() => new Error(`Failed to assign manager with ID ${managerId}`));
         })
       )
@@ -143,14 +143,14 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      "unassignManager",
+      'unassignManager',
       this.fuelStationApi.unassignManager(fuelStation.id, managerId).pipe(
         switchMap(() => {
           this.updateContext({ managers: [] })
           return this.getAssignedManagers()
         }),
         catchError(error => {
-          console.error("Error unassigning manager:", error);
+          console.error('Error unassigning manager:', error);
           return throwError(() => new Error(`Failed to unassign manager with ID ${managerId}`));
         })
       )
@@ -161,14 +161,14 @@ export default class AdminFuelStationContextService {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.contextValue;
     return this.withLoading(
-      "confirmOrder",
+      'confirmOrder',
       this.fuelOrderApi.confirmFuelOrder(fuelOrderId).pipe(
         switchMap(() => {
           this.updateContext({ fuelOrders: [] })
           return this.getFuelOrders();
         }),
         catchError(error => {
-          console.error("Error confirming fuel order:", error);
+          console.error('Error confirming fuel order:', error);
           return throwError(() => new Error(`Failed to confirm fuel order with ID ${fuelOrderId}`));
         })
       )
@@ -179,14 +179,14 @@ export default class AdminFuelStationContextService {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.contextValue;
     return this.withLoading(
-      "rejectOrder",
+      'rejectOrder',
       this.fuelOrderApi.rejectFuelOrder(fuelOrderId).pipe(
         switchMap(() => {
           this.updateContext({ fuelOrders: [] })
           return this.getFuelOrders()
         }),
         catchError(error => {
-          console.error("Error rejecting fuel order:", error);
+          console.error('Error rejecting fuel order:', error);
           return throwError(() => new Error(`Failed to reject fuel order with ID ${fuelOrderId}`));
         })
       )
@@ -197,13 +197,13 @@ export default class AdminFuelStationContextService {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
 
     return this.withLoading(
-      "changeFuelPrice",
+      'changeFuelPrice',
       this.fuelStationApi.changeFuelPrice(fuelStation.id, fuelGrade, newPrice).pipe(
         tap(updatedStation => {
           this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
         }),
         catchError(error => {
-          console.error("Error changing fuel price:", error);
+          console.error('Error changing fuel price:', error);
           return throwError(() => new Error(`Failed to change fuel price for grade ${fuelGrade}`));
         })
       )
@@ -214,14 +214,14 @@ export default class AdminFuelStationContextService {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
 
     return this.withLoading(
-      "deactivateFuelStation",
+      'deactivateFuelStation',
       this.fuelStationApi.deactivateFuelStation(fuelStation.id).pipe(
         tap(updatedStation => {
           this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
         }),
         catchError(error => {
-          console.error("Error deactivating fuel station:", error);
-          return throwError(() => new Error("Failed to deactivate fuel station"));
+          console.error('Error deactivating fuel station:', error);
+          return throwError(() => new Error('Failed to deactivate fuel station'));
         })
       )
     );

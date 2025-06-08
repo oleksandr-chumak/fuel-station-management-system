@@ -45,17 +45,17 @@ export class AdminFuelStationFuelPricesComponent implements OnInit {
     const newFuelPrice = Number(fuelPrice.pricePerLiter);
     if(Number.isNaN(newFuelPrice)) {
       this.resetFuelPrices();
-      this.messageService.add({ severity: "error", summary: "Validation", detail: "Fuel price must be a number"});
+      this.messageService.add({ severity: 'error', summary: 'Validation', detail: 'Fuel price must be a number'});
       return;
     }
 
     this.ctxService.changeFuelPrice(fuelPrice.fuelGrade, newFuelPrice).subscribe({
       error: () => {
         this.resetFuelPrices();
-        this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel orders"});
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'});
       },
       next: () => {
-        this.messageService.add({ severity: "success", summary: "Changed", detail: "Fuel price was successfully changed" });
+        this.messageService.add({ severity: 'success', summary: 'Changed', detail: 'Fuel price was successfully changed' });
       }
     });
   }

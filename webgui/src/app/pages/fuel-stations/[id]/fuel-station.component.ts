@@ -21,20 +21,20 @@ export class FuelStationComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.paramsStationId = params["id"];
+      this.paramsStationId = params['id'];
       const stationId = Number(this.paramsStationId);
 
       if(Number.isNaN(stationId)) {
-        this.messageService.add({severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"]})
-        this.router.navigate(["/admin"]);
+        this.messageService.add({severity: 'error', summary: 'Unable to parse id', detail: 'Unable to parse fuel station id: ' + params['id']})
+        this.router.navigate(['/admin']);
         return;
       }
 
       this.ctxService.getFuelStation(stationId)
         .subscribe({
           error: () => {
-            this.messageService.add({severity: "error", summary: "Not found", detail: "Fuel station with id: " + stationId + " doesn't exist"})
-            this.router.navigate(["/admin"]);
+            this.messageService.add({severity: 'error', summary: 'Not found', detail: 'Fuel station with id: ' + stationId + " doesn't exist"})
+            this.router.navigate(['/admin']);
           }
         })
     });
@@ -63,13 +63,13 @@ export class FuelStationComponent implements OnInit, OnDestroy {
           route: `/fuel-station/${this.paramsStationId}/fuel-orders`
         },
         {
-          label: "Fuel Tanks", 
-          icon: "pi pi-box",
+          label: 'Fuel Tanks', 
+          icon: 'pi pi-box',
           route: `/fuel-station/${this.paramsStationId}/fuel-tanks`
         },
         {
-          label: "Fuel Prices", 
-          icon: "pi pi-dollar",
+          label: 'Fuel Prices', 
+          icon: 'pi pi-dollar',
           route: `/fuel-station/${this.paramsStationId}/fuel-prices`
         }
       ]

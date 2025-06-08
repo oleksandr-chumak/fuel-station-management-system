@@ -34,7 +34,7 @@ export class ManagerDashboardComponent implements OnInit {
     const user = this.authService.getUserValue();
 
     if(!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     this.loading = true;
@@ -45,20 +45,20 @@ export class ManagerDashboardComponent implements OnInit {
           this.fuelStations = data;
         }, 
         error: (err: unknown) => {
-          console.error("An error occurred while fetching fuel stations", err);
-          this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations"});
+          console.error('An error occurred while fetching fuel stations', err);
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel stations'});
         }
       })
   }
 
   handleViewClick(fuelStationId: number) {
-    this.router.navigate(["fuel-station/" + fuelStationId + "/info"]);
+    this.router.navigate(['fuel-station/' + fuelStationId + '/info']);
   }
 
   // TODO make this as util
-  getSeverity(fuelStation: FuelStation): "success" | undefined {
+  getSeverity(fuelStation: FuelStation): 'success' | undefined {
     if(fuelStation.active) {
-      return "success";
+      return 'success';
     }
     return undefined;
   }

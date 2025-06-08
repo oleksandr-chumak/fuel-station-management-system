@@ -1,11 +1,11 @@
-import { inject, Injectable } from "@angular/core";
-import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap, throwError } from "rxjs";
-import User from "../models/user.model";
-import AuthApiService from "./auth-api.service";
+import { inject, Injectable } from '@angular/core';
+import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import User from '../models/user.model';
+import AuthApiService from './auth-api.service';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class AuthService {
-  private ACCESS_TOKEN_KEY = "accessToken";
+  private ACCESS_TOKEN_KEY = 'accessToken';
   private accessToken: string | null = this.getAccessTokenFromLocalStorage();
   private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
   private user$: Observable<User | null> = this.userSubject.asObservable();
@@ -22,7 +22,7 @@ export class AuthService {
           this.userSubject.next(user);
         }),
         catchError(err => {
-          console.log("Error happened while fetching user", err);
+          console.log('Error happened while fetching user', err);
           this.logout();
           return of(null);
         })
@@ -47,8 +47,8 @@ export class AuthService {
       switchMap(() => this.authApiService.getMe()),
       tap(user => this.userSubject.next(user)),
       catchError(err => {
-        console.log("Error happened while fetching user", err);
-        return throwError(() => new Error("Error happened while fetching user" + err)); 
+        console.log('Error happened while fetching user', err);
+        return throwError(() => new Error('Error happened while fetching user' + err)); 
       })
     );
   }
@@ -59,8 +59,8 @@ export class AuthService {
       switchMap(() => this.authApiService.getMe()),
       tap(user => this.userSubject.next(user)),
       catchError(err => {
-        console.log("Error happened while fetching user", err);
-        return throwError(() => new Error("Error happened while fetching user" + err)); 
+        console.log('Error happened while fetching user', err);
+        return throwError(() => new Error('Error happened while fetching user' + err)); 
       })
     );
   }

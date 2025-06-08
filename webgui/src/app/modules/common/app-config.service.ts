@@ -6,14 +6,14 @@ export interface AppConfig {
   apiUrl: string;
 }
 
-@Injectable({ providedIn: "root"})
+@Injectable({ providedIn: 'root'})
 export class AppConfigService {
   private config!: AppConfig;
 
   private http: HttpClient = inject(HttpClient);
 
   async loadConfig(): Promise<AppConfig> {
-    return firstValueFrom(this.http.get<AppConfig>("/assets/app.config.json").pipe(tap(data => {this.config  = data;})));
+    return firstValueFrom(this.http.get<AppConfig>('/assets/app.config.json').pipe(tap(data => {this.config  = data;})));
   }
   
   getConfig(): AppConfig {

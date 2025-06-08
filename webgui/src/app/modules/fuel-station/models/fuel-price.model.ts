@@ -1,4 +1,4 @@
-import FuelGrade from "../../common/fuel-grade.enum";
+import FuelGrade from '../../common/fuel-grade.enum';
 
 export default class FuelPrice {
 

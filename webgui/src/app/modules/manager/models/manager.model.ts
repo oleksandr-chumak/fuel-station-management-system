@@ -1,4 +1,4 @@
-import ManagerStatus from "./manager-status.enum";
+import ManagerStatus from './manager-status.enum';
 
 export default class Manager {
   constructor(
@@ -13,6 +13,6 @@ export default class Manager {
   }
 
   get fullName() {
-    return this.firstName + " " + this.lastName;
+    return this.firstName + ' ' + this.lastName;
   }
 }

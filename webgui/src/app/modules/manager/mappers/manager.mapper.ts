@@ -1,5 +1,5 @@
-import ManagerStatus from "../models/manager-status.enum";
-import Manager from "../models/manager.model";
+import ManagerStatus from '../models/manager-status.enum';
+import Manager from '../models/manager.model';
 
 export class ManagerMapper {
 
@@ -18,9 +18,9 @@ export class ManagerMapper {
   private static parseStatus(status: unknown): ManagerStatus {
     if (typeof status === 'string') {
       switch(status) {
-      case "active": 
+      case 'active': 
         return ManagerStatus.Active;
-      case "deactivated":
+      case 'deactivated':
         return ManagerStatus.Deactivated;
       default:
         throw new Error(`Unsupported status type: ${typeof status}`);

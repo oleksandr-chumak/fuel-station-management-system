@@ -22,39 +22,39 @@ import managerGuard from './modules/auth/guards/manager.guard';
 
 export const routes: Routes = [
   // manager routes
-  { path: "", component: ManagerDashboardComponent, canActivate: [managerGuard] },
-  { path: "login", component: ManagerLoginComponent },
+  { path: '', component: ManagerDashboardComponent, canActivate: [managerGuard] },
+  { path: 'login', component: ManagerLoginComponent },
   { 
-    path: "fuel-station/:id", 
+    path: 'fuel-station/:id', 
     component: FuelStationComponent, 
     canActivate: [managerGuard],
     children: [
-      { path: "info", component: FuelStationInfoComponent },
-      { path: "managers", component: FuelStationManagersComponent },
-      { path: "fuel-orders", component: FuelStationFuelOrdersComponent },
-      { path: "fuel-tanks", component: FuelStationFuelTanksComponent },
-      { path: "fuel-prices", component: FuelStationFuelPricesComponent },
-      { path: "", redirectTo: "info", pathMatch: "full" }
+      { path: 'info', component: FuelStationInfoComponent },
+      { path: 'managers', component: FuelStationManagersComponent },
+      { path: 'fuel-orders', component: FuelStationFuelOrdersComponent },
+      { path: 'fuel-tanks', component: FuelStationFuelTanksComponent },
+      { path: 'fuel-prices', component: FuelStationFuelPricesComponent },
+      { path: '', redirectTo: 'info', pathMatch: 'full' }
     ]
   },
 
   // admin routes
-  { path: "admin/login", component: AdminLoginComponent },
+  { path: 'admin/login', component: AdminLoginComponent },
   // TODO rename this component
-  { path: "admin", component: FuelStationsAdminComponent, canActivate: [adminGuard] },
+  { path: 'admin', component: FuelStationsAdminComponent, canActivate: [adminGuard] },
   { 
-    path: "admin/fuel-station/:id", 
+    path: 'admin/fuel-station/:id', 
     component: AdminFuelStationComponent, 
     canActivate: [adminGuard],
     children: [
-      { path: "info", component: AdminFuelStationInfoComponent },
-      { path: "managers", component: AdminFuelStationManagersComponent },
-      { path: "fuel-orders", component: AdminFuelStationFuelOrdersComponent },
-      { path: "fuel-tanks", component: AdminFuelStationFuelTanksComponent },
-      { path: "fuel-prices", component: AdminFuelStationFuelPricesComponent },
-      { path: "", redirectTo: "info", pathMatch: "full" }
+      { path: 'info', component: AdminFuelStationInfoComponent },
+      { path: 'managers', component: AdminFuelStationManagersComponent },
+      { path: 'fuel-orders', component: AdminFuelStationFuelOrdersComponent },
+      { path: 'fuel-tanks', component: AdminFuelStationFuelTanksComponent },
+      { path: 'fuel-prices', component: AdminFuelStationFuelPricesComponent },
+      { path: '', redirectTo: 'info', pathMatch: 'full' }
     ]
   },
-  { path: "admin/managers", component: AdminManagersComponent, canActivate: [adminGuard]},
-  { path: "admin/fuel-orders", component: AdminFuelOrdersComponent, canActivate: [adminGuard]}
+  { path: 'admin/managers', component: AdminManagersComponent, canActivate: [adminGuard]},
+  { path: 'admin/fuel-orders', component: AdminFuelOrdersComponent, canActivate: [adminGuard]}
 ];

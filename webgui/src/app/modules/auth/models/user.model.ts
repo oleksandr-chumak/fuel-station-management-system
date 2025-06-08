@@ -1,4 +1,4 @@
-import UserRole from "./user-role.enum";
+import UserRole from './user-role.enum';
 
 export default class User {
 

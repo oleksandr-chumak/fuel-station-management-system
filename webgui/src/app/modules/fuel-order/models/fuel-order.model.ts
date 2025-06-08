@@ -1,5 +1,5 @@
-import FuelGrade from "../../common/fuel-grade.enum";
-import FuelOrderStatus from "./fuel-order-status.enum";
+import FuelGrade from '../../common/fuel-grade.enum';
+import FuelOrderStatus from './fuel-order-status.enum';
 
 export default class FuelOrder {
 

@@ -25,14 +25,14 @@ export class ManagerLoginComponent {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: "Login successful" });
-          console.log("redirect")
-          console.log("user", this.authService.getUserValue())
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login successful' });
+          console.log('redirect')
+          console.log('user', this.authService.getUserValue())
           this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Login failed', error);
-          this.messageService.add({ severity: "error", summary: "Error", detail: "Invalid credentials"});
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid credentials'});
         },
       });
   }

@@ -40,7 +40,7 @@ export class FuelStationManagersComponent implements OnInit {
   private getManagers() {
     this.ctxService.getAssignedManagers()
       .subscribe({
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching managers"})
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers'})
       })
   }
 

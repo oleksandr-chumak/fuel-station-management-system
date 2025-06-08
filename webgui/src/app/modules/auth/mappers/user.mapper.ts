@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import User from "../models/user.model";
-import UserRole from "../models/user-role.enum";
+import { Injectable } from '@angular/core';
+import User from '../models/user.model';
+import UserRole from '../models/user-role.enum';
 
 interface UserJson {
   userId: number;
@@ -8,7 +8,7 @@ interface UserJson {
   role: string | number;
 }
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class UserMapper {
 
   fromJson(json: unknown): User {  
@@ -40,9 +40,9 @@ export class UserMapper {
   private parseUserRole(role: string | number): UserRole {
     if (typeof role === 'string') {
       switch (role) {
-      case "administrator":
+      case 'administrator':
         return UserRole.Administrator;
-      case "manager":
+      case 'manager':
         return UserRole.Manager;
       default:
         throw new Error(`Invalid role string: ${role}`);

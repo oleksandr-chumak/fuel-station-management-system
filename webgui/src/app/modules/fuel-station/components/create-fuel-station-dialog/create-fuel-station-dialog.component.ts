@@ -29,14 +29,14 @@ export class CreateFuelStationDialogComponent extends BasicDialog {
           // TODO This logic should be handled inside service 
           this.fuelStationQueryService.getFuelStations()
             .subscribe({
-              error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel stations"})
+              error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel stations'})
             });
-          this.messageService.add({ severity: "success", summary: "Created", detail: "A new fuel station was created"});
+          this.messageService.add({ severity: 'success', summary: 'Created', detail: 'A new fuel station was created'});
           this.closeDialog();
         },
         error: (err) => {
-          console.error("Error: ", err);
-          this.messageService.add({severity: "error", summary: "Error", detail: "An error occurred while creating fuel station"});
+          console.error('Error: ', err);
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'An error occurred while creating fuel station'});
         }
       })
   }

@@ -33,10 +33,10 @@ export class AssignManagerDialogComponent extends BasicDialog {
       this.fuelStationContext.assignManager(formData.manager.id)
         .subscribe({
           next: () => {
-            this.messageService.add({ severity: "success", summary: "Assigned", detail: "Manager was successfully assigned" });
+            this.messageService.add({ severity: 'success', summary: 'Assigned', detail: 'Manager was successfully assigned' });
             this.closeDialog();
           },
-          error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while assigning manager" })
+          error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while assigning manager' })
         });
     }
 
@@ -48,7 +48,7 @@ export class AssignManagerDialogComponent extends BasicDialog {
   }
 
   get managerInvalid() {
-    return this.isFieldInvalid(this.assignManagerForm, "manager");
+    return this.isFieldInvalid(this.assignManagerForm, 'manager');
   }
 
   get loading$(): Observable<boolean> {

@@ -30,6 +30,8 @@ module.exports = tseslint.config(
         },
       ],
       "indent": ["error", 2],
+      "quotes": ["error", "single", { "avoidEscape": true }],
+ 
     },
   },
   {

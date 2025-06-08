@@ -1,9 +1,9 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
-import { Observable } from "rxjs";
-import { AppConfigService } from "./app-config.service";
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { AppConfigService } from './app-config.service';
 
-@Injectable({ providedIn: "root" })
+@Injectable({ providedIn: 'root' })
 export class ApiService {
 
   private http: HttpClient = inject(HttpClient);
@@ -31,7 +31,7 @@ export class ApiService {
 
   assertArray<T>(data: unknown, transformer?: (item: unknown) => T): T[] {
     if (!Array.isArray(data)) {
-      throw new Error("Expected array response from API");
+      throw new Error('Expected array response from API');
     }
 
     return transformer ? data.map(transformer) : data as T[];
@@ -42,6 +42,6 @@ export class ApiService {
   }
 
   private getUrl(endpoint: string) {
-    return this.baseUrl + "/" + endpoint;
+    return this.baseUrl + '/' + endpoint;
   }
 }

@@ -30,14 +30,14 @@ export class CreateManagerDialogComponent extends BasicDialog {
           // TODO This logic should be handled inside service 
           this.managersQueryService.getManagers()
             .subscribe({
-              error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error while fetching manager"})
+              error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error while fetching manager'})
             });
-          this.messageService.add({ severity: "success", summary: "Created", detail: "A new manager was created"});
+          this.messageService.add({ severity: 'success', summary: 'Created', detail: 'A new manager was created'});
           this.closeDialog();
         },
         error: (err) => {
-          console.error("Error: ", err);
-          this.messageService.add({severity: "error", summary: "Error", detail: "An error occurred while creating manager"});
+          console.error('Error: ', err);
+          this.messageService.add({severity: 'error', summary: 'Error', detail: 'An error occurred while creating manager'});
         }
       })
   }
