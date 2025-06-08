@@ -1,11 +1,9 @@
-import { Injectable } from "@angular/core";
 import FuelGrade from "./fuel-grade.enum";
 
 
-@Injectable({ providedIn: "root" })
 export class FuelGradeMapper {
 
-  map(grade: unknown): FuelGrade {
+  static map(grade: unknown): FuelGrade {
     if(typeof grade !== "string") {
       throw new Error("Fuel grade must be a string");
     }

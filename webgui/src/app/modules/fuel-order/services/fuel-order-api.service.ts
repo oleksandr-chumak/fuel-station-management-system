@@ -9,26 +9,25 @@ import { FuelOrderMapper } from "../mappers/fuel-order.mapper";
 export class FuelOrderApiService {
       
   private apiService = inject(ApiService);
-  private fuelOrderMapper = inject(FuelOrderMapper);
     
   getFuelOrders(): Observable<FuelOrder[]> {
     return this.apiService.get("api/fuel-orders/")
-      .pipe(map(data => this.apiService.assertArray(data, this.fuelOrderMapper.fromJson.bind(this.fuelOrderMapper))));
+      .pipe(map(data => this.apiService.assertArray(data, FuelOrderMapper.fromJson)));
   } 
 
   getFuelOrderById(fuelOrderId: number): Observable<FuelOrder> {
     return this.apiService.get(`api/fuel-orders/${fuelOrderId}`)
-      .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
+      .pipe(map(data => FuelOrderMapper.fromJson(data)));
   }
     
   confirmFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
     return this.apiService.put(`api/fuel-orders/${fuelOrderId}/confirm`)
-      .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
+      .pipe(map(data => FuelOrderMapper.fromJson(data)));
   }
 
   rejectFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
     return this.apiService.put(`api/fuel-orders/${fuelOrderId}/reject`)
-      .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
+      .pipe(map(data => FuelOrderMapper.fromJson(data)));
   }
 
   createFuelOrder(fuelStationId: number, fuelGrade: FuelGrade, amount: number): Observable<FuelOrder> {
@@ -37,7 +36,7 @@ export class FuelOrderApiService {
       fuelGrade: this.fuelGradeToSlug(fuelGrade), 
       amount
     })
-      .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
+      .pipe(map(data => FuelOrderMapper.fromJson(data)));
   }
 
   private fuelGradeToSlug(fuelGrade: FuelGrade): string {
