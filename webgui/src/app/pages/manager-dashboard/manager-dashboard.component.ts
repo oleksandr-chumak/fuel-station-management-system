@@ -25,7 +25,7 @@ export class ManagerDashboardComponent implements OnInit {
   private router: Router = inject(Router);
   private messageService: MessageService = inject(MessageService);
 
-  loading: boolean = false;
+  loading = false;
   fuelStations: FuelStation[] = [];
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);

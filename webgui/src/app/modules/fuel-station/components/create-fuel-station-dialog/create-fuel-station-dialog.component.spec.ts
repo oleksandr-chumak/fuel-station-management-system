@@ -10,7 +10,7 @@ describe('CreateFuelStationDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CreateFuelStationDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CreateFuelStationDialogComponent);
     component = fixture.componentInstance;

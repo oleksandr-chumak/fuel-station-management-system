@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { FuelStationFormComponent } from '../fuel-station-form/fuel-station-form.component';
 import FuelStationApiService from '../../services/fuel-station-api.service';
@@ -25,7 +25,7 @@ export class CreateFuelStationDialogComponent extends BasicDialog {
     this.fuelStationApiService.createFuelStation(e.street, e.buildingNumber, e.city, e.postalCode, e.country)
       .pipe(finalize(() => this.loading = false))
       .subscribe({
-        next: (d) => {
+        next: () => {
           // TODO This logic should be handled inside service 
           this.fuelStationQueryService.getFuelStations()
             .subscribe({

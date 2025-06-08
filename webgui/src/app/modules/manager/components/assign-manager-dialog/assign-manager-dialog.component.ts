@@ -1,4 +1,4 @@
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ManagerSelectComponent } from '../manager-select/manager-select.component';
 import { ButtonModule } from 'primeng/button';

@@ -2,7 +2,6 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
-
 module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
@@ -30,6 +29,7 @@ module.exports = tseslint.config(
           style: "kebab-case",
         },
       ],
+      "indent": ["error", 2],
     },
   },
   {
@@ -38,6 +38,5 @@ module.exports = tseslint.config(
       ...angular.configs.templateRecommended,
       ...angular.configs.templateAccessibility,
     ],
-    rules: {},
   }
 );

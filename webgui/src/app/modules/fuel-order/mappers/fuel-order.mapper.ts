@@ -54,14 +54,14 @@ export class FuelOrderMapper {
   private parseFuelOrderStatus(status: string | number): FuelOrderStatus {
     if (typeof status === 'string') {
       switch (status) {
-        case "pending":
-          return FuelOrderStatus.Pending;
-        case "confirmed":
-          return FuelOrderStatus.Confirmed;
-        case "rejected":
-          return FuelOrderStatus.Rejected;
-        default:
-          throw new Error(`Invalid status string: ${status}`);
+      case "pending":
+        return FuelOrderStatus.Pending;
+      case "confirmed":
+        return FuelOrderStatus.Confirmed;
+      case "rejected":
+        return FuelOrderStatus.Rejected;
+      default:
+        throw new Error(`Invalid status string: ${status}`);
       }
     } 
 

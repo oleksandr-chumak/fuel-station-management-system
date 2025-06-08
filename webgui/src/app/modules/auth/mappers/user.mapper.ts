@@ -40,12 +40,12 @@ export class UserMapper {
   private parseUserRole(role: string | number): UserRole {
     if (typeof role === 'string') {
       switch (role) {
-        case "administrator":
-          return UserRole.Administrator;
-        case "manager":
-          return UserRole.Manager;
-        default:
-          throw new Error(`Invalid role string: ${role}`);
+      case "administrator":
+        return UserRole.Administrator;
+      case "manager":
+        return UserRole.Manager;
+      default:
+        throw new Error(`Invalid role string: ${role}`);
       }
     } 
 

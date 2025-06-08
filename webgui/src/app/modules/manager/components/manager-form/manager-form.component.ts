@@ -19,14 +19,14 @@ import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
 })
 export class ManagerFormComponent {
 
-  @Input() loading: boolean = false;
-  @Input() buttonText: string = "";
+  @Input() loading = false;
+  @Input() buttonText = "";
   @Output() formSubmitted = new EventEmitter<ManagerFormData>();
 
   managerForm = new FormGroup({
-     firstName: new FormControl('', Validators.required),
-     lastName: new FormControl('', Validators.required),
-     email: new FormControl('', [Validators.required, Validators.email]),
+    firstName: new FormControl('', Validators.required),
+    lastName: new FormControl('', Validators.required),
+    email: new FormControl('', [Validators.required, Validators.email]),
   })
   
   handleSubmit() {

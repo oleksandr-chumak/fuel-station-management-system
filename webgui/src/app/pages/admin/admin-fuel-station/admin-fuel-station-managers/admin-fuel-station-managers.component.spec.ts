@@ -10,7 +10,7 @@ describe('AdminFuelStationManagersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AdminFuelStationManagersComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AdminFuelStationManagersComponent);
     component = fixture.componentInstance;

@@ -10,7 +10,7 @@ describe('AdminHeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AdminHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AdminHeaderComponent);
     component = fixture.componentInstance;

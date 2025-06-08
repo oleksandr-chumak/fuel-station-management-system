@@ -10,7 +10,7 @@ describe('ManagerFormComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ManagerFormComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ManagerFormComponent);
     component = fixture.componentInstance;

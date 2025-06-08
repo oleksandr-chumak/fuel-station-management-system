@@ -32,9 +32,9 @@ export const appConfig: ApplicationConfig = {
     MessageService, 
     provideAnimationsAsync(),
     providePrimeNG({
-        theme: {
-            preset: Aura
-        }
+      theme: {
+        preset: Aura
+      }
     }),
   ]
 };

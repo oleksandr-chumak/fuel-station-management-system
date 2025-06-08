@@ -6,11 +6,11 @@ import Manager from "../models/manager.model";
 @Injectable({ providedIn: "root" })
 export default class ManagerService {
 
-    private managerApiService: ManagerApiService = inject(ManagerApiService);
+  private managerApiService: ManagerApiService = inject(ManagerApiService);
 
-    terminate(manager: Manager): Observable<Manager> {
-        return this.managerApiService.terminateManager(manager.id)
-            .pipe(tap((m) => m.terminate()));
-    }
+  terminate(manager: Manager): Observable<Manager> {
+    return this.managerApiService.terminateManager(manager.id)
+      .pipe(tap((m) => m.terminate()));
+  }
 
 }

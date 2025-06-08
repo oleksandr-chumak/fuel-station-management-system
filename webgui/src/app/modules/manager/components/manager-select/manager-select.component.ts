@@ -18,7 +18,7 @@ export class ManagerSelectComponent implements OnInit {
   private messageService: MessageService = inject(MessageService);
   private managerApiService: ManagerApiService = inject(ManagerApiService);
 
-  loading: boolean = false;
+  loading = false;
   managers: Manager[] = [];
   selectedManager: Manager | null = null;
   

@@ -10,7 +10,7 @@ describe('ManagerDashboardComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ManagerDashboardComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ManagerDashboardComponent);
     component = fixture.componentInstance;

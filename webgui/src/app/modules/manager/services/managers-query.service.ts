@@ -6,19 +6,19 @@ import { ManagerApiService } from "./manager-api.service";
 @Injectable({ providedIn: "root" })
 export default class ManagersQueryService {
 
-    private managerApiService: ManagerApiService = inject(ManagerApiService);
-    private queryService = new QueryService(() => this.managerApiService.getManagers());
+  private managerApiService: ManagerApiService = inject(ManagerApiService);
+  private queryService = new QueryService(() => this.managerApiService.getManagers());
 
-    getManagers() {
-        return this.queryService.executeQuery();
-    }
+  getManagers() {
+    return this.queryService.executeQuery();
+  }
 
-    get managers$() {
-        return this.queryService.data$.pipe(map(data => data ? data : []));
-    }
+  get managers$() {
+    return this.queryService.data$.pipe(map(data => data ? data : []));
+  }
 
-    get loading$() {
-        return this.queryService.loading$;
-    }
+  get loading$() {
+    return this.queryService.loading$;
+  }
 
 }

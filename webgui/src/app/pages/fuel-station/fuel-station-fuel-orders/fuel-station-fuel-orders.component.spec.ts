@@ -10,7 +10,7 @@ describe('FuelStationFuelOrdersComponent', () => {
     await TestBed.configureTestingModule({
       imports: [FuelStationFuelOrdersComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(FuelStationFuelOrdersComponent);
     component = fixture.componentInstance;

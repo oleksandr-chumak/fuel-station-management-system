@@ -84,12 +84,12 @@ export class FuelStationMapper {
   private parseStatus(status: string | number): FuelStationStatus {
     if (typeof status === 'string') {
       switch(status) {
-        case "active":
-          return FuelStationStatus.Active;
-        case "deactivated":
-          return FuelStationStatus.Deactivated
-        default:
-          throw new Error(`Unsupported status type: ${typeof status}`);
+      case "active":
+        return FuelStationStatus.Active;
+      case "deactivated":
+        return FuelStationStatus.Deactivated
+      default:
+        throw new Error(`Unsupported status type: ${typeof status}`);
 
       }
     } 

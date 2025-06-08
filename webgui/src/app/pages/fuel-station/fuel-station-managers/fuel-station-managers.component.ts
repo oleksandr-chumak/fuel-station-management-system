@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
   imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
   templateUrl: './fuel-station-managers.component.html'
 })
-export class FuelStationManagersComponent {
+export class FuelStationManagersComponent implements OnInit {
 
   private messageService: MessageService = inject(MessageService);
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);

@@ -23,7 +23,7 @@ import { InputTextModule } from 'primeng/inputtext';
 })
 export class LoginFormComponent {
 
-  @Input() loading: boolean = false;
+  @Input() loading = false;
   @Output() formSubmitted = new EventEmitter<{ email: string, password: string }>();
 
   loginForm: FormGroup = new FormGroup({

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
@@ -17,7 +17,7 @@ import FuelOrder from '../../../modules/fuel-order/models/fuel-order.model';
   imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
   templateUrl: './admin-fuel-orders.component.html'
 })
-export class AdminFuelOrdersComponent {
+export class AdminFuelOrdersComponent implements OnInit {
 
   private fuelOrderApi: FuelOrderApiService = inject(FuelOrderApiService);
   private messageService: MessageService = inject(MessageService);
@@ -34,14 +34,14 @@ export class AdminFuelOrdersComponent {
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
     switch(fuelOrderStatus) {
-      case FuelOrderStatus.Confirmed:
-        return "success";
-      case FuelOrderStatus.Pending:
-        return "info";
-      case FuelOrderStatus.Rejected:
-        return "danger";
-      default:
-        return undefined
+    case FuelOrderStatus.Confirmed:
+      return "success";
+    case FuelOrderStatus.Pending:
+      return "info";
+    case FuelOrderStatus.Rejected:
+      return "danger";
+    default:
+      return undefined
     }
   }
 

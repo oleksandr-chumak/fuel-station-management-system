@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -17,7 +17,7 @@ import FuelStationContext from '../../../../modules/fuel-station/models/fuel-sta
   imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
   templateUrl: './admin-fuel-station-fuel-orders.component.html'
 })
-export class AdminFuelStationFuelOrdersComponent {
+export class AdminFuelStationFuelOrdersComponent implements OnInit {
 
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
@@ -35,14 +35,14 @@ export class AdminFuelStationFuelOrdersComponent {
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
     switch(fuelOrderStatus) {
-      case FuelOrderStatus.Confirmed:
-        return "success";
-      case FuelOrderStatus.Pending:
-        return "info";
-      case FuelOrderStatus.Rejected:
-        return "danger";
-      default:
-        return undefined
+    case FuelOrderStatus.Confirmed:
+      return "success";
+    case FuelOrderStatus.Pending:
+      return "info";
+    case FuelOrderStatus.Rejected:
+      return "danger";
+    default:
+      return undefined
     }
   }
 

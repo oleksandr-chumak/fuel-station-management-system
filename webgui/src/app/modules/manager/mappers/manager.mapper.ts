@@ -41,12 +41,12 @@ export class ManagerMapper {
   private parseStatus(status: unknown): ManagerStatus {
     if (typeof status === 'string') {
       switch(status) {
-        case "active": 
-          return ManagerStatus.Active;
-        case "deactivated":
-          return ManagerStatus.Deactivated;
-        default:
-          throw new Error(`Unsupported status type: ${typeof status}`);
+      case "active": 
+        return ManagerStatus.Active;
+      case "deactivated":
+        return ManagerStatus.Deactivated;
+      default:
+        throw new Error(`Unsupported status type: ${typeof status}`);
       }
     }
 

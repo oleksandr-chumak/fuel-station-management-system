@@ -10,7 +10,7 @@ describe('NotLoggedInHeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [NotLoggedInHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NotLoggedInHeaderComponent);
     component = fixture.componentInstance;

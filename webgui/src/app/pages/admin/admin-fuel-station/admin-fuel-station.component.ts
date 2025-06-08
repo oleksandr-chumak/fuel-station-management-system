@@ -12,7 +12,7 @@ import { SkeletonModule } from 'primeng/skeleton';
   templateUrl: './admin-fuel-station.component.html'
 })
 export class AdminFuelStationComponent implements OnInit, OnDestroy {
-  private paramsStationId: string = '';
+  private paramsStationId = '';
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute)
   private messageService: MessageService = inject(MessageService);

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -11,8 +11,8 @@ import ManagerFuelStationContextService from '../../modules/fuel-station/service
   imports: [RouterModule, TabsModule, CommonModule, SkeletonModule],
   templateUrl: './fuel-station.component.html'
 })
-export class FuelStationComponent {
-  private paramsStationId: string = '';
+export class FuelStationComponent implements OnInit, OnDestroy {
+  private paramsStationId = '';
 
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
   private messageService: MessageService = inject(MessageService);

@@ -19,17 +19,17 @@ import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.int
   templateUrl: './fuel-station-form.component.html'
 })
 export class FuelStationFormComponent {
-  @Input() loading: boolean = false;
-  @Input() buttonText: string = "";
-  @Input() disabled: boolean = false;
+  @Input() loading = false;
+  @Input() buttonText = "";
+  @Input() disabled = false;
   @Output() formSubmitted = new EventEmitter<FuelStationFormData>();
 
   fuelStationForm = new FormGroup({
-     street: new FormControl('', Validators.required),
-     buildingNumber: new FormControl('', Validators.required),
-     city: new FormControl('', Validators.required),
-     postalCode: new FormControl('', Validators.required),
-     country: new FormControl('', Validators.required),
+    street: new FormControl('', Validators.required),
+    buildingNumber: new FormControl('', Validators.required),
+    city: new FormControl('', Validators.required),
+    postalCode: new FormControl('', Validators.required),
+    country: new FormControl('', Validators.required),
   })
   
   handleSubmit() {

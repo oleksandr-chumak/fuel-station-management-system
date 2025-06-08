@@ -17,6 +17,6 @@ export class AppConfigService {
   }
   
   getConfig(): AppConfig {
-      return this.config;
+    return this.config;
   }
 }

@@ -10,7 +10,7 @@ describe('ManagerSelectComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ManagerSelectComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ManagerSelectComponent);
     component = fixture.componentInstance;

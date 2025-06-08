@@ -16,7 +16,7 @@ export class AdminLoginComponent {
   private authService: AuthService = inject(AuthService);
   private messageService: MessageService = inject(MessageService);
 
-  loading: boolean = false;
+  loading = false;
 
   handleFormSubmission(data: { email: string; password: string }) {
     this.loading = true;

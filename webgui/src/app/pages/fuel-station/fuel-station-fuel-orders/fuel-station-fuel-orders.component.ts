@@ -32,14 +32,14 @@ export class FuelStationFuelOrdersComponent implements OnInit {
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
     switch(fuelOrderStatus) {
-      case FuelOrderStatus.Confirmed:
-        return "success";
-      case FuelOrderStatus.Pending:
-        return "info";
-      case FuelOrderStatus.Rejected:
-        return "danger";
-      default:
-        return undefined
+    case FuelOrderStatus.Confirmed:
+      return "success";
+    case FuelOrderStatus.Pending:
+      return "info";
+    case FuelOrderStatus.Rejected:
+      return "danger";
+    default:
+      return undefined
     }
   }
   

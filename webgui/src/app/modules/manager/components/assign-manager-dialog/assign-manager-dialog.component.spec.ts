@@ -10,7 +10,7 @@ describe('AssignManagerDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [AssignManagerDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(AssignManagerDialogComponent);
     component = fixture.componentInstance;

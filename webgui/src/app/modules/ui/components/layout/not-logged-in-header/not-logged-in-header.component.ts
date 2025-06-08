@@ -18,7 +18,7 @@ import { SidebarModule } from 'primeng/sidebar';
 })
 export class NotLoggedInHeaderComponent {
   private router: Router = inject(Router);
-  mobileMenuVisible: boolean = false;
+  mobileMenuVisible = false;
   
   get items(): MenuItem[] {
     const admin = this.router.url.startsWith("/admin");

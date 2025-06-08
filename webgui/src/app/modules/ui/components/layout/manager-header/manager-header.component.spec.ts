@@ -10,7 +10,7 @@ describe('ManagerHeaderComponent', () => {
     await TestBed.configureTestingModule({
       imports: [ManagerHeaderComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(ManagerHeaderComponent);
     component = fixture.componentInstance;

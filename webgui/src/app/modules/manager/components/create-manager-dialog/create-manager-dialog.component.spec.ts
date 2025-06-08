@@ -10,7 +10,7 @@ describe('CreateManagerDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CreateManagerDialogComponent]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(CreateManagerDialogComponent);
     component = fixture.componentInstance;

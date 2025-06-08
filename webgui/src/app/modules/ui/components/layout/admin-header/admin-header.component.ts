@@ -31,7 +31,7 @@ export class AdminHeaderComponent {
   private router: Router = inject(Router);
   
   user$: Observable<User | null> = this.authService.getUser();
-  mobileMenuVisible: boolean = false;
+  mobileMenuVisible = false;
   
   get menubarItems(): MenuItem[] {
     return [ 
