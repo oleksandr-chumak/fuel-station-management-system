@@ -8,10 +8,10 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize } from 'rxjs';
 
-import { FuelGrade } from '../../../modules/common/api/fuel-grade.enum';
-import { FuelOrderApiService } from '../../../modules/fuel-order/api/fuel-order-api.service';
-import { FuelOrderStatus } from '../../../modules/fuel-order/api/models/fuel-order-status.enum';
-import { FuelOrder } from '../../../modules/fuel-order/api/models/fuel-order.model';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
+import { FuelOrderApiService } from '~fuel-order/api/fuel-order-api.service';
+import { FuelOrderStatus } from '~fuel-order/api/models/fuel-order-status.enum';
+import { FuelOrder } from '~fuel-order/api/models/fuel-order.model';
 
 @Component({
   selector: 'app-admin-fuel-orders',

@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, finalize, Observable } from 'rxjs';
 
-import { ManagerApiService } from '../../api/manager-api.service';
-import { Manager } from '../../api/models/manager.model';
+import { ManagerApiService } from '~manager/api/manager-api.service';
+import { Manager } from '~manager/api/models/manager.model';
 
 @Injectable({ providedIn: 'root' })
 export class ManagerService {

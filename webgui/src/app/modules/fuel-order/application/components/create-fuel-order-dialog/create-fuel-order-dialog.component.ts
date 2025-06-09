@@ -9,10 +9,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 
-import { FuelGrade } from '../../../../common/api/fuel-grade.enum';
-import { BasicDialog } from '../../../../common/application/basic-dialog.component';
-import { ManagerFuelStationContextLoadingEvent } from '../../../../fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
-import { ManagerFuelStationContextService } from '../../../../fuel-station/application/services/manager-fuel-station-context.service';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
+import { BasicDialog } from '~common/application/basic-dialog.component';
+import { ManagerFuelStationContextLoadingEvent } from '~fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { ManagerFuelStationContextService } from '~fuel-station/application/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-create-fuel-order-dialog',

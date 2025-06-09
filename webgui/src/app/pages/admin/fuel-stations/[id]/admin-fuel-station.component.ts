@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
 
-import { AdminFuelStationContextService } from '../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextService } from '~fuel-station/application/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station',

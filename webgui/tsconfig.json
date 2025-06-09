@@ -17,7 +17,16 @@
     "moduleResolution": "bundler",
     "importHelpers": true,
     "target": "ES2022",
-    "module": "ES2022"
+    "module": "ES2022",
+    "paths": {
+      "~/*": ["./src/*"],
+      "~pages/*": ["./src/app/pages/*"],
+      "~auth/*": ["./src/app/modules/auth/*"],
+      "~common/*": ["./src/app/modules/common/*"],
+      "~fuel-order/*": ["./src/app/modules/fuel-order/*"],
+      "~fuel-station/*": ["./src/app/modules/fuel-station/*"],
+      "~manager/*": ["./src/app/modules/manager/*"],
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

@@ -10,9 +10,9 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize } from 'rxjs';
 
-import { AuthService } from '../modules/auth/application/auth.service';
-import { FuelStation } from '../modules/fuel-station/api/models/fuel-station.model';
-import { ManagerApiService } from '../modules/manager/api/manager-api.service';
+import { AuthService } from '~auth/application/auth.service';
+import { FuelStation } from '~fuel-station/api/models/fuel-station.model';
+import { ManagerApiService } from '~manager/api/manager-api.service';
 
 @Component({
   selector: 'app-manager-dashboard',

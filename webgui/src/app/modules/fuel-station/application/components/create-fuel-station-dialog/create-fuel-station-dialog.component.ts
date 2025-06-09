@@ -3,11 +3,11 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { finalize } from 'rxjs';
 
-import { BasicDialog } from '../../../../common/application/basic-dialog.component';
-import { FuelStation } from '../../../api/models/fuel-station.model';
-import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.interface';
-import { FuelStationService } from '../../services/fuel-station.service';
-import { FuelStationFormComponent } from '../fuel-station-form/fuel-station-form.component';
+import { BasicDialog } from '~common/application/basic-dialog.component';
+import { FuelStation } from '~fuel-station/api/models/fuel-station.model';
+import { FuelStationFormComponent } from '~fuel-station/application/components/fuel-station-form/fuel-station-form.component';
+import { FuelStationFormData } from '~fuel-station/application/interfaces/fuel-station-form-data.interface';
+import { FuelStationService } from '~fuel-station/application/services/fuel-station.service';
 
 @Component({
   selector: 'app-create-fuel-station-dialog',

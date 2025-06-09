@@ -8,10 +8,10 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import { FuelGrade } from '../../../../../modules/common/api/fuel-grade.enum';
-import { FuelPrice } from '../../../../../modules/fuel-station/api/models/fuel-price.model';
-import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
-import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
+import { FuelPrice } from '~fuel-station/api/models/fuel-price.model';
+import { AdminFuelStationContextLoadingEvent } from '~fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
+import { AdminFuelStationContextService } from '~fuel-station/application/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-prices',

@@ -6,15 +6,15 @@ import {
   tap,
 } from 'rxjs';
 
-import { FuelGrade } from '../../../common/api/fuel-grade.enum';
-import { LoadingEvent } from '../../../common/application/loading-event.model'; // Adjust path as needed
-import { FuelOrderApiService } from '../../../fuel-order/api/fuel-order-api.service';
-import { FuelOrder } from '../../../fuel-order/api/models/fuel-order.model';
-import { Manager } from '../../../manager/api/models/manager.model';
-import { FuelStationApiService } from '../../api/fuel-station-api.service';
-import { FuelStation } from '../../api/models/fuel-station.model';
-import { FuelStationContext } from '../models/fuel-station-context.model';
-import { ManagerFuelStationContextLoadingEvent } from '../models/manager-fuel-station-context-loading-event.enum';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
+import { LoadingEvent } from '~common/application/loading-event.model'; // Adjust path as needed
+import { FuelOrderApiService } from '~fuel-order/api/fuel-order-api.service';
+import { FuelOrder } from '~fuel-order/api/models/fuel-order.model';
+import { FuelStationApiService } from '~fuel-station/api/fuel-station-api.service';
+import { FuelStation } from '~fuel-station/api/models/fuel-station.model';
+import { FuelStationContext } from '~fuel-station/application/models/fuel-station-context.model';
+import { ManagerFuelStationContextLoadingEvent } from '~fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { Manager } from '~manager/api/models/manager.model';
 
 @Injectable({ providedIn: 'root' })
 export class ManagerFuelStationContextService {

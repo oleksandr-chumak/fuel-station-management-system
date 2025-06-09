@@ -8,11 +8,11 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Observable } from 'rxjs';
 
-import { FuelGrade } from '../../../../../modules/common/api/fuel-grade.enum';
-import { FuelOrderStatus } from '../../../../../modules/fuel-order/api/models/fuel-order-status.enum';
-import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
-import { FuelStationContext } from '../../../../../modules/fuel-station/application/models/fuel-station-context.model';
-import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
+import { FuelOrderStatus } from '~fuel-order/api/models/fuel-order-status.enum';
+import { AdminFuelStationContextLoadingEvent } from '~fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
+import { FuelStationContext } from '~fuel-station/application/models/fuel-station-context.model';
+import { AdminFuelStationContextService } from '~fuel-station/application/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-orders',

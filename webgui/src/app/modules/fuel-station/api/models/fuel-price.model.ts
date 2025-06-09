@@ -1,4 +1,4 @@
-import { FuelGrade } from '../../../common/api/fuel-grade.enum';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
 
 export class FuelPrice {
   constructor(public fuelGrade: FuelGrade, public pricePerLiter: number) {}

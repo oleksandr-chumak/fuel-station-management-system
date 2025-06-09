@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 
-import { ApiService } from '../../common/api/api.service';
-import { FuelGrade } from '../../common/api/fuel-grade.enum';
-
 import { FuelOrderMapper } from './fuel-order.mapper';
 import { FuelOrder } from './models/fuel-order.model';
+
+import { ApiService } from '~common/api/api.service';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
 
 @Injectable({ providedIn: 'root'})
 export class FuelOrderApiService {

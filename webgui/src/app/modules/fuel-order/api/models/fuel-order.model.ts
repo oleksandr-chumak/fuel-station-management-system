@@ -1,6 +1,6 @@
-import { FuelGrade } from '../../../common/api/fuel-grade.enum';
-
 import { FuelOrderStatus } from './fuel-order-status.enum';
+
+import { FuelGrade } from '~common/api/fuel-grade.enum';
 
 export class FuelOrder {
   constructor(

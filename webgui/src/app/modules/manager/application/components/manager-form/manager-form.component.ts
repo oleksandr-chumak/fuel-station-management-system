@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 
-import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
+import { ManagerFormData } from '~manager/application/interfaces/manager-form-data.interface';
 
 @Component({
   selector: 'app-manager-form',

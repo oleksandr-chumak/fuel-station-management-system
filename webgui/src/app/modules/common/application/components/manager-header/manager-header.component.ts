@@ -8,8 +8,8 @@ import { Menu } from 'primeng/menu';
 import { SidebarModule } from 'primeng/sidebar';
 import { Observable } from 'rxjs';
 
-import { User } from '../../../../auth/api/models/user.model';
-import { AuthService } from '../../../../auth/application/auth.service';
+import { User } from '~auth/api/models/user.model';
+import { AuthService } from '~auth/application/auth.service';
 
 @Component({
   selector: 'app-manager-header',

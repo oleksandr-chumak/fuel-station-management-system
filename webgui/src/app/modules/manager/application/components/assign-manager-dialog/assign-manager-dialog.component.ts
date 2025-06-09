@@ -7,11 +7,11 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 
-import { BasicDialog } from '../../../../common/application/basic-dialog.component';
-import { AdminFuelStationContextLoadingEvent } from '../../../../fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
-import { AdminFuelStationContextService } from '../../../../fuel-station/application/services/admin-fuel-station-context.service';
-import { Manager } from '../../../api/models/manager.model';
-import { ManagerSelectComponent } from '../manager-select/manager-select.component';
+import { BasicDialog } from '~common/application/basic-dialog.component';
+import { AdminFuelStationContextLoadingEvent } from '~fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
+import { AdminFuelStationContextService } from '~fuel-station/application/services/admin-fuel-station-context.service';
+import { Manager } from '~manager/api/models/manager.model';
+import { ManagerSelectComponent } from '~manager/application/components/manager-select/manager-select.component';
 
 @Component({
   selector: 'app-assign-manager-dialog',

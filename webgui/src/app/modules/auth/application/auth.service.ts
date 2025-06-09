@@ -1,8 +1,8 @@
 import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
-import { AuthApiService } from '../api/auth-api.service';
-import { User } from '../api/models/user.model';
+import { AuthApiService } from '~auth/api/auth-api.service';
+import { User } from '~auth/api/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

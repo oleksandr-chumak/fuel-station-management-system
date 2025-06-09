@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Observable, catchError, throwError } from 'rxjs';
 
-import { AuthService } from '../application/auth.service';
+import { AuthService } from '~auth/application/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

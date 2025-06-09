@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 
-import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.interface';
+import { FuelStationFormData } from '~fuel-station/application/interfaces/fuel-station-form-data.interface';
 
 @Component({
   selector: 'app-fuel-station-form',

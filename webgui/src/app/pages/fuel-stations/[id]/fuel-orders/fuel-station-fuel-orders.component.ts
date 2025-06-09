@@ -8,12 +8,12 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Observable } from 'rxjs';
 
-import { FuelGrade } from '../../../../modules/common/api/fuel-grade.enum';
-import { FuelOrderStatus } from '../../../../modules/fuel-order/api/models/fuel-order-status.enum';
-import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
-import { FuelStationContext } from '../../../../modules/fuel-station/application/models/fuel-station-context.model';
-import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
-import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/application/services/manager-fuel-station-context.service';
+import { FuelGrade } from '~common/api/fuel-grade.enum';
+import { FuelOrderStatus } from '~fuel-order/api/models/fuel-order-status.enum';
+import { CreateFuelOrderDialogComponent } from '~fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
+import { FuelStationContext } from '~fuel-station/application/models/fuel-station-context.model';
+import { ManagerFuelStationContextLoadingEvent } from '~fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { ManagerFuelStationContextService } from '~fuel-station/application/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',

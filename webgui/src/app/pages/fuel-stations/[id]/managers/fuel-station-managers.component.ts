@@ -6,8 +6,8 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
-import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/application/services/manager-fuel-station-context.service';
+import { ManagerFuelStationContextLoadingEvent } from '~fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { ManagerFuelStationContextService } from '~fuel-station/application/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-managers',

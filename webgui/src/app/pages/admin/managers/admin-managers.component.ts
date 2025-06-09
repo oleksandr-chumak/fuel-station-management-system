@@ -7,10 +7,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
-import { ManagerStatus } from '../../../modules/manager/api/models/manager-status.enum';
-import { Manager } from '../../../modules/manager/api/models/manager.model';
-import { CreateManagerDialogComponent } from '../../../modules/manager/application/components/create-manager-dialog/create-manager-dialog.component';
-import { ManagerService } from '../../../modules/manager/application/services/manager.service';
+import { ManagerStatus } from '~manager/api/models/manager-status.enum';
+import { Manager } from '~manager/api/models/manager.model';
+import { CreateManagerDialogComponent } from '~manager/application/components/create-manager-dialog/create-manager-dialog.component';
+import { ManagerService } from '~manager/application/services/manager.service';
 
 @Component({
   selector: 'app-admin-managers',
