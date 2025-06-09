@@ -35,6 +35,7 @@ module.exports = tseslint.config(
       ],
       "indent": ["error", 2],
       "quotes": ["error", "single", { "avoidEscape": true }],
+      "semi": ["error", "always"],
       "lines-between-class-members": ["error", "always", { exceptAfterSingleLine: true }],
       "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 0, maxEOF: 0 }],
       "padded-blocks": ["error", { "classes": "never" }],
@@ -59,6 +60,7 @@ module.exports = tseslint.config(
         }
       ],
       "import/newline-after-import": ["error", { "count": 1 }],
+      "import/no-default-export": "error",
     },
   },
   {

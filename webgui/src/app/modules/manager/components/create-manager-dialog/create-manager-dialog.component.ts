@@ -3,10 +3,10 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 
-import BasicDialog from '../../../common/basic-dialog.component';
+import { BasicDialog } from '../../../common/basic-dialog.component';
 import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
-import Manager from '../../models/manager.model';
-import ManagerService from '../../services/manager.service';
+import { Manager } from '../../models/manager.model';
+import { ManagerService } from '../../services/manager.service';
 import { ManagerFormComponent } from '../manager-form/manager-form.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class CreateManagerDialogComponent extends BasicDialog implements OnInit 
   loading = false;
 
   ngOnInit(): void {
-    this.managerService.loading$.subscribe((v) => this.loading = v)
+    this.managerService.loading$.subscribe((v) => this.loading = v);
   }
 
   handleFormSubmission(e: ManagerFormData) {
@@ -36,6 +36,6 @@ export class CreateManagerDialogComponent extends BasicDialog implements OnInit 
         error: () => {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'An error occurred while creating manager'});
         }
-      })
+      });
   }
 }

@@ -1,12 +1,12 @@
 import { FuelGradeMapper } from '../../common/fuel-grade.mapper';
-import FuelPrice from '../models/fuel-price.model';
-import FuelStationStatus from '../models/fuel-station-status.enum';
+import { FuelPrice } from '../models/fuel-price.model';
+import { FuelStationStatus } from '../models/fuel-station-status.enum';
 import { FuelStation } from '../models/fuel-station.model';
 import { FuelTank } from '../models/fuel-tank.model';
 
 export class FuelStationMapper {
   static fromJson(json: unknown): FuelStation {
-    const typedJson = json as Record<string, unknown>
+    const typedJson = json as Record<string, unknown>;
     const status = this.parseStatus(typedJson['status']);
     const fuelPrices = this.parseFuelPrices(typedJson['fuelPrices'] as Record<string,unknown>[]);
     const fuelTanks = this.parseFuelTanks(typedJson['fuelTanks'] as Record<string,unknown>[] );
@@ -32,7 +32,7 @@ export class FuelStationMapper {
       case 'active':
         return FuelStationStatus.Active;
       case 'deactivated':
-        return FuelStationStatus.Deactivated
+        return FuelStationStatus.Deactivated;
       default:
         throw new Error(`Unsupported status type: ${typeof status}`);
 

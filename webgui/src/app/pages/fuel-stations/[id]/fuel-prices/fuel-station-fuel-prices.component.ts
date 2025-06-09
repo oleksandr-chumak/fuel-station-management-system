@@ -7,8 +7,8 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import FuelGrade from '../../../../modules/common/fuel-grade.enum';
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { FuelGrade } from '../../../../modules/common/fuel-grade.enum';
+import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-fuel-prices',

@@ -6,7 +6,7 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-managers',
@@ -41,6 +41,6 @@ export class FuelStationManagersComponent implements OnInit {
     this.ctxService.getAssignedManagers()
       .subscribe({
         error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers'})
-      })
+      });
   }
 }

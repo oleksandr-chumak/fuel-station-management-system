@@ -5,7 +5,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
 import { Observable, BehaviorSubject } from 'rxjs';
 
-import User from './modules/auth/models/user.model';
+import { User } from './modules/auth/models/user.model';
 import { AuthService } from './modules/auth/services/auth.service';
 import { AdminHeaderComponent } from './modules/ui/components/layout/admin-header/admin-header.component';
 import { ManagerHeaderComponent } from './modules/ui/components/layout/manager-header/manager-header.component';

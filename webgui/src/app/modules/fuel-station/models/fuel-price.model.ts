@@ -1,6 +1,6 @@
-import FuelGrade from '../../common/fuel-grade.enum';
+import { FuelGrade } from '../../common/fuel-grade.enum';
 
-export default class FuelPrice {
+export class FuelPrice {
   constructor(public fuelGrade: FuelGrade, public pricePerLiter: number) {}
 
   clone(): FuelPrice {

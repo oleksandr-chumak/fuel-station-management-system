@@ -48,7 +48,7 @@ export class ManagerDashboardComponent implements OnInit {
           console.error('An error occurred while fetching fuel stations', err);
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel stations'});
         }
-      })
+      });
   }
 
   handleViewClick(fuelStationId: number) {

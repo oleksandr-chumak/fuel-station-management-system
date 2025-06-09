@@ -1,4 +1,4 @@
-export default class BasicDialog {
+export class BasicDialog {
   open = false;
 
   openDialog(): void {

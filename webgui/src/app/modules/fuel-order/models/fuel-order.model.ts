@@ -1,8 +1,8 @@
-import FuelGrade from '../../common/fuel-grade.enum';
+import { FuelGrade } from '../../common/fuel-grade.enum';
 
-import FuelOrderStatus from './fuel-order-status.enum';
+import { FuelOrderStatus } from './fuel-order-status.enum';
 
-export default class FuelOrder {
+export class FuelOrder {
   constructor(
         public id: number, 
         public status: FuelOrderStatus, 

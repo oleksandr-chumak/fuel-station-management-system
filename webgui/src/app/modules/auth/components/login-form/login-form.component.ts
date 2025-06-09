@@ -28,7 +28,7 @@ export class LoginFormComponent {
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.minLength(12), Validators.maxLength(30), Validators.email]), 
     password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(32)])
-  })
+  });
 
   handleSubmit(): void {
     if(this.loginForm.valid) {

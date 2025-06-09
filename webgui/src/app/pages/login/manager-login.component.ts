@@ -27,8 +27,8 @@ export class ManagerLoginComponent {
       .subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Login successful' });
-          console.log('redirect')
-          console.log('user', this.authService.getUserValue())
+          console.log('redirect');
+          console.log('user', this.authService.getUserValue());
           this.router.navigate(['/']);
         },
         error: (error) => {

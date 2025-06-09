@@ -1,6 +1,4 @@
-enum UserRole {
+export enum UserRole {
     Manager,
     Administrator
 }
-
-export default UserRole;

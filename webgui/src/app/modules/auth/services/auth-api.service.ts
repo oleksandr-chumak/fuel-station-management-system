@@ -3,10 +3,10 @@ import { map, Observable } from 'rxjs';
 
 import { ApiService } from '../../common/api.service';
 import { UserMapper } from '../mappers/user.mapper';
-import User from '../models/user.model';
+import { User } from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
-export default class AuthApiService {
+export class AuthApiService {
   private apiService: ApiService = inject(ApiService);
   private userMapper: UserMapper = inject(UserMapper);
 

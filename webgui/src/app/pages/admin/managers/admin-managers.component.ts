@@ -8,9 +8,9 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
 import { CreateManagerDialogComponent } from '../../../modules/manager/components/create-manager-dialog/create-manager-dialog.component';
-import ManagerStatus from '../../../modules/manager/models/manager-status.enum';
-import Manager from '../../../modules/manager/models/manager.model';
-import ManagerService from '../../../modules/manager/services/manager.service';
+import { ManagerStatus } from '../../../modules/manager/models/manager-status.enum';
+import { Manager } from '../../../modules/manager/models/manager.model';
+import { ManagerService } from '../../../modules/manager/services/manager.service';
 
 @Component({
   selector: 'app-admin-managers',
@@ -34,7 +34,7 @@ export class AdminManagersComponent implements OnInit {
       .subscribe({
         error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers' }),
         next: (managers) => this.managers = managers 
-      })
+      });
   }
 
   getSeverity(manager: Manager): 'success' | undefined {

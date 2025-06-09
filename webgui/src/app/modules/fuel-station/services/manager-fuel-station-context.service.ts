@@ -6,17 +6,17 @@ import {
   tap,
 } from 'rxjs';
 
-import FuelGrade from '../../common/fuel-grade.enum';
-import FuelOrder from '../../fuel-order/models/fuel-order.model';
+import { FuelGrade } from '../../common/fuel-grade.enum';
+import { FuelOrder } from '../../fuel-order/models/fuel-order.model';
 import { FuelOrderApiService } from '../../fuel-order/services/fuel-order-api.service';
-import Manager from '../../manager/models/manager.model';
-import FuelStationContext from '../models/fuel-station-context.model';
+import { Manager } from '../../manager/models/manager.model';
+import { FuelStationContext } from '../models/fuel-station-context.model';
 import { FuelStation } from '../models/fuel-station.model';
 
-import FuelStationApiService from './fuel-station-api.service';
+import { FuelStationApiService } from './fuel-station-api.service';
 
 @Injectable({ providedIn: 'root' })
-export default class ManagerFuelStationContextService {
+export class ManagerFuelStationContextService {
   private contextSubject = new BehaviorSubject<FuelStationContext | null>(null);
   context$ = this.contextSubject.asObservable();
 
@@ -35,7 +35,7 @@ export default class ManagerFuelStationContextService {
   //TODO make as util or smth like that 
   private withLoading<T>(observable: Observable<T>): Observable<T> {
     this.loading.next(true);
-    return observable.pipe(finalize(() => this.loading.next(false)))
+    return observable.pipe(finalize(() => this.loading.next(false)));
   }
 
   private updateContext(partial: Partial<FuelStationContext>) {
@@ -86,7 +86,7 @@ export default class ManagerFuelStationContextService {
           return this.getFuelOrders(); 
         })
       )
-    ) 
+    ); 
   }
 
   resetContext(): void {

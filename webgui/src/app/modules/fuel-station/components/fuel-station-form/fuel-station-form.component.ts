@@ -31,7 +31,7 @@ export class FuelStationFormComponent {
     city: new FormControl('', Validators.required),
     postalCode: new FormControl('', Validators.required),
     country: new FormControl('', Validators.required),
-  })
+  });
   
   handleSubmit() {
     if(this.fuelStationForm.valid) {

@@ -10,9 +10,9 @@ import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { Observable } from 'rxjs';
 
-import BasicDialog from '../../../common/basic-dialog.component';
-import FuelGrade from '../../../common/fuel-grade.enum';
-import ManagerFuelStationContextService from '../../../fuel-station/services/manager-fuel-station-context.service';
+import { BasicDialog } from '../../../common/basic-dialog.component';
+import { FuelGrade } from '../../../common/fuel-grade.enum';
+import { ManagerFuelStationContextService } from '../../../fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-create-fuel-order-dialog',
@@ -27,16 +27,16 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
     { label: 'Diesel', value: FuelGrade.Diesel },
     { label: 'RON 95', value: FuelGrade.RON_95 },
     { label: 'RON 92', value: FuelGrade.RON_92 }
-  ]
+  ];
 
   createFuelOrderForm = new FormGroup({
     fuelGrade: new FormControl<{ label: string, value: FuelGrade } | null>(null, Validators.required),
     amount: new FormControl<number>(0, Validators.required)
-  })
+  });
 
   handleFormSubmission() {
     if(this.createFuelOrderForm.valid) {
-      console.log(this.createFuelOrderForm.value)
+      console.log(this.createFuelOrderForm.value);
       // TODO make form data interface
       const formData = {
         fuelGrade: this.createFuelOrderForm.value.fuelGrade,

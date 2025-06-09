@@ -3,7 +3,7 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { finalize } from 'rxjs';
 
-import BasicDialog from '../../../common/basic-dialog.component';
+import { BasicDialog } from '../../../common/basic-dialog.component';
 import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.interface';
 import { FuelStation } from '../../models/fuel-station.model';
 import { FuelStationService } from '../../services/fuel-station.service';
@@ -37,6 +37,6 @@ export class CreateFuelStationDialogComponent extends BasicDialog implements OnI
         error: () => {
           this.messageService.add({severity: 'error', summary: 'Error', detail: 'An error occurred while creating fuel station'});
         }
-      })
+      });
   }
 }

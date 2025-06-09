@@ -1,7 +1,5 @@
-import UserRole from '../models/user-role.enum';
+import { UserRole } from '../models/user-role.enum';
 
-import roleGuard from './role.guard';
+import { roleGuard } from './role.guard';
 
-const adminGuard = roleGuard([UserRole.Administrator], 'admin/login', 'unauthorized')
-
-export default adminGuard;
+export const adminGuard = roleGuard([UserRole.Administrator], 'admin/login', 'unauthorized');

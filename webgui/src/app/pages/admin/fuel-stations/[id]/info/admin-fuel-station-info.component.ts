@@ -4,7 +4,7 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 
-import AdminFuelStationContextService from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station-info',

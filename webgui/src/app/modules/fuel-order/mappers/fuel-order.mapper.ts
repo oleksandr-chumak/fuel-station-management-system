@@ -1,10 +1,10 @@
 import { FuelGradeMapper } from '../../common/fuel-grade.mapper';
-import FuelOrderStatus from '../models/fuel-order-status.enum';
-import FuelOrder from '../models/fuel-order.model';
+import { FuelOrderStatus } from '../models/fuel-order-status.enum';
+import { FuelOrder } from '../models/fuel-order.model';
 
 export class FuelOrderMapper {
   static fromJson(json: unknown): FuelOrder {
-    const typedJson = json as Record<string, unknown>
+    const typedJson = json as Record<string, unknown>;
     const status = this.parseFuelOrderStatus(typedJson['status']);
     const fuelGrade = FuelGradeMapper.map(typedJson['fuelGrade']);
     const createdAt = new Date(typedJson['createdAt'] as string);

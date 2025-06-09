@@ -1,5 +1,5 @@
-import FuelPrice from './fuel-price.model';
-import FuelStationStatus from './fuel-station-status.enum';
+import { FuelPrice } from './fuel-price.model';
+import { FuelStationStatus } from './fuel-station-status.enum';
 import { FuelTank } from './fuel-tank.model';
 
 export class FuelStation {
@@ -27,7 +27,7 @@ export class FuelStation {
   
   clone(): FuelStation {
     const clonedFuelPrices = this.fuelPrices.map(fuelPrice => fuelPrice.clone());
-    const clonedFuelTanks = this.fuelTanks.map(fuelTank => fuelTank.clone())
+    const clonedFuelTanks = this.fuelTanks.map(fuelTank => fuelTank.clone());
     const clonedManagerIds = [...this.assignedManagersIds];
     
     return new FuelStation(

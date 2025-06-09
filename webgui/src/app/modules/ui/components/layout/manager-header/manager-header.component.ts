@@ -8,7 +8,7 @@ import { Menu } from 'primeng/menu';
 import { SidebarModule } from 'primeng/sidebar';
 import { Observable } from 'rxjs';
 
-import User from '../../../../auth/models/user.model';
+import { User } from '../../../../auth/models/user.model';
 import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({

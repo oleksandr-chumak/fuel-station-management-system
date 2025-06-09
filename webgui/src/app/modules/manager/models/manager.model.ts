@@ -1,6 +1,6 @@
-import ManagerStatus from './manager-status.enum';
+import { ManagerStatus } from './manager-status.enum';
 
-export default class Manager {
+export class Manager {
   constructor(
         public id: number,
         public firstName: string,

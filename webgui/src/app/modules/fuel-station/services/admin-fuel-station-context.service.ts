@@ -2,24 +2,22 @@ import { inject, Injectable } from '@angular/core';
 import {
   BehaviorSubject,
   Observable,
-  catchError,
   finalize,
   switchMap,
   tap,
-  throwError
 } from 'rxjs';
 
-import FuelGrade from '../../common/fuel-grade.enum';
-import FuelOrder from '../../fuel-order/models/fuel-order.model';
+import { FuelGrade } from '../../common/fuel-grade.enum';
+import { FuelOrder } from '../../fuel-order/models/fuel-order.model';
 import { FuelOrderApiService } from '../../fuel-order/services/fuel-order-api.service';
-import Manager from '../../manager/models/manager.model';
-import FuelStationContext from '../models/fuel-station-context.model';
+import { Manager } from '../../manager/models/manager.model';
+import { FuelStationContext } from '../models/fuel-station-context.model';
 import { FuelStation } from '../models/fuel-station.model';
 
-import FuelStationApiService from './fuel-station-api.service';
+import { FuelStationApiService } from './fuel-station-api.service';
 
 @Injectable({ providedIn: 'root' })
-export default class AdminFuelStationContextService {
+export class AdminFuelStationContextService {
   private contextSubject = new BehaviorSubject<FuelStationContext | null>(null);
   context$ = this.contextSubject.asObservable();
 
@@ -55,15 +53,10 @@ export default class AdminFuelStationContextService {
 
   getFuelStation(id: number): Observable<FuelStation> {
     return this.withLoading(
-      this.fuelStationApi.getFuelStationById(id).pipe(
-        tap(fuelStation =>
-          this.contextSubject.next(new FuelStationContext(fuelStation, [], []))
-        ),
-        catchError(error => {
-          console.error('Error fetching fuel station:', error);
-          return throwError(() => new Error(`Failed to fetch fuel station with ID ${id}`));
-        })
-      )
+      this.fuelStationApi.getFuelStationById(id)
+        .pipe(
+          tap(fuelStation => this.contextSubject.next(new FuelStationContext(fuelStation, [], [])))
+        )
     );
   }
 
@@ -71,13 +64,10 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      this.fuelStationApi.getAssignedManagers(fuelStation.id).pipe(
-        tap(managers => this.updateContext({ managers })),
-        catchError(error => {
-          console.error('Error fetching managers:', error);
-          return throwError(() => new Error('Failed to fetch assigned managers'));
-        })
-      )
+      this.fuelStationApi.getAssignedManagers(fuelStation.id)
+        .pipe(
+          tap(managers => this.updateContext({ managers })),
+        )
     );
   }
 
@@ -85,13 +75,10 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      this.fuelStationApi.getFuelStationOrders(fuelStation.id).pipe(
-        tap(fuelOrders => this.updateContext({ fuelOrders })),
-        catchError(error => {
-          console.error('Error fetching orders:', error);
-          return throwError(() => new Error('Failed to fetch fuel orders'));
-        })
-      )
+      this.fuelStationApi.getFuelStationOrders(fuelStation.id)
+        .pipe(
+          tap(fuelOrders => this.updateContext({ fuelOrders })),
+        )
     );
   }
 
@@ -99,16 +86,13 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      this.fuelStationApi.assignManager(fuelStation.id, managerId).pipe(
-        switchMap(() => {
-          this.updateContext({ managers: [] })
-          return this.getAssignedManagers()
-        }),
-        catchError(error => {
-          console.error('Error assigning manager:', error);
-          return throwError(() => new Error(`Failed to assign manager with ID ${managerId}`));
-        })
-      )
+      this.fuelStationApi.assignManager(fuelStation.id, managerId)
+        .pipe(
+          switchMap(() => {
+            this.updateContext({ managers: [] });
+            return this.getAssignedManagers();
+          })
+        )
     );
   }
 
@@ -116,49 +100,38 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      this.fuelStationApi.unassignManager(fuelStation.id, managerId).pipe(
-        switchMap(() => {
-          this.updateContext({ managers: [] })
-          return this.getAssignedManagers()
-        }),
-        catchError(error => {
-          console.error('Error unassigning manager:', error);
-          return throwError(() => new Error(`Failed to unassign manager with ID ${managerId}`));
-        })
-      )
+      this.fuelStationApi.unassignManager(fuelStation.id, managerId)
+        .pipe(
+          switchMap(() => {
+            this.updateContext({ managers: [] });
+            return this.getAssignedManagers();
+          })
+        )
     );
   }
 
-  confirmFuelOrder(fuelOrderId: number): Observable<FuelOrder[]> {
+  confirmFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.contextValue;
     return this.withLoading(
       this.fuelOrderApi.confirmFuelOrder(fuelOrderId).pipe(
-        switchMap(() => {
-          this.updateContext({ fuelOrders: [] })
+        tap(() => {
+          this.updateContext({ fuelOrders: [] });
           return this.getFuelOrders();
-        }),
-        catchError(error => {
-          console.error('Error confirming fuel order:', error);
-          return throwError(() => new Error(`Failed to confirm fuel order with ID ${fuelOrderId}`));
         })
       )
     );
   }
 
-  rejectFuelOrder(fuelOrderId: number): Observable<FuelOrder[]> {
+  rejectFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.contextValue;
     return this.withLoading(
       this.fuelOrderApi.rejectFuelOrder(fuelOrderId).pipe(
-        switchMap(() => {
-          this.updateContext({ fuelOrders: [] })
-          return this.getFuelOrders()
+        tap(() => {
+          this.updateContext({ fuelOrders: [] });
+          this.getFuelOrders();
         }),
-        catchError(error => {
-          console.error('Error rejecting fuel order:', error);
-          return throwError(() => new Error(`Failed to reject fuel order with ID ${fuelOrderId}`));
-        })
       )
     );
   }
@@ -167,15 +140,12 @@ export default class AdminFuelStationContextService {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
 
     return this.withLoading(
-      this.fuelStationApi.changeFuelPrice(fuelStation.id, fuelGrade, newPrice).pipe(
-        tap(updatedStation => {
-          this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
-        }),
-        catchError(error => {
-          console.error('Error changing fuel price:', error);
-          return throwError(() => new Error(`Failed to change fuel price for grade ${fuelGrade}`));
-        })
-      )
+      this.fuelStationApi.changeFuelPrice(fuelStation.id, fuelGrade, newPrice)
+        .pipe(
+          tap(updatedStation => {
+            this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
+          }),
+        )
     );
   }
 
@@ -183,15 +153,12 @@ export default class AdminFuelStationContextService {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
 
     return this.withLoading(
-      this.fuelStationApi.deactivateFuelStation(fuelStation.id).pipe(
-        tap(updatedStation => {
-          this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
-        }),
-        catchError(error => {
-          console.error('Error deactivating fuel station:', error);
-          return throwError(() => new Error('Failed to deactivate fuel station'));
-        })
-      )
+      this.fuelStationApi.deactivateFuelStation(fuelStation.id)
+        .pipe(
+          tap(updatedStation => {
+            this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
+          })
+        )
     );
   }
 

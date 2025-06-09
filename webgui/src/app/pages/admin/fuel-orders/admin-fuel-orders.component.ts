@@ -8,9 +8,9 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { finalize } from 'rxjs';
 
-import FuelGrade from '../../../modules/common/fuel-grade.enum';
-import FuelOrderStatus from '../../../modules/fuel-order/models/fuel-order-status.enum';
-import FuelOrder from '../../../modules/fuel-order/models/fuel-order.model';
+import { FuelGrade } from '../../../modules/common/fuel-grade.enum';
+import { FuelOrderStatus } from '../../../modules/fuel-order/models/fuel-order-status.enum';
+import { FuelOrder } from '../../../modules/fuel-order/models/fuel-order.model';
 import { FuelOrderApiService } from '../../../modules/fuel-order/services/fuel-order-api.service';
 
 @Component({
@@ -41,7 +41,7 @@ export class AdminFuelOrdersComponent implements OnInit {
     case FuelOrderStatus.Rejected:
       return 'danger';
     default:
-      return undefined
+      return undefined;
     }
   }
 
@@ -51,13 +51,13 @@ export class AdminFuelOrdersComponent implements OnInit {
       .pipe(finalize(() => this.actionLoading = false))
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while confirming fuel order'})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while confirming fuel order'});
         },
         next: () => {
           this.getFuelOrders();
-          this.messageService.add({ severity: 'success', summary: 'Confirmed', detail: 'Fuel orders was successfully confirmed'})
+          this.messageService.add({ severity: 'success', summary: 'Confirmed', detail: 'Fuel orders was successfully confirmed'});
         }
-      })
+      });
   }
 
   rejectFuelOrder(fuelOrderId: number) {
@@ -66,13 +66,13 @@ export class AdminFuelOrdersComponent implements OnInit {
       .pipe(finalize(() => this.actionLoading = false))
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while rejecting fuel order'})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while rejecting fuel order'});
         },
         next: () => {
           this.getFuelOrders();
-          this.messageService.add({ severity: 'success', summary: 'Rejected', detail: 'Fuel orders was successfully rejected'})
+          this.messageService.add({ severity: 'success', summary: 'Rejected', detail: 'Fuel orders was successfully rejected'});
         }
-      })
+      });
   }
   
   getValue(fuelOrderStatus: FuelOrderStatus) {
@@ -89,11 +89,11 @@ export class AdminFuelOrdersComponent implements OnInit {
       .pipe(finalize(() => this.loading = false))
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'});
         },
         next: (data) => {
           this.fuelOrders = data;
         }
-      }) 
+      }); 
   }
 }

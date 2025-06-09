@@ -1,6 +1,6 @@
-import UserRole from './user-role.enum';
+import { UserRole } from './user-role.enum';
 
-export default class User {
+export class User {
   constructor(
         public userId: number, 
         public email: string, 

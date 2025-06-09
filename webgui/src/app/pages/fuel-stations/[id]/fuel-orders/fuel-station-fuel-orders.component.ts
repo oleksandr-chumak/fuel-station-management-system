@@ -8,11 +8,11 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Observable } from 'rxjs';
 
-import FuelGrade from '../../../../modules/common/fuel-grade.enum';
+import { FuelGrade } from '../../../../modules/common/fuel-grade.enum';
 import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
-import FuelOrderStatus from '../../../../modules/fuel-order/models/fuel-order-status.enum';
-import FuelStationContext from '../../../../modules/fuel-station/models/fuel-station-context.model';
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { FuelOrderStatus } from '../../../../modules/fuel-order/models/fuel-order-status.enum';
+import { FuelStationContext } from '../../../../modules/fuel-station/models/fuel-station-context.model';
+import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',
@@ -39,7 +39,7 @@ export class FuelStationFuelOrdersComponent implements OnInit {
     case FuelOrderStatus.Rejected:
       return 'danger';
     default:
-      return undefined
+      return undefined;
     }
   }
   
@@ -63,8 +63,8 @@ export class FuelStationFuelOrdersComponent implements OnInit {
     this.ctxService.getFuelOrders()
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'});
         }
-      }) 
+      }); 
   }
 }

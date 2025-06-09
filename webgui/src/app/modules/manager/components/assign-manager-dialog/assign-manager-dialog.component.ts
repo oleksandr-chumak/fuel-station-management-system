@@ -8,9 +8,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { Observable } from 'rxjs';
 
-import BasicDialog from '../../../common/basic-dialog.component';
-import AdminFuelStationContextService from '../../../fuel-station/services/admin-fuel-station-context.service';
-import Manager from '../../models/manager.model';
+import { BasicDialog } from '../../../common/basic-dialog.component';
+import { AdminFuelStationContextService } from '../../../fuel-station/services/admin-fuel-station-context.service';
+import { Manager } from '../../models/manager.model';
 import { ManagerSelectComponent } from '../manager-select/manager-select.component';
 
 @Component({
@@ -24,7 +24,7 @@ export class AssignManagerDialogComponent extends BasicDialog {
 
   assignManagerForm = new FormGroup({
     manager: new FormControl<Manager | null>(null, Validators.required)
-  })
+  });
 
   handleFormSubmission() {
     if (this.assignManagerForm.valid) {

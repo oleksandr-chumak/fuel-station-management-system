@@ -6,7 +6,7 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import AdminFuelStationContextService from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 import { AssignManagerDialogComponent } from '../../../../../modules/manager/components/assign-manager-dialog/assign-manager-dialog.component';
 
 @Component({
@@ -30,7 +30,7 @@ export class AdminFuelStationManagersComponent implements OnInit {
       .subscribe({
         next: () => this.messageService.add({ severity: 'success', summary: 'Unassigned', detail: 'Manager was successfully unassigned' }),
         error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while unassign manager'})
-      })
+      });
   }
 
   get ctx$() {
@@ -45,6 +45,6 @@ export class AdminFuelStationManagersComponent implements OnInit {
     this.ctxService.getAssignedManagers()
       .subscribe({
         error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers'})
-      })
+      });
   }
 }

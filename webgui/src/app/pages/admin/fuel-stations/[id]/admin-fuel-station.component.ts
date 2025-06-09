@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
 
-import AdminFuelStationContextService from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextService } from '../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station',
@@ -15,9 +15,9 @@ import AdminFuelStationContextService from '../../../../modules/fuel-station/ser
 export class AdminFuelStationComponent implements OnInit, OnDestroy {
   private paramsStationId = '';
   private router: Router = inject(Router);
-  private route: ActivatedRoute = inject(ActivatedRoute)
+  private route: ActivatedRoute = inject(ActivatedRoute);
   private messageService: MessageService = inject(MessageService);
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService)
+  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -25,7 +25,7 @@ export class AdminFuelStationComponent implements OnInit, OnDestroy {
       const stationId = Number(this.paramsStationId);
 
       if(Number.isNaN(stationId)) {
-        this.messageService.add({severity: 'error', summary: 'Unable to parse id', detail: 'Unable to parse fuel station id: ' + params['id']})
+        this.messageService.add({severity: 'error', summary: 'Unable to parse id', detail: 'Unable to parse fuel station id: ' + params['id']});
         this.router.navigate(['/admin']);
         return;
       }
@@ -33,10 +33,10 @@ export class AdminFuelStationComponent implements OnInit, OnDestroy {
       this.ctxService.getFuelStation(stationId)
         .subscribe({
           error: () => {
-            this.messageService.add({severity: 'error', summary: 'Not found', detail: 'Fuel station with id: ' + stationId + " doesn't exist"})
+            this.messageService.add({severity: 'error', summary: 'Not found', detail: 'Fuel station with id: ' + stationId + " doesn't exist"});
             this.router.navigate(['/admin']);
           }
-        })
+        });
     });
   }
 
@@ -73,7 +73,7 @@ export class AdminFuelStationComponent implements OnInit, OnDestroy {
           route: `/admin/fuel-station/${this.paramsStationId}/fuel-prices`
         }
       ]
-    )
+    );
   }
 
   get ctx$() {

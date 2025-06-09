@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/api';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { finalize } from 'rxjs';
 
-import Manager from '../../models/manager.model';
+import { Manager } from '../../models/manager.model';
 import { ManagerApiService } from '../../services/manager-api.service';
 
 // TODO refactor this
@@ -44,6 +44,6 @@ export class ManagerSelectComponent implements OnInit {
         error: () => {
           this.messageService.add({ severity: 'error', detail: 'Error', summary: 'An error occurred while fetching managers'});
         }
-      })
+      });
   }
 }

@@ -1,4 +1,4 @@
-import FuelGrade from './fuel-grade.enum';
+import { FuelGrade } from './fuel-grade.enum';
 
 export class FuelGradeMapper {
   static map(grade: unknown): FuelGrade {

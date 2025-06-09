@@ -8,10 +8,10 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Observable } from 'rxjs';
 
-import FuelGrade from '../../../../../modules/common/fuel-grade.enum';
-import FuelOrderStatus from '../../../../../modules/fuel-order/models/fuel-order-status.enum';
-import FuelStationContext from '../../../../../modules/fuel-station/models/fuel-station-context.model';
-import AdminFuelStationContextService from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import { FuelGrade } from '../../../../../modules/common/fuel-grade.enum';
+import { FuelOrderStatus } from '../../../../../modules/fuel-order/models/fuel-order-status.enum';
+import { FuelStationContext } from '../../../../../modules/fuel-station/models/fuel-station-context.model';
+import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-orders',
@@ -29,7 +29,7 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.getFuelOrders();
     
-    this.ctxService.loading$.subscribe((value) => this.actionLoading = value)
+    this.ctxService.loading$.subscribe((value) => this.actionLoading = value);
   }
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
@@ -41,7 +41,7 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
     case FuelOrderStatus.Rejected:
       return 'danger';
     default:
-      return undefined
+      return undefined;
     }
   }
 
@@ -75,8 +75,8 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
     this.ctxService.getFuelOrders()
       .subscribe({
         error: () => {
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'})
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching fuel orders'});
         }
-      }) 
+      }); 
   }
 }
