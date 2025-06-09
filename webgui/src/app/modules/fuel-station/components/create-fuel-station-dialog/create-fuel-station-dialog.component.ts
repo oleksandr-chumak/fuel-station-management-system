@@ -1,12 +1,13 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { FuelStationFormComponent } from '../fuel-station-form/fuel-station-form.component';
-import { finalize } from 'rxjs';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { finalize } from 'rxjs';
+
 import BasicDialog from '../../../common/basic-dialog.component';
 import { FuelStationFormData } from '../../interfaces/fuel-station-form-data.interface';
-import { FuelStationService } from '../../services/fuel-station.service';
 import { FuelStation } from '../../models/fuel-station.model';
+import { FuelStationService } from '../../services/fuel-station.service';
+import { FuelStationFormComponent } from '../fuel-station-form/fuel-station-form.component';
 
 @Component({
   selector: 'app-create-fuel-station-dialog',

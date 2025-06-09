@@ -1,6 +1,6 @@
-import FuelOrder from '../models/fuel-order.model';
-import FuelOrderStatus from '../models/fuel-order-status.enum';
 import { FuelGradeMapper } from '../../common/fuel-grade.mapper';
+import FuelOrderStatus from '../models/fuel-order-status.enum';
+import FuelOrder from '../models/fuel-order.model';
 
 export class FuelOrderMapper {
   static fromJson(json: unknown): FuelOrder {

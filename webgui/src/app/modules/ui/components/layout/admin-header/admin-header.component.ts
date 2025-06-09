@@ -1,15 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
 import { MenuItem, MessageService } from 'primeng/api';
 import { AvatarModule } from 'primeng/avatar';
-import { AuthService } from '../../../../auth/services/auth.service';
-import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-import { Router, RouterModule } from '@angular/router';
-import User from '../../../../auth/models/user.model';
 import { PanelModule } from 'primeng/panel';
 import { SidebarModule } from 'primeng/sidebar';
+import { Observable } from 'rxjs';
+
+import User from '../../../../auth/models/user.model';
+import { AuthService } from '../../../../auth/services/auth.service';
 
 @Component({
   selector: 'app-admin-header',

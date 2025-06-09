@@ -1,13 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { PanelModule } from 'primeng/panel';
+import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
-import { MessageService } from 'primeng/api';
-import { DialogModule } from 'primeng/dialog';
-import { Router } from '@angular/router';
-import { SkeletonModule } from 'primeng/skeleton';
+
 import { CreateFuelStationDialogComponent } from '../../../modules/fuel-station/components/create-fuel-station-dialog/create-fuel-station-dialog.component';
 import { FuelStation } from '../../../modules/fuel-station/models/fuel-station.model';
 import { FuelStationService } from '../../../modules/fuel-station/services/fuel-station.service';

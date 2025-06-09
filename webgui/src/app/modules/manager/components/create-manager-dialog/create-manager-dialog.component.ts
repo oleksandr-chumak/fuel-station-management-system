@@ -1,12 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { ManagerFormComponent } from '../manager-form/manager-form.component';
 import { MessageService } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+
 import BasicDialog from '../../../common/basic-dialog.component';
 import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
-import ManagerService from '../../services/manager.service';
 import Manager from '../../models/manager.model';
-import { CommonModule } from '@angular/common';
+import ManagerService from '../../services/manager.service';
+import { ManagerFormComponent } from '../manager-form/manager-form.component';
 
 @Component({
   selector: 'app-create-manager-dialog',

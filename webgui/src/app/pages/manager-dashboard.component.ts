@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
-import { Router } from '@angular/router';
+
 import { AuthService } from '../modules/auth/services/auth.service';
 import { FuelStation } from '../modules/fuel-station/models/fuel-station.model';
 import { ManagerApiService } from '../modules/manager/services/manager-api.service';

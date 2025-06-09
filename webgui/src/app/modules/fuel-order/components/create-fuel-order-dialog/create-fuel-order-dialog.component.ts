@@ -1,14 +1,15 @@
-import { Component, inject } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { SelectModule } from 'primeng/select';
-import { InputNumberModule } from 'primeng/inputnumber';
+import { Observable } from 'rxjs';
+
 import BasicDialog from '../../../common/basic-dialog.component';
 import FuelGrade from '../../../common/fuel-grade.enum';
 import ManagerFuelStationContextService from '../../../fuel-station/services/manager-fuel-station-context.service';

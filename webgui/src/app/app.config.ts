@@ -1,15 +1,15 @@
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ApplicationConfig, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { providePrimeNG } from 'primeng/config';
+import { provideRouter } from '@angular/router';
 import Aura from '@primeng/themes/aura';
+import { MessageService } from 'primeng/api';
+import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
-import { MessageService } from 'primeng/api';
-import { AppConfigService } from './modules/common/app-config.service';
-import { AuthService } from './modules/auth/services/auth.service';
 import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
+import { AuthService } from './modules/auth/services/auth.service';
+import { AppConfigService } from './modules/common/app-config.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

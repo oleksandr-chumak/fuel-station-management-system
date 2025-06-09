@@ -1,8 +1,8 @@
-import { FuelStation } from '../models/fuel-station.model';
-import FuelStationStatus from '../models/fuel-station-status.enum';
-import FuelPrice from '../models/fuel-price.model';
-import { FuelTank } from '../models/fuel-tank.model';
 import { FuelGradeMapper } from '../../common/fuel-grade.mapper';
+import FuelPrice from '../models/fuel-price.model';
+import FuelStationStatus from '../models/fuel-station-status.enum';
+import { FuelStation } from '../models/fuel-station.model';
+import { FuelTank } from '../models/fuel-tank.model';
 
 export class FuelStationMapper {
   static fromJson(json: unknown): FuelStation {

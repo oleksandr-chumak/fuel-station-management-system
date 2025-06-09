@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
-import FuelStationApiService from './fuel-station-api.service';
 import { BehaviorSubject, finalize, Observable } from 'rxjs';
+
+import FuelStationApiService from './fuel-station-api.service';
 
 @Injectable({ providedIn: 'root'})
 export class FuelStationService {

@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
+import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
+
 import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
-import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-fuel-station-managers',

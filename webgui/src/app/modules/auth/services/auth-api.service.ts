@@ -1,8 +1,9 @@
 import { inject, Injectable } from '@angular/core';
-import { ApiService } from '../../common/api.service';
 import { map, Observable } from 'rxjs';
-import User from '../models/user.model';
+
+import { ApiService } from '../../common/api.service';
 import { UserMapper } from '../mappers/user.mapper';
+import User from '../models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export default class AuthApiService {

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import User from '../models/user.model';
+
 import UserRole from '../models/user-role.enum';
+import User from '../models/user.model';
 
 interface UserJson {
   userId: number;

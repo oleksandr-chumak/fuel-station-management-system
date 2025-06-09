@@ -1,9 +1,10 @@
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, catchError, throwError } from 'rxjs';
-import { AuthService } from '../services/auth.service';
-import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { Observable, catchError, throwError } from 'rxjs';
+
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {

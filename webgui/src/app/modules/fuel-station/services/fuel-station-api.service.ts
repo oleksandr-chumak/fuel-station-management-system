@@ -1,13 +1,14 @@
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+
 import { ApiService } from '../../common/api.service';
 import FuelGrade from '../../common/fuel-grade.enum';
-import FuelOrder from '../../fuel-order/models/fuel-order.model';
-import Manager from '../../manager/models/manager.model';
-import { FuelStation } from '../models/fuel-station.model';
-import { FuelStationMapper } from '../mappers/fuel-station.mapper';
-import { ManagerMapper } from '../../manager/mappers/manager.mapper';
 import { FuelOrderMapper } from '../../fuel-order/mappers/fuel-order.mapper';
+import FuelOrder from '../../fuel-order/models/fuel-order.model';
+import { ManagerMapper } from '../../manager/mappers/manager.mapper';
+import Manager from '../../manager/models/manager.model';
+import { FuelStationMapper } from '../mappers/fuel-station.mapper';
+import { FuelStation } from '../models/fuel-station.model';
 
 @Injectable({ providedIn: 'root' })
 export default class FuelStationApiService {

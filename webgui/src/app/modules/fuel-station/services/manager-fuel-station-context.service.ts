@@ -6,13 +6,14 @@ import {
   tap,
 } from 'rxjs';
 
-import FuelStationApiService from './fuel-station-api.service';
-import Manager from '../../manager/models/manager.model';
-import FuelOrder from '../../fuel-order/models/fuel-order.model';
 import FuelGrade from '../../common/fuel-grade.enum';
+import FuelOrder from '../../fuel-order/models/fuel-order.model';
 import { FuelOrderApiService } from '../../fuel-order/services/fuel-order-api.service';
+import Manager from '../../manager/models/manager.model';
 import FuelStationContext from '../models/fuel-station-context.model';
 import { FuelStation } from '../models/fuel-station.model';
+
+import FuelStationApiService from './fuel-station-api.service';
 
 @Injectable({ providedIn: 'root' })
 export default class ManagerFuelStationContextService {

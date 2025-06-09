@@ -1,16 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
-import { ManagerSelectComponent } from '../manager-select/manager-select.component';
-import { ButtonModule } from 'primeng/button';
-import { MessageModule } from 'primeng/message';
-import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MessageService } from 'primeng/api';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import BasicDialog from '../../../common/basic-dialog.component';
 import AdminFuelStationContextService from '../../../fuel-station/services/admin-fuel-station-context.service';
 import Manager from '../../models/manager.model';
+import { ManagerSelectComponent } from '../manager-select/manager-select.component';
 
 @Component({
   selector: 'app-assign-manager-dialog',

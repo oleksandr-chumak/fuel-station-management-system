@@ -2,6 +2,7 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const angular = require("angular-eslint");
+
 module.exports = tseslint.config(
   {
     files: ["**/*.ts"],
@@ -11,6 +12,9 @@ module.exports = tseslint.config(
       ...tseslint.configs.stylistic,
       ...angular.configs.tsRecommended,
     ],
+    plugins: {
+      import: require("eslint-plugin-import"),
+    },
     processor: angular.processInlineTemplates,
     rules: {
       "@angular-eslint/directive-selector": [
@@ -33,7 +37,28 @@ module.exports = tseslint.config(
       "quotes": ["error", "single", { "avoidEscape": true }],
       "lines-between-class-members": ["error", "always", { exceptAfterSingleLine: true }],
       "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 0, maxEOF: 0 }],
-      "padded-blocks": ["error", { "classes": "never" }] 
+      "padded-blocks": ["error", { "classes": "never" }],
+      
+      // Import ordering rules
+      "import/order": [
+        "error",
+        {
+          "groups": [
+            "builtin",   // Node.js built-ins (fs, path, etc.)
+            "external",  // npm packages
+            "internal",  // Internal modules (your app's modules)
+            "parent",    // ../
+            "sibling",   // ./
+            "index"      // ./index
+          ],
+          "newlines-between": "always",
+          "alphabetize": {
+            "order": "asc",
+            "caseInsensitive": true
+          }
+        }
+      ],
+      "import/newline-after-import": ["error", { "count": 1 }],
     },
   },
   {

@@ -1,24 +1,25 @@
 import { Routes } from '@angular/router';
-import { AdminLoginComponent } from './pages/admin/login/admin-login.component';
-import { FuelStationsAdminComponent } from './pages/admin/fuel-stations/fuel-stations-admin.component';
-import { AdminFuelStationComponent } from './pages/admin/fuel-stations/[id]/admin-fuel-station.component';
-import { AdminFuelStationInfoComponent } from './pages/admin/fuel-stations/[id]/info/admin-fuel-station-info.component';
-import { AdminFuelStationManagersComponent } from './pages/admin/fuel-stations/[id]/managers/admin-fuel-station-managers.component';
-import { AdminFuelStationFuelOrdersComponent } from './pages/admin/fuel-stations/[id]/fuel-orders/admin-fuel-station-fuel-orders.component';
-import { AdminManagersComponent } from './pages/admin/managers/admin-managers.component';
-import { AdminFuelOrdersComponent } from './pages/admin/fuel-orders/admin-fuel-orders.component';
-import { ManagerLoginComponent } from './pages/login/manager-login.component';
-import { FuelStationComponent } from './pages/fuel-stations/[id]/fuel-station.component';
-import { FuelStationInfoComponent } from './pages/fuel-stations/[id]/info/fuel-station-info.component';
-import { FuelStationManagersComponent } from './pages/fuel-stations/[id]/managers/fuel-station-managers.component';
-import { FuelStationFuelOrdersComponent } from './pages/fuel-stations/[id]/fuel-orders/fuel-station-fuel-orders.component';
-import { AdminFuelStationFuelTanksComponent } from './pages/admin/fuel-stations/[id]/fuel-tanks/admin-fuel-station-fuel-tanks.component';
-import { AdminFuelStationFuelPricesComponent } from './pages/admin/fuel-stations/[id]/fuel-prices/admin-fuel-station-fuel-prices.component';
-import { FuelStationFuelTanksComponent } from './pages/fuel-stations/[id]/fuel-tanks/fuel-station-fuel-tanks.component';
-import { FuelStationFuelPricesComponent } from './pages/fuel-stations/[id]/fuel-prices/fuel-station-fuel-prices.component';
-import { ManagerDashboardComponent } from './pages/manager-dashboard.component';
+
 import adminGuard from './modules/auth/guards/admin.guard';
 import managerGuard from './modules/auth/guards/manager.guard';
+import { AdminFuelOrdersComponent } from './pages/admin/fuel-orders/admin-fuel-orders.component';
+import { AdminFuelStationComponent } from './pages/admin/fuel-stations/[id]/admin-fuel-station.component';
+import { AdminFuelStationFuelOrdersComponent } from './pages/admin/fuel-stations/[id]/fuel-orders/admin-fuel-station-fuel-orders.component';
+import { AdminFuelStationFuelPricesComponent } from './pages/admin/fuel-stations/[id]/fuel-prices/admin-fuel-station-fuel-prices.component';
+import { AdminFuelStationFuelTanksComponent } from './pages/admin/fuel-stations/[id]/fuel-tanks/admin-fuel-station-fuel-tanks.component';
+import { AdminFuelStationInfoComponent } from './pages/admin/fuel-stations/[id]/info/admin-fuel-station-info.component';
+import { AdminFuelStationManagersComponent } from './pages/admin/fuel-stations/[id]/managers/admin-fuel-station-managers.component';
+import { FuelStationsAdminComponent } from './pages/admin/fuel-stations/fuel-stations-admin.component';
+import { AdminLoginComponent } from './pages/admin/login/admin-login.component';
+import { AdminManagersComponent } from './pages/admin/managers/admin-managers.component';
+import { FuelStationFuelOrdersComponent } from './pages/fuel-stations/[id]/fuel-orders/fuel-station-fuel-orders.component';
+import { FuelStationFuelPricesComponent } from './pages/fuel-stations/[id]/fuel-prices/fuel-station-fuel-prices.component';
+import { FuelStationComponent } from './pages/fuel-stations/[id]/fuel-station.component';
+import { FuelStationFuelTanksComponent } from './pages/fuel-stations/[id]/fuel-tanks/fuel-station-fuel-tanks.component';
+import { FuelStationInfoComponent } from './pages/fuel-stations/[id]/info/fuel-station-info.component';
+import { FuelStationManagersComponent } from './pages/fuel-stations/[id]/managers/fuel-station-managers.component';
+import { ManagerLoginComponent } from './pages/login/manager-login.component';
+import { ManagerDashboardComponent } from './pages/manager-dashboard.component';
 
 export const routes: Routes = [
   // manager routes

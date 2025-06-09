@@ -1,9 +1,10 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
-import { Select, SelectChangeEvent } from 'primeng/select';
-import { MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MessageService } from 'primeng/api';
+import { Select, SelectChangeEvent } from 'primeng/select';
+import { finalize } from 'rxjs';
+
 import Manager from '../../models/manager.model';
 import { ManagerApiService } from '../../services/manager-api.service';
 

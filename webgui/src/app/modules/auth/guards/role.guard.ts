@@ -1,8 +1,9 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { map, take } from 'rxjs';
-import { AuthService } from '../services/auth.service';
+
 import UserRole from '../models/user-role.enum';
+import { AuthService } from '../services/auth.service';
 
 const roleGuard = (
   allowedRoles: UserRole[],
