@@ -7,9 +7,9 @@ import { MessageService } from 'primeng/api';
 import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
-import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
-import { AuthService } from './modules/auth/services/auth.service';
-import { AppConfigService } from './modules/common/app-config.service';
+import { AuthInterceptor } from './modules/auth/api/auth.interceptor';
+import { AuthService } from './modules/auth/application/auth.service';
+import { AppConfigService } from './modules/common/api/app-config.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [

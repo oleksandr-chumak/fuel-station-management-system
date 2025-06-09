@@ -5,9 +5,9 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
-import { FuelGrade } from '../../../../../modules/common/fuel-grade.enum';
-import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
-import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/interfaces/admin-fuel-station-context-loading-event.enum';
+import { FuelGrade } from '../../../../../modules/common/api/fuel-grade.enum';
+import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-tanks',

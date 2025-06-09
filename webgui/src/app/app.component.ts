@@ -5,11 +5,11 @@ import { MenubarModule } from 'primeng/menubar';
 import { ToastModule } from 'primeng/toast';
 import { Observable, BehaviorSubject } from 'rxjs';
 
-import { User } from './modules/auth/models/user.model';
-import { AuthService } from './modules/auth/services/auth.service';
-import { AdminHeaderComponent } from './modules/ui/components/layout/admin-header/admin-header.component';
-import { ManagerHeaderComponent } from './modules/ui/components/layout/manager-header/manager-header.component';
-import { NotLoggedInHeaderComponent } from './modules/ui/components/layout/not-logged-in-header/not-logged-in-header.component';
+import { User } from './modules/auth/api/models/user.model';
+import { AuthService } from './modules/auth/application/auth.service';
+import { AdminHeaderComponent } from './modules/common/application/components/admin-header/admin-header.component';
+import { ManagerHeaderComponent } from './modules/common/application/components/manager-header/manager-header.component';
+import { NotLoggedInHeaderComponent } from './modules/common/application/components/not-logged-in-header/not-logged-in-header.component';
 
 @Component({
   selector: 'app-root',

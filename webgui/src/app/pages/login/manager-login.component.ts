@@ -4,8 +4,8 @@ import { MessageService } from 'primeng/api';
 import { PanelModule } from 'primeng/panel';
 import { finalize } from 'rxjs';
 
-import { LoginFormComponent } from '../../modules/auth/components/login-form/login-form.component';
-import { AuthService } from '../../modules/auth/services/auth.service';
+import { LoginFormComponent } from '../../modules/auth/application/components/login-form/login-form.component';
+import { AuthService } from '../../modules/auth/application/auth.service';
 
 @Component({
   selector: 'app-manager-login-page',

@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
-import { adminGuard } from './modules/auth/guards/admin.guard';
-import { managerGuard } from './modules/auth/guards/manager.guard';
+import { adminGuard } from './modules/auth/application/guards/admin.guard';
+import { managerGuard } from './modules/auth/application/guards/manager.guard';
 import { AdminFuelOrdersComponent } from './pages/admin/fuel-orders/admin-fuel-orders.component';
 import { AdminFuelStationComponent } from './pages/admin/fuel-stations/[id]/admin-fuel-station.component';
 import { AdminFuelStationFuelOrdersComponent } from './pages/admin/fuel-stations/[id]/fuel-orders/admin-fuel-station-fuel-orders.component';
