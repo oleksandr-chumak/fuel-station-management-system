@@ -9,11 +9,11 @@ import { TagModule } from 'primeng/tag';
 import { Observable } from 'rxjs';
 
 import { FuelGrade } from '../../../../modules/common/api/fuel-grade.enum';
-import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { FuelOrderStatus } from '../../../../modules/fuel-order/api/models/fuel-order-status.enum';
+import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/application/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { FuelStationContext } from '../../../../modules/fuel-station/application/models/fuel-station-context.model';
-import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/application/services/manager-fuel-station-context.service';
 import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/application/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',
@@ -34,7 +34,7 @@ export class FuelStationFuelOrdersComponent implements OnInit {
       if(event?.type === ManagerFuelStationContextLoadingEvent.GET_FUEL_ORDERS) {
         this.loading = event.value;
       }
-    })
+    });
   }
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {

@@ -6,8 +6,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
 import { FuelGrade } from '../../../../../modules/common/api/fuel-grade.enum';
-import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
 import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
+import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-tanks',
@@ -27,7 +27,7 @@ export class AdminFuelStationFuelTanksComponent implements OnInit {
       if(event?.type === AdminFuelStationContextLoadingEvent.GET_FUEL_STATION) {
         this.loading = event.value;
       }
-    })
+    });
   }
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
@@ -37,5 +37,4 @@ export class AdminFuelStationFuelTanksComponent implements OnInit {
   get ctx$() {
     return this.ctxService.getContext();
   }
-
 }

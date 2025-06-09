@@ -10,9 +10,9 @@ import { Observable } from 'rxjs';
 
 import { FuelGrade } from '../../../../../modules/common/api/fuel-grade.enum';
 import { FuelOrderStatus } from '../../../../../modules/fuel-order/api/models/fuel-order-status.enum';
+import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
 import { FuelStationContext } from '../../../../../modules/fuel-station/application/models/fuel-station-context.model';
 import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
-import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-orders',
@@ -38,7 +38,7 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
         event?.type === AdminFuelStationContextLoadingEvent.REJECT_FUEL_ORDER || 
         event?.type === AdminFuelStationContextLoadingEvent.CONFIRM_FUEL_ORDER
       ) {
-        this.actionLoading = event.value
+        this.actionLoading = event.value;
       }
     });
   }

@@ -7,6 +7,7 @@ import { FuelOrderMapper } from '../../fuel-order/api/fuel-order.mapper';
 import { FuelOrder } from '../../fuel-order/api/models/fuel-order.model';
 import { ManagerMapper } from '../../manager/api/manager.mapper';
 import { Manager } from '../../manager/api/models/manager.model';
+
 import { FuelStationMapper } from './fuel-station.mapper';
 import { FuelStation } from './models/fuel-station.model';
 

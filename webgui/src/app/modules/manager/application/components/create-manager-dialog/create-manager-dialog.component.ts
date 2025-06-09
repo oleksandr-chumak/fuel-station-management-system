@@ -4,8 +4,8 @@ import { MessageService } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 
 import { BasicDialog } from '../../../../common/application/basic-dialog.component';
-import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
 import { Manager } from '../../../api/models/manager.model';
+import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
 import { ManagerService } from '../../services/manager.service';
 import { ManagerFormComponent } from '../manager-form/manager-form.component';
 

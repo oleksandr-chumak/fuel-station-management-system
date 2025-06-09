@@ -9,9 +9,9 @@ import { TagModule } from 'primeng/tag';
 import { finalize } from 'rxjs';
 
 import { FuelGrade } from '../../../modules/common/api/fuel-grade.enum';
+import { FuelOrderApiService } from '../../../modules/fuel-order/api/fuel-order-api.service';
 import { FuelOrderStatus } from '../../../modules/fuel-order/api/models/fuel-order-status.enum';
 import { FuelOrder } from '../../../modules/fuel-order/api/models/fuel-order.model';
-import { FuelOrderApiService } from '../../../modules/fuel-order/api/fuel-order-api.service';
 
 @Component({
   selector: 'app-admin-fuel-orders',

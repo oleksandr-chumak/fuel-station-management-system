@@ -6,9 +6,9 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
+import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
 import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/application/services/admin-fuel-station-context.service';
 import { AssignManagerDialogComponent } from '../../../../../modules/manager/application/components/assign-manager-dialog/assign-manager-dialog.component';
-import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/application/models/admin-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-admin-fuel-station-managers',
@@ -32,7 +32,7 @@ export class AdminFuelStationManagersComponent implements OnInit {
       } else if(event?.type === AdminFuelStationContextLoadingEvent.UNASSIGN_MANAGER) {
         this.loading = event.value;
       }
-    })
+    });
   }
 
   unassignManger(managerId: number) {

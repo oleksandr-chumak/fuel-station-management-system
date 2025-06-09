@@ -1,4 +1,5 @@
 import { FuelGradeMapper } from '../../common/api/fuel-grade.mapper';
+
 import { FuelPrice } from './models/fuel-price.model';
 import { FuelStationStatus } from './models/fuel-station-status.enum';
 import { FuelStation } from './models/fuel-station.model';

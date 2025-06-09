@@ -9,8 +9,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 
-import { CreateFuelStationDialogComponent } from '../../../modules/fuel-station/application/components/create-fuel-station-dialog/create-fuel-station-dialog.component';
 import { FuelStation } from '../../../modules/fuel-station/api/models/fuel-station.model';
+import { CreateFuelStationDialogComponent } from '../../../modules/fuel-station/application/components/create-fuel-station-dialog/create-fuel-station-dialog.component';
 import { FuelStationService } from '../../../modules/fuel-station/application/services/fuel-station.service';
 
 @Component({

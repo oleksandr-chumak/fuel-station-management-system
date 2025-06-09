@@ -5,8 +5,8 @@ import { MessageService } from 'primeng/api';
 import { Select, SelectChangeEvent } from 'primeng/select';
 import { finalize } from 'rxjs';
 
-import { Manager } from '../../../api/models/manager.model';
 import { ManagerApiService } from '../../../api/manager-api.service';
+import { Manager } from '../../../api/models/manager.model';
 
 // TODO refactor this
 @Component({

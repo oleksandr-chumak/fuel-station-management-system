@@ -8,12 +8,11 @@ import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
-import { Observable } from 'rxjs';
 
-import { BasicDialog } from '../../../../common/application/basic-dialog.component';
 import { FuelGrade } from '../../../../common/api/fuel-grade.enum';
-import { ManagerFuelStationContextService } from '../../../../fuel-station/application/services/manager-fuel-station-context.service';
+import { BasicDialog } from '../../../../common/application/basic-dialog.component';
 import { ManagerFuelStationContextLoadingEvent } from '../../../../fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { ManagerFuelStationContextService } from '../../../../fuel-station/application/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-create-fuel-order-dialog',
@@ -41,7 +40,7 @@ export class CreateFuelOrderDialogComponent extends BasicDialog implements OnIni
       if(event?.type === ManagerFuelStationContextLoadingEvent.CREATE_FUEL_ORDER) {
         this.loading === event.value;
       }
-    })
+    });
   }
 
   handleFormSubmission() {

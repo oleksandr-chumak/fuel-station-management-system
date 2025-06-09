@@ -6,8 +6,8 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
 import { FuelGrade } from '../../../../modules/common/api/fuel-grade.enum';
-import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/application/services/manager-fuel-station-context.service';
 import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/application/models/manager-fuel-station-context-loading-event.enum';
+import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/application/services/manager-fuel-station-context.service';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks',
@@ -25,9 +25,9 @@ export class FuelStationFuelTanksComponent implements OnInit {
   ngOnInit(): void {
     this.ctxService.loadingEvents$.subscribe((event) => {
       if(event?.type === ManagerFuelStationContextLoadingEvent.GET_FUEL_STATION) {
-        this.loading === event.value;
+        this.loading = event.value;
       }
-    })
+    });
   }
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
@@ -37,5 +37,4 @@ export class FuelStationFuelTanksComponent implements OnInit {
   get ctx$() {
     return this.ctxService.getContext();
   }
-
 }
