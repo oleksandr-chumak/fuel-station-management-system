@@ -38,7 +38,7 @@ export class CreateFuelOrderDialogComponent extends BasicDialog implements OnIni
   ngOnInit(): void {
     this.fuelStationContext.loadingEvents$.subscribe((event) => {
       if(event?.type === ManagerFuelStationContextLoadingEvent.CREATE_FUEL_ORDER) {
-        this.loading === event.value;
+        this.loading = event.value;
       }
     });
   }
