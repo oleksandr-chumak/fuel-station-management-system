@@ -11,7 +11,6 @@ import { AppConfigService } from './modules/common/app-config.service';
 import { AuthService } from './modules/auth/services/auth.service';
 import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
 
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAppInitializer(async () => {
@@ -38,4 +37,3 @@ export const appConfig: ApplicationConfig = {
     }),
   ]
 };
-

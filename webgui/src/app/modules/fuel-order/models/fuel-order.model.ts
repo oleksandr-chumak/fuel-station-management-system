@@ -2,7 +2,6 @@ import FuelGrade from '../../common/fuel-grade.enum';
 import FuelOrderStatus from './fuel-order-status.enum';
 
 export default class FuelOrder {
-
   constructor(
         public id: number, 
         public status: FuelOrderStatus, 
@@ -23,5 +22,4 @@ export default class FuelOrder {
   get rejected() {
     return this.status === FuelOrderStatus.Rejected;
   }
-    
 }

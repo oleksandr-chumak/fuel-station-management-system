@@ -1,7 +1,6 @@
 import FuelGrade from '../../common/fuel-grade.enum';
 
 export class FuelTank {
-  
   constructor(
     public id: number, 
     public currentVolume: number,
@@ -20,6 +19,5 @@ export class FuelTank {
       this.fuelGrade,
       clonedLastRefillDate
     );
-  } 
-
+  }
 }

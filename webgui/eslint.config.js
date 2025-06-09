@@ -31,7 +31,9 @@ module.exports = tseslint.config(
       ],
       "indent": ["error", 2],
       "quotes": ["error", "single", { "avoidEscape": true }],
- 
+      "lines-between-class-members": ["error", "always", { exceptAfterSingleLine: true }],
+      "no-multiple-empty-lines": ["error", { max: 1, maxBOF: 0, maxEOF: 0 }],
+      "padded-blocks": ["error", { "classes": "never" }] 
     },
   },
   {

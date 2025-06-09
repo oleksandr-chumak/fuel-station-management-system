@@ -1,6 +1,4 @@
-
 export default class BasicDialog {
-
   open = false;
 
   openDialog(): void {
@@ -18,5 +16,4 @@ export default class BasicDialog {
       this.closeDialog();
     }
   }
-
 }

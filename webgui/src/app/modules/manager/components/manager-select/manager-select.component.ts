@@ -45,5 +45,4 @@ export class ManagerSelectComponent implements OnInit {
         }
       })
   }
-
 }

@@ -1,4 +1,4 @@
-<app-create-manager-dialog #dialog></app-create-manager-dialog>
+<app-create-manager-dialog #dialog (managerCreated)="getManagers()"></app-create-manager-dialog>
 <p-panel header="Managers">
     <ng-template #icons>
         <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Create Manager" />

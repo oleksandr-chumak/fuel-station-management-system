@@ -16,5 +16,4 @@ export class FuelStationInfoComponent {
   get ctx$() {
     return this.ctxService.getContext();
   }
-
 }

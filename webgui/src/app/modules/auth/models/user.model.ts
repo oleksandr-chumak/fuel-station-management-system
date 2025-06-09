@@ -1,7 +1,6 @@
 import UserRole from './user-role.enum';
 
 export default class User {
-
   constructor(
         public userId: number, 
         public email: string, 
@@ -15,5 +14,4 @@ export default class User {
   get manager(): boolean {
     return this.role === UserRole.Manager;
   }
-
 }

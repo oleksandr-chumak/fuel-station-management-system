@@ -10,7 +10,6 @@ interface UserJson {
 
 @Injectable({ providedIn: 'root' })
 export class UserMapper {
-
   fromJson(json: unknown): User {  
     if (!this.isUserJson(json)) {
       throw new Error('Invalid User JSON structure');

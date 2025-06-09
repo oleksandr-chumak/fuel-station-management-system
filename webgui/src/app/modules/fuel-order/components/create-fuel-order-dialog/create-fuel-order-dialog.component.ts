@@ -27,6 +27,7 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
     { label: 'RON 95', value: FuelGrade.RON_95 },
     { label: 'RON 92', value: FuelGrade.RON_92 }
   ]
+
   createFuelOrderForm = new FormGroup({
     fuelGrade: new FormControl<{ label: string, value: FuelGrade } | null>(null, Validators.required),
     amount: new FormControl<number>(0, Validators.required)
@@ -62,7 +63,7 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
   }
 
   get loading$(): Observable<boolean> {
-    return this.fuelStationContext.loading.createFuelOrder;
+    return this.fuelStationContext.loading$;
   }
 
   // TODO rewrite it to util

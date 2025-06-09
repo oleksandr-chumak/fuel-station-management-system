@@ -1,9 +1,9 @@
 <p-panel header="Fuel stations">
-    <app-create-fuel-station-dialog #dialog></app-create-fuel-station-dialog>
+    <app-create-fuel-station-dialog #dialog (fuelStationCreated)="getFuelStations()"></app-create-fuel-station-dialog>
     <ng-template #icons>
         <p-button severity="secondary" [outlined]="true" label="Create" (click)="dialog.openDialog()" />
     </ng-template>
-    <p-table [value]="fuelStations" size="small" [loading]="fuelStationQueryService.loading$ | async" [showLoader]="false"
+    <p-table [value]="fuelStations" size="small" [loading]="loading$ | async" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>

@@ -1,8 +1,6 @@
 import FuelGrade from './fuel-grade.enum';
 
-
 export class FuelGradeMapper {
-
   static map(grade: unknown): FuelGrade {
     if(typeof grade !== 'string') {
       throw new Error('Fuel grade must be a string');
@@ -19,5 +17,4 @@ export class FuelGradeMapper {
       throw new Error(`Cannot transform value: ${grade} to FuelGrade enum`);
     }
   }
-
 }

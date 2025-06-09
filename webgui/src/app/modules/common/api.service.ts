@@ -5,7 +5,6 @@ import { AppConfigService } from './app-config.service';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-
   private http: HttpClient = inject(HttpClient);
   private appConfigService: AppConfigService = inject(AppConfigService);
 

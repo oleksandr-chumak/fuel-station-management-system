@@ -19,7 +19,6 @@ import { ManagerApiService } from '../modules/manager/services/manager-api.servi
   templateUrl: './manager-dashboard.component.html',
 })
 export class ManagerDashboardComponent implements OnInit {
-
   private authService: AuthService = inject(AuthService);
   private managerApiService: ManagerApiService = inject(ManagerApiService);
   private router: Router = inject(Router);
@@ -62,5 +61,4 @@ export class ManagerDashboardComponent implements OnInit {
     }
     return undefined;
   }
-
 }

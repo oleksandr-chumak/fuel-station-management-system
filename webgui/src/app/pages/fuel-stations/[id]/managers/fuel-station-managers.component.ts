@@ -13,7 +13,6 @@ import { MessageService } from 'primeng/api';
   templateUrl: './fuel-station-managers.component.html'
 })
 export class FuelStationManagersComponent implements OnInit {
-
   private messageService: MessageService = inject(MessageService);
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
@@ -34,7 +33,7 @@ export class FuelStationManagersComponent implements OnInit {
   }
 
   get loading$() {
-    return this.ctxService.loading.managers;
+    return this.ctxService.loading$;
   }
 
   private getManagers() {
@@ -43,5 +42,4 @@ export class FuelStationManagersComponent implements OnInit {
         error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers'})
       })
   }
-
 }

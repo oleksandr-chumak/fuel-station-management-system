@@ -13,7 +13,6 @@ import FuelGrade from '../../../../modules/common/fuel-grade.enum';
   templateUrl: './fuel-station-fuel-tanks.component.html'
 })
 export class FuelStationFuelTanksComponent {
-
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
   visible = false;
@@ -29,7 +28,6 @@ export class FuelStationFuelTanksComponent {
   }
 
   get loading$() {
-    return this.ctxService.loading.fuelStation;
+    return this.ctxService.loading$;
   }
-
 }

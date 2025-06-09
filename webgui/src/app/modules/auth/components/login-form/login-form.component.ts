@@ -22,7 +22,6 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './login-form.component.html'
 })
 export class LoginFormComponent {
-
   @Input() loading = false;
   @Output() formSubmitted = new EventEmitter<{ email: string, password: string }>();
 
@@ -52,5 +51,4 @@ export class LoginFormComponent {
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
     return !!(formGroup.get(fieldName)?.touched && formGroup.get(fieldName)?.invalid);
   }
-
 }

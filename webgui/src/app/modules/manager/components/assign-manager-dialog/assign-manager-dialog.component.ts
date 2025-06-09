@@ -18,7 +18,6 @@ import Manager from '../../models/manager.model';
   templateUrl: './assign-manager-dialog.component.html'
 })
 export class AssignManagerDialogComponent extends BasicDialog {
-
   private fuelStationContext: AdminFuelStationContextService = inject(AdminFuelStationContextService);
   private messageService: MessageService = inject(MessageService);
 
@@ -52,7 +51,7 @@ export class AssignManagerDialogComponent extends BasicDialog {
   }
 
   get loading$(): Observable<boolean> {
-    return this.fuelStationContext.loading.assignManager;
+    return this.fuelStationContext.loading$;
   }
 
   // TODO rewrite it to util

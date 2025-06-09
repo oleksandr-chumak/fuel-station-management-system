@@ -8,7 +8,6 @@ import { FuelStationMapper } from '../../fuel-station/mappers/fuel-station.mappe
 
 @Injectable({ providedIn: 'root' })
 export class ManagerApiService {
-
   private apiService = inject(ApiService);
 
   getManagerById(managerId: number): Observable<Manager> {

@@ -14,7 +14,6 @@ import { AssignManagerDialogComponent } from '../../../../../modules/manager/com
   templateUrl: './admin-fuel-station-managers.component.html'
 })
 export class AdminFuelStationManagersComponent implements OnInit {
-
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
@@ -38,13 +37,8 @@ export class AdminFuelStationManagersComponent implements OnInit {
   }
 
   get loading$() {
-    return this.ctxService.loading.managers;
+    return this.ctxService.loading$;
   }
-
-  get loadingUnassignManager$() {
-    return this.ctxService.loading.unassignManager;
-  }
-
 
   private getManagers() {
     this.ctxService.getAssignedManagers()
@@ -52,5 +46,4 @@ export class AdminFuelStationManagersComponent implements OnInit {
         error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers'})
       })
   }
-
 }

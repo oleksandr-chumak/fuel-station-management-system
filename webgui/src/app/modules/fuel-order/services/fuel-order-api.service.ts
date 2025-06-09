@@ -7,7 +7,6 @@ import { FuelOrderMapper } from '../mappers/fuel-order.mapper';
 
 @Injectable({ providedIn: 'root'})
 export class FuelOrderApiService {
-      
   private apiService = inject(ApiService);
     
   getFuelOrders(): Observable<FuelOrder[]> {

@@ -17,7 +17,6 @@ import FuelPrice from '../../../../../modules/fuel-station/models/fuel-price.mod
   templateUrl: './admin-fuel-station-fuel-prices.component.html'
 })
 export class AdminFuelStationFuelPricesComponent implements OnInit {
-  
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
@@ -30,7 +29,7 @@ export class AdminFuelStationFuelPricesComponent implements OnInit {
     this.ctx$.subscribe((data) => {
       this.clonedFuelPrices = data?.fuelStation.clone().fuelPrices || [];
     })
-    this.ctxService.loading.changeFuelPrice.subscribe((value) => this.loading = value);
+    this.ctxService.loading$.subscribe((value) => this.loading = value);
   }
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
@@ -71,5 +70,4 @@ export class AdminFuelStationFuelPricesComponent implements OnInit {
   get ctx$() {
     return this.ctxService.getContext();
   }
-
 }

@@ -18,7 +18,6 @@ import FuelOrder from '../../../modules/fuel-order/models/fuel-order.model';
   templateUrl: './admin-fuel-orders.component.html'
 })
 export class AdminFuelOrdersComponent implements OnInit {
-
   private fuelOrderApi: FuelOrderApiService = inject(FuelOrderApiService);
   private messageService: MessageService = inject(MessageService);
 

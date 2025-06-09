@@ -17,8 +17,6 @@ import FuelOrder from '../../fuel-order/models/fuel-order.model';
 import FuelStationContext from '../models/fuel-station-context.model';
 import { FuelStation } from '../models/fuel-station.model';
 
-type LoadingKey = 'fuelStation' | 'managers' | 'fuelOrders' | 'assignManager' | 'unassignManager' | 'confirmOrder' | 'rejectOrder' | 'changeFuelPrice' | 'deactivateFuelStation';
-
 @Injectable({ providedIn: 'root' })
 export default class AdminFuelStationContextService {
   private contextSubject = new BehaviorSubject<FuelStationContext | null>(null);
@@ -27,29 +25,8 @@ export default class AdminFuelStationContextService {
   private fuelStationApi = inject(FuelStationApiService);
   private fuelOrderApi = inject(FuelOrderApiService);
 
-  private loadingSubjects: Record<LoadingKey, BehaviorSubject<boolean>> = {
-    fuelStation: new BehaviorSubject<boolean>(false),
-    managers: new BehaviorSubject<boolean>(false),
-    fuelOrders: new BehaviorSubject<boolean>(false),
-    assignManager: new BehaviorSubject<boolean>(false),
-    unassignManager: new BehaviorSubject<boolean>(false),
-    confirmOrder: new BehaviorSubject<boolean>(false),
-    rejectOrder: new BehaviorSubject<boolean>(false),
-    changeFuelPrice: new BehaviorSubject<boolean>(false),
-    deactivateFuelStation: new BehaviorSubject<boolean>(false),
-  };
-
-  loading = {
-    fuelStation: this.loadingSubjects.fuelStation.asObservable(),
-    managers: this.loadingSubjects.managers.asObservable(),
-    fuelOrders: this.loadingSubjects.fuelOrders.asObservable(),
-    assignManager: this.loadingSubjects.assignManager.asObservable(),
-    unassignManager: this.loadingSubjects.unassignManager.asObservable(),
-    confirmOrder: this.loadingSubjects.confirmOrder.asObservable(),
-    rejectOrder: this.loadingSubjects.rejectOrder.asObservable(),
-    changeFuelPrice: this.loadingSubjects.changeFuelPrice.asObservable(),
-    deactivateFuelStation: this.loadingSubjects.deactivateFuelStation.asObservable(),
-  };
+  private loading = new BehaviorSubject(false);
+  loading$ = this.loading.asObservable();
 
   private get contextValue(): FuelStationContext {
     const ctx = this.contextSubject.value;
@@ -57,10 +34,9 @@ export default class AdminFuelStationContextService {
     return ctx;
   }
 
-  private withLoading<T>(key: LoadingKey, observable: Observable<T>): Observable<T> {
-    const subject = this.loadingSubjects[key];
-    subject?.next(true);
-    return observable.pipe(finalize(() => subject?.next(false)));
+  private withLoading<T>(observable: Observable<T>): Observable<T> {
+    this.loading.next(true);
+    return observable.pipe(finalize(() => this.loading.next(false)));
   }
 
   private updateContext(partial: Partial<FuelStationContext>) {
@@ -78,7 +54,6 @@ export default class AdminFuelStationContextService {
 
   getFuelStation(id: number): Observable<FuelStation> {
     return this.withLoading(
-      'fuelStation',
       this.fuelStationApi.getFuelStationById(id).pipe(
         tap(fuelStation =>
           this.contextSubject.next(new FuelStationContext(fuelStation, [], []))
@@ -95,7 +70,6 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      'managers',
       this.fuelStationApi.getAssignedManagers(fuelStation.id).pipe(
         tap(managers => this.updateContext({ managers })),
         catchError(error => {
@@ -110,7 +84,6 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      'fuelOrders',
       this.fuelStationApi.getFuelStationOrders(fuelStation.id).pipe(
         tap(fuelOrders => this.updateContext({ fuelOrders })),
         catchError(error => {
@@ -125,7 +98,6 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      'assignManager',
       this.fuelStationApi.assignManager(fuelStation.id, managerId).pipe(
         switchMap(() => {
           this.updateContext({ managers: [] })
@@ -143,7 +115,6 @@ export default class AdminFuelStationContextService {
     const { fuelStation } = this.contextValue;
 
     return this.withLoading(
-      'unassignManager',
       this.fuelStationApi.unassignManager(fuelStation.id, managerId).pipe(
         switchMap(() => {
           this.updateContext({ managers: [] })
@@ -161,7 +132,6 @@ export default class AdminFuelStationContextService {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.contextValue;
     return this.withLoading(
-      'confirmOrder',
       this.fuelOrderApi.confirmFuelOrder(fuelOrderId).pipe(
         switchMap(() => {
           this.updateContext({ fuelOrders: [] })
@@ -179,7 +149,6 @@ export default class AdminFuelStationContextService {
     // eslint-disable-next-line @typescript-eslint/no-unused-expressions
     this.contextValue;
     return this.withLoading(
-      'rejectOrder',
       this.fuelOrderApi.rejectFuelOrder(fuelOrderId).pipe(
         switchMap(() => {
           this.updateContext({ fuelOrders: [] })
@@ -197,7 +166,6 @@ export default class AdminFuelStationContextService {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
 
     return this.withLoading(
-      'changeFuelPrice',
       this.fuelStationApi.changeFuelPrice(fuelStation.id, fuelGrade, newPrice).pipe(
         tap(updatedStation => {
           this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
@@ -214,7 +182,6 @@ export default class AdminFuelStationContextService {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
 
     return this.withLoading(
-      'deactivateFuelStation',
       this.fuelStationApi.deactivateFuelStation(fuelStation.id).pipe(
         tap(updatedStation => {
           this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));

@@ -3,7 +3,6 @@ import FuelStationStatus from './fuel-station-status.enum';
 import { FuelTank } from './fuel-tank.model';
 
 export class FuelStation {
-  
   constructor(
     public id: number,
     public street: string,

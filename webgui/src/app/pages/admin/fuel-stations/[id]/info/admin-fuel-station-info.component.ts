@@ -16,5 +16,4 @@ export class AdminFuelStationInfoComponent {
   get ctx$() {
     return this.ctxService.getContext();
   }
-
 }

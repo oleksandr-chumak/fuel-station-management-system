@@ -22,7 +22,7 @@
                 <td>{{ manager.fullName }}</td>
                 <td>
                     <div class="flex items-center justify-center">
-                        <p-button (onClick)="unassignManger(manager.id)" size="small" severity="secondary" [outlined]="true" [loading]="loadingUnassignManager$ | async">
+                        <p-button (onClick)="unassignManger(manager.id)" size="small" severity="secondary" [outlined]="true" [loading]="loading$ | async">
                             Unassign Manager
                         </p-button>
                     </div>

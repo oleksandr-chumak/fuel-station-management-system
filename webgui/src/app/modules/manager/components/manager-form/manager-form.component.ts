@@ -18,7 +18,6 @@ import { ManagerFormData } from '../../interfaces/manager-form-data.interface';
   templateUrl: './manager-form.component.html'
 })
 export class ManagerFormComponent {
-
   @Input() loading = false;
   @Input() buttonText = '';
   @Output() formSubmitted = new EventEmitter<ManagerFormData>();
@@ -51,5 +50,4 @@ export class ManagerFormComponent {
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
     return !!(formGroup.get(fieldName)?.touched && formGroup.get(fieldName)?.invalid);
   }
-
 }

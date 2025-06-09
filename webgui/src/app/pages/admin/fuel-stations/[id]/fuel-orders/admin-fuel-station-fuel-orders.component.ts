@@ -18,7 +18,6 @@ import FuelStationContext from '../../../../../modules/fuel-station/models/fuel-
   templateUrl: './admin-fuel-station-fuel-orders.component.html'
 })
 export class AdminFuelStationFuelOrdersComponent implements OnInit {
-
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
@@ -29,8 +28,7 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
   ngOnInit(): void {
     this.getFuelOrders();
     
-    this.ctxService.loading.rejectOrder.subscribe((value) => this.actionLoading = value)
-    this.ctxService.loading.confirmOrder.subscribe((value) => this.actionLoading = value);
+    this.ctxService.loading$.subscribe((value) => this.actionLoading = value)
   }
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
@@ -65,7 +63,7 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
   }
 
   get loading$(): Observable<boolean> {
-    return this.ctxService.loading.fuelOrders;
+    return this.ctxService.loading$;
   }
 
   get ctx$(): Observable<FuelStationContext | null>  {

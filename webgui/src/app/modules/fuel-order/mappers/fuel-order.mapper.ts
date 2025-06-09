@@ -3,7 +3,6 @@ import FuelOrderStatus from '../models/fuel-order-status.enum';
 import { FuelGradeMapper } from '../../common/fuel-grade.mapper';
 
 export class FuelOrderMapper {
-
   static fromJson(json: unknown): FuelOrder {
     const typedJson = json as Record<string, unknown>
     const status = this.parseFuelOrderStatus(typedJson['status']);
@@ -36,5 +35,4 @@ export class FuelOrderMapper {
 
     throw new Error(`Unsupported status type: ${typeof status}`);
   }
-  
 }

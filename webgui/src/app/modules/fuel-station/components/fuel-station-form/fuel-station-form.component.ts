@@ -63,5 +63,4 @@ export class FuelStationFormComponent {
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
     return !!(formGroup.get(fieldName)?.touched && formGroup.get(fieldName)?.invalid);
   }
-
 }

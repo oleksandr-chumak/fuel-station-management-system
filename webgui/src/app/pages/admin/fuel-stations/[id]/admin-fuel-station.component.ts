@@ -78,5 +78,4 @@ export class AdminFuelStationComponent implements OnInit, OnDestroy {
   get ctx$() {
     return this.ctxService.getContext();
   }
-
 }

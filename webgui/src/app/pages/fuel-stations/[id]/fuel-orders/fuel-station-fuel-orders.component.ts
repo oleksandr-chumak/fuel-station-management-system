@@ -19,7 +19,6 @@ import FuelStationContext from '../../../../modules/fuel-station/models/fuel-sta
   templateUrl: './fuel-station-fuel-orders.component.html'
 })
 export class FuelStationFuelOrdersComponent implements OnInit {
-
   private messageService: MessageService = inject(MessageService);
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
@@ -52,7 +51,7 @@ export class FuelStationFuelOrdersComponent implements OnInit {
   }
 
   get loading$(): Observable<boolean> {
-    return this.ctxService.loading.fuelOrders;
+    return this.ctxService.loading$;
   }
 
   get ctx$(): Observable<FuelStationContext | null>  {
@@ -67,5 +66,4 @@ export class FuelStationFuelOrdersComponent implements OnInit {
         }
       }) 
   }
-
 }

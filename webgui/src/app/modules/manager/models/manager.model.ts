@@ -8,10 +8,6 @@ export default class Manager {
         public status: ManagerStatus
   ) {}
 
-  terminate() {
-    this.status = ManagerStatus.Deactivated;
-  }
-
   get fullName() {
     return this.firstName + ' ' + this.lastName;
   }

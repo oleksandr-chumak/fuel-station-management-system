@@ -6,7 +6,6 @@ import { UserMapper } from '../mappers/user.mapper';
 
 @Injectable({ providedIn: 'root' })
 export default class AuthApiService {
-
   private apiService: ApiService = inject(ApiService);
   private userMapper: UserMapper = inject(UserMapper);
 
@@ -22,5 +21,4 @@ export default class AuthApiService {
     return this.apiService.get('api/auth/me')
       .pipe(map((user) => this.userMapper.fromJson(user)));
   }
-    
 }

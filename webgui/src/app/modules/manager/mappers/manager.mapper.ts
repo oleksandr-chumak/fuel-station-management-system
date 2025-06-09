@@ -2,7 +2,6 @@ import ManagerStatus from '../models/manager-status.enum';
 import Manager from '../models/manager.model';
 
 export class ManagerMapper {
-
   static fromJson(json: unknown): Manager {
     const typedJson = json as Record<string, unknown>
     const status = this.parseStatus(typedJson['status']);

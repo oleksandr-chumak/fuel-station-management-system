@@ -15,7 +15,6 @@ import ManagerFuelStationContextService from '../../../../modules/fuel-station/s
   templateUrl: './fuel-station-fuel-prices.component.html'
 })
 export class FuelStationFuelPricesComponent {
-
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
   skeletonRows = new Array(5).fill(null);

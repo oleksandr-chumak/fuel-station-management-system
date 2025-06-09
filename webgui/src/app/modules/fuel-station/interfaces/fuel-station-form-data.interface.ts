@@ -1,4 +1,3 @@
-
 export interface FuelStationFormData {
     street: string,
     buildingNumber: string,

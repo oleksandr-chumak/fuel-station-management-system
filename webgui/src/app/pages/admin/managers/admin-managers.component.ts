@@ -1,5 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import ManagersQueryService from '../../../modules/manager/services/managers-query.service';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +9,7 @@ import Manager from '../../../modules/manager/models/manager.model';
 import { TagModule } from 'primeng/tag';
 import ManagerStatus from '../../../modules/manager/models/manager-status.enum';
 import { CreateManagerDialogComponent } from '../../../modules/manager/components/create-manager-dialog/create-manager-dialog.component';
+import ManagerService from '../../../modules/manager/services/manager.service';
 
 @Component({
   selector: 'app-admin-managers',
@@ -17,8 +17,7 @@ import { CreateManagerDialogComponent } from '../../../modules/manager/component
   templateUrl: './admin-managers.component.html'
 })
 export class AdminManagersComponent implements OnInit {
-  
-  private managersQueryService: ManagersQueryService = inject(ManagersQueryService);
+  private managerService: ManagerService = inject(ManagerService);
   private messageService: MessageService = inject(MessageService);
 
   managers: Manager[] = [];
@@ -26,11 +25,15 @@ export class AdminManagersComponent implements OnInit {
   skeletonCols = new Array(6).fill(null);
   
   ngOnInit(): void {
-    this.managersQueryService.getManagers()
+    this.getManagers();
+  }
+
+  getManagers() {
+    this.managerService.getManagers()
       .subscribe({
-        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers' })
+        error: () => this.messageService.add({ severity: 'error', summary: 'Error', detail: 'An error occurred while fetching managers' }),
+        next: (managers) => this.managers = managers 
       })
-    this.managersQueryService.managers$.subscribe((data) => this.managers = data)
   }
 
   getSeverity(manager: Manager): 'success' | undefined {
@@ -41,7 +44,6 @@ export class AdminManagersComponent implements OnInit {
   }
 
   get loading$() {
-    return this.managersQueryService.loading$;
+    return this.managerService.loading$;
   }
-
 }
