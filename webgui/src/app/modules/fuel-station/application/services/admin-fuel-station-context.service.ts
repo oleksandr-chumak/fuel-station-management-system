@@ -66,7 +66,6 @@ export class AdminFuelStationContextService {
 
   getAssignedManagers(): Observable<Manager[]> {
     const { fuelStation } = this.contextValue;
-
     return this.withLoading(
       this.fuelStationApi.getAssignedManagers(fuelStation.id)
         .pipe(
@@ -78,7 +77,6 @@ export class AdminFuelStationContextService {
 
   getFuelOrders(): Observable<FuelOrder[]> {
     const { fuelStation } = this.contextValue;
-
     return this.withLoading(
       this.fuelStationApi.getFuelStationOrders(fuelStation.id)
         .pipe(
@@ -90,7 +88,6 @@ export class AdminFuelStationContextService {
 
   assignManager(managerId: number): Observable<Manager[]> {
     const { fuelStation } = this.contextValue;
-
     return this.withLoading(
       this.fuelStationApi.assignManager(fuelStation.id, managerId)
         .pipe(
@@ -119,8 +116,7 @@ export class AdminFuelStationContextService {
   }
 
   confirmFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    this.contextValue;
+    const _ = this.contextValue;
     return this.withLoading(
       this.fuelOrderApi.confirmFuelOrder(fuelOrderId).pipe(
         tap(() => {
@@ -133,8 +129,7 @@ export class AdminFuelStationContextService {
   }
 
   rejectFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    this.contextValue;
+    const _ = this.contextValue;
     return this.withLoading(
       this.fuelOrderApi.rejectFuelOrder(fuelOrderId).pipe(
         tap(() => {
@@ -148,7 +143,6 @@ export class AdminFuelStationContextService {
 
   changeFuelPrice(fuelGrade: FuelGrade, newPrice: number): Observable<FuelStation> {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
-
     return this.withLoading(
       this.fuelStationApi.changeFuelPrice(fuelStation.id, fuelGrade, newPrice)
         .pipe(
@@ -162,7 +156,6 @@ export class AdminFuelStationContextService {
 
   deactivateFuelStation(): Observable<FuelStation> {
     const { fuelStation, managers, fuelOrders } = this.contextValue;
-
     return this.withLoading(
       this.fuelStationApi.deactivateFuelStation(fuelStation.id)
         .pipe(

@@ -52,6 +52,7 @@ export default tseslint.config(
       ],
       'import/newline-after-import': ['error', { count: 1 }],
       'import/no-default-export': 'error',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
       '@dword-design/import-alias/prefer-alias': [
         'error',
         {

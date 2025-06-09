@@ -33,7 +33,6 @@ export class ManagerFuelStationContextService {
     return ctx;
   }
   
-  //TODO make as util or smth like that 
   private withLoading<T>(observable: Observable<T>, eventType: ManagerFuelStationContextLoadingEvent): Observable<T> {
     this.loadingEvents.next(new LoadingEvent(eventType, true));
     return observable.pipe(
