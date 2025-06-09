@@ -1,11 +1,8 @@
-import { Injectable } from '@angular/core';
-
 import { UserRole } from './models/user-role.enum';
 import { User } from './models/user.model';
 
-@Injectable({ providedIn: 'root' })
 export class UserMapper {
-  fromJson(json: unknown): User {  
+  static fromJson(json: unknown): User {  
     const typedJson = json as Record<string, unknown>;
     const role = this.parseUserRole(typedJson['role']);
 
@@ -16,7 +13,7 @@ export class UserMapper {
     );
   }
 
-  private parseUserRole(role: unknown): UserRole {
+  private static parseUserRole(role: unknown): UserRole {
     if (typeof role === 'string') {
       switch (role) {
       case 'administrator':

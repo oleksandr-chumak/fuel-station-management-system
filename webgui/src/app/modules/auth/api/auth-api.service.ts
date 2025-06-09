@@ -9,7 +9,6 @@ import { ApiService } from '~common/api/api.service';
 @Injectable({ providedIn: 'root' })
 export class AuthApiService {
   private apiService: ApiService = inject(ApiService);
-  private userMapper: UserMapper = inject(UserMapper);
 
   loginAdmin(email: string, password: string): Observable<string> {
     return this.apiService.post<string>('api/auth/login/admin', { email, password }, { responseType: 'text' });
@@ -21,6 +20,6 @@ export class AuthApiService {
 
   getMe(): Observable<User> {
     return this.apiService.get('api/auth/me')
-      .pipe(map((user) => this.userMapper.fromJson(user)));
+      .pipe(map((user) => UserMapper.fromJson(user)));
   }
 }
