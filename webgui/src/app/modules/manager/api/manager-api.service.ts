@@ -14,17 +14,17 @@ export class ManagerApiService {
 
   getManagerById(managerId: number): Observable<Manager> {
     return this.apiService.get('api/managers/' + managerId)
-      .pipe(map((ManagerMapper.fromJson)));
+      .pipe(map(((data) => ManagerMapper.fromJson(data))));
   }
 
   getManagers(): Observable<Manager[]> {
     return this.apiService.get('api/managers/')
-      .pipe(map(data => this.apiService.assertArray(data, ManagerMapper.fromJson)));
+      .pipe(map(data => this.apiService.assertArray(data, (data) => ManagerMapper.fromJson(data))));
   }
 
   getManagerFuelStations(managerId: number): Observable<FuelStation[]> {
     return this.apiService.get('api/managers/' + managerId + '/fuel-stations')
-      .pipe(map(data => this.apiService.assertArray(data, FuelStationMapper.fromJson)));
+      .pipe(map(data => this.apiService.assertArray(data, (data) => FuelStationMapper.fromJson(data))));
   }
 
   terminateManager(managerId: number): Observable<Manager> {

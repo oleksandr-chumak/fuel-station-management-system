@@ -17,17 +17,17 @@ export class FuelStationApiService {
     
   getFuelStationOrders(fuelStationId: number): Observable<FuelOrder[]> {
     return this.apiService.get(`api/fuel-stations/${fuelStationId}/fuel-orders`)
-      .pipe(map((data) => this.apiService.assertArray(data, FuelOrderMapper.fromJson)));
+      .pipe(map((data) => this.apiService.assertArray(data, (data) => FuelOrderMapper.fromJson(data))));
   }
 
   getAssignedManagers(fuelStationId: number): Observable<Manager[]> {
     return this.apiService.get(`api/fuel-stations/${fuelStationId}/managers`)
-      .pipe(map(data => this.apiService.assertArray(data, ManagerMapper.fromJson)));
+      .pipe(map(data => this.apiService.assertArray(data, (data) => ManagerMapper.fromJson(data))));
   }
 
   getFuelStations(): Observable<FuelStation[]> {
     return this.apiService.get('api/fuel-stations/')
-      .pipe(map(data => this.apiService.assertArray(data, FuelStationMapper.fromJson)));
+      .pipe(map(data => this.apiService.assertArray(data, (data) => FuelStationMapper.fromJson(data))));
   }
     
   getFuelStationById(fuelStationId: number): Observable<FuelStation> {
@@ -36,19 +36,16 @@ export class FuelStationApiService {
   }
 
   changeFuelPrice(fuelStationId: number, fuelGrade: FuelGrade, newFuelPrice: number): Observable<FuelStation> {
-    // TODO: Change change-fuel-price to fuel-prices/:fuelGrade
     return this.apiService.put(`api/fuel-stations/${fuelStationId}/change-fuel-price`, 
       { fuelGrade: this.fuelGradeToSlug(fuelGrade), newPrice: newFuelPrice })
       .pipe(map(data => FuelStationMapper.fromJson(data)));
   }
 
-  // TODO Maybe change unassign-manager to managers/{managerId}/unassign
   unassignManager(fuelStationId: number, managerId: number): Observable<FuelStation> {
     return this.apiService.put(`api/fuel-stations/${fuelStationId}/unassign-manager`, { managerId })
       .pipe(map(data => FuelStationMapper.fromJson(data)));
   }
 
-  // TODO Maybe change assign-manager to managers/{managerId}/assign
   assignManager(fuelStationId: number, managerId: number): Observable<FuelStation> {
     return this.apiService.put(`api/fuel-stations/${fuelStationId}/assign-manager`, { managerId })
       .pipe(map(data => FuelStationMapper.fromJson(data)));

@@ -13,7 +13,7 @@ export class FuelOrderApiService {
     
   getFuelOrders(): Observable<FuelOrder[]> {
     return this.apiService.get('api/fuel-orders/')
-      .pipe(map(data => this.apiService.assertArray(data, FuelOrderMapper.fromJson)));
+      .pipe(map(data => this.apiService.assertArray(data, (data) => FuelOrderMapper.fromJson(data))));
   } 
 
   getFuelOrderById(fuelOrderId: number): Observable<FuelOrder> {
