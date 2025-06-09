@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 
 import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
 import { AssignManagerDialogComponent } from '../../../../../modules/manager/components/assign-manager-dialog/assign-manager-dialog.component';
+import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/interfaces/admin-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-admin-fuel-station-managers',
@@ -20,9 +21,18 @@ export class AdminFuelStationManagersComponent implements OnInit {
 
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
+  loading = false;
+  unassignManagerLoading = false;
   
   ngOnInit(): void {
     this.getManagers();
+    this.ctxService.loadingEvents$.subscribe((event) => {
+      if(event?.type === AdminFuelStationContextLoadingEvent.GET_ASSIGNED_MANAGERS) {
+        this.loading = event.value;
+      } else if(event?.type === AdminFuelStationContextLoadingEvent.UNASSIGN_MANAGER) {
+        this.loading = event.value;
+      }
+    })
   }
 
   unassignManger(managerId: number) {
@@ -35,10 +45,6 @@ export class AdminFuelStationManagersComponent implements OnInit {
 
   get ctx$() {
     return this.ctxService.getContext();
-  }
-
-  get loading$() {
-    return this.ctxService.loading$;
   }
 
   private getManagers() {

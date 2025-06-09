@@ -13,6 +13,7 @@ import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/c
 import { FuelOrderStatus } from '../../../../modules/fuel-order/models/fuel-order-status.enum';
 import { FuelStationContext } from '../../../../modules/fuel-station/models/fuel-station-context.model';
 import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/interfaces/manager-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders',
@@ -23,11 +24,17 @@ export class FuelStationFuelOrdersComponent implements OnInit {
   private messageService: MessageService = inject(MessageService);
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
+  loading = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
   
   ngOnInit(): void {
     this.getFuelOrders();
+    this.ctxService.loadingEvents$.subscribe((event) => {
+      if(event?.type === ManagerFuelStationContextLoadingEvent.GET_FUEL_ORDERS) {
+        this.loading = event.value;
+      }
+    })
   }
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
@@ -49,10 +56,6 @@ export class FuelStationFuelOrdersComponent implements OnInit {
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
     return FuelGrade[fuelGrade];
-  }
-
-  get loading$(): Observable<boolean> {
-    return this.ctxService.loading$;
   }
 
   get ctx$(): Observable<FuelStationContext | null>  {

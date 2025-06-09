@@ -3,7 +3,7 @@
     <ng-template #icons>
         <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Create fuel order" />
     </ng-template>
-    <p-table [value]="ctx.fuelOrders" size="small" [loading]="loading$ | async" [showLoader]="false"
+    <p-table [value]="ctx.fuelOrders" size="small" [loading]="loading" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>

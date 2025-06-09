@@ -7,6 +7,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 
 import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/interfaces/manager-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-fuel-station-managers',
@@ -18,11 +19,17 @@ export class FuelStationManagersComponent implements OnInit {
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
   visible = false;
+  loading = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(4).fill(null);
   
   ngOnInit(): void {
     this.getManagers();
+    this.ctxService.loadingEvents$.subscribe((event) => {
+      if(event?.type === ManagerFuelStationContextLoadingEvent.GET_ASSIGNED_MANAGERS) {
+        this.loading = event.value;
+      }
+    })
   }
 
   openDialog() { 
@@ -31,10 +38,6 @@ export class FuelStationManagersComponent implements OnInit {
 
   get ctx$() {
     return this.ctxService.getContext();
-  }
-
-  get loading$() {
-    return this.ctxService.loading$;
   }
 
   private getManagers() {

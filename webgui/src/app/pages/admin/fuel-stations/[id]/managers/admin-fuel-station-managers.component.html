@@ -3,7 +3,7 @@
     <ng-template #icons>
         <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
     </ng-template>
-    <p-table [value]="ctx.managers" size="small" [loading]="loading$ | async" [showLoader]="false"
+    <p-table [value]="ctx.managers" size="small" [loading]="loading" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
@@ -22,7 +22,7 @@
                 <td>{{ manager.fullName }}</td>
                 <td>
                     <div class="flex items-center justify-center">
-                        <p-button (onClick)="unassignManger(manager.id)" size="small" severity="secondary" [outlined]="true" [loading]="loading$ | async">
+                        <p-button (onClick)="unassignManger(manager.id)" size="small" severity="secondary" [outlined]="true" [loading]="unassignManagerLoading">
                             Unassign Manager
                         </p-button>
                     </div>

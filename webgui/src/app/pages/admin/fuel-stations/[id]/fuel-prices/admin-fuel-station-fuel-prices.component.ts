@@ -11,6 +11,7 @@ import { TableModule } from 'primeng/table';
 import { FuelGrade } from '../../../../../modules/common/fuel-grade.enum';
 import { FuelPrice } from '../../../../../modules/fuel-station/models/fuel-price.model';
 import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/interfaces/admin-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-prices',
@@ -21,16 +22,23 @@ export class AdminFuelStationFuelPricesComponent implements OnInit {
   private messageService: MessageService = inject(MessageService);
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
-  loading = false;
   clonedFuelPrices = this.ctxService.getContextValue()?.fuelStation.clone().fuelPrices || [];
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(3).fill(null);
+  loading = false;
+  changeFuelPriceLoading = false;
 
   ngOnInit(): void {
     this.ctx$.subscribe((data) => {
       this.clonedFuelPrices = data?.fuelStation.clone().fuelPrices || [];
     });
-    this.ctxService.loading$.subscribe((value) => this.loading = value);
+    this.ctxService.loadingEvents$.subscribe((event) => {
+      if(event?.type === AdminFuelStationContextLoadingEvent.GET_FUEL_STATION) {
+        this.loading = event.value;
+      } else if(event?.type === AdminFuelStationContextLoadingEvent.CHANGE_FUEL_PRICE) {
+        this.changeFuelPriceLoading = false;
+      }
+    })
   }
 
   getFuelGradeValue(fuelGrade: FuelGrade) {

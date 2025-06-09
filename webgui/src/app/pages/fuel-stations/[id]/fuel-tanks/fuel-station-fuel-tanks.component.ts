@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -7,18 +7,28 @@ import { TableModule } from 'primeng/table';
 
 import { FuelGrade } from '../../../../modules/common/fuel-grade.enum';
 import { ManagerFuelStationContextService } from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { ManagerFuelStationContextLoadingEvent } from '../../../../modules/fuel-station/interfaces/manager-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks',
   imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
   templateUrl: './fuel-station-fuel-tanks.component.html'
 })
-export class FuelStationFuelTanksComponent {
+export class FuelStationFuelTanksComponent implements OnInit {
   private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
 
   visible = false;
+  loading = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(4).fill(null);
+
+  ngOnInit(): void {
+    this.ctxService.loadingEvents$.subscribe((event) => {
+      if(event?.type === ManagerFuelStationContextLoadingEvent.GET_FUEL_STATION) {
+        this.loading === event.value;
+      }
+    })
+  }
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
     return FuelGrade[fuelGrade];
@@ -28,7 +38,4 @@ export class FuelStationFuelTanksComponent {
     return this.ctxService.getContext();
   }
 
-  get loading$() {
-    return this.ctxService.loading$;
-  }
 }

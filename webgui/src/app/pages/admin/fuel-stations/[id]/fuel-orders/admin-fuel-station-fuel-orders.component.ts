@@ -12,6 +12,7 @@ import { FuelGrade } from '../../../../../modules/common/fuel-grade.enum';
 import { FuelOrderStatus } from '../../../../../modules/fuel-order/models/fuel-order-status.enum';
 import { FuelStationContext } from '../../../../../modules/fuel-station/models/fuel-station-context.model';
 import { AdminFuelStationContextService } from '../../../../../modules/fuel-station/services/admin-fuel-station-context.service';
+import { AdminFuelStationContextLoadingEvent } from '../../../../../modules/fuel-station/interfaces/admin-fuel-station-context-loading-event.enum';
 
 @Component({
   selector: 'app-admin-fuel-station-fuel-orders',
@@ -23,13 +24,23 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
   private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
 
   actionLoading = false;
+  loading = false;
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
 
   ngOnInit(): void {
     this.getFuelOrders();
-    
-    this.ctxService.loading$.subscribe((value) => this.actionLoading = value);
+
+    this.ctxService.loadingEvents$.subscribe((event) => {
+      if(event?.type === AdminFuelStationContextLoadingEvent.GET_FUEL_ORDERS) {
+        this.loading = event.value;
+      } else if(
+        event?.type === AdminFuelStationContextLoadingEvent.REJECT_FUEL_ORDER || 
+        event?.type === AdminFuelStationContextLoadingEvent.CONFIRM_FUEL_ORDER
+      ) {
+        this.actionLoading = event.value
+      }
+    });
   }
 
   getSeverity(fuelOrderStatus: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
@@ -61,10 +72,6 @@ export class AdminFuelStationFuelOrdersComponent implements OnInit {
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
     return FuelGrade[fuelGrade];
-  }
-
-  get loading$(): Observable<boolean> {
-    return this.ctxService.loading$;
   }
 
   get ctx$(): Observable<FuelStationContext | null>  {

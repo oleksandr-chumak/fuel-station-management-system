@@ -13,8 +13,10 @@ import { FuelOrderApiService } from '../../fuel-order/services/fuel-order-api.se
 import { Manager } from '../../manager/models/manager.model';
 import { FuelStationContext } from '../models/fuel-station-context.model';
 import { FuelStation } from '../models/fuel-station.model';
+import { LoadingEvent } from '../../common/loading-event.model'; // Adjust path as needed
 
 import { FuelStationApiService } from './fuel-station-api.service';
+import { AdminFuelStationContextLoadingEvent } from '../interfaces/admin-fuel-station-context-loading-event.enum';
 
 @Injectable({ providedIn: 'root' })
 export class AdminFuelStationContextService {
@@ -24,8 +26,8 @@ export class AdminFuelStationContextService {
   private fuelStationApi = inject(FuelStationApiService);
   private fuelOrderApi = inject(FuelOrderApiService);
 
-  private loading = new BehaviorSubject(false);
-  loading$ = this.loading.asObservable();
+  private loadingEvents = new BehaviorSubject<LoadingEvent<AdminFuelStationContextLoadingEvent> | null>(null);
+  loadingEvents$ = this.loadingEvents.asObservable();
 
   private get contextValue(): FuelStationContext {
     const ctx = this.contextSubject.value;
@@ -33,9 +35,11 @@ export class AdminFuelStationContextService {
     return ctx;
   }
 
-  private withLoading<T>(observable: Observable<T>): Observable<T> {
-    this.loading.next(true);
-    return observable.pipe(finalize(() => this.loading.next(false)));
+  private withLoading<T>(observable: Observable<T>, eventType: AdminFuelStationContextLoadingEvent): Observable<T> {
+    this.loadingEvents.next(new LoadingEvent(eventType, true));
+    return observable.pipe(
+      finalize(() => this.loadingEvents.next(new LoadingEvent(eventType, false)))
+    );
   }
 
   private updateContext(partial: Partial<FuelStationContext>) {
@@ -56,7 +60,8 @@ export class AdminFuelStationContextService {
       this.fuelStationApi.getFuelStationById(id)
         .pipe(
           tap(fuelStation => this.contextSubject.next(new FuelStationContext(fuelStation, [], [])))
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.GET_FUEL_STATION
     );
   }
 
@@ -67,7 +72,8 @@ export class AdminFuelStationContextService {
       this.fuelStationApi.getAssignedManagers(fuelStation.id)
         .pipe(
           tap(managers => this.updateContext({ managers })),
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.GET_ASSIGNED_MANAGERS
     );
   }
 
@@ -78,7 +84,8 @@ export class AdminFuelStationContextService {
       this.fuelStationApi.getFuelStationOrders(fuelStation.id)
         .pipe(
           tap(fuelOrders => this.updateContext({ fuelOrders })),
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.GET_FUEL_ORDERS
     );
   }
 
@@ -92,7 +99,8 @@ export class AdminFuelStationContextService {
             this.updateContext({ managers: [] });
             return this.getAssignedManagers();
           })
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.ASSIGN_MANAGER
     );
   }
 
@@ -106,7 +114,8 @@ export class AdminFuelStationContextService {
             this.updateContext({ managers: [] });
             return this.getAssignedManagers();
           })
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.UNASSIGN_MANAGER
     );
   }
 
@@ -119,7 +128,8 @@ export class AdminFuelStationContextService {
           this.updateContext({ fuelOrders: [] });
           return this.getFuelOrders();
         })
-      )
+      ),
+      AdminFuelStationContextLoadingEvent.CONFIRM_FUEL_ORDER
     );
   }
 
@@ -132,7 +142,8 @@ export class AdminFuelStationContextService {
           this.updateContext({ fuelOrders: [] });
           this.getFuelOrders();
         }),
-      )
+      ),
+      AdminFuelStationContextLoadingEvent.REJECT_FUEL_ORDER
     );
   }
 
@@ -145,7 +156,8 @@ export class AdminFuelStationContextService {
           tap(updatedStation => {
             this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
           }),
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.CHANGE_FUEL_PRICE
     );
   }
 
@@ -158,7 +170,8 @@ export class AdminFuelStationContextService {
           tap(updatedStation => {
             this.contextSubject.next(new FuelStationContext(updatedStation, managers, fuelOrders));
           })
-        )
+        ),
+      AdminFuelStationContextLoadingEvent.DEACTIVATE_FUEL_STATION
     );
   }
 

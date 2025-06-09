@@ -15,6 +15,6 @@
             <p-input-number inputId="amount" suffix="L" formControlName="amount" placeholder="Amount"></p-input-number>
             <p-message *ngIf="amountInvalid" severity="error" variant="simple" size="small">Amount is invalid</p-message>
         </div>
-        <p-button type="submit" styleClass="w-full" label="Create Fuel Order" [loading]="loading$ | async"/> 
+        <p-button type="submit" styleClass="w-full" label="Create Fuel Order" [loading]="loading"/> 
     </form>
 </p-dialog>  
