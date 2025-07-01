@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelstation.application.common;
+package com.fuelstation.managmentapi.common;
 
 public class TestSettings {
 
