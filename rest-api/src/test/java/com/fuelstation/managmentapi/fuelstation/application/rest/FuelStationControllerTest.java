@@ -50,14 +50,6 @@ public class FuelStationControllerTest {
     @Autowired
     private ManagerTestClient managerTestClient;
 
-    private FuelStationResponse testFuelStation;
-    private ManagerResponse testManager;
-
-    @BeforeEach
-    public void setup() throws Exception {
-        testManager = managerTestClient.createManagerAndReturnResponse();
-        testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
-    }
 
     @Nested
     class CreateFuelStation {
@@ -102,6 +94,13 @@ public class FuelStationControllerTest {
     @Nested
     class DeactivateFuelStationTests {
 
+        private FuelStationResponse testFuelStation;
+
+        @BeforeEach
+        public void setup() throws Exception {
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        }
+
         @AdminUserTest
         @DisplayName("Should deactivate fuel station")
         public void shouldDeactivateFuelStation() throws Exception {
@@ -126,6 +125,15 @@ public class FuelStationControllerTest {
 
     @Nested
     class AssignManagerToFuelStationTests {
+
+        private FuelStationResponse testFuelStation;
+        private ManagerResponse testManager;
+
+        @BeforeEach
+        public void setup() throws Exception {
+            testManager = managerTestClient.createManagerAndReturnResponse();
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        }
 
         @AdminUserTest
         @DisplayName("Should assign manager to fuel station")
@@ -157,6 +165,15 @@ public class FuelStationControllerTest {
 
     @Nested
     class UnassignManagerFromFuelStationTests {
+
+        private FuelStationResponse testFuelStation;
+        private ManagerResponse testManager;
+
+        @BeforeEach
+        public void setup() throws Exception {
+            testManager = managerTestClient.createManagerAndReturnResponse();
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        }
 
         @AdminUserTest
         @DisplayName("Should unassign manager from fuel station")
@@ -190,6 +207,13 @@ public class FuelStationControllerTest {
     @Nested
     class ChangeFuelPriceTests {
 
+        private FuelStationResponse testFuelStation;
+
+        @BeforeEach
+        public void setup() throws Exception {
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        }
+
         @AdminUserTest
         @DisplayName("Should change fuel price")
         public void shouldChangeFuelPrice() throws Exception {
@@ -219,6 +243,13 @@ public class FuelStationControllerTest {
     @Nested
     class GetFuelStationByIdTests {
 
+        private FuelStationResponse testFuelStation;
+
+        @BeforeEach
+        public void setup() throws Exception {
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        }
+
         @AdminUserTest
         @DisplayName("Should get fuel station by id")
         public void shouldGetFuelStationById() throws Exception {
@@ -237,6 +268,7 @@ public class FuelStationControllerTest {
     @AdminUserTest
     @DisplayName("Should get all fuel stations")
     public void shouldGetAllFuelStations() throws Exception {
+        fuelStationTestClient.createFuelStationAndReturnResponse();
         List<?> fuelStationResponses = fuelStationTestClient.getAllFuelStationsAndReturnResponse();
         assertThat(fuelStationResponses.size()).isEqualTo(1);
     }
@@ -244,6 +276,9 @@ public class FuelStationControllerTest {
     @AdminUserTest
     @DisplayName("Should get all managers assigned to the fuel station")
     public void shouldGetAllManagersAssignedToFuelStation() throws Exception {
+        ManagerResponse testManager = managerTestClient.createManagerAndReturnResponse();
+        FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+
         fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getId());
         List<ManagerResponse> managers = fuelStationTestClient.getManagersAssignedToFuelStationAndReturnResponse(testFuelStation.getId());
         assertThat(managers.size()).isEqualTo(1);
@@ -252,6 +287,8 @@ public class FuelStationControllerTest {
     @AdminUserTest
     @DisplayName("Should get all fuel orders related to the fuel station")
     public void shouldGetAllFuelOrdersRelatedToFuelStation() throws Exception {
+        FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+
         fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getId(), FuelGrade.RON_92, 10));
         fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getId(), FuelGrade.DIESEL, 10));
 
