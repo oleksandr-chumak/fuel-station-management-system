@@ -50,7 +50,6 @@ public class FuelStationControllerTest {
     @Autowired
     private ManagerTestClient managerTestClient;
 
-
     @Nested
     class CreateFuelStation {
 
