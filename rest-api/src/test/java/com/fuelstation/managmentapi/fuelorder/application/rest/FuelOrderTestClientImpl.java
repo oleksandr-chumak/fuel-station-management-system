@@ -9,6 +9,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -31,6 +33,46 @@ public class FuelOrderTestClientImpl implements FuelOrderTestClient {
     @Override
     public FuelOrderResponse createFuelOrderAndReturnResponse(CreateFuelOrderRequest request) throws Exception {
         return getResponse(createFuelOrder(request), FuelOrderResponse.class, status().isCreated());
+    }
+
+    @Override
+    public ResultActions confirmFuelOrder(long fuelOrderId) throws Exception {
+        return this.mockMvc.perform(put("/api/fuel-orders/{id}/confirm", fuelOrderId));
+    }
+
+    @Override
+    public FuelOrderResponse confirmFuelOrderAndReturnResponse(long fuelOrderId) throws Exception {
+        return getResponse(confirmFuelOrder(fuelOrderId), FuelOrderResponse.class, status().isOk());
+    }
+
+    @Override
+    public ResultActions rejectFuelOrder(long fuelOrderId) throws Exception {
+        return this.mockMvc.perform(put("/api/fuel-orders/{id}/reject", fuelOrderId));
+    }
+
+    @Override
+    public FuelOrderResponse rejectFuelOrderAndReturnResponse(long fuelOrderId) throws Exception {
+        return getResponse(rejectFuelOrder(fuelOrderId), FuelOrderResponse.class, status().isOk());
+    }
+
+    @Override
+    public ResultActions getAllFuelOrders() throws Exception {
+        return this.mockMvc.perform(get("/api/fuel-orders/"));
+    }
+
+    @Override
+    public List<FuelOrderResponse> getAllFuelOrderAndReturnResponse() throws Exception {
+        return getResponse(getAllFuelOrders(), new TypeReference<>() {}, status().isOk());
+    }
+
+    @Override
+    public ResultActions getFuelOrderById(long fuelOrderId) throws Exception {
+        return this.mockMvc.perform(get("/api/fuel-orders/{id}", fuelOrderId));
+    }
+
+    @Override
+    public FuelOrderResponse getFuelOrderByIdAndReturnResponse(long fuelOrderId) throws Exception {
+        return getResponse(getFuelOrderById(fuelOrderId), FuelOrderResponse.class, status().isOk());
     }
 
     // TODO make it reusable

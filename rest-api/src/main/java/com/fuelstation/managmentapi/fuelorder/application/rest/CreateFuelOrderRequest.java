@@ -21,6 +21,6 @@ public class CreateFuelOrderRequest {
 
     @NotNull(message = "Amount must not be null")
     @Positive(message = "Amount must be a positive number")
-    private float amount;
+    private Float amount;
 
 }

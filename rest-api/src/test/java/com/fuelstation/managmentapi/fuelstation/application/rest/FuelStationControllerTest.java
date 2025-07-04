@@ -288,8 +288,8 @@ public class FuelStationControllerTest {
     public void shouldGetAllFuelOrdersRelatedToFuelStation() throws Exception {
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
 
-        fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getId(), FuelGrade.RON_92, 10));
-        fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getId(), FuelGrade.DIESEL, 10));
+        fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getId(), FuelGrade.RON_92, 10f));
+        fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getId(), FuelGrade.DIESEL, 10f));
 
         List<FuelOrderResponse> fuelOrders = fuelStationTestClient.getFuelStationFuelOrdersAndReturnResponse(testFuelStation.getId());
         assertThat(fuelOrders.size()).isEqualTo(2);

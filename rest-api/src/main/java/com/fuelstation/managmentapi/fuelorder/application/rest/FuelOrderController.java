@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.fuelorder.application.rest;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,23 +24,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/api/fuel-orders")
 public class FuelOrderController {
 
-    @Autowired
-    private CreateFuelOrder createFuelOrder;
+    private final CreateFuelOrder createFuelOrder;
     
-    @Autowired
-    private ConfirmFuelOrder confirmFuelOrder;
+    private final ConfirmFuelOrder confirmFuelOrder;
     
-    @Autowired
-    private RejectFuelOrder rejectFuelOrder;
+    private final RejectFuelOrder rejectFuelOrder;
 
-    @Autowired
-    private GetAllFuelOrders getAllFuelOrders;
+    private final GetAllFuelOrders getAllFuelOrders;
 
-    @Autowired
-    private GetFuelOrderById getFuelOrderById;
+    private final GetFuelOrderById getFuelOrderById;
+
+    public FuelOrderController(CreateFuelOrder createFuelOrder, ConfirmFuelOrder confirmFuelOrder, RejectFuelOrder rejectFuelOrder, GetAllFuelOrders getAllFuelOrders, GetFuelOrderById getFuelOrderById) {
+        this.createFuelOrder = createFuelOrder;
+        this.confirmFuelOrder = confirmFuelOrder;
+        this.rejectFuelOrder = rejectFuelOrder;
+        this.getAllFuelOrders = getAllFuelOrders;
+        this.getFuelOrderById = getFuelOrderById;
+    }
 
     @PostMapping("/")
-    public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody CreateFuelOrderRequest request) {
+    public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody @Valid CreateFuelOrderRequest request) {
         FuelOrder fuelOrder = createFuelOrder.process(
             request.getFuelStationId(),
             request.getFuelGrade(),
@@ -67,9 +70,8 @@ public class FuelOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FuelOrderResponse> getMethodName(@PathVariable("id") long fuelOrderId) {
+    public ResponseEntity<FuelOrderResponse> getFuelOrderById(@PathVariable("id") long fuelOrderId) {
         return ResponseEntity.ok(FuelOrderResponse.fromDomain(getFuelOrderById.process(fuelOrderId)));
     }
-    
-    
+
 }
