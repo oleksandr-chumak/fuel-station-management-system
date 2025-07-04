@@ -2,7 +2,6 @@ package com.fuelstation.managmentapi.manager.application.usecases;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -11,8 +10,11 @@ import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRe
 @Component
 public class GetAllManagers {
     
-    @Autowired
-    private ManagerRepository managerRepository;
+    private final ManagerRepository managerRepository;
+
+    public GetAllManagers(ManagerRepository managerRepository) {
+        this.managerRepository = managerRepository;
+    }
 
     public List<Manager> process() {
         return managerRepository.findAll();

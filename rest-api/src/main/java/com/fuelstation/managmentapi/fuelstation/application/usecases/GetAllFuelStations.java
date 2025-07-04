@@ -2,7 +2,6 @@ package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
@@ -11,8 +10,11 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelS
 @Component
 public class GetAllFuelStations {
 
-    @Autowired
-    private FuelStationRepository fuelStationRepository;
+    private final FuelStationRepository fuelStationRepository;
+
+    public GetAllFuelStations(FuelStationRepository fuelStationRepository) {
+        this.fuelStationRepository = fuelStationRepository;
+    }
 
     public List<FuelStation> process() {
         return fuelStationRepository.findAll(); 

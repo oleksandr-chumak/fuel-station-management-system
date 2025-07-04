@@ -1,6 +1,5 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderNotFoundException;
@@ -10,8 +9,11 @@ import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrd
 @Component
 public class GetFuelOrderById {
     
-    @Autowired
-    private FuelOrderRepository fuelOrderRepository;
+    private final FuelOrderRepository fuelOrderRepository;
+
+    public GetFuelOrderById(FuelOrderRepository fuelOrderRepository) {
+        this.fuelOrderRepository = fuelOrderRepository;
+    }
 
     public FuelOrder process(long fuelOrderId) {
         return fuelOrderRepository.findById(fuelOrderId)

@@ -1,6 +1,5 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationNotFoundException;
@@ -10,8 +9,11 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelS
 @Component
 public class GetFuelStationById {
     
-    @Autowired
-    private FuelStationRepository fuelStationRepository;
+    private final FuelStationRepository fuelStationRepository;
+
+    public GetFuelStationById(FuelStationRepository fuelStationRepository) {
+        this.fuelStationRepository = fuelStationRepository;
+    }
 
     public FuelStation process(long fuelStationId) {
         return fuelStationRepository.findById(fuelStationId)

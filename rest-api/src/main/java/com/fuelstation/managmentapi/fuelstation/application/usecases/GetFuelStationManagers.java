@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
@@ -12,12 +12,16 @@ import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRe
 @Component
 public class GetFuelStationManagers {
    
-    @Autowired
-    private ManagerRepository managerRepository;
+    private final ManagerRepository managerRepository;
 
-    @Autowired
-    private GetFuelStationById getFuelStationById;
+    private final GetFuelStationById getFuelStationById;
 
+    public GetFuelStationManagers(ManagerRepository managerRepository, GetFuelStationById getFuelStationById) {
+        this.managerRepository = managerRepository;
+        this.getFuelStationById = getFuelStationById;
+    }
+
+    @Transactional()
     public List<Manager> process(long fuelStationId) {
         FuelStation fuelStation = getFuelStationById.process(fuelStationId);
         List<Long> assignedManagerIds = fuelStation.getAssignedManagersIds(); 
