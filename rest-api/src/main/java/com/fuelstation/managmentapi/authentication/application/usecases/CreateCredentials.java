@@ -17,17 +17,20 @@ import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 @Component
 public class CreateCredentials {
     
-    @Autowired  
-    private CredentialsRepository credentialsRepository;
+    private final CredentialsRepository credentialsRepository;
 
-    @Autowired 
-    private CredentialsFactory credentialsFactory;
+    private final CredentialsFactory credentialsFactory;
 
-    @Autowired 
-    private DomainEventPublisher domainEventPublisher; 
+    private final DomainEventPublisher domainEventPublisher;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public CreateCredentials(CredentialsRepository credentialsRepository, CredentialsFactory credentialsFactory, DomainEventPublisher domainEventPublisher, PasswordEncoder passwordEncoder) {
+        this.credentialsRepository = credentialsRepository;
+        this.credentialsFactory = credentialsFactory;
+        this.domainEventPublisher = domainEventPublisher;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Credentials process(String email, String password, UserRole role) {
         Optional<Credentials> foundCredentials = credentialsRepository.findByEmailAndRole(email, role);

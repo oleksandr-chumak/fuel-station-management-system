@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
 import org.springframework.stereotype.Component;
 
-import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderNotFoundException;
+import com.fuelstation.managmentapi.fuelorder.application.exceptions.FuelOrderNotFoundException;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 

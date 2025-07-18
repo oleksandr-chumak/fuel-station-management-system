@@ -7,10 +7,10 @@ import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 
 public interface FuelOrderRepository {
-    public FuelOrder save(FuelOrder fuelOrder);
-    public Optional<FuelOrder> findById(long id);
-    public List<FuelOrder> findAll();
-    public List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId);
-    public float getUnconfirmedFuelAmount(long gasStationId, FuelGrade fuelGrade);
-    public void deleteAll();
+     FuelOrder save(FuelOrder fuelOrder);
+     Optional<FuelOrder> findById(long id);
+     List<FuelOrder> findAll();
+     List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId);
+     float getUnconfirmedFuelAmount(long gasStationId, FuelGrade fuelGrade);
+     void deleteAll();
 }

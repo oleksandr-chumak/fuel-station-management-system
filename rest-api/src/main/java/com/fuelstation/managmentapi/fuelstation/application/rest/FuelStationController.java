@@ -2,6 +2,8 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 
 import java.util.List;
 
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationDomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,7 @@ import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 import jakarta.validation.Valid;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/fuel-stations")
@@ -80,8 +83,12 @@ public class FuelStationController {
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<FuelStationResponse> deactivateFuelStation(@PathVariable("id") long fuelStationId) {
-        FuelStation fuelStation = deactivateFuelStation.process(fuelStationId);
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        try {
+            FuelStation fuelStation = deactivateFuelStation.process(fuelStationId);
+            return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        } catch (FuelStationAlreadyDeactivatedException fuelStationAlreadyDeactivatedException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, fuelStationAlreadyDeactivatedException.getMessage());
+        }
     }
 
     @PutMapping("/{id}/assign-manager")
