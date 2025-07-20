@@ -11,10 +11,7 @@ public class Credentials {
    private Long credentialsId;
    private String email;
    private UserRole role;
+   private String username;
    private String password;
-
-   public String getUsername() {
-      return email + "_" + role.name();
-   }
 
 }

@@ -8,6 +8,7 @@ public class CredentialsMapper {
             entity.getId(),
             entity.getEmail(),
             entity.getRole(),
+            entity.getUsername(),
             entity.getPassword()
         );
     }
