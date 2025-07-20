@@ -17,6 +17,7 @@ public class CredentialsMapper {
             domain.getCredentialsId(),
             domain.getEmail(),
             domain.getRole(),
+            domain.getUsername(),
             domain.getPassword()
         );
     }

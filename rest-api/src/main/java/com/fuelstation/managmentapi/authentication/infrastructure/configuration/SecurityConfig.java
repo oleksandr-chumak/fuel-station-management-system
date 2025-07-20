@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.configuration;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,12 +30,15 @@ public class SecurityConfig {
     @Value("${client.origin}")
     private String clientOrigin;
 
-    @Autowired
-    private JwtTokenFilter jwtTokenFilter;
+    private final JwtTokenFilter jwtTokenFilter;
 
-    @Autowired
-    private UserDetailsServiceImp userDetailsServiceImp;
-    
+    private final UserDetailsServiceImp userDetailsServiceImp;
+
+    public SecurityConfig(JwtTokenFilter jwtTokenFilter, UserDetailsServiceImp userDetailsServiceImp) {
+        this.jwtTokenFilter = jwtTokenFilter;
+        this.userDetailsServiceImp = userDetailsServiceImp;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))

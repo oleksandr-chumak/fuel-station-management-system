@@ -28,7 +28,7 @@ public class SecurityUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return credentials.getEmail(); 
+        return credentials.getUsername();
     }
 
     @Override public boolean isAccountNonExpired() { return true; }
@@ -36,7 +36,4 @@ public class SecurityUserDetails implements UserDetails {
     @Override public boolean isCredentialsNonExpired() { return true; }
     @Override public boolean isEnabled() { return true; }
 
-    public Credentials getDomainCredentials() {
-        return credentials;
-    }
 }

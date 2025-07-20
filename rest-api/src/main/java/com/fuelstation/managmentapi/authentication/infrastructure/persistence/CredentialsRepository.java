@@ -6,8 +6,9 @@ import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 public interface CredentialsRepository {
-    public Credentials save(Credentials credentials);
-    public Optional<Credentials> findById(Long id);    
-    public Optional<Credentials> findByEmailAndRole(String email, UserRole role);
-    public Optional<Credentials> findByEmail(String email);
+     Credentials save(Credentials credentials);
+     Optional<Credentials> findById(Long id);
+     Optional<Credentials> findByEmailAndRole(String email, UserRole role);
+     Optional<Credentials> findByEmail(String email);
+     Optional<Credentials> findByUsername(String username);
 }

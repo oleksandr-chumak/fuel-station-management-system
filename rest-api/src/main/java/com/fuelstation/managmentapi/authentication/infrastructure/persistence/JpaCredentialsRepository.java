@@ -9,6 +9,7 @@ import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 @Repository
 public interface JpaCredentialsRepository extends JpaRepository<CredentialsEntity, Long> {
-    public Optional<CredentialsEntity> findByEmailAndRole(String email,  UserRole role);
-    public Optional<CredentialsEntity> findByEmail(String email);
+     Optional<CredentialsEntity> findByEmailAndRole(String email,  UserRole role);
+     Optional<CredentialsEntity> findByEmail(String email);
+     Optional<CredentialsEntity> findByUsername(String username);
 }

@@ -6,7 +6,6 @@ import com.fuelstation.managmentapi.administrator.infrastructure.persistence.Adm
 import com.fuelstation.managmentapi.authentication.application.exceptions.AdministratorNotFoundByCredentialsIdException;
 import com.fuelstation.managmentapi.authentication.application.exceptions.ManagerNotFoundByCredentialsId;
 import com.fuelstation.managmentapi.authentication.application.exceptions.UnsupportedUserRoleException;
-import com.fuelstation.managmentapi.authentication.application.exceptions.UserNotFoundException;
 import com.fuelstation.managmentapi.authentication.application.Me;
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
@@ -14,6 +13,7 @@ import com.fuelstation.managmentapi.authentication.infrastructure.persistence.Cr
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -31,8 +31,8 @@ public class GetMe {
 
     @Transactional
     public Me process(String username) {
-        Credentials credentials = credentialsRepository.findByEmail(username)
-                .orElseThrow(UserNotFoundException::new);
+        Credentials credentials = credentialsRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
         long userId = switch (credentials.getRole()) {
             case UserRole.MANAGER -> {

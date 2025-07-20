@@ -12,4 +12,9 @@ public class Credentials {
    private String email;
    private UserRole role;
    private String password;
+
+   public String getUsername() {
+      return email + "_" + role.name();
+   }
+
 }
