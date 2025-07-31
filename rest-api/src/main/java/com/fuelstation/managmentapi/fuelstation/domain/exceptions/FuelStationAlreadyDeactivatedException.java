@@ -6,14 +6,11 @@ import lombok.Getter;
  * Exception thrown when attempting to deactivate an already deactivated fuel station
  */
 @Getter
-public class FuelStationAlreadyDeactivatedException extends FuelStationDomainException {
+public class FuelStationAlreadyDeactivatedException extends RuntimeException {
     private final long fuelStationId;
 
     public FuelStationAlreadyDeactivatedException(long fuelStationId) {
-        super(
-            String.format("Fuel station %d is already deactivated", fuelStationId),
-            "ALREADY_DEACTIVATED"
-        );
+        super(String.format("Fuel station %d is already deactivated", fuelStationId));
         this.fuelStationId = fuelStationId;
     }
 }

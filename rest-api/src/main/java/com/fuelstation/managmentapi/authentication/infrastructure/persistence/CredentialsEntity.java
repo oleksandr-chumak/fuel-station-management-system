@@ -2,13 +2,7 @@ package com.fuelstation.managmentapi.authentication.infrastructure.persistence;
 
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,6 +23,9 @@ public class CredentialsEntity {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Column(unique = true)
+    private String username;
 
     private String password;
 }

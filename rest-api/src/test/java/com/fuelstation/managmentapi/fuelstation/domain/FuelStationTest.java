@@ -31,37 +31,32 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 public class FuelStationTest {
 
     private FuelStation fuelStation;
-    private FuelStationAddress address;
-    private List<FuelTank> fuelTanks;
-    private List<FuelPrice> fuelPrices;
-    private List<Long> assignedManagersIds;
-    private LocalDate createdAt;
 
     @BeforeEach
     void setUp() {
-        address = new FuelStationAddress("Main St", "123", "New York", "10001", "USA");
-        
-        fuelTanks = new ArrayList<>();
+        FuelStationAddress address = new FuelStationAddress("Main St", "123", "New York", "10001", "USA");
+
+        List<FuelTank> fuelTanks = new ArrayList<>();
         fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, 5000, 10000, Optional.empty()));
         fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, 2000, 8000, Optional.empty()));
         fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, 3000, 12000, Optional.empty()));
-        
-        fuelPrices = new ArrayList<>();
+
+        List<FuelPrice> fuelPrices = new ArrayList<>();
         fuelPrices.add(new FuelPrice(FuelGrade.RON_92, 3.5f));
         fuelPrices.add(new FuelPrice(FuelGrade.RON_95, 4.0f));
         fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, 3.8f));
-        
-        assignedManagersIds = new ArrayList<>();
-        createdAt = LocalDate.now();
+
+        List<Long> assignedManagersIds = new ArrayList<>();
+        LocalDate createdAt = LocalDate.now();
         
         fuelStation = new FuelStation(
             1L,
-            address,
-            fuelTanks,
-            fuelPrices,
-            assignedManagersIds,
-            FuelStationStatus.ACTIVE,
-            createdAt
+                address,
+                fuelTanks,
+                fuelPrices,
+                assignedManagersIds,
+                FuelStationStatus.ACTIVE,
+                createdAt
         );
     }
 

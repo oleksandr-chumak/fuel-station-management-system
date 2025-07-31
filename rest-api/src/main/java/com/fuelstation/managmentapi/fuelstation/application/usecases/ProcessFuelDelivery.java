@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
@@ -13,21 +13,25 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelS
 @Component
 public class ProcessFuelDelivery {
 
-    @Autowired
-    private FuelStationRepository fuelStationRepository;
+    private final FuelStationRepository fuelStationRepository;
 
-    @Autowired
-    private FuelDeliveryService fuelDeliveryService;
+    private final FuelDeliveryService fuelDeliveryService;
 
-    @Autowired
-    private DomainEventPublisher domainEventPublisher;
+    private final DomainEventPublisher domainEventPublisher;
 
-    @Autowired
-    private GetFuelStationById getFuelStationById;
+    private final GetFuelStationById getFuelStationById;
     
-    @Autowired
-    private GetFuelOrderById getFuelOrderById;
+    private final GetFuelOrderById getFuelOrderById;
 
+    public ProcessFuelDelivery(FuelStationRepository fuelStationRepository, FuelDeliveryService fuelDeliveryService, DomainEventPublisher domainEventPublisher, GetFuelStationById getFuelStationById, GetFuelOrderById getFuelOrderById) {
+        this.fuelStationRepository = fuelStationRepository;
+        this.fuelDeliveryService = fuelDeliveryService;
+        this.domainEventPublisher = domainEventPublisher;
+        this.getFuelStationById = getFuelStationById;
+        this.getFuelOrderById = getFuelOrderById;
+    }
+
+    @Transactional
     public FuelStation process(long fuelOrderId) {
         FuelOrder fuelOrder = getFuelOrderById.process(fuelOrderId);
         FuelStation fuelStation = getFuelStationById.process(fuelOrder.getFuelStationId());

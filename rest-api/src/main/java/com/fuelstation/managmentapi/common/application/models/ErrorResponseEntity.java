@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.fuelstation.managmentapi.common.domain.DomainException;
 
-public class ErrorResponseEntity extends ResponseEntity<ErrorResponse>{
+public class ErrorResponseEntity extends ResponseEntity<ErrorResponse> {
 
     public ErrorResponseEntity(String message, String code, HttpStatus status) {
         super(new ErrorResponse(message, code, status), status);

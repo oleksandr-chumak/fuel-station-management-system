@@ -2,7 +2,6 @@ package com.fuelstation.managmentapi.manager.application.usecases;
 
 import java.security.SecureRandom;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.authentication.application.usecases.CreateCredentials;
@@ -17,18 +16,21 @@ import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRe
 @Component
 public class CreateManager {
     
-    @Autowired
-    private CreateCredentials createCredentials;
+    private final CreateCredentials createCredentials;
 
-    @Autowired
-    private ManagerRepository managerRepository;
+    private final ManagerRepository managerRepository;
 
-    @Autowired 
-    private ManagerFactory managerFactory;
+    private final ManagerFactory managerFactory;
 
-    @Autowired
-    private DomainEventPublisher domainEventPublisher;
-    
+    private final DomainEventPublisher domainEventPublisher;
+
+    public CreateManager(CreateCredentials createCredentials, ManagerRepository managerRepository, ManagerFactory managerFactory, DomainEventPublisher domainEventPublisher) {
+        this.createCredentials = createCredentials;
+        this.managerRepository = managerRepository;
+        this.managerFactory = managerFactory;
+        this.domainEventPublisher = domainEventPublisher;
+    }
+
     // TODO if manager creation fails delete credentials
     public Manager process(String firstName, String lastName, String email) {
         return process(firstName, lastName, email, generateRandomPassword(10));

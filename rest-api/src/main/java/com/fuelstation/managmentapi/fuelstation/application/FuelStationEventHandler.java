@@ -15,35 +15,35 @@ import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedF
 @Component
 public class FuelStationEventHandler {
 
-    private Logger logger = LoggerFactory.getLogger(FuelStationEventHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(FuelStationEventHandler.class);
     
     @EventListener
     public void handle(FuelStationCreated event) {
-        logger.info("Fuel station was created ID:" + event.getFuelStationId());
+        logger.info("Fuel station was created ID:{}", event.getFuelStationId());
     }
     
     @EventListener
     public void handle(FuelDeliveryProcessed event) {
-        logger.info("Fuel delivery was processed ID:" + event.getFuelOrderId());
+        logger.info("Fuel delivery was processed ID:{}", event.getFuelOrderId());
     }
     
     @EventListener
     public void handle(FuelPriceChanged event) {
-        logger.info("Fuel price was changed ID:" + event.getFuelStationId());
+        logger.info("Fuel price was changed ID:{}", event.getFuelStationId());
     }
-    
+
     @EventListener
     public void handle(FuelStationDeactivated event) {
-        logger.info("Fuel station was deactivated ID:" + event.getFuelStationId());
+        logger.info("Fuel station was deactivated ID:{}", event.getFuelStationId());
     }
     
     @EventListener
     public void handle(ManagerAssignedToFuelStation event) {
-        logger.info("Manager was assigned to fuel station ID:" + event.getFuelStationId() + " MANAGER ID:" + event.getManagerId());
+        logger.info("Manager was assigned to fuel station ID:{} MANAGER ID:{}", event.getFuelStationId(), event.getManagerId());
     }
     
     @EventListener
     public void handle(ManagerUnassignedFromFuelStation event) {
-        logger.info("Manager was unassigned from fuel station ID:" + event.getFuelStationId() + " MANAGER ID:" + event.getManagerId());
+        logger.info("Manager was unassigned from fuel station ID:{} MANAGER ID:{}", event.getFuelStationId(), event.getManagerId());
     }
 }        

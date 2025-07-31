@@ -8,10 +8,10 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponse {
-    private Date timestamp;
-    private String message;
-    private String code;
-    private HttpStatus status;
+    private final Date timestamp;
+    private final String message;
+    private final String code;
+    private final HttpStatus status;
     
     public ErrorResponse(String message, String code, HttpStatus status) {
         this.timestamp = new Date();

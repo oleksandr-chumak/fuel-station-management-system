@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
@@ -10,20 +10,28 @@ import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrd
 @Component
 public class ConfirmFuelOrder {
 
-    @Autowired
-    private FuelOrderRepository fuelOrderRepository;
+    private final FuelOrderRepository fuelOrderRepository;
 
-    @Autowired
-    private DomainEventPublisher domainEventPublisher;
+    private final DomainEventPublisher domainEventPublisher;
 
-    @Autowired
-    private GetFuelOrderById getFuelOrderById;
-    
+    private final GetFuelOrderById getFuelOrderById;
+
+    public ConfirmFuelOrder(FuelOrderRepository fuelOrderRepository, DomainEventPublisher domainEventPublisher, GetFuelOrderById getFuelOrderById) {
+        this.fuelOrderRepository = fuelOrderRepository;
+        this.domainEventPublisher = domainEventPublisher;
+        this.getFuelOrderById = getFuelOrderById;
+    }
+
+    @Transactional
     public FuelOrder process(long fuelOrderId) {
         FuelOrder fuelOrder = getFuelOrderById.process(fuelOrderId);
+
         fuelOrder.confirm();
+
         fuelOrderRepository.save(fuelOrder);
         domainEventPublisher.publishAll(fuelOrder.getDomainEvents());
+
         return fuelOrder;
     }
+
 }

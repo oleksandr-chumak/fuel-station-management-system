@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
@@ -16,22 +16,26 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 @Component
 public class CreateFuelOrder {
     
-    @Autowired
-    private FuelOrderRepository fuelOrderRepository;
+    private final FuelOrderRepository fuelOrderRepository;
 
-    @Autowired
-    private GetFuelStationById getFuelStationById;
+    private final GetFuelStationById getFuelStationById;
 
-    @Autowired 
-    private FuelOrderFactory fuelOrderFactory;
+    private final FuelOrderFactory fuelOrderFactory;
 
-    @Autowired
-    private DomainEventPublisher domainEventPublisher;
-    
+    private final DomainEventPublisher domainEventPublisher;
+
+    public CreateFuelOrder(FuelOrderRepository fuelOrderRepository, GetFuelStationById getFuelStationById, FuelOrderFactory fuelOrderFactory, DomainEventPublisher domainEventPublisher) {
+        this.fuelOrderRepository = fuelOrderRepository;
+        this.getFuelStationById = getFuelStationById;
+        this.fuelOrderFactory = fuelOrderFactory;
+        this.domainEventPublisher = domainEventPublisher;
+    }
+
     /*
      * The ordered amount of fuel can't be greater than the available space in the fuel tanks for the specified fuel grade, 
      * minus the amount of fuel already ordered for that grade which hasn't been confirmed or rejected.
      */
+    @Transactional
     public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, float amount) {
         FuelStation fuelStation = getFuelStationById.process(fuelStationId);
 
