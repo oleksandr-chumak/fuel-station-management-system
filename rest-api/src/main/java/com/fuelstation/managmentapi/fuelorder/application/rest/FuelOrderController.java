@@ -2,7 +2,10 @@ package com.fuelstation.managmentapi.fuelorder.application.rest;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
+import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeConfirmedException;
+import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeRejectedException;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,46 +22,63 @@ import com.fuelstation.managmentapi.fuelorder.application.usecases.GetFuelOrderB
 import com.fuelstation.managmentapi.fuelorder.application.usecases.RejectFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/fuel-orders")
 public class FuelOrderController {
 
-    @Autowired
-    private CreateFuelOrder createFuelOrder;
+    private final CreateFuelOrder createFuelOrder;
     
-    @Autowired
-    private ConfirmFuelOrder confirmFuelOrder;
+    private final ConfirmFuelOrder confirmFuelOrder;
     
-    @Autowired
-    private RejectFuelOrder rejectFuelOrder;
+    private final RejectFuelOrder rejectFuelOrder;
 
-    @Autowired
-    private GetAllFuelOrders getAllFuelOrders;
+    private final GetAllFuelOrders getAllFuelOrders;
 
-    @Autowired
-    private GetFuelOrderById getFuelOrderById;
+    private final GetFuelOrderById getFuelOrderById;
+
+    public FuelOrderController(CreateFuelOrder createFuelOrder, ConfirmFuelOrder confirmFuelOrder, RejectFuelOrder rejectFuelOrder, GetAllFuelOrders getAllFuelOrders, GetFuelOrderById getFuelOrderById) {
+        this.createFuelOrder = createFuelOrder;
+        this.confirmFuelOrder = confirmFuelOrder;
+        this.rejectFuelOrder = rejectFuelOrder;
+        this.getAllFuelOrders = getAllFuelOrders;
+        this.getFuelOrderById = getFuelOrderById;
+    }
 
     @PostMapping("/")
-    public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody CreateFuelOrderRequest request) {
-        FuelOrder fuelOrder = createFuelOrder.process(
-            request.getFuelStationId(),
-            request.getFuelGrade(),
-            request.getAmount()
-        );
-        return new ResponseEntity<>(FuelOrderResponse.fromDomain(fuelOrder), HttpStatus.CREATED);
+    public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody @Valid CreateFuelOrderRequest request) {
+        try{
+            FuelOrder fuelOrder = createFuelOrder.process(
+                    request.getFuelStationId(),
+                    request.getFuelGrade(),
+                    request.getAmount()
+            );
+
+            return new ResponseEntity<>(FuelOrderResponse.fromDomain(fuelOrder), HttpStatus.CREATED);
+        } catch (FuelOrderAmountExceedsLimitException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/confirm")
     public ResponseEntity<FuelOrderResponse> confirmFuelOrder(@PathVariable("id") long fuelOrderId) {
-        FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId);
-        return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
+        try {
+            FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId);
+            return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
+        } catch (FuelOrderCannotBeConfirmedException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/reject")
     public ResponseEntity<FuelOrderResponse> rejectFuelOrder(@PathVariable("id") long fuelOrderId) {
-        FuelOrder fuelOrder = rejectFuelOrder.process(fuelOrderId);
-        return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
+        try {
+            FuelOrder fuelOrder = rejectFuelOrder.process(fuelOrderId);
+            return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
+        } catch (FuelOrderCannotBeRejectedException e) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
+        }
     }
 
     @GetMapping("/")
@@ -67,9 +87,9 @@ public class FuelOrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FuelOrderResponse> getMethodName(@PathVariable("id") long fuelOrderId) {
+    public ResponseEntity<FuelOrderResponse> getFuelOrderById(@PathVariable("id") long fuelOrderId) {
         return ResponseEntity.ok(FuelOrderResponse.fromDomain(getFuelOrderById.process(fuelOrderId)));
     }
-    
-    
+
+
 }

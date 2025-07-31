@@ -2,7 +2,8 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationDomainException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,38 +33,41 @@ import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 import jakarta.validation.Valid;
-
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/fuel-stations")
 public class FuelStationController {
 
-    @Autowired
-    private CreateFuelStation createFuelStation;
+    private final CreateFuelStation createFuelStation;
     
-    @Autowired
-    private DeactivateFuelStation deactivateFuelStation;
+    private final DeactivateFuelStation deactivateFuelStation;
     
-    @Autowired
-    private AssignManagerToFuelStation assignManagerToFuelStation;
+    private final AssignManagerToFuelStation assignManagerToFuelStation;
     
-    @Autowired
-    private UnassignManagerFromFuelStation unassignManagerFromFuelStation;
+    private final UnassignManagerFromFuelStation unassignManagerFromFuelStation;
     
-    @Autowired
-    private ChangeFuelPrice changeFuelPrice;
+    private final ChangeFuelPrice changeFuelPrice;
      
-    @Autowired
-    private GetFuelStationById getFuelStationById;
+    private final GetFuelStationById getFuelStationById;
     
-    @Autowired
-    private GetAllFuelStations getAllFuelStations;
+    private final GetAllFuelStations getAllFuelStations;
     
-    @Autowired
-    private GetFuelStationManagers getFuelStationManagers;
+    private final GetFuelStationManagers getFuelStationManagers;
     
-    @Autowired
-    private GetFuelStationOrders getFuelStationOrders;
+    private final GetFuelStationOrders getFuelStationOrders;
+
+    public FuelStationController(CreateFuelStation createFuelStation, DeactivateFuelStation deactivateFuelStation, AssignManagerToFuelStation assignManagerToFuelStation, UnassignManagerFromFuelStation unassignManagerFromFuelStation, ChangeFuelPrice changeFuelPrice, GetFuelStationById getFuelStationById, GetAllFuelStations getAllFuelStations, GetFuelStationManagers getFuelStationManagers, GetFuelStationOrders getFuelStationOrders) {
+        this.createFuelStation = createFuelStation;
+        this.deactivateFuelStation = deactivateFuelStation;
+        this.assignManagerToFuelStation = assignManagerToFuelStation;
+        this.unassignManagerFromFuelStation = unassignManagerFromFuelStation;
+        this.changeFuelPrice = changeFuelPrice;
+        this.getFuelStationById = getFuelStationById;
+        this.getAllFuelStations = getAllFuelStations;
+        this.getFuelStationManagers = getFuelStationManagers;
+        this.getFuelStationOrders = getFuelStationOrders;
+    }
 
     @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody @Valid CreateFuelStationRequest request) {
@@ -79,8 +83,12 @@ public class FuelStationController {
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<FuelStationResponse> deactivateFuelStation(@PathVariable("id") long fuelStationId) {
-        FuelStation fuelStation = deactivateFuelStation.process(fuelStationId);
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        try {
+            FuelStation fuelStation = deactivateFuelStation.process(fuelStationId);
+            return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        } catch (FuelStationAlreadyDeactivatedException fuelStationAlreadyDeactivatedException) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, fuelStationAlreadyDeactivatedException.getMessage());
+        }
     }
 
     @PutMapping("/{id}/assign-manager")

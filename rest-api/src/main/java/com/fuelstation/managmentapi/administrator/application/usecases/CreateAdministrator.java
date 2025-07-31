@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.administrator.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
@@ -12,12 +12,16 @@ import com.fuelstation.managmentapi.authentication.domain.UserRole;
 @Component
 public class CreateAdministrator {
 
-    @Autowired
-    private CreateCredentials createCredentials;
+    private final CreateCredentials createCredentials;
 
-    @Autowired
-    private AdministratorRepository administratorRepository;
+    private final AdministratorRepository administratorRepository;
 
+    public CreateAdministrator(CreateCredentials createCredentials, AdministratorRepository administratorRepository) {
+        this.createCredentials = createCredentials;
+        this.administratorRepository = administratorRepository;
+    }
+
+    @Transactional
     public Administrator process(String email, String password) {
         Credentials credentials = createCredentials.process(email, password, UserRole.ADMINISTRATOR);
         return administratorRepository.save(new Administrator(null, credentials.getCredentialsId()));

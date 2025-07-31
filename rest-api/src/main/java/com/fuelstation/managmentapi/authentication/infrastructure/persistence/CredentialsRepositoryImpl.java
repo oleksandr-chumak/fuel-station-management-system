@@ -38,4 +38,9 @@ public class CredentialsRepositoryImpl implements CredentialsRepository {
     public Optional<Credentials> findByEmail(String email) {
         return jpaCredentialsRepository.findByEmail(email).map(CredentialsMapper::toDomain);
     }
+
+    @Override
+    public Optional<Credentials> findByUsername(String username) {
+        return jpaCredentialsRepository.findByUsername(username).map(CredentialsMapper::toDomain);
+    }
 }

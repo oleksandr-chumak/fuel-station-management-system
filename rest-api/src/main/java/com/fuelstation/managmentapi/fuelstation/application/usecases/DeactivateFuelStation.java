@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
@@ -10,20 +10,27 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelS
 @Component
 public class DeactivateFuelStation {
     
-    @Autowired
-    private FuelStationRepository fuelStationRepository;
+    private final FuelStationRepository fuelStationRepository;
 
-    @Autowired
-    private DomainEventPublisher domainEventPublisher;
+    private final DomainEventPublisher domainEventPublisher;
     
-    @Autowired
-    private GetFuelStationById getFuelStationById;
+    private final GetFuelStationById getFuelStationById;
 
+    public DeactivateFuelStation(FuelStationRepository fuelStationRepository, DomainEventPublisher domainEventPublisher, GetFuelStationById getFuelStationById) {
+        this.fuelStationRepository = fuelStationRepository;
+        this.domainEventPublisher = domainEventPublisher;
+        this.getFuelStationById = getFuelStationById;
+    }
+
+    @Transactional
     public FuelStation process(long fuelStationId) {
-        FuelStation fuelStation = getFuelStationById.process(fuelStationId); 
+        FuelStation fuelStation = getFuelStationById.process(fuelStationId);
+
         fuelStation.deactivate();
+
         fuelStationRepository.save(fuelStation);
         domainEventPublisher.publishAll(fuelStation.getDomainEvents());
+
         return fuelStation;
     }
 

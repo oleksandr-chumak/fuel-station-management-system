@@ -1,6 +1,5 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -12,8 +11,11 @@ import com.fuelstation.managmentapi.authentication.infrastructure.persistence.Cr
 @Service
 public class UserDetailsServiceImp implements UserDetailsService {
 
-    @Autowired
-    private CredentialsRepository credentialsRepository;
+    private final CredentialsRepository credentialsRepository;
+
+    public UserDetailsServiceImp(CredentialsRepository credentialsRepository) {
+        this.credentialsRepository = credentialsRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.manager.application.rest;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,23 +25,26 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/api/managers")
 public class ManagerController {
 
-    @Autowired
-    private CreateManager createManager;
+    private final CreateManager createManager;
     
-    @Autowired
-    private TerminateManager terminateManager;
+    private final TerminateManager terminateManager;
 
-    @Autowired
-    private GetAllManagers getAllManagers;
+    private final GetAllManagers getAllManagers;
 
-    @Autowired
-    private GetManagerFuelStations getManagerFuelStations;
+    private final GetManagerFuelStations getManagerFuelStations;
 
-    @Autowired 
-    private GetManagerById getManagerById;
+    private final GetManagerById getManagerById;
+
+    public ManagerController(CreateManager createManager, TerminateManager terminateManager, GetAllManagers getAllManagers, GetManagerFuelStations getManagerFuelStations, GetManagerById getManagerById) {
+        this.createManager = createManager;
+        this.terminateManager = terminateManager;
+        this.getAllManagers = getAllManagers;
+        this.getManagerFuelStations = getManagerFuelStations;
+        this.getManagerById = getManagerById;
+    }
 
     @PostMapping("/")
-    public ResponseEntity<ManagerResponse> createManager(@RequestBody CreateManagerRequest request) {
+    public ResponseEntity<ManagerResponse> createManager(@RequestBody @Valid CreateManagerRequest request) {
         Manager manager = createManager.process(request.getFirstName(), request.getLastName(), request.getEmail());
         return new ResponseEntity<>(ManagerResponse.fromDomain(manager), HttpStatus.CREATED);
     }

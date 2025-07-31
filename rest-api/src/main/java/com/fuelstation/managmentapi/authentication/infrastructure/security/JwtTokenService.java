@@ -8,8 +8,6 @@ import javax.crypto.SecretKey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fuelstation.managmentapi.authentication.domain.UserRole;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -19,27 +17,15 @@ import io.jsonwebtoken.security.Keys;
 public class JwtTokenService {
 
     @Value("${security.jwt.secret-key}")
-    private String secretKey; //Encoded Base64 format and at least 256 bits is recommended
+    private String secretKey;
     @Value("${security.jwt.access-token-expiration}")
     private long accessTokenExpire;
-    @Value("${security.jwt.refresh-token-expiration}")
-    private long refreshTokenExpire;
 
     public String generateAccessToken(SecurityUserDetails user) {
         return Jwts.builder()
                 .subject(user.getUsername())
-                .claim("roles", user.getDomainCredentials().getRole().name().toString())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpire))
-                .signWith(getSigninKey())
-                .compact();
-    }
-
-    public String generateRefreshToken(SecurityUserDetails user) {
-        return Jwts.builder()
-                .subject(user.getUsername())
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + refreshTokenExpire))
                 .signWith(getSigninKey())
                 .compact();
     }
@@ -49,21 +35,10 @@ public class JwtTokenService {
         return (username.equals(tokenUsername) && !isTokenExpired(token));
     }
 
-    public boolean isValidRefreshToken(String token, String username) {
-        String tokenUsername = getUsernameFromToken(token);
-        return (username.equals(tokenUsername)) && !isTokenExpired(token);
-    }
-
     public String getUsernameFromToken(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public UserRole getUserRoleFromToken(String token) {
-        Claims claims = extractAllClaims(token);
-        String roleName = claims.get("roles", String.class);
-        return UserRole.valueOf(roleName);
-    }
-    
     private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }

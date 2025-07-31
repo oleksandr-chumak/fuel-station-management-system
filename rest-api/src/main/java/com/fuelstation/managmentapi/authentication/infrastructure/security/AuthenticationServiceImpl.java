@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,23 +11,26 @@ import com.fuelstation.managmentapi.authentication.infrastructure.persistence.Cr
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService{
 
-    @Autowired
-    private CredentialsRepository credentialsRepository;
+    private final CredentialsRepository credentialsRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired 
-    private JwtTokenService jwtTokenService;
+    private final JwtTokenService jwtTokenService;
+
+    public AuthenticationServiceImpl(CredentialsRepository credentialsRepository, PasswordEncoder passwordEncoder, JwtTokenService jwtTokenService) {
+        this.credentialsRepository = credentialsRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenService = jwtTokenService;
+    }
 
     @Override
     public String authenticate(String email, String password, UserRole role) {
         Credentials credentials = credentialsRepository.findByEmailAndRole(email, role)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
-        boolean passwordIsCorrect = passwordEncoder.matches(password, credentials.getPassword());
+            .orElseThrow(() -> new BadCredentialsException("Invalid credentials"));
+        boolean passwordCorrect = passwordEncoder.matches(password, credentials.getPassword());
         
-        if(!passwordIsCorrect) {
-            throw new IllegalArgumentException("Invalid credentials");
+        if(!passwordCorrect) {
+            throw new BadCredentialsException("Invalid credentials");
         }
 
         return jwtTokenService.generateAccessToken(new SecurityUserDetails(credentials));

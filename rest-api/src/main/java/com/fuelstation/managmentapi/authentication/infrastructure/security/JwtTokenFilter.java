@@ -2,7 +2,6 @@ package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
 import java.io.IOException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
-import com.fuelstation.managmentapi.authentication.domain.UserRole;
 import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
 
 import jakarta.servlet.FilterChain;
@@ -21,11 +19,15 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
-    @Autowired
-    private JwtTokenService jwtTokenService;
 
-    @Autowired
-    private CredentialsRepository credentialsRepository;
+    private final JwtTokenService jwtTokenService;
+
+    private final CredentialsRepository credentialsRepository;
+
+    public JwtTokenFilter(JwtTokenService jwtTokenService, CredentialsRepository credentialsRepository) {
+        this.jwtTokenService = jwtTokenService;
+        this.credentialsRepository = credentialsRepository;
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -44,12 +46,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             try {
                 String username = jwtTokenService.getUsernameFromToken(token);
-                UserRole role = jwtTokenService.getUserRoleFromToken(token);
 
                 if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    Credentials credentials = credentialsRepository.findByEmailAndRole(username, role)
+                    Credentials credentials = credentialsRepository.findByUsername(username)
                             .orElseThrow(() -> new UsernameNotFoundException(
-                                    "User with email: " + username + " and role: " + role.name() + " doesn't exist"));
+                                    "User with username: " + username + " does not exist"));
                     SecurityUserDetails userDetails = new SecurityUserDetails(credentials);
                     if (jwtTokenService.isValidAccessToken(token, userDetails.getUsername())) {
                         UsernamePasswordAuthenticationToken authenticationToken =

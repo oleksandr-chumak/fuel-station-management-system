@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
@@ -56,7 +57,8 @@ public class FuelStationResponse {
         return response;
     }
 
-    @JsonProperty("address")
+    @JsonProperty( value = "address")
+    @JsonIgnore()
     String getAddress() {
         return String.format("%s %s, %s %s, %s", street, buildingNumber, postalCode, city, country);
     }
@@ -69,7 +71,6 @@ public class FuelStationResponse {
             Optional<LocalDate> lastRefillDate) {
     }
 
-    private record FuelPriceResponse(String fuelGrade, float pricePerLiter) {
-    }
+    public record FuelPriceResponse(String fuelGrade, float pricePerLiter) {}
 
 }
