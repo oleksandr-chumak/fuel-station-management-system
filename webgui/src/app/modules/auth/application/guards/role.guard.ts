@@ -1,0 +1,36 @@
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { map, take } from 'rxjs';
+
+import { UserRole } from '~auth/api/models/user-role.enum';
+import { AuthService } from '~auth/application/auth.service';
+
+export const roleGuard = (
+  allowedRoles: UserRole[],
+  loginPageUrl = '/login', 
+  unauthorizedPageUrl = '/unauthorized'
+) => {
+  return (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+    const router = inject(Router);
+    const authService = inject(AuthService);
+      
+    return authService.getUser().pipe(
+      take(1),
+      map(user => {
+        if (!user) {
+          router.navigate([loginPageUrl], { queryParams: { returnUrl: state.url } });
+          return false;
+        }
+          
+        const hasRole = allowedRoles.some(role => user.role === role);
+
+        if (!hasRole) {
+          router.navigate([unauthorizedPageUrl]);
+          return false;
+        }
+          
+        return true;
+      })
+    );
+  };
+};

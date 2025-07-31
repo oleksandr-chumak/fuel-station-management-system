@@ -1,0 +1,39 @@
+import { inject, Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+
+import { ManagerMapper } from './manager.mapper';
+import { Manager } from './models/manager.model';
+
+import { ApiService } from '~common/api/api.service';
+import { FuelStationMapper } from '~fuel-station/api/fuel-station.mapper';
+import { FuelStation } from '~fuel-station/api/models/fuel-station.model';
+
+@Injectable({ providedIn: 'root' })
+export class ManagerApiService {
+  private apiService = inject(ApiService);
+
+  getManagerById(managerId: number): Observable<Manager> {
+    return this.apiService.get('api/managers/' + managerId)
+      .pipe(map(((data) => ManagerMapper.fromJson(data))));
+  }
+
+  getManagers(): Observable<Manager[]> {
+    return this.apiService.get('api/managers/')
+      .pipe(map(data => this.apiService.assertArray(data, (data) => ManagerMapper.fromJson(data))));
+  }
+
+  getManagerFuelStations(managerId: number): Observable<FuelStation[]> {
+    return this.apiService.get('api/managers/' + managerId + '/fuel-stations')
+      .pipe(map(data => this.apiService.assertArray(data, (data) => FuelStationMapper.fromJson(data))));
+  }
+
+  terminateManager(managerId: number): Observable<Manager> {
+    return this.apiService.put('api/managers/' + managerId)
+      .pipe(map((data) => ManagerMapper.fromJson(data)));
+  }
+
+  createManager(firstName: string, lastName: string, email: string): Observable<Manager> {
+    return this.apiService.post('api/managers/', { firstName, lastName, email })
+      .pipe(map((data) => ManagerMapper.fromJson(data)));
+  }
+}

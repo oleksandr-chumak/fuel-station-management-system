@@ -1,0 +1,34 @@
+<app-create-fuel-order-dialog #dialog></app-create-fuel-order-dialog>
+<p-panel header="Fuel Orders" *ngIf="ctx$ | async as ctx">
+    <ng-template #icons>
+        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Create fuel order" />
+    </ng-template>
+    <p-table [value]="ctx.fuelOrders" size="small" [loading]="loading" [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+        <ng-template #header>
+            <tr>
+                <th>Id</th>
+                <th>Status</th>
+                <th>Grade</th>
+                <th>Amount</th>
+                <th>Created At</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-fuelOrder>
+            <tr>
+                <td>{{ fuelOrder.id }}</td>
+                <td><p-tag [value]="getValue(fuelOrder.status)" [severity]="getSeverity(fuelOrder.status)" /></td>
+                <td>{{ getFuelGradeValue(fuelOrder.fuelGrade) }}</td>
+                <td>{{ fuelOrder.amount }}L</td>
+                <td>{{ fuelOrder.createdAt }}</td>
+            </tr>
+        </ng-template>
+        <ng-template #loadingbody>
+            <tr *ngFor="let row of skeletonRows" style="height:46px">
+                <td *ngFor="let col of skeletonCols">
+                    <p-skeleton></p-skeleton>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>
