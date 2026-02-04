@@ -1,11 +1,17 @@
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
 .vscode/*
-
-# web-gui
-webgui/node_modules/**
-webgui/.vscode/*
-webgui/.angular/*
-webgui/dist/**
-
-# rest-api
-rest-api/target/**
-rest-api/.gradle/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/mcp.json
+.history/*

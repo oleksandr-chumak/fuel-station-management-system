@@ -26,8 +26,3 @@ security:
 client:
   origin: http://localhost:4200
 
-logging:
-  level:
-    org.springframework.security: DEBUG
-    org.springframework.security.web: DEBUG
-    org.springframework.security.oauth2: DEBUG
