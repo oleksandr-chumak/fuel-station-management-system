@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;

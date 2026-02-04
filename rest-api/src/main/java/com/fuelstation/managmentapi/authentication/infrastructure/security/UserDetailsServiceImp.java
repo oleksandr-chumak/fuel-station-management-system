@@ -23,7 +23,6 @@ public class UserDetailsServiceImp implements UserDetailsService {
         Credentials credentials = credentialsRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new SecurityUserDetails(credentials);
-
-
     }
+
 }

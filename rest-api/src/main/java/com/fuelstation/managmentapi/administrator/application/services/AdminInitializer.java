@@ -13,7 +13,7 @@ import jakarta.annotation.PostConstruct;
 public class AdminInitializer {
 
     private static final String DEFAULT_ADMIN_EMAIL = "test@test.com";
-    private static final String DEFAULT_ADMIN_PASSWORD = "1234";
+    private static final String DEFAULT_ADMIN_PASSWORD = "123456789";
 
     @Autowired
     private CreateAdministrator createAdministrator;
