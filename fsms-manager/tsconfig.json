@@ -22,6 +22,10 @@
       "fsms-web-api": [
         "../fsms-client-sdk/dist/fsms-web-api",
         "../fsms-client-sdk/dist/fsms-web-api/fsms-web-api"
+      ],
+      "fsms-security": [
+        "../fsms-client-sdk/dist/fsms-security",
+        "../fsms-client-sdk/dist/fsms-security/fsms-security"
       ]
     }
   },

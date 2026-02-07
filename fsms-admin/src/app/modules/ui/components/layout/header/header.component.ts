@@ -1,7 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { MenuItem, MessageService } from "primeng/api";
 import { AvatarModule } from "primeng/avatar";
-import { AuthService } from "../../../../auth/services/auth.service";
 import { Observable } from "rxjs";
 import { CommonModule } from "@angular/common";
 import { ButtonModule } from "primeng/button";
@@ -10,6 +9,7 @@ import { Router, RouterModule } from "@angular/router";
 import { PanelModule } from "primeng/panel";
 import { DrawerModule } from 'primeng/drawer';
 import { User } from "fsms-web-api";
+import { AuthService } from "fsms-security";
 
 @Component({
   selector: "app-header",

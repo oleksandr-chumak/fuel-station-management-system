@@ -2,9 +2,8 @@ import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
-import { AuthService } from '../../modules/auth/services/auth.service';
-import { LoginFormComponent } from '../../modules/auth/components/login-form/login-form.component';
 import { PanelModule } from 'primeng/panel';
+import { AuthService, LoginFormComponent } from 'fsms-security';
 
 @Component({
   selector: 'app-manager-login-page',

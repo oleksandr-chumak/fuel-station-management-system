@@ -1,7 +1,7 @@
 <p-toast/>
 
 <ng-template #notLoggedIn>
-  <app-not-logged-in-header/>
+  <fsms-security-not-logged-in-header/>
 </ng-template>
 
 <ng-container *ngIf="user$ | async as user; else notLoggedIn">

@@ -2,13 +2,13 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { MessageService, MenuItem } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../../../auth/services/auth.service';
 import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
 import { DrawerModule } from 'primeng/drawer';
 import { User } from 'fsms-web-api';
+import { AuthService } from 'fsms-security';
 
 @Component({
   selector: 'app-header',

@@ -31,6 +31,32 @@
           }
         }
       }
+    },
+    "fsms-security": {
+      "projectType": "library",
+      "root": "projects/fsms-security",
+      "sourceRoot": "projects/fsms-security/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/fsms-security/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/fsms-security/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/fsms-security/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }

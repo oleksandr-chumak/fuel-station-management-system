@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { DrawerModule } from 'primeng/drawer';
 
 @Component({
-  selector: 'app-not-logged-in-header',
+  selector: 'fsms-security-not-logged-in-header',
   standalone: true,
   imports: [
     CommonModule,

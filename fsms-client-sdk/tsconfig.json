@@ -5,6 +5,9 @@
   "compilerOptions": {
     "strict": true,
     "paths": {
+      "fsms-security": [
+        "./dist/fsms-security"
+      ],
       "fsms-web-api": [
         "./dist/fsms-web-api"
       ]
@@ -33,6 +36,12 @@
     },
     {
       "path": "./projects/fsms-web-api/tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/fsms-security/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/fsms-security/tsconfig.spec.json"
     }
   ]
 }

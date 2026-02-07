@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import adminGuard from './modules/auth/guards/admin.guard';
 import { FuelStationPage } from './pages/fuel-stations/[id]/fuel-station.page';
 import { LoginPage } from './pages/login/login.page';
 import { FuelStationsPage } from './pages/fuel-stations/fuel-stations-admin.component';
@@ -10,6 +9,7 @@ import { FuelStationFuelTanksPage } from './pages/fuel-stations/[id]/fuel-statio
 import { FuelStationFuelPricesPage } from './pages/fuel-stations/[id]/fuel-station-fuel-prices/fuel-station-fuel-prices.page';
 import { ManagersPage } from './pages/managers/managers.page';
 import { FuelOrdersPage } from './pages/fuel-orders/fuel-orders.component';
+import {adminGuard, } from "fsms-security"
 
 export const routes: Routes = [
     { path: "fuel-stations", component: FuelStationsPage, canActivate: [adminGuard] },

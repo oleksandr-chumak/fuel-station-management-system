@@ -4,7 +4,7 @@ import { map, take } from "rxjs";
 import { AuthService } from "../services/auth.service";
 import { UserRole } from "fsms-web-api";
 
-const roleGuard = (
+export const roleGuard = (
     allowedRoles: UserRole[],
     loginPageUrl: String = "/login", 
     unauthorizedPageUrl: String = "/unauthorized"
@@ -33,5 +33,3 @@ const roleGuard = (
       );
     };
 };
-
-export default roleGuard;

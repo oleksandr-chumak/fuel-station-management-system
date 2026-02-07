@@ -5,12 +5,10 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
 
 import { routes } from './app.routes';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './modules/common/app-config.service';
-import { AuthService } from './modules/auth/services/auth.service';
-import { AuthInterceptor } from './modules/auth/interceptors/auth.interceptor';
 import { WEB_API_CONFIG, WebApiConfig, WebApiModule } from 'fsms-web-api';
+import { AuthService } from 'fsms-security';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,13 +36,6 @@ export const appConfig: ApplicationConfig = {
 
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
-
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
-      deps:[AppConfigService],
-      multi: true,
-    },
 
     MessageService, 
     provideAnimationsAsync(),

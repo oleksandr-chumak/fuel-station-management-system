@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import managerGuard from './modules/auth/guards/manager.guard';
 import { DashboardPage } from './pages/dashboard/dashboard.page';
 import { LoginPage } from './pages/login/login.page';
 import { FuelStationPage } from './pages/fuel-stations/[id]/fuel-station.page';
@@ -8,6 +7,7 @@ import { FuelStationManagersPage } from './pages/fuel-stations/[id]/fuel-station
 import { FuelStationFuelOrdersPage } from './pages/fuel-stations/[id]/fuel-station-fuel-orders/fuel-station-fuel-orders.page';
 import { FuelStationFuelTanksPage } from './pages/fuel-stations/[id]/fuel-station-fuel-tanks/fuel-station-fuel-tanks.page';
 import { FuelStationFuelPricesPage } from './pages/fuel-stations/[id]/fuel-station-fuel-prices/fuel-station-fuel-prices.page';
+import { managerGuard } from 'fsms-security';
 
 export const routes: Routes = [
     { path: "", component: DashboardPage, canActivate: [managerGuard] },

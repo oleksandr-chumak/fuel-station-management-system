@@ -8,7 +8,7 @@ import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'app-login-form',
+  selector: 'fsms-security-login-form',
   standalone: true,
   imports: [
     CommonModule, 
