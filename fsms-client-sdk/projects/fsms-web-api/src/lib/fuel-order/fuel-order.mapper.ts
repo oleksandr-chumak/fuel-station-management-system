@@ -3,51 +3,23 @@ import { FuelOrder } from "./fuel-order.model";
 import { FuelOrderStatus } from "./fuel-order-status.enum";
 import { FuelGradeMapper } from "../core/fuel-grade.mapper";
 
-interface FuelOrderJson {
-  id: number;
-  status: string | number;
-  fuelGrade: string | number;
-  amount: number;
-  fuelStationId: number;
-  createdAt: string;
-}
-
 @Injectable({ providedIn: "root" })
 export class FuelOrderMapper {
 
   private fuelGradeMapper = inject(FuelGradeMapper);  
 
   fromJson(json: unknown): FuelOrder {
-    if (!this.isFuelOrderJson(json)) {
-      throw new Error('Invalid Fuel Order JSON structure');
-    }
-
-    const status = this.parseFuelOrderStatus(json.status);
-    const fuelGrade = this.fuelGradeMapper.map(json.fuelGrade);
-    const createdAt = new Date(json.createdAt);
+    const status = this.parseFuelOrderStatus((json as FuelOrder).status);
+    const fuelGrade = this.fuelGradeMapper.map((json as FuelOrder).fuelGrade);
+    const createdAt = new Date((json as FuelOrder).createdAt);
 
     return new FuelOrder(
-      json.id,
+      (json as FuelOrder).id,
       status,
       fuelGrade,
-      json.amount,
-      json.fuelStationId,
+      (json as FuelOrder).amount,
+      (json as FuelOrder).fuelStationId,
       createdAt
-    );
-  }
-
-  private isFuelOrderJson(json: unknown): json is FuelOrderJson {
-    if (typeof json !== 'object' || json === null) return false;
-
-    const typedJson = json as Partial<FuelOrderJson>;
-    
-    return (
-      'id' in json && typeof typedJson.id === 'number' &&
-      'status' in json && (typeof typedJson.status === 'string') &&
-      'fuelGrade' in json && (typeof typedJson.fuelGrade === 'string') &&
-      'amount' in json && typeof typedJson.amount === 'number' &&
-      'fuelStationId' in json && typeof typedJson.fuelStationId === 'number' &&
-      'createdAt' in json && typeof typedJson.createdAt === 'string'
     );
   }
 

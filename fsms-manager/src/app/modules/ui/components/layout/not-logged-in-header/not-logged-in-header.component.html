@@ -1,0 +1,37 @@
+<header>
+    <div class="container mx-auto p-4">
+        <div class="p-2 border-slate-200 border rounded-md">
+            <div class="flex justify-between items-center">
+                <button class="md:hidden flex items-center" (click)="toggleMobileMenu()">
+                    <i class="pi pi-bars !text-3xl"></i>
+                </button>
+                
+                <div class="font-bold text-xl">
+                    Fuel System
+                </div>
+
+                <div class="hidden md:flex gap-1">
+                    <a *ngFor="let item of items" 
+                       [routerLink]="item.routerLink" 
+                       class="p-2 flex items-center hover:bg-slate-100 rounded-md transition-all">
+                        <i *ngIf="item.icon" class="{{item.icon}} mr-2"></i>
+                        <span>{{item.label}}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <p-sidebar [(visible)]="mobileMenuVisible" [position]="'left'" styleClass="p-sidebar-md" (onHide)="closeMobileMenu()">
+        <h3 class="font-bold text-xl mb-4">Menu</h3>
+        <div class="flex flex-col gap-4">
+            <a *ngFor="let item of items" 
+               [routerLink]="item.routerLink" 
+               class="p-2 flex items-center hover:bg-slate-100 rounded-md transition-all"
+               (click)="closeMobileMenu()">
+                <i *ngIf="item.icon" class="{{item.icon}} mr-2"></i>
+                <span>{{item.label}}</span>
+            </a>
+        </div>
+    </p-sidebar>
+</header>

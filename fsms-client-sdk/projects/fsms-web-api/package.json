@@ -1,6 +1,10 @@
 {
   "name": "fsms-web-api",
   "version": "0.0.1",
+  "scripts": {
+    "build:api": "ng build fsms-web-api",
+    "build:api:watch": "ng build fsms-web-api --watch"
+  },
   "peerDependencies": {
     "@angular/common": "^21.1.0",
     "@angular/core": "^21.1.0"

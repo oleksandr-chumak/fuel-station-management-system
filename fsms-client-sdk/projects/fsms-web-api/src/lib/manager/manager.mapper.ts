@@ -2,39 +2,17 @@ import { Injectable } from "@angular/core";
 import { Manager } from "./manager.model";
 import { ManagerStatus } from "./manager-status.enum";
 
-interface ManagerJson {
-  id: number;
-  firstName: string;
-  lastName: string;
-  status: string;
-}
-
 @Injectable({ providedIn: "root" })
 export class ManagerMapper {
 
   fromJson(json: unknown): Manager {
-    if (!this.isManagerJson(json)) {
-      throw new Error('Invalid Manager JSON structure');
-    }
-
-    const status = this.parseStatus(json.status);
+    const status = this.parseStatus((json as Manager).status);
 
     return new Manager(
-      json.id,
-      json.firstName,
-      json.lastName,
+      (json as Manager).id,
+      (json as Manager).firstName,
+      (json as Manager).lastName,
       status
-    );
-  }
-
-  private isManagerJson(json: unknown): json is ManagerJson {
-    if (typeof json !== 'object' || json === null) return false;
-
-    return (
-      'id' in json && typeof (json as { id: unknown }).id === 'number' &&
-      'firstName' in json && typeof (json as { firstName: unknown }).firstName === 'string' &&
-      'lastName' in json && typeof (json as { lastName: unknown }).lastName === 'string' &&
-      'status' in json && (typeof (json as { status: unknown }).status === 'string')
     );
   }
 
