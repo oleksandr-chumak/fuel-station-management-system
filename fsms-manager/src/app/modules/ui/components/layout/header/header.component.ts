@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { AvatarModule } from 'primeng/avatar';
 import { ButtonModule } from 'primeng/button';
 import { Menu } from 'primeng/menu';
-import { SidebarModule } from 'primeng/sidebar';
+import { DrawerModule } from 'primeng/drawer';
 import { User } from 'fsms-web-api';
 
 @Component({
@@ -19,7 +19,7 @@ import { User } from 'fsms-web-api';
     AvatarModule, 
     ButtonModule, 
     RouterModule,
-    SidebarModule
+    DrawerModule
   ],
   templateUrl: './header.component.html',
 })

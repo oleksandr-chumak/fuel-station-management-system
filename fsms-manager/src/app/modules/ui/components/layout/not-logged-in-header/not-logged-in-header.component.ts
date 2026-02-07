@@ -3,7 +3,7 @@ import { Router, RouterModule } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { SidebarModule } from 'primeng/sidebar';
+import { DrawerModule } from 'primeng/drawer';
 
 @Component({
   selector: 'app-not-logged-in-header',
@@ -12,7 +12,7 @@ import { SidebarModule } from 'primeng/sidebar';
     CommonModule,
     RouterModule,
     ButtonModule,
-    SidebarModule
+    DrawerModule
   ],
   templateUrl: './not-logged-in-header.component.html',
 })

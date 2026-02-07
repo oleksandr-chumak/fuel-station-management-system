@@ -8,7 +8,7 @@ import { ButtonModule } from "primeng/button";
 import { Menu } from "primeng/menu";
 import { Router, RouterModule } from "@angular/router";
 import { PanelModule } from "primeng/panel";
-import { SidebarModule } from "primeng/sidebar";
+import { DrawerModule } from 'primeng/drawer';
 import { User } from "fsms-web-api";
 
 @Component({
@@ -21,7 +21,7 @@ import { User } from "fsms-web-api";
     ButtonModule, 
     RouterModule, 
     PanelModule,
-    SidebarModule
+    DrawerModule
   ],
   templateUrl: "./header.component.html",
 })
