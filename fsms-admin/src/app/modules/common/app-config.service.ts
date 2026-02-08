@@ -4,6 +4,7 @@ import { firstValueFrom, tap } from 'rxjs';
 
 export interface AppConfig {
   apiUrl: string;
+  managerUrl: string;
 }
 
 @Injectable({ providedIn: "root"})

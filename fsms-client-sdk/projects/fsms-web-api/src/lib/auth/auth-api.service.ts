@@ -18,6 +18,10 @@ export class AuthApiService {
         return this.apiService.post<string>("api/auth/managers/login", { email, password }, { responseType: "text" });
     }    
 
+    getManagerAccessToken(managerId: number): Observable<String> {
+        return this.apiService.get<string>(`api/auth/managers/${managerId}/token`, { responseType: "text" });
+    }
+
     getMe(): Observable<User> {
         return this.apiService.get("api/auth/me")
             .pipe(map((user) => this.userMapper.fromJson(user)));

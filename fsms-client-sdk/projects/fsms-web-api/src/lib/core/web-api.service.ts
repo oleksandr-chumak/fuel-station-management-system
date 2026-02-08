@@ -9,8 +9,8 @@ export class ApiService {
     private http = inject(HttpClient);
     private config = inject(WEB_API_CONFIG);
 
-    get<T>(endpoint: string): Observable<T>   {
-        return this.http.get<T>(this.getUrl(endpoint));
+    get<T>(endpoint: string, options?: Record<string, string | string[]>): Observable<T>   {
+        return this.http.get<T>(this.getUrl(endpoint), options);
     }
 
     post<T>(endpoint: string, body: Record<string, unknown>, options?: Record<string, string | string[]>): Observable<T>   {

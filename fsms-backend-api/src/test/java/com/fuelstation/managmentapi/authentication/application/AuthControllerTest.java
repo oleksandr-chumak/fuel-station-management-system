@@ -179,6 +179,7 @@ public class AuthControllerTest {
         }
 
     }
+
     @Nested
     class GetManagerAccessTokenTests {
 

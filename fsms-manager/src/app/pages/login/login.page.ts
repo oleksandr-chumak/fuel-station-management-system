@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, inject, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { PanelModule } from 'primeng/panel';
@@ -10,12 +10,25 @@ import { AuthService, LoginFormComponent } from 'fsms-security';
   imports: [LoginFormComponent, PanelModule],  
   templateUrl: './login.page.html'
 })
-export class LoginPage {
-  private router: Router = inject(Router);
-  private authService: AuthService = inject(AuthService);
-  private messageService: MessageService = inject(MessageService);
+export class LoginPage implements OnInit {
+  private router = inject(Router);
+  private route = inject(ActivatedRoute); 
+  private authService = inject(AuthService);
+  private messageService = inject(MessageService);
 
   loading: boolean = false;
+  token: string | null = null;
+
+  ngOnInit(): void {
+    this.token = this.route.snapshot.queryParamMap.get('token');
+
+    if(this.token) {
+      this.authService.setAccessToken(this.token);
+      this.authService.loadUserData().then(() => {
+        this.router.navigate(["/"]);
+      });
+    }
+  }
 
   handleFormSubmission(data: { email: string; password: string }) {
     this.loading = true;
@@ -25,8 +38,6 @@ export class LoginPage {
       .subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: "Login successful" });
-          console.log("redirect")
-          console.log("user", this.authService.getUserValue())
           this.router.navigate(['/']);
         },
         error: (error) => {

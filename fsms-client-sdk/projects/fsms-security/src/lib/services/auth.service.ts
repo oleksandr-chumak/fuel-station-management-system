@@ -39,6 +39,10 @@ export class AuthService {
     getAccessToken(): String | null {
         return this.accessToken;
     }
+    
+    setAccessToken(accessToken: string): void {
+        this.saveAccessTokenAndSetState(accessToken);
+    }
 
     loginAdmin(email: string, password: string): Observable<User> {
         return this.authApiService.loginAdmin(email, password).pipe(

@@ -8,7 +8,9 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { PanelModule } from 'primeng/panel';
 import { TagModule } from 'primeng/tag';
 import { CreateManagerDialogComponent } from '../../modules/managers/components/create-manager-dialog/create-manager-dialog.component';
-import { Manager, ManagerStatus } from "fsms-web-api";
+import { AuthApiService , Manager, ManagerStatus } from "fsms-web-api";
+import { map } from 'rxjs';
+import { AppConfigService } from '../../modules/common/app-config.service';
 
 @Component({
   selector: 'app-managers-page',
@@ -17,8 +19,10 @@ import { Manager, ManagerStatus } from "fsms-web-api";
 })
 export class ManagersPage implements OnInit {
   
-  private managersQueryService: ManagersQueryService = inject(ManagersQueryService);
-  private messageService: MessageService = inject(MessageService);
+  private managersQueryService = inject(ManagersQueryService);
+  private appConfigService = inject(AppConfigService);
+  private messageService = inject(MessageService);
+  private authApiService = inject(AuthApiService);
 
   managers: Manager[] = [];
   skeletonRows = new Array(5).fill(null);
@@ -37,6 +41,13 @@ export class ManagersPage implements OnInit {
       return "success";
     }
     return undefined;
+  }
+
+  handleSignInAsManager(managerId: number) {
+    const managerUrl = this.appConfigService.getConfig().managerUrl;
+    this.authApiService.getManagerAccessToken(managerId).subscribe({
+        next: (token) => window.open(`${managerUrl}/login?token=${token}`)
+      });
   }
 
   get loading$() {
