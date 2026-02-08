@@ -9,6 +9,9 @@ public interface AuthTestClient {
    ResultActions loginAdmin(AuthRequest authRequest) throws Exception;
    String loginAdminAndGetToken(AuthRequest authRequest) throws Exception;
 
+   ResultActions getManagerAccessToken(Long managerId, String adminToken) throws Exception;
+   String getManagerAccessTokenAndReturn(Long managerId, String adminToken) throws Exception;
+
    ResultActions getMe(String token) throws Exception;
    Me getMeAndReturnResponse(String token) throws Exception;
 }

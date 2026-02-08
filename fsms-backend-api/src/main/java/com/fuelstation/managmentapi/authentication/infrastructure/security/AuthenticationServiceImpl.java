@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.security;
 
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -9,19 +10,11 @@ import com.fuelstation.managmentapi.authentication.domain.UserRole;
 import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
 
 @Service
+@AllArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService{
-
     private final CredentialsRepository credentialsRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final JwtTokenService jwtTokenService;
-
-    public AuthenticationServiceImpl(CredentialsRepository credentialsRepository, PasswordEncoder passwordEncoder, JwtTokenService jwtTokenService) {
-        this.credentialsRepository = credentialsRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtTokenService = jwtTokenService;
-    }
 
     @Override
     public String authenticate(String email, String password, UserRole role) {

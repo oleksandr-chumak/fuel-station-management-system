@@ -23,7 +23,7 @@ public class AuthTestClientImpl implements AuthTestClient {
 
     @Override
     public ResultActions loginManager(AuthRequest authRequest) throws Exception {
-        return mockMvc.perform(post("/api/auth/login/manager")
+        return mockMvc.perform(post("/api/auth/managers/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(authRequest)));
     }
@@ -35,7 +35,7 @@ public class AuthTestClientImpl implements AuthTestClient {
 
     @Override
     public ResultActions loginAdmin(AuthRequest authRequest) throws Exception {
-        return mockMvc.perform(post("/api/auth/login/admin")
+        return mockMvc.perform(post("/api/auth/admins/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(authRequest)));
     }
@@ -43,6 +43,18 @@ public class AuthTestClientImpl implements AuthTestClient {
     @Override
     public String loginAdminAndGetToken(AuthRequest authRequest) throws Exception {
         return loginAdmin(authRequest).andReturn().getResponse().getContentAsString();
+    }
+
+    @Override
+    public ResultActions getManagerAccessToken(Long managerId, String adminToken) throws Exception {
+        return mockMvc.perform(get("/api/auth/managers/" + managerId + "/token")
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON));
+    }
+
+    @Override
+    public String getManagerAccessTokenAndReturn(Long managerId, String adminToken) throws Exception {
+        return getManagerAccessToken(managerId, adminToken).andReturn().getResponse().getContentAsString();
     }
 
     @Override
@@ -57,12 +69,6 @@ public class AuthTestClientImpl implements AuthTestClient {
 
     // TODO make it reusable
     private <T> T getResponse(ResultActions resultActions, Class<T> responseType, ResultMatcher status) throws Exception {
-        String responseBody = resultActions.andExpect(status).andReturn().getResponse().getContentAsString();
-        return objectMapper.readValue(responseBody, responseType);
-    }
-
-    // TODO make it reusable
-    private <T> T getResponse(ResultActions resultActions, TypeReference<T> responseType, ResultMatcher status) throws Exception {
         String responseBody = resultActions.andExpect(status).andReturn().getResponse().getContentAsString();
         return objectMapper.readValue(responseBody, responseType);
     }

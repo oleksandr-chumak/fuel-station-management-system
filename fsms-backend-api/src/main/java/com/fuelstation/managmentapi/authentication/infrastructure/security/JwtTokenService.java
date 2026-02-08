@@ -22,11 +22,12 @@ public class JwtTokenService {
     private long accessTokenExpire;
 
     public String generateAccessToken(SecurityUserDetails user) {
+        var temp = getSigninKey();
         return Jwts.builder()
                 .subject(user.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + accessTokenExpire))
-                .signWith(getSigninKey())
+                .signWith(temp)
                 .compact();
     }
 

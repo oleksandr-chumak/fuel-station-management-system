@@ -11,11 +11,11 @@ export class AuthApiService {
     private userMapper = inject(UserMapper);
 
     loginAdmin(email: string, password: string): Observable<string> {
-        return this.apiService.post<string>("api/auth/login/admin", { email, password }, { responseType: "text" });
+        return this.apiService.post<string>("api/auth/admins/login", { email, password }, { responseType: "text" });
     }
 
     loginManager(email: string, password: string): Observable<string> {
-        return this.apiService.post<string>("api/auth/login/manager", { email, password }, { responseType: "text" });
+        return this.apiService.post<string>("api/auth/managers/login", { email, password }, { responseType: "text" });
     }    
 
     getMe(): Observable<User> {

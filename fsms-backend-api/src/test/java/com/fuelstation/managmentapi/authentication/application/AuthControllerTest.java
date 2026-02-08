@@ -178,7 +178,71 @@ public class AuthControllerTest {
             assertThat(me.email()).isEqualTo(testManagerEmail);
         }
 
+    }
+    @Nested
+    class GetManagerAccessTokenTests {
 
+        @Test
+        @DisplayName("Should generate valid access token for manager")
+        void shouldGenerateValidAccessTokenForManager() throws Exception {
+            String adminToken = getAdminAccessToken();
+            Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword);
+
+            String token = authTestClient.getManagerAccessTokenAndReturn(manager.getId(), adminToken);
+
+            assertThat(token).isNotNull().isNotEmpty();
+
+            Me me = authTestClient.getMeAndReturnResponse(token);
+            assertThat(me.userId()).isEqualTo(manager.getId());
+            assertThat(me.role()).isEqualTo(UserRole.MANAGER.toString());
+            assertThat(me.email()).isEqualTo(testManagerEmail);
+        }
+
+        @Test
+        @DisplayName("Should return Not Found for non-existent manager")
+        void shouldReturnNotFoundForNonExistentManager() throws Exception {
+            String adminToken = getAdminAccessToken();
+            long nonExistentManagerId = 99999L;
+
+            authTestClient.getManagerAccessToken(nonExistentManagerId, adminToken)
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @DisplayName("Should generate different tokens for different managers")
+        void shouldGenerateDifferentTokensForDifferentManagers() throws Exception {
+            String adminToken = getAdminAccessToken();
+            Manager manager1 = createManager.process("John", "Doe", "manager1@gmail.com", "password1");
+            Manager manager2 = createManager.process("Jane", "Smith", "manager2@gmail.com", "password2");
+
+            String token1 = authTestClient.getManagerAccessTokenAndReturn(manager1.getId(), adminToken);
+            String token2 = authTestClient.getManagerAccessTokenAndReturn(manager2.getId(), adminToken);
+
+            assertThat(token1).isNotEqualTo(token2);
+
+            Me me1 = authTestClient.getMeAndReturnResponse(token1);
+            Me me2 = authTestClient.getMeAndReturnResponse(token2);
+
+            assertThat(me1.userId()).isEqualTo(manager1.getId());
+            assertThat(me1.email()).isEqualTo("manager1@gmail.com");
+            assertThat(me2.userId()).isEqualTo(manager2.getId());
+            assertThat(me2.email()).isEqualTo("manager2@gmail.com");
+        }
+
+        @Test
+        @DisplayName("Should handle invalid manager ID format")
+        void shouldHandleInvalidManagerIdFormat() throws Exception {
+            String adminToken = getAdminAccessToken();
+            authTestClient.getManagerAccessToken(-1L, adminToken)
+                    .andExpect(status().isNotFound());
+        }
+
+        private String getAdminAccessToken() throws Exception {
+            createAdministrator.process(testAdminEmail, testAdminPassword);
+            return authTestClient.loginAdminAndGetToken(
+                    new AuthRequest(testAdminEmail, testAdminPassword)
+            );
+        }
     }
 
     @Nested
@@ -221,4 +285,5 @@ public class AuthControllerTest {
         }
 
     }
+
 }
