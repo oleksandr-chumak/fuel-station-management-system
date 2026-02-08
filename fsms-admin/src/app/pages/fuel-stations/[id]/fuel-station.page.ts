@@ -49,27 +49,27 @@ export class FuelStationPage implements OnInit, OnDestroy {
         {
           label: "Info",
           icon: "pi pi-info-circle",
-          route: `/admin/fuel-station/${this.paramsStationId}/info`
+          route: `/fuel-stations/${this.paramsStationId}/info`
         },
         {
           label: "Managers",
           icon: "pi pi-users",
-          route: `/admin/fuel-station/${this.paramsStationId}/managers`
+          route: `/fuel-stations/${this.paramsStationId}/managers`
         },
         {
           label: "Fuel Orders",
           icon: "pi pi-list",
-          route: `/admin/fuel-station/${this.paramsStationId}/fuel-orders`
+          route: `/fuel-stations/${this.paramsStationId}/fuel-orders`
         },
         {
           label: "Fuel Tanks", 
           icon: "pi pi-box",
-          route: `/admin/fuel-station/${this.paramsStationId}/fuel-tanks`
+          route: `/fuel-stations/${this.paramsStationId}/fuel-tanks`
         },
         {
           label: "Fuel Prices", 
           icon: "pi pi-dollar",
-          route: `/admin/fuel-station/${this.paramsStationId}/fuel-prices`
+          route: `/fuel-stations/${this.paramsStationId}/fuel-prices`
         }
       ]
     )

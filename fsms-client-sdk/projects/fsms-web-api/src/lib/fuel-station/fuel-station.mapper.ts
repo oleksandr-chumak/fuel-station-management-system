@@ -20,7 +20,7 @@ export class FuelStationMapper {
       (json as FuelStation).country,
       (json as FuelStation).address,
       (json as FuelStation).fuelPrices.map((price) => new FuelPrice(
-        price.fuelGrade, 
+        this.fuelGradeMapper.map(price.fuelGrade), 
         price.pricePerLiter
       )),
       (json as FuelStation).fuelTanks.map((tank) => new FuelTank(
@@ -28,7 +28,7 @@ export class FuelStationMapper {
         tank.currentVolume, 
         tank.maxCapacity, 
         this.fuelGradeMapper.map(tank.fuelGrade), 
-        tank.lastRefillDate
+        tank.lastRefillDate && new Date(tank.lastRefillDate)
       )),
       (json as FuelStation).assignedManagersIds,
       this.parseStatus((json as FuelStation).status)

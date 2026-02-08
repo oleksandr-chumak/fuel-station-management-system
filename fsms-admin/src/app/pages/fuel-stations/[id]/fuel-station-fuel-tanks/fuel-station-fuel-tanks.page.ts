@@ -20,6 +20,7 @@ export class FuelStationFuelTanksPage {
   skeletonCols = new Array(4).fill(null);
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
+    console.log(this.ctxService.getContextValue()?.fuelStation.fuelTanks)
     return FuelGrade[fuelGrade];
   }
 

@@ -28,6 +28,7 @@ export class FuelStationFuelPricesPage implements OnInit {
   ngOnInit(): void {
     this.ctx$.subscribe((data) => {
       this.clonedFuelPrices = data?.fuelStation.clone().fuelPrices || [];
+      console.log(this.ctxService.getContextValue()?.fuelStation.clone().fuelPrices)
     })
     this.ctxService.loading.changeFuelPrice.subscribe((value) => this.loading = value);
   }

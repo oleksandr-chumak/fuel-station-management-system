@@ -25,7 +25,7 @@ export class LoginPage {
       .subscribe({
         next: () => {
           this.messageService.add({ severity: 'success', summary: 'Success', detail: "Login successful" });
-          this.router.navigate(['admin']);
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Login failed', error);

@@ -35,9 +35,9 @@ export class HeaderComponent {
   
   get menubarItems(): MenuItem[] {
     return [ 
-      { label: "Fuel Stations", routerLink: ["/admin"] },
-      { label: "Managers", routerLink: ["/admin/managers"] },
-      { label: "Fuel Orders", routerLink: ["/admin/fuel-orders"] },
+      { label: "Fuel Stations", routerLink: ["/"] },
+      { label: "Managers", routerLink: ["/managers"] },
+      { label: "Fuel Orders", routerLink: ["/fuel-orders"] },
     ];
   }
   
@@ -56,6 +56,6 @@ export class HeaderComponent {
   private handleLogout() {
     this.messageService.add({ severity: "success", summary: "Success", detail: "You were logged out" });
     this.authService.logout();
-    this.router.navigate(["/admin/login"]);
+    this.router.navigate(["/login"]);
   }
 }

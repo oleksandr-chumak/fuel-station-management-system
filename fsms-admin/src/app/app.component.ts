@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from './modules/ui/components/layout/header/header.component';
 import { ToastModule } from 'primeng/toast';
 import { User } from 'fsms-web-api';
-import { AuthService, LoginFormComponent } from 'fsms-security';
+import { AuthService, NotLoggedInHeaderComponent } from 'fsms-security';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +16,7 @@ import { AuthService, LoginFormComponent } from 'fsms-security';
     CommonModule,
     ToastModule,
     HeaderComponent,
-    LoginFormComponent
+    NotLoggedInHeaderComponent
 ],
   templateUrl: './app.component.html',
 })
@@ -24,7 +24,6 @@ export class AppComponent implements OnInit {
   user$!: Observable<User | null>;
   isLoading = new BehaviorSubject<boolean>(true);
   isLoading$ = this.isLoading.asObservable();
-  
   private authService: AuthService = inject(AuthService); 
   
   ngOnInit(): void {

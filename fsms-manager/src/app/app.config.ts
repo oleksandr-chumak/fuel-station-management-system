@@ -20,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     }), 
 
     importProvidersFrom(WebApiModule.forRoot()),
+    importProvidersFrom(SecurityModule),
     {
       provide: WEB_API_CONFIG,
       useFactory: (appConfigService: AppConfigService): WebApiConfig => ({
@@ -33,8 +34,6 @@ export const appConfig: ApplicationConfig = {
       }),
       deps: [AppConfigService]
     },
-
-    SecurityModule,
 
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),

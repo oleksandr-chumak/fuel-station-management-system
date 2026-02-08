@@ -8,7 +8,7 @@ import { routes } from './app.routes';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './modules/common/app-config.service';
 import { WEB_API_CONFIG, WebApiConfig, WebApiModule } from 'fsms-web-api';
-import { AuthService } from 'fsms-security';
+import { AuthService, SecurityModule } from 'fsms-security';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +20,7 @@ export const appConfig: ApplicationConfig = {
     }), 
 
     importProvidersFrom(WebApiModule.forRoot()),
+    importProvidersFrom(SecurityModule),
     {
       provide: WEB_API_CONFIG,
       useFactory: (appConfigService: AppConfigService): WebApiConfig => ({

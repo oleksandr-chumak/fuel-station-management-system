@@ -13,9 +13,9 @@ import { CreateFuelStationDialogComponent } from '../../modules/fuel-stations/co
 import { FuelStation } from 'fsms-web-api';
 
 @Component({
-  selector: 'app-fuel-station-admin',
+  selector: 'app-fuel-stations-page',
   imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule, DialogModule, CreateFuelStationDialogComponent, SkeletonModule],
-  templateUrl: './fuel-stations-admin.component.html',
+  templateUrl: './fuel-stations.page.html',
 })
 export class FuelStationsPage implements OnInit, OnDestroy {
   private messageService = inject(MessageService);
@@ -46,6 +46,6 @@ export class FuelStationsPage implements OnInit, OnDestroy {
   }
 
   handleViewClick(fuelStationId: number) {
-    this.router.navigate(["admin/fuel-station/" + fuelStationId + "/info"]);
+    this.router.navigate(["/fuel-stations/" + fuelStationId + "/info"]);
   }
 }
