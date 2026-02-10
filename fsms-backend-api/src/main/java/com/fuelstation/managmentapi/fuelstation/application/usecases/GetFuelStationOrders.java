@@ -2,6 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import java.util.List;
 
+import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -21,8 +22,8 @@ public class GetFuelStationOrders {
     }
 
     @Transactional
-    public List<FuelOrder> process(long fuelStationId) {
-        getFuelStationById.process(fuelStationId);
+    public List<FuelOrder> process(long fuelStationId, Credentials credentials) {
+        getFuelStationById.process(fuelStationId, credentials);
         return fuelOrderRepository.findFuelOrdersByFuelStationId(fuelStationId);
     }
 }

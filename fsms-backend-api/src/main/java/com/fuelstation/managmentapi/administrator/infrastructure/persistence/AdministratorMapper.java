@@ -8,16 +8,10 @@ import com.fuelstation.managmentapi.administrator.domain.Administrator;
 public class AdministratorMapper {
 
     public Administrator toDomain(AdministratorEntity entity) {
-        return new Administrator(
-            entity.getId(),
-            entity.getCredentialsId()
-        );
+        return new Administrator(entity.getCredentialsId());
     }
 
     public AdministratorEntity toEntity(Administrator domain) {
-        return new AdministratorEntity(
-            domain.getId(),
-            domain.getCredentialsId()
-        );
+        return new AdministratorEntity(domain.getCredentialsId());
     }
 }

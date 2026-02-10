@@ -8,5 +8,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ManagerCreated implements DomainEvent {
-    private long mangerId;
+    private long credentialsId;
 }

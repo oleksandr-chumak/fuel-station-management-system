@@ -20,6 +20,6 @@ public class ManagerEventHandler {
     
     @EventListener
     public void handle(ManagerCreated event) {
-        logger.info("Manager was created ID:" + event.getMangerId());
+        logger.info("Manager was created ID:" + event.getCredentialsId());
     }
 }

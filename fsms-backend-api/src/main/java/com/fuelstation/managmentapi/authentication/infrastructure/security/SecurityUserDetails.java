@@ -3,12 +3,14 @@ package com.fuelstation.managmentapi.authentication.infrastructure.security;
 import java.util.Collection;
 import java.util.List;
 
+import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
 
+@Getter
 public class SecurityUserDetails implements UserDetails {
     private final Credentials credentials;
 

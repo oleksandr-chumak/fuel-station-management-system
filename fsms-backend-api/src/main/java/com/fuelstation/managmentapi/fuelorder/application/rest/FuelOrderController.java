@@ -2,10 +2,13 @@ package com.fuelstation.managmentapi.fuelorder.application.rest;
 
 import java.util.List;
 
+import com.fuelstation.managmentapi.authentication.application.CurrentUser;
+import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeConfirmedException;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeRejectedException;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,33 +29,26 @@ import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/fuel-orders")
+@AllArgsConstructor
 public class FuelOrderController {
 
     private final CreateFuelOrder createFuelOrder;
-    
     private final ConfirmFuelOrder confirmFuelOrder;
-    
     private final RejectFuelOrder rejectFuelOrder;
-
     private final GetAllFuelOrders getAllFuelOrders;
-
     private final GetFuelOrderById getFuelOrderById;
 
-    public FuelOrderController(CreateFuelOrder createFuelOrder, ConfirmFuelOrder confirmFuelOrder, RejectFuelOrder rejectFuelOrder, GetAllFuelOrders getAllFuelOrders, GetFuelOrderById getFuelOrderById) {
-        this.createFuelOrder = createFuelOrder;
-        this.confirmFuelOrder = confirmFuelOrder;
-        this.rejectFuelOrder = rejectFuelOrder;
-        this.getAllFuelOrders = getAllFuelOrders;
-        this.getFuelOrderById = getFuelOrderById;
-    }
-
     @PostMapping("/")
-    public ResponseEntity<FuelOrderResponse> createFuelOrder(@RequestBody @Valid CreateFuelOrderRequest request) {
+    public ResponseEntity<FuelOrderResponse> createFuelOrder(
+            @RequestBody @Valid CreateFuelOrderRequest request,
+            @CurrentUser Credentials credentials
+            ) {
         try{
             FuelOrder fuelOrder = createFuelOrder.process(
                     request.getFuelStationId(),
                     request.getFuelGrade(),
-                    request.getAmount()
+                    request.getAmount(),
+                    credentials
             );
 
             return new ResponseEntity<>(FuelOrderResponse.fromDomain(fuelOrder), HttpStatus.CREATED);

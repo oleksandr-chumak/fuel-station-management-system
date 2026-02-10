@@ -46,22 +46,22 @@ public class FuelStation extends AggregateRoot {
         return (long) totalAvailableAmount;
     }
 
-    public void assignManager(long managerId) {
-        Optional<Long> foundManagerId = assignedManagersIds.stream()
-                .filter((id) -> id == managerId)
-                .findFirst();
-
-        if (foundManagerId.isPresent()) {
-            throw new ManagerAlreadyAssignedException(managerId, this.id);
+    public void assignManager(long credentialsId) {
+        if (isManagerAssigned(credentialsId)) {
+            throw new ManagerAlreadyAssignedException(credentialsId, this.id);
         }
 
-        assignedManagersIds.add(managerId);
-        pushDomainEvent(new ManagerAssignedToFuelStation(id, managerId));
+        assignedManagersIds.add(credentialsId);
+        pushDomainEvent(new ManagerAssignedToFuelStation(id, credentialsId));
     }
 
-    public void unassignManager(long managerId) {
-        assignedManagersIds.removeIf((id) -> id == managerId);
-        pushDomainEvent(new ManagerUnassignedFromFuelStation(id, managerId));
+    public void unassignManager(long credentialsId) {
+        assignedManagersIds.removeIf((id) -> id == credentialsId);
+        pushDomainEvent(new ManagerUnassignedFromFuelStation(id, credentialsId));
+    }
+
+    public boolean isManagerAssigned(long credentialsId) {
+        return assignedManagersIds.contains(credentialsId);
     }
 
     public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
@@ -101,8 +101,8 @@ public class FuelStation extends AggregateRoot {
 
     private void unassignAllManagers() {
         List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
-        for (long managerId : cloneAssignedManagersIds) {
-            unassignManager(managerId);
+        for (long credentialsId : cloneAssignedManagersIds) {
+            unassignManager(credentialsId);
         }
     }
 }

@@ -1,8 +1,8 @@
 package com.fuelstation.managmentapi.fuelorder.application;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
@@ -12,9 +12,9 @@ import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ProcessFuelDelivery;
 
 @Component
+@AllArgsConstructor
 public class FuelOrderEventHandler {
 
-    @Autowired
     private ProcessFuelDelivery processFuelDelivery;
 
     private static final Logger logger = LoggerFactory.getLogger(FuelOrderEventHandler.class);
@@ -26,8 +26,8 @@ public class FuelOrderEventHandler {
     
     @EventListener
     public void handle(FuelOrderConfirmed event) {
-        logger.info("Fuel order was confirmed ID:" + event.getFuelOrderId());
-        processFuelDelivery.process(event.getFuelOrderId());
+        logger.info("Fuel order was confirmed ID:" + event.fuelOrderId());
+        processFuelDelivery.process(event.fuelOrderId());
     }
 
     @EventListener

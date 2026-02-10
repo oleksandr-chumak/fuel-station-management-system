@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
+import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -36,8 +37,8 @@ public class CreateFuelOrder {
      * minus the amount of fuel already ordered for that grade which hasn't been confirmed or rejected.
      */
     @Transactional
-    public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, float amount) {
-        FuelStation fuelStation = getFuelStationById.process(fuelStationId);
+    public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, float amount, Credentials credentials) {
+        FuelStation fuelStation = getFuelStationById.process(fuelStationId, credentials);
 
         float availableVolume = fuelStation.getAvailableVolume(fuelGrade);
         float pendingAmount = fuelOrderRepository.getUnconfirmedFuelAmount(fuelStationId, fuelGrade);

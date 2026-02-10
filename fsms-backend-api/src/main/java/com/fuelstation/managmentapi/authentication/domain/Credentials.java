@@ -14,4 +14,12 @@ public class Credentials {
    private String username;
    private String password;
 
+   public boolean admin() {
+      return role == UserRole.ADMINISTRATOR;
+   }
+
+   public boolean manager() {
+      return role == UserRole.MANAGER;
+   }
+
 }

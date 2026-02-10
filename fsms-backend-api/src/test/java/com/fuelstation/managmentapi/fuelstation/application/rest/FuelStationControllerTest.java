@@ -3,8 +3,7 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fuelstation.managmentapi.common.AdminUserTest;
-import com.fuelstation.managmentapi.common.WithMockAdminUser;
+import com.fuelstation.managmentapi.common.WithMockCustomUser;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.CreateFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
@@ -19,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -53,7 +53,8 @@ public class FuelStationControllerTest {
     @Nested
     class CreateFuelStation {
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should create fuel station")
         public void shouldCreateFuelStation() throws Exception {
             FuelStationResponse fuelStationResponse = fuelStationTestClient.createFuelStationAndReturnResponse();
@@ -62,7 +63,7 @@ public class FuelStationControllerTest {
 
         @ParameterizedTest
         @MethodSource("invalidCreateFuelStationRequests")
-        @WithMockAdminUser
+        @WithMockCustomUser
         @DisplayName("Should return Bad Request for invalid requests")
         public void shouldReturnBadRequestForInvalidRequests(CreateFuelStationRequest request) throws Exception {
             fuelStationTestClient.createFuelStation(request)
@@ -100,21 +101,24 @@ public class FuelStationControllerTest {
             testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should deactivate fuel station")
         public void shouldDeactivateFuelStation() throws Exception {
             FuelStationResponse fuelStationResponse = fuelStationTestClient.deactivateFuelStationAndReturnResponse(testFuelStation.getId());
             assertThat(fuelStationResponse.getStatus()).isEqualTo(FuelStationStatus.DEACTIVATED.toString());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Conflict when the fuel station is already deactivated")
         public void shouldReturnConflictWhenFuelStationIsAlreadyDeactivated() throws Exception {
             fuelStationTestClient.deactivateFuelStation(testFuelStation.getId()).andExpect(status().isOk());
             fuelStationTestClient.deactivateFuelStation(testFuelStation.getId()).andExpect(status().isConflict());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
             fuelStationTestClient.deactivateFuelStation(99999L).andExpect(status().isNotFound());
@@ -134,27 +138,31 @@ public class FuelStationControllerTest {
             testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should assign manager to fuel station")
         public void shouldAssignManagerToFuelStation() throws Exception {
-            FuelStationResponse fuelStationResponse = fuelStationTestClient.assignManagerToFuelStationAndReturnResponse(testFuelStation.getId(), testManager.getId());
-            assertThat(fuelStationResponse.getAssignedManagersIds()).contains(testManager.getId());
+            FuelStationResponse fuelStationResponse = fuelStationTestClient.assignManagerToFuelStationAndReturnResponse(testFuelStation.getId(), testManager.getCredentialsId());
+            assertThat(fuelStationResponse.getAssignedManagersIds()).contains(testManager.getCredentialsId());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Conflict when the manager is already assigned")
         public void shouldReturnConflictWhenManagerIsAlreadyAssigned() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getId()).andExpect(status().isOk());
-            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getId()).andExpect(status().isConflict());
+            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getCredentialsId()).andExpect(status().isOk());
+            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getCredentialsId()).andExpect(status().isConflict());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getId()).andExpect(status().isNotFound());
+            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getCredentialsId()).andExpect(status().isNotFound());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the manager does not exist")
         public void shouldReturnNotFoundWhenManagerDoesNotExist() throws Exception {
             fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), 99999L).andExpect(status().isNotFound());
@@ -174,27 +182,31 @@ public class FuelStationControllerTest {
             testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should unassign manager from fuel station")
         public void shouldUnassignManagerFromFuelStation() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getId());
-            FuelStationResponse fuelStationResponse = fuelStationTestClient.unassignManagerFromFuelStationAndReturnResponse(testFuelStation.getId(), testManager.getId());
+            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getCredentialsId());
+            FuelStationResponse fuelStationResponse = fuelStationTestClient.unassignManagerFromFuelStationAndReturnResponse(testFuelStation.getId(), testManager.getCredentialsId());
             assertThat(fuelStationResponse.getAssignedManagersIds()).isEmpty();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Conflict when the manager is not assigned ")
         public void shouldReturnConflictWhenManagerIsNotAssigned() throws Exception {
-            fuelStationTestClient.unassignManagerFromFuelStation(testFuelStation.getId(), testManager.getId()).andExpect(status().isOk());
+            fuelStationTestClient.unassignManagerFromFuelStation(testFuelStation.getId(), testManager.getCredentialsId()).andExpect(status().isOk());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getId()).andExpect(status().isNotFound());
+            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getCredentialsId()).andExpect(status().isNotFound());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the manager does not exist")
         public void shouldReturnNotFoundWhenManagerDoesNotExist() throws Exception {
             fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), 99999L).andExpect(status().isNotFound());
@@ -213,7 +225,8 @@ public class FuelStationControllerTest {
             testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should change fuel price")
         public void shouldChangeFuelPrice() throws Exception {
             ChangeFuelPriceRequest changeFuelPriceRequest = new ChangeFuelPriceRequest(FuelGrade.RON_92, 10f);
@@ -231,7 +244,8 @@ public class FuelStationControllerTest {
             }
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
             fuelStationTestClient.changeFuelPrice(99999L, new ChangeFuelPriceRequest(FuelGrade.RON_92, 10f)).andExpect(status().isNotFound());
@@ -249,14 +263,16 @@ public class FuelStationControllerTest {
             testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should get fuel station by id")
         public void shouldGetFuelStationById() throws Exception {
             FuelStationResponse fuelStationResponse = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getId());
             assertThat(fuelStationResponse.getId()).isEqualTo(testFuelStation.getId());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
             fuelStationTestClient.getFuelStationById(99999L).andExpect(status().isNotFound());
@@ -264,7 +280,8 @@ public class FuelStationControllerTest {
 
     }
 
-    @AdminUserTest
+    @Test
+    @WithMockCustomUser
     @DisplayName("Should get all fuel stations")
     public void shouldGetAllFuelStations() throws Exception {
         fuelStationTestClient.createFuelStationAndReturnResponse();
@@ -272,18 +289,20 @@ public class FuelStationControllerTest {
         assertThat(fuelStationResponses.size()).isEqualTo(1);
     }
 
-    @AdminUserTest
+    @Test
+    @WithMockCustomUser
     @DisplayName("Should get all managers assigned to the fuel station")
     public void shouldGetAllManagersAssignedToFuelStation() throws Exception {
         ManagerResponse testManager = managerTestClient.createManagerAndReturnResponse();
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
 
-        fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getId());
+        fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getId(), testManager.getCredentialsId());
         List<ManagerResponse> managers = fuelStationTestClient.getManagersAssignedToFuelStationAndReturnResponse(testFuelStation.getId());
         assertThat(managers.size()).isEqualTo(1);
     }
 
-    @AdminUserTest
+    @Test
+    @WithMockCustomUser
     @DisplayName("Should get all fuel orders related to the fuel station")
     public void shouldGetAllFuelOrdersRelatedToFuelStation() throws Exception {
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();

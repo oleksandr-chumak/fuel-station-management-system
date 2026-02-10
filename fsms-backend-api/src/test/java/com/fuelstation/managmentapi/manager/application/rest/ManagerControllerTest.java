@@ -100,15 +100,15 @@ public class ManagerControllerTest {
         @AdminUserTest
         @DisplayName("Should terminate manager")
         void shouldTerminateManager() throws Exception {
-            ManagerResponse managerResponse = managerTestClient.terminateManagerAndReturnResponse(testManager.getId());
+            ManagerResponse managerResponse = managerTestClient.terminateManagerAndReturnResponse(testManager.getCredentialsId());
             assertThat(managerResponse.getStatus()).isEqualTo(ManagerStatus.TERMINATED.toString());
         }
 
         @AdminUserTest
         @DisplayName("Should return Conflict when manger is already terminated")
         void shouldReturnConflictWhenManagerIsAlreadyTerminated() throws Exception {
-            managerTestClient.terminateManager(testManager.getId());
-            managerTestClient.terminateManager(testManager.getId()).andExpect(status().isConflict());
+            managerTestClient.terminateManager(testManager.getCredentialsId());
+            managerTestClient.terminateManager(testManager.getCredentialsId()).andExpect(status().isConflict());
         }
 
         @AdminUserTest
@@ -127,7 +127,7 @@ public class ManagerControllerTest {
     }
 
     @Nested
-    class GetManagerByIdTests {
+    class GetManagerByCredentialsIdTests {
 
         private ManagerResponse testManager;
 
@@ -139,7 +139,7 @@ public class ManagerControllerTest {
         @AdminUserTest
         @DisplayName("Should get manager by id")
         void shouldGetManagerById() throws Exception {
-            managerTestClient.getManagerByIdAndReturnResponse(testManager.getId());
+            managerTestClient.getManagerByIdAndReturnResponse(testManager.getCredentialsId());
         }
 
         @AdminUserTest
@@ -163,7 +163,7 @@ public class ManagerControllerTest {
         @AdminUserTest
         @DisplayName("Should get manager fuel stations")
         void shouldGetManagerFuelStations() throws Exception {
-            managerTestClient.getManagerFuelStationsAndReturnResponse(testManager.getId());
+            managerTestClient.getManagerFuelStationsAndReturnResponse(testManager.getCredentialsId());
         }
 
         @AdminUserTest

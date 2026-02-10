@@ -1,38 +1,31 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
+import com.fuelstation.managmentapi.authentication.domain.Credentials;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
-import com.fuelstation.managmentapi.manager.application.usecases.GetManagerById;
+import com.fuelstation.managmentapi.manager.application.usecases.GetManagerByCredentialsId;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 @Component
+@AllArgsConstructor
 public class AssignManagerToFuelStation {
     
     private final FuelStationRepository fuelStationRepository;
-
     private final DomainEventPublisher domainEventPublisher;
-    
-    private final GetManagerById getManagerById;
-
+    private final GetManagerByCredentialsId getManagerByCredentialsId;
     private final GetFuelStationById getFuelStationById;
 
-    public AssignManagerToFuelStation(FuelStationRepository fuelStationRepository, DomainEventPublisher domainEventPublisher, GetManagerById getManagerById, GetFuelStationById getFuelStationById) {
-        this.fuelStationRepository = fuelStationRepository;
-        this.domainEventPublisher = domainEventPublisher;
-        this.getManagerById = getManagerById;
-        this.getFuelStationById = getFuelStationById;
-    }
-
     @Transactional
-    public FuelStation process(long fuelStationId, long managerId) {
-        FuelStation fuelStation = getFuelStationById.process(fuelStationId); 
-        Manager manager = getManagerById.process(managerId);
+    public FuelStation process(long fuelStationId, long managerId, Credentials credentials) {
+        FuelStation fuelStation = getFuelStationById.process(fuelStationId, credentials);
+        Manager manager = getManagerByCredentialsId.process(managerId);
 
-        fuelStation.assignManager(manager.getId());
+        fuelStation.assignManager(manager.getCredentialsId());
 
         fuelStationRepository.save(fuelStation);
         domainEventPublisher.publishAll(fuelStation.getDomainEvents());

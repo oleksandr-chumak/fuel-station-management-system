@@ -10,14 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ManagerResponse {
-    private Long id;
+    private Long credentialsId;
     private String firstName;
     private String lastName;
     private String status;
 
     public static ManagerResponse fromDomain(Manager manager) {
         ManagerResponse response = new ManagerResponse();
-        response.setId(manager.getId());
+        response.setCredentialsId(manager.getCredentialsId());
         response.setFirstName(manager.getFirstName());
         response.setLastName(manager.getLastName());
         response.setStatus(manager.getStatus().toString());

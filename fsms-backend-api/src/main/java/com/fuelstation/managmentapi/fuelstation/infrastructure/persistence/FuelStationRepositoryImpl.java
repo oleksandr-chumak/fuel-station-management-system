@@ -3,18 +3,16 @@ package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 @Repository
+@AllArgsConstructor
 public class FuelStationRepositoryImpl implements FuelStationRepository {
 
-    @Autowired
     private JpaFuelStationRepository jpaFuelStationRepository;
-
-    @Autowired 
     private FuelStationMapper fuelStationMapper;
 
     @Override
@@ -27,11 +25,6 @@ public class FuelStationRepositoryImpl implements FuelStationRepository {
     public Optional<FuelStation> findById(Long id) {
         Optional<FuelStationEntity> fuelStationEntity = jpaFuelStationRepository.findById(id);
         return fuelStationEntity.map(fuelStationMapper::toDomain);
-    }
-
-    @Override
-    public void deleteAll() {
-        jpaFuelStationRepository.deleteAll();
     }
 
     @Override

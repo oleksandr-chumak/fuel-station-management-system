@@ -68,13 +68,13 @@ public class FuelStationTest {
         @DisplayName("Should throw exception when trying to assign an already assigned manager")
         void shouldThrowExceptionWhenAssigningAlreadyAssignedManager() {
             // Given
-            Manager manager = new Manager(1L, null, null, null, null);
-            fuelStation.getAssignedManagersIds().add(manager.getId());
+            Manager manager = new Manager(1L, null, null, null);
+            fuelStation.getAssignedManagersIds().add(manager.getCredentialsId());
             
             // When & Then
             assertThrows(
                 ManagerAlreadyAssignedException.class,
-                () -> fuelStation.assignManager(manager.getId())
+                () -> fuelStation.assignManager(manager.getCredentialsId())
             );
         }
         
@@ -82,14 +82,14 @@ public class FuelStationTest {
         @DisplayName("Should assign a new manager")
         void shouldAssignNewManager() {
             // Given
-            Manager newManager = new Manager(2L, null, null, null, null);
-            assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getId()));
+            Manager newManager = new Manager(2L, null, null, null);
+            assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getCredentialsId()));
 
             // When
-            fuelStation.assignManager(newManager.getId());
+            fuelStation.assignManager(newManager.getCredentialsId());
 
             // Then
-            assertTrue(fuelStation.getAssignedManagersIds().contains(newManager.getId()));
+            assertTrue(fuelStation.getAssignedManagersIds().contains(newManager.getCredentialsId()));
             assertEquals(1, fuelStation.getAssignedManagersIds().size());
         }
         
@@ -97,27 +97,27 @@ public class FuelStationTest {
         @DisplayName("Should unassign a manager")
         void shouldUnassignManager() {
             // Given
-            Manager manager = new Manager(3L, null, null, null, null);
-            fuelStation.getAssignedManagersIds().add(manager.getId());
+            Manager manager = new Manager(3L, null, null, null);
+            fuelStation.getAssignedManagersIds().add(manager.getCredentialsId());
             assertEquals(1, fuelStation.getAssignedManagersIds().size());
             
             // When
-            fuelStation.unassignManager(manager.getId());
+            fuelStation.unassignManager(manager.getCredentialsId());
             
             // Then
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
-            assertFalse(fuelStation.getAssignedManagersIds().contains(manager.getId()));
+            assertFalse(fuelStation.getAssignedManagersIds().contains(manager.getCredentialsId()));
         }
         
         @Test
         @DisplayName("Should do nothing when unassign a manager that isn't assigned")
         void shouldDoNothingWhenUnassigningNonAssignedManager() {
             // Given
-            Manager manager = new Manager(4L, null, null, null, null);
+            Manager manager = new Manager(4L, null, null, null);
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
             
             // When
-            fuelStation.unassignManager(manager.getId());
+            fuelStation.unassignManager(manager.getCredentialsId());
             
             // Then
             assertEquals(0, fuelStation.getAssignedManagersIds().size());

@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 public class ManagerFactoryImpl implements ManagerFactory {
 
     @Override
-    public Manager create(String firstName, String lastName, long credentialsId) {
-        return new Manager(null, firstName, lastName, ManagerStatus.ACTIVE, credentialsId);
+    public Manager create(long credentialsId, String firstName, String lastName) {
+        return new Manager(credentialsId, firstName, lastName, ManagerStatus.ACTIVE);
     }
 
 }

@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Administrator {
-    private Long id;
     private Long credentialsId;
 }

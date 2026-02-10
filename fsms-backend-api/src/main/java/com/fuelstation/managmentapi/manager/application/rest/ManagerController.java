@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationResponse;
 import com.fuelstation.managmentapi.manager.application.usecases.CreateManager;
 import com.fuelstation.managmentapi.manager.application.usecases.GetAllManagers;
-import com.fuelstation.managmentapi.manager.application.usecases.GetManagerById;
+import com.fuelstation.managmentapi.manager.application.usecases.GetManagerByCredentialsId;
 import com.fuelstation.managmentapi.manager.application.usecases.GetManagerFuelStations;
 import com.fuelstation.managmentapi.manager.application.usecases.TerminateManager;
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -33,14 +33,14 @@ public class ManagerController {
 
     private final GetManagerFuelStations getManagerFuelStations;
 
-    private final GetManagerById getManagerById;
+    private final GetManagerByCredentialsId getManagerByCredentialsId;
 
-    public ManagerController(CreateManager createManager, TerminateManager terminateManager, GetAllManagers getAllManagers, GetManagerFuelStations getManagerFuelStations, GetManagerById getManagerById) {
+    public ManagerController(CreateManager createManager, TerminateManager terminateManager, GetAllManagers getAllManagers, GetManagerFuelStations getManagerFuelStations, GetManagerByCredentialsId getManagerByCredentialsId) {
         this.createManager = createManager;
         this.terminateManager = terminateManager;
         this.getAllManagers = getAllManagers;
         this.getManagerFuelStations = getManagerFuelStations;
-        this.getManagerById = getManagerById;
+        this.getManagerByCredentialsId = getManagerByCredentialsId;
     }
 
     @PostMapping("/")
@@ -62,7 +62,7 @@ public class ManagerController {
     
     @GetMapping("/{id}")
     public ResponseEntity<ManagerResponse> getManagerById(@PathVariable("id") long managerId) {
-        return ResponseEntity.ok(ManagerResponse.fromDomain(getManagerById.process(managerId)));
+        return ResponseEntity.ok(ManagerResponse.fromDomain(getManagerByCredentialsId.process(managerId)));
     }
 
     @GetMapping("/{id}/fuel-stations")

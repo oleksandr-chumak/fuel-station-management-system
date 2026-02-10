@@ -160,7 +160,7 @@ public class AuthControllerTest {
             String token = authTestClient.loginAdminAndGetToken(new AuthRequest(testAdminEmail, testAdminPassword));
             Me me = authTestClient.getMeAndReturnResponse(token);
 
-            assertThat(me.userId()).isEqualTo(administrator.getId());
+            assertThat(me.userId()).isEqualTo(administrator.getCredentialsId());
             assertThat(me.role()).isEqualTo(UserRole.ADMINISTRATOR.toString());
             assertThat(me.email()).isEqualTo(testAdminEmail);
         }
@@ -173,7 +173,7 @@ public class AuthControllerTest {
             String token = authTestClient.loginManagerAndGetToken(new AuthRequest(testManagerEmail, testManagerPassword));
             Me me = authTestClient.getMeAndReturnResponse(token);
 
-            assertThat(me.userId()).isEqualTo(manager.getId());
+            assertThat(me.userId()).isEqualTo(manager.getCredentialsId());
             assertThat(me.role()).isEqualTo(UserRole.MANAGER.toString());
             assertThat(me.email()).isEqualTo(testManagerEmail);
         }
@@ -189,12 +189,12 @@ public class AuthControllerTest {
             String adminToken = getAdminAccessToken();
             Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword);
 
-            String token = authTestClient.getManagerAccessTokenAndReturn(manager.getId(), adminToken);
+            String token = authTestClient.getManagerAccessTokenAndReturn(manager.getCredentialsId(), adminToken);
 
             assertThat(token).isNotNull().isNotEmpty();
 
             Me me = authTestClient.getMeAndReturnResponse(token);
-            assertThat(me.userId()).isEqualTo(manager.getId());
+            assertThat(me.userId()).isEqualTo(manager.getCredentialsId());
             assertThat(me.role()).isEqualTo(UserRole.MANAGER.toString());
             assertThat(me.email()).isEqualTo(testManagerEmail);
         }
@@ -216,17 +216,17 @@ public class AuthControllerTest {
             Manager manager1 = createManager.process("John", "Doe", "manager1@gmail.com", "password1");
             Manager manager2 = createManager.process("Jane", "Smith", "manager2@gmail.com", "password2");
 
-            String token1 = authTestClient.getManagerAccessTokenAndReturn(manager1.getId(), adminToken);
-            String token2 = authTestClient.getManagerAccessTokenAndReturn(manager2.getId(), adminToken);
+            String token1 = authTestClient.getManagerAccessTokenAndReturn(manager1.getCredentialsId(), adminToken);
+            String token2 = authTestClient.getManagerAccessTokenAndReturn(manager2.getCredentialsId(), adminToken);
 
             assertThat(token1).isNotEqualTo(token2);
 
             Me me1 = authTestClient.getMeAndReturnResponse(token1);
             Me me2 = authTestClient.getMeAndReturnResponse(token2);
 
-            assertThat(me1.userId()).isEqualTo(manager1.getId());
+            assertThat(me1.userId()).isEqualTo(manager1.getCredentialsId());
             assertThat(me1.email()).isEqualTo("manager1@gmail.com");
-            assertThat(me2.userId()).isEqualTo(manager2.getId());
+            assertThat(me2.userId()).isEqualTo(manager2.getCredentialsId());
             assertThat(me2.email()).isEqualTo("manager2@gmail.com");
         }
 
@@ -264,7 +264,7 @@ public class AuthControllerTest {
             Me adminMe = authTestClient.getMeAndReturnResponse(adminToken);
 
             // Verify admin identity
-            assertThat(adminMe.userId()).isEqualTo(administrator.getId());
+            assertThat(adminMe.userId()).isEqualTo(administrator.getCredentialsId());
             assertThat(adminMe.role()).isEqualTo(UserRole.ADMINISTRATOR.toString());
             assertThat(adminMe.email()).isEqualTo(sharedEmail);
         }
@@ -280,7 +280,7 @@ public class AuthControllerTest {
             Me managerMe = authTestClient.getMeAndReturnResponse(managerToken);
 
             // Verify manager identity
-            assertThat(managerMe.userId()).isEqualTo(manager.getId());
+            assertThat(managerMe.userId()).isEqualTo(manager.getCredentialsId());
             assertThat(managerMe.role()).isEqualTo(UserRole.MANAGER.toString());
             assertThat(managerMe.email()).isEqualTo(sharedEmail);
         }

@@ -57,7 +57,7 @@ public class FuelStationResponse {
         return response;
     }
 
-    @JsonProperty( value = "address")
+    @JsonProperty(value = "address")
     @JsonIgnore()
     String getAddress() {
         return String.format("%s %s, %s %s, %s", street, buildingNumber, postalCode, city, country);
@@ -71,6 +71,7 @@ public class FuelStationResponse {
             Optional<LocalDate> lastRefillDate) {
     }
 
-    public record FuelPriceResponse(String fuelGrade, float pricePerLiter) {}
+    public record FuelPriceResponse(String fuelGrade, float pricePerLiter) {
+    }
 
 }

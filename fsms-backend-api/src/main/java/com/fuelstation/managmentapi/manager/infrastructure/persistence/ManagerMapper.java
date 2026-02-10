@@ -9,21 +9,19 @@ public class ManagerMapper {
 
     public Manager toDomain(ManagerEntity entity) {
         return new Manager(
-            entity.getId(),
+            entity.getCredentialsId(),
             entity.getFirstName(),
             entity.getLastName(),
-            entity.getStatus(),
-            entity.getCredentialsId() 
+            entity.getStatus()
         );
     }
 
     public ManagerEntity toEntity(Manager domain) {
         return new ManagerEntity(
-            domain.getId(),
+            domain.getCredentialsId(),
             domain.getFirstName(),
             domain.getLastName(),
-            domain.getStatus(),
-            domain.getCredentialsId()
+            domain.getStatus()
         );
     }
 }

@@ -5,7 +5,6 @@ import java.util.Optional;
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
 
 public interface AdministratorRepository {
-    public Administrator save(Administrator administrator);
-    public Optional<Administrator> findById(long id);
-    public Optional<Administrator> findByCredentialsId(long id);
+    Administrator save(Administrator administrator);
+    Optional<Administrator> findByCredentialsId(long id);
 }

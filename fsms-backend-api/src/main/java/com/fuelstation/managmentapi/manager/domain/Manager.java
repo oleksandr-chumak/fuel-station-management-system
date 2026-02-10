@@ -12,17 +12,16 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class Manager extends AggregateRoot {
-   private Long id; 
+   private Long credentialsId;
    private String firstName;
    private String lastName;
    private ManagerStatus status;
-   private Long credentialsId; 
 
    public void terminate() {
       if(status == ManagerStatus.TERMINATED) {
-         throw new ManagerAlreadyTerminatedException(id);
+         throw new ManagerAlreadyTerminatedException(credentialsId);
       }
       status = ManagerStatus.TERMINATED;
-      pushDomainEvent(new ManagerTerminated(id));
+      pushDomainEvent(new ManagerTerminated(credentialsId));
    }
 }

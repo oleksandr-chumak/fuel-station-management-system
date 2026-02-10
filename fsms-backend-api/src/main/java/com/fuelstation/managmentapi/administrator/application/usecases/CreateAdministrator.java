@@ -24,7 +24,7 @@ public class CreateAdministrator {
     @Transactional
     public Administrator process(String email, String password) {
         Credentials credentials = createCredentials.process(email, password, UserRole.ADMINISTRATOR);
-        return administratorRepository.save(new Administrator(null, credentials.getCredentialsId()));
+        return administratorRepository.save(new Administrator(credentials.getCredentialsId()));
     }
     
 }

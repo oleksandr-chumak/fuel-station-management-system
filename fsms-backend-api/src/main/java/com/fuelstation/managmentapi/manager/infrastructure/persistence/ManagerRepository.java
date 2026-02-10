@@ -6,9 +6,8 @@ import java.util.Optional;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 public interface ManagerRepository {
-   public Manager save(Manager manager);
-   public Optional<Manager> findById(long id);   
-   public Optional<Manager> findByCredentialsId(long id);
-   public List<Manager> findAll();
-   public List<Manager> findManagersByIds(List<Long> assignedManagerIds);
+   Manager save(Manager manager);
+   Optional<Manager> findByCredentialsId(long id);
+   List<Manager> findAll();
+   List<Manager> findManagersByIds(List<Long> assignedManagerIds);
 }

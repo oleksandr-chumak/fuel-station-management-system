@@ -14,17 +14,17 @@ public class TerminateManager {
 
     private final DomainEventPublisher domainEventPublisher;
     
-    private final GetManagerById getManagerById;
+    private final GetManagerByCredentialsId getManagerByCredentialsId;
 
-    public TerminateManager(ManagerRepository managerRepository, DomainEventPublisher domainEventPublisher, GetManagerById getManagerById) {
+    public TerminateManager(ManagerRepository managerRepository, DomainEventPublisher domainEventPublisher, GetManagerByCredentialsId getManagerByCredentialsId) {
         this.managerRepository = managerRepository;
         this.domainEventPublisher = domainEventPublisher;
-        this.getManagerById = getManagerById;
+        this.getManagerByCredentialsId = getManagerByCredentialsId;
     }
 
     @Transactional
     public Manager process(long managerId) {
-        Manager manger = getManagerById.process(managerId);
+        Manager manger = getManagerByCredentialsId.process(managerId);
 
         manger.terminate();
 

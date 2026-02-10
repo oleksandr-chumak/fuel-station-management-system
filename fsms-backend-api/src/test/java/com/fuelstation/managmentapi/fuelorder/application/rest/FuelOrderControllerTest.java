@@ -3,8 +3,7 @@ package com.fuelstation.managmentapi.fuelorder.application.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fuelstation.managmentapi.common.AdminUserTest;
-import com.fuelstation.managmentapi.common.WithMockAdminUser;
+import com.fuelstation.managmentapi.common.WithMockCustomUser;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationResponse;
@@ -13,6 +12,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -41,7 +41,8 @@ public class FuelOrderControllerTest {
     @Nested
     class CreateFuelOrderTests {
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should create fuel order")
         public void shouldCreateFuelOrder() throws Exception {
             FuelStationResponse fuelStationResponse = fuelStationTestClient.createFuelStationAndReturnResponse();
@@ -57,7 +58,7 @@ public class FuelOrderControllerTest {
 
         @ParameterizedTest
         @MethodSource("invalidCreateFuelOrderRequests")
-        @WithMockAdminUser
+        @WithMockCustomUser
         @DisplayName("Should return Bad Request for invalid requests")
         public void shouldReturnBadRequestForInvalidRequests(CreateFuelOrderRequest request) throws Exception {
             fuelOrderTestClient.createFuelOrder(request)
@@ -102,7 +103,8 @@ public class FuelOrderControllerTest {
             ));
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should confirm the fuel order")
         public void shouldConfirmFuelOrder() throws Exception {
             FuelOrderResponse confirmedFuelOrder = fuelOrderTestClient.confirmFuelOrderAndReturnResponse(testFuelOrder.getId());
@@ -110,7 +112,8 @@ public class FuelOrderControllerTest {
             assertThat(confirmedFuelOrder.getStatus()).isEqualTo(FuelOrderStatus.CONFIRMED.toString());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
             fuelOrderTestClient.confirmFuelOrder(99999L).andExpect(status().isNotFound());
@@ -134,7 +137,8 @@ public class FuelOrderControllerTest {
             ));
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should reject the fuel order")
         public void shouldRejectFuelOrder() throws Exception {
             FuelOrderResponse rejectedFuelOrder = fuelOrderTestClient.rejectFuelOrderAndReturnResponse(testFuelOrder.getId());
@@ -142,7 +146,8 @@ public class FuelOrderControllerTest {
             assertThat(rejectedFuelOrder.getStatus()).isEqualTo(FuelOrderStatus.REJECTED.toString());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
             fuelOrderTestClient.rejectFuelOrder(99999L).andExpect(status().isNotFound());
@@ -150,7 +155,8 @@ public class FuelOrderControllerTest {
 
     }
 
-    @AdminUserTest
+    @Test
+    @WithMockCustomUser
     @DisplayName("Should return all fuel orders")
     public void shouldReturnAllFuelOrders() throws Exception {
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
@@ -161,7 +167,8 @@ public class FuelOrderControllerTest {
         assertThat(fuelOrders.size()).isEqualTo(2);
     }
 
-    @AdminUserTest
+    @Test
+    @WithMockCustomUser
     @DisplayName("Should get fuel order by id")
     public void shouldGetFuelOrderById() throws Exception {
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();

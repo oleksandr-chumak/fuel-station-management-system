@@ -10,18 +10,18 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelS
 @Component
 public class GetManagerFuelStations {
     
-    private final GetManagerById getManagerById;
+    private final GetManagerByCredentialsId getManagerByCredentialsId;
 
     private final FuelStationRepository fuelStationRepository;
 
-    public GetManagerFuelStations(GetManagerById getManagerById, FuelStationRepository fuelStationRepository) {
-        this.getManagerById = getManagerById;
+    public GetManagerFuelStations(GetManagerByCredentialsId getManagerByCredentialsId, FuelStationRepository fuelStationRepository) {
+        this.getManagerByCredentialsId = getManagerByCredentialsId;
         this.fuelStationRepository = fuelStationRepository;
     }
 
 
     public List<FuelStation> process(long managerId) {
-        getManagerById.process(managerId);
+        getManagerByCredentialsId.process(managerId);
         return fuelStationRepository.findFuelStationsByManagerId(managerId);
     }
     
