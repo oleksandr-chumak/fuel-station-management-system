@@ -17,17 +17,16 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Stream;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureTestDatabase
 @ActiveProfiles("test")
 @Transactional
 public class FuelOrderControllerTest {
@@ -47,13 +46,13 @@ public class FuelOrderControllerTest {
         public void shouldCreateFuelOrder() throws Exception {
             FuelStationResponse fuelStationResponse = fuelStationTestClient.createFuelStationAndReturnResponse();
             FuelOrderResponse fuelOrderResponse = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(
-                    fuelStationResponse.getId(),
+                    fuelStationResponse.getFuelStationId(),
                     FuelGrade.RON_92,
-                    10f
+                    BigDecimal.valueOf(10)
             ));
 
             assertThat(fuelOrderResponse.getFuelGrade()).isEqualTo(FuelGrade.RON_92.toString());
-            assertThat(fuelOrderResponse.getFuelStationId()).isEqualTo(fuelStationResponse.getId());
+            assertThat(fuelOrderResponse.getFuelStationId()).isEqualTo(fuelStationResponse.getFuelStationId());
         }
 
         @ParameterizedTest
@@ -68,20 +67,20 @@ public class FuelOrderControllerTest {
         private static Stream<Arguments> invalidCreateFuelOrderRequests() {
             return Stream.of(
                     // Fuel station id validation
-                    Arguments.of(new CreateFuelOrderRequest(null, FuelGrade.RON_92, 10f), "null fuel station id"),
+                    Arguments.of(new CreateFuelOrderRequest(null, FuelGrade.RON_92, BigDecimal.valueOf(10)), "null fuel station id"),
 
                     // Fuel grade validation
-                    Arguments.of(new CreateFuelOrderRequest(1L, null, 10f), "null fuel grade"),
+                    Arguments.of(new CreateFuelOrderRequest(1L, null, BigDecimal.valueOf(10)), "null fuel grade"),
 
                     // Amount validation
                     Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92, null), "null amount"),
-                    Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92, 0f), "zero amount"),
-                    Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92, -5f), "negative amount"),
-                    Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92, -0.1f), "negative decimal amount"),
+                    Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92,BigDecimal.valueOf(0)), "zero amount"),
+                    Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92, BigDecimal.valueOf(-5)), "negative amount"),
+                    Arguments.of(new CreateFuelOrderRequest(1L, FuelGrade.RON_92, BigDecimal.valueOf(-0.1f)), "negative decimal amount"),
 
                     // Multiple field validation
                     Arguments.of(new CreateFuelOrderRequest(null, null, null), "all fields null"),
-                    Arguments.of(new CreateFuelOrderRequest(null, null, -1f), "multiple validation failures")
+                    Arguments.of(new CreateFuelOrderRequest(null, null, BigDecimal.valueOf(-1)), "multiple validation failures")
             );
         }
 
@@ -97,9 +96,9 @@ public class FuelOrderControllerTest {
             FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
 
             testFuelOrder = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(
-                    testFuelStation.getId(),
+                    testFuelStation.getFuelStationId(),
                     FuelGrade.RON_92,
-                    10f
+                    BigDecimal.valueOf(10)
             ));
         }
 
@@ -107,7 +106,7 @@ public class FuelOrderControllerTest {
         @WithMockCustomUser
         @DisplayName("Should confirm the fuel order")
         public void shouldConfirmFuelOrder() throws Exception {
-            FuelOrderResponse confirmedFuelOrder = fuelOrderTestClient.confirmFuelOrderAndReturnResponse(testFuelOrder.getId());
+            FuelOrderResponse confirmedFuelOrder = fuelOrderTestClient.confirmFuelOrderAndReturnResponse(testFuelOrder.getFuelOrderId());
 
             assertThat(confirmedFuelOrder.getStatus()).isEqualTo(FuelOrderStatus.CONFIRMED.toString());
         }
@@ -131,9 +130,9 @@ public class FuelOrderControllerTest {
             FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
 
             testFuelOrder = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(
-                    testFuelStation.getId(),
+                    testFuelStation.getFuelStationId(),
                     FuelGrade.RON_92,
-                    10f
+                    BigDecimal.valueOf(10)
             ));
         }
 
@@ -141,7 +140,7 @@ public class FuelOrderControllerTest {
         @WithMockCustomUser
         @DisplayName("Should reject the fuel order")
         public void shouldRejectFuelOrder() throws Exception {
-            FuelOrderResponse rejectedFuelOrder = fuelOrderTestClient.rejectFuelOrderAndReturnResponse(testFuelOrder.getId());
+            FuelOrderResponse rejectedFuelOrder = fuelOrderTestClient.rejectFuelOrderAndReturnResponse(testFuelOrder.getFuelOrderId());
 
             assertThat(rejectedFuelOrder.getStatus()).isEqualTo(FuelOrderStatus.REJECTED.toString());
         }
@@ -160,8 +159,12 @@ public class FuelOrderControllerTest {
     @DisplayName("Should return all fuel orders")
     public void shouldReturnAllFuelOrders() throws Exception {
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
-        fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(testFuelStation.getId(),FuelGrade.RON_92,10f));
-        fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(testFuelStation.getId(),FuelGrade.RON_95,10f));
+        fuelOrderTestClient.createFuelOrderAndReturnResponse(
+                new CreateFuelOrderRequest(testFuelStation.getFuelStationId(),FuelGrade.RON_92,BigDecimal.valueOf(10))
+        );
+        fuelOrderTestClient.createFuelOrderAndReturnResponse(
+                new CreateFuelOrderRequest(testFuelStation.getFuelStationId(),FuelGrade.RON_95,BigDecimal.valueOf(10))
+        );
 
         List<FuelOrderResponse> fuelOrders = fuelOrderTestClient.getAllFuelOrderAndReturnResponse();
         assertThat(fuelOrders.size()).isEqualTo(2);
@@ -171,12 +174,14 @@ public class FuelOrderControllerTest {
     @WithMockCustomUser
     @DisplayName("Should get fuel order by id")
     public void shouldGetFuelOrderById() throws Exception {
-        FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
-        FuelOrderResponse testFuelOrder = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(testFuelStation.getId(),FuelGrade.RON_92,10f));
+        var testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        var testFuelOrder = fuelOrderTestClient.createFuelOrderAndReturnResponse(
+                new CreateFuelOrderRequest(testFuelStation.getFuelStationId(),FuelGrade.RON_92, BigDecimal.valueOf(10))
+        );
 
-        FuelOrderResponse foundFuelOrder = fuelOrderTestClient.getFuelOrderByIdAndReturnResponse(testFuelOrder.getId());
+        var foundFuelOrder = fuelOrderTestClient.getFuelOrderByIdAndReturnResponse(testFuelOrder.getFuelOrderId());
 
-        assertThat(foundFuelOrder.getId()).isEqualTo(testFuelOrder.getId());
+        assertThat(foundFuelOrder.getFuelOrderId()).isEqualTo(testFuelOrder.getFuelOrderId());
     }
 
 }

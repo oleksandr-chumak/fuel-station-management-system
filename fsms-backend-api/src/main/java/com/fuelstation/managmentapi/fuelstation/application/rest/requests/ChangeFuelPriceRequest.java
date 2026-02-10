@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -17,6 +19,6 @@ public class ChangeFuelPriceRequest {
     private FuelGrade fuelGrade;
 
     @Positive(message = "New price must be a positive number")
-    private Float newPrice;
+    private BigDecimal newPrice;
 
 }

@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,6 +23,6 @@ public class CreateFuelOrderRequest {
 
     @NotNull(message = "Amount must not be null")
     @Positive(message = "Amount must be a positive number")
-    private Float amount;
+    private BigDecimal amount;
 
 }

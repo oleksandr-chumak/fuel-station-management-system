@@ -23,7 +23,7 @@ public class CreateFuelStation {
         var fuelStation = fuelStationFactory.create(street, buildingNumber, city, postalCode, country);
 
         var savedFuelStation = fuelStationRepository.save(fuelStation);
-        domainEventPublisher.publish(new FuelStationCreated(savedFuelStation.getId()));
+        domainEventPublisher.publish(new FuelStationCreated(savedFuelStation.getFuelStationId()));
 
         return savedFuelStation;
     } 

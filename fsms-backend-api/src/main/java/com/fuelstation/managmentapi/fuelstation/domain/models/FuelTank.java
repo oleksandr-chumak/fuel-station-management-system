@@ -6,7 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.Optional;
 
 @Data
@@ -15,11 +16,11 @@ import java.util.Optional;
 public class FuelTank{
     private Long id;
     private FuelGrade fuelGrade;
-    private float currentVolume;
-    private float maxCapacity;
-    private Optional<LocalDate> lastRefillDate;
+    private BigDecimal currentVolume;
+    private BigDecimal maxCapacity;
+    private Optional<OffsetDateTime> lastRefillDate;
 
-    public float getAvailableVolume() {
-        return this.maxCapacity - this.currentVolume;
+    public BigDecimal getAvailableVolume() {
+        return this.maxCapacity.subtract(this.currentVolume);
     }
 }

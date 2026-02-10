@@ -17,15 +17,19 @@ import lombok.Setter;
 public class CredentialsEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "credentials_id")
+    private Long credentialsId;
 
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "role", columnDefinition = "user_role", nullable = false)
     private UserRole role;
 
-    @Column(unique = true)
+    @Column(name = "username", nullable = false)
     private String username;
 
+    @Column(name = "password", nullable = false)
     private String password;
 }

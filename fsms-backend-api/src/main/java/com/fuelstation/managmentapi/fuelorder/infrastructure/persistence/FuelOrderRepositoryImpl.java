@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,14 +33,9 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
     }
 
     @Override
-    public float getUnconfirmedFuelAmount(long fuelStationId, FuelGrade fuelGrade) {
-        Float res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(fuelStationId, fuelGrade);
-        return res != null ? res : 0f;
-    }
-
-    @Override
-    public void deleteAll() {
-        jpaFuelOrderRepository.deleteAll();
+    public BigDecimal getUnconfirmedFuelAmount(long fuelStationId, FuelGrade fuelGrade) {
+        BigDecimal res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(fuelStationId, fuelGrade);
+        return res != null ? res : BigDecimal.ZERO;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FuelStationResponse {
-    private Long id;
+    private Long fuelStationId;
     private String street;
     private String buildingNumber;
     private String city;
@@ -29,7 +30,7 @@ public class FuelStationResponse {
 
     public static FuelStationResponse fromDomain(FuelStation fuelStation) {
         FuelStationResponse response = new FuelStationResponse();
-        response.setId(fuelStation.getId());
+        response.setFuelStationId(fuelStation.getFuelStationId());
         response.setStreet(fuelStation.getAddress().street());
         response.setFuelTanks(
                 fuelStation.getFuelTanks()
@@ -66,12 +67,12 @@ public class FuelStationResponse {
     private record FuelTankResponse(
             Long id,
             String fuelGrade,
-            float currentVolume,
-            float maxCapacity,
-            Optional<LocalDate> lastRefillDate) {
+            BigDecimal currentVolume,
+            BigDecimal maxCapacity,
+            Optional<OffsetDateTime> lastRefillDate) {
     }
 
-    public record FuelPriceResponse(String fuelGrade, float pricePerLiter) {
+    public record FuelPriceResponse(String fuelGrade, BigDecimal pricePerLiter) {
     }
 
 }

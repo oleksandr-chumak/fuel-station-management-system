@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changes/001-create-credentials-table.sql
+  - include:
+      file: db/changelog/changes/002-create-managers-table.sql
+  - include:
+      file: db/changelog/changes/003-create-administrators-table.sql
+  - include:
+      file: db/changelog/changes/004-create-fuel-stations-table.sql
+  - include:
+      file: db/changelog/changes/005-create-fuel-stations-managers-table.sql
+  - include:
+      file: db/changelog/changes/006-create-fuel-station-fuel-prices-table.sql
+  - include:
+      file: db/changelog/changes/007-create-fuel-station-fuel-tanks-table.sql
+  - include:
+      file: db/changelog/changes/008-create-fuel-orders-table.sql

@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.domain.models;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,13 +25,13 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class FuelStation extends AggregateRoot {
-    private Long id;
+    private Long fuelStationId;
     private FuelStationAddress address;
     private List<FuelTank> fuelTanks;
     private List<FuelPrice> fuelPrices;
     private List<Long> assignedManagersIds;
     private FuelStationStatus status;
-    private LocalDate createdAt;
+    private OffsetDateTime createdAt;
 
     public List<FuelTank> getFuelTanksByFuelGrade(FuelGrade fuelGrade) {
         return fuelTanks.stream()
@@ -38,65 +39,63 @@ public class FuelStation extends AggregateRoot {
                 .toList();
     }
 
-    public long getAvailableVolume(FuelGrade fuelGrade) {
-        double totalAvailableAmount = getFuelTanksByFuelGrade(fuelGrade).stream()
-                .mapToDouble(FuelTank::getAvailableVolume)
-                .sum();
-
-        return (long) totalAvailableAmount;
+    public BigDecimal getAvailableVolume(FuelGrade fuelGrade) {
+        return getFuelTanksByFuelGrade(fuelGrade).stream()
+                .map(FuelTank::getAvailableVolume)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public void assignManager(long credentialsId) {
         if (isManagerAssigned(credentialsId)) {
-            throw new ManagerAlreadyAssignedException(credentialsId, this.id);
+            throw new ManagerAlreadyAssignedException(credentialsId, fuelStationId);
         }
 
         assignedManagersIds.add(credentialsId);
-        pushDomainEvent(new ManagerAssignedToFuelStation(id, credentialsId));
+        pushDomainEvent(new ManagerAssignedToFuelStation(fuelStationId, credentialsId));
     }
 
     public void unassignManager(long credentialsId) {
         assignedManagersIds.removeIf((id) -> id == credentialsId);
-        pushDomainEvent(new ManagerUnassignedFromFuelStation(id, credentialsId));
+        pushDomainEvent(new ManagerUnassignedFromFuelStation(fuelStationId, credentialsId));
     }
 
     public boolean isManagerAssigned(long credentialsId) {
         return assignedManagersIds.contains(credentialsId);
     }
 
-    public void changeFuelPrice(FuelGrade fuelGrade, float newPrice) {
+    public void changeFuelPrice(FuelGrade fuelGrade, BigDecimal newPrice) {
         FuelPrice oldPrice = fuelPrices.stream()
                 .filter(fp -> fp.fuelGrade() == fuelGrade)
                 .findFirst()
-                .orElseThrow(() -> new FuelGradeNotFoundException(fuelGrade.toString(), this.id));
+                .orElseThrow(() -> new FuelGradeNotFoundException(fuelGrade.toString(), fuelStationId));
 
         fuelPrices.remove(oldPrice);
         fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
-        pushDomainEvent(new FuelPriceChanged(id));
+        pushDomainEvent(new FuelPriceChanged(fuelStationId));
     }
 
-    public void refillFuelTank(FuelTank fuelTank, float volume) {
-        float totalVolume = fuelTank.getCurrentVolume() + volume;
-        if (totalVolume > fuelTank.getMaxCapacity()) {
+    public void refillFuelTank(FuelTank fuelTank, BigDecimal volume) {
+        var totalVolume = fuelTank.getCurrentVolume().add(volume);
+        if (totalVolume.compareTo(fuelTank.getMaxCapacity()) > 0) {
             throw new TankCapacityExceededException(
-                    fuelTank.getId(), 
-                    totalVolume, 
+                    fuelTank.getId(),
+                    totalVolume,
                     fuelTank.getMaxCapacity()
             );
         }
 
         fuelTank.setCurrentVolume(totalVolume);
-        fuelTank.setLastRefillDate(Optional.of(LocalDate.now()));
+        fuelTank.setLastRefillDate(Optional.of(OffsetDateTime.now()));
     }
 
     public void deactivate() {
         if (status == FuelStationStatus.DEACTIVATED) {
-            throw new FuelStationAlreadyDeactivatedException(this.id);
+            throw new FuelStationAlreadyDeactivatedException(this.fuelStationId);
         }
 
         this.status = FuelStationStatus.DEACTIVATED;
         this.unassignAllManagers();
-        pushDomainEvent(new FuelStationDeactivated(id));
+        pushDomainEvent(new FuelStationDeactivated(fuelStationId));
     }
 
     private void unassignAllManagers() {

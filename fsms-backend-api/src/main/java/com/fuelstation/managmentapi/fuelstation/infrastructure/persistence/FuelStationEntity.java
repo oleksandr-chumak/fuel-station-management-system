@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
@@ -32,12 +32,14 @@ import lombok.NoArgsConstructor;
 public class FuelStationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "fuel_station_id")
+    private Long fuelStationId;
 
     @Embedded
     private FuelStationAddressEmbeddable address;
 
-    @ElementCollection
+    @ElementCollection()
+    @CollectionTable(name = "fuel_station_fuel_prices", joinColumns = @JoinColumn(name = "fuel_station_id"))
     private List<FuelPriceEmbeddable> fuelPrices;
 
     @OneToMany(mappedBy = "fuelStation", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -45,12 +47,13 @@ public class FuelStationEntity {
     
     @ElementCollection
     @CollectionTable(name = "fuel_station_managers", joinColumns = @JoinColumn(name = "fuel_station_id"))
-    @Column(name = "manager_id")
+    @Column(name = "manager_id", nullable = false)
     private List<Long> assignedManagers;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private FuelStationStatus status;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDate createdAt;
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt;
 }

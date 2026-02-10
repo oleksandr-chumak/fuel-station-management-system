@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,17 +38,17 @@ public class FuelStationTest {
         FuelStationAddress address = new FuelStationAddress("Main St", "123", "New York", "10001", "USA");
 
         List<FuelTank> fuelTanks = new ArrayList<>();
-        fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, 5000, 10000, Optional.empty()));
-        fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, 2000, 8000, Optional.empty()));
-        fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, 3000, 12000, Optional.empty()));
+        fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), Optional.empty()));
+        fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, BigDecimal.valueOf(2000), BigDecimal.valueOf(8000), Optional.empty()));
+        fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, BigDecimal.valueOf(3000), BigDecimal.valueOf(12000), Optional.empty()));
 
         List<FuelPrice> fuelPrices = new ArrayList<>();
-        fuelPrices.add(new FuelPrice(FuelGrade.RON_92, 3.5f));
-        fuelPrices.add(new FuelPrice(FuelGrade.RON_95, 4.0f));
-        fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, 3.8f));
+        fuelPrices.add(new FuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f)));
+        fuelPrices.add(new FuelPrice(FuelGrade.RON_95, BigDecimal.valueOf(4.0f)));
+        fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, BigDecimal.valueOf(3.8f)));
 
         List<Long> assignedManagersIds = new ArrayList<>();
-        LocalDate createdAt = LocalDate.now();
+        var createdAt = OffsetDateTime.now();
         
         fuelStation = new FuelStation(
             1L,
@@ -133,12 +134,12 @@ public class FuelStationTest {
         void shouldThrowExceptionWhenFuelGradeDoesntExist() {
             // First, clear fuel prices and add only one
             fuelStation.getFuelPrices().clear();
-            fuelStation.getFuelPrices().add(new FuelPrice(FuelGrade.RON_92, 3.5f));
+            fuelStation.getFuelPrices().add(new FuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f)));
             
             // When & Then
             assertThrows(
                 FuelGradeNotFoundException.class,
-                () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, 4.2f)
+                () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, BigDecimal.valueOf(4.2f))
             );
         }
         
@@ -146,7 +147,7 @@ public class FuelStationTest {
         @DisplayName("Should change fuel price for existing fuel grade")
         void shouldChangeFuelPrice() {
             // Given
-            float newPrice = 4.5f;
+            var newPrice = BigDecimal.valueOf(4.5f);
             
             // When
             fuelStation.changeFuelPrice(FuelGrade.RON_95, newPrice);

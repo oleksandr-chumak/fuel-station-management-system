@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelorder.domain;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
@@ -19,26 +20,26 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class FuelOrder extends AggregateRoot {
-    private Long id;
+    private Long fuelOrderId;
     private FuelOrderStatus status; 
     private FuelGrade grade;
-    private float amount;
+    private BigDecimal amount;
     private Long fuelStationId; 
-    private LocalDate createdAt;
+    private OffsetDateTime createdAt;
 
     public void confirm() {
         if (status != FuelOrderStatus.PENDING) {
-            throw new FuelOrderCannotBeConfirmedException(id, status);
+            throw new FuelOrderCannotBeConfirmedException(fuelOrderId, status);
         }
         status = FuelOrderStatus.CONFIRMED;
-        pushDomainEvent(new FuelOrderConfirmed(id));
+        pushDomainEvent(new FuelOrderConfirmed(fuelOrderId));
     }
 
     public void reject() {
         if (status != FuelOrderStatus.PENDING) {
-            throw new FuelOrderCannotBeRejectedException(id, status);
+            throw new FuelOrderCannotBeRejectedException(fuelOrderId, status);
         }
         status = FuelOrderStatus.REJECTED;
-        pushDomainEvent(new FuelOrderRejected(id));
+        pushDomainEvent(new FuelOrderRejected(fuelOrderId));
     }
 }

@@ -5,7 +5,7 @@ import com.fuelstation.managmentapi.authentication.domain.Credentials;
 public class CredentialsMapper {
     public static Credentials toDomain(CredentialsEntity entity) {
         return new Credentials(
-            entity.getId(),
+            entity.getCredentialsId(),
             entity.getEmail(),
             entity.getRole(),
             entity.getUsername(),

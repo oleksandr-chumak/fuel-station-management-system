@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,5 +15,5 @@ public interface JpaFuelOrderRepository extends JpaRepository<FuelOrderEntity, L
     List<FuelOrderEntity> findByFuelStationId(Long fuelStationId); 
     
     @Query("SELECT SUM(f.amount) FROM FuelOrderEntity f WHERE f.fuelStationId = :stationId AND f.grade = :grade AND f.status NOT IN ('Confirmed', 'Rejected')")
-    Float getUnconfirmedAmountByGradeAndStation(@Param("stationId") Long stationId, @Param("grade") FuelGrade grade);
+    BigDecimal getUnconfirmedAmountByGradeAndStation(@Param("stationId") Long stationId, @Param("grade") FuelGrade grade);
 }

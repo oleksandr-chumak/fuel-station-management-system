@@ -2,13 +2,15 @@ package com.fuelstation.managmentapi.fuelorder.domain.exceptions;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 
+import java.math.BigDecimal;
+
 public class FuelOrderAmountExceedsLimitException extends FuelOrderDomainException {
 
     public FuelOrderAmountExceedsLimitException(
-        float amount,
-        float availableVolume,
-        float pendingAmount,
-        float allowedAmount,
+        BigDecimal amount,
+        BigDecimal availableVolume,
+        BigDecimal pendingAmount,
+        BigDecimal allowedAmount,
         FuelGrade fuelGrade,
         long fuelStationId
     ) {

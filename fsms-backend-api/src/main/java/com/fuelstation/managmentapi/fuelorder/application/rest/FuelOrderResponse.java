@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelorder.application.rest;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 
@@ -12,16 +13,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FuelOrderResponse {
-    private Long id;
+    private Long fuelOrderId;
     private Long fuelStationId;
     private String fuelGrade;
-    private float amount;
+    private BigDecimal amount;
     private String status;
-    private LocalDate createdAt;
+    private OffsetDateTime createdAt;
 
     public static FuelOrderResponse fromDomain(FuelOrder fuelOrder) {
         FuelOrderResponse response = new FuelOrderResponse();
-        response.setId(fuelOrder.getId());
+        response.setFuelOrderId(fuelOrder.getFuelOrderId());
         response.setFuelStationId(fuelOrder.getFuelStationId());
         response.setFuelGrade(fuelOrder.getGrade().toString());
         response.setAmount(fuelOrder.getAmount());

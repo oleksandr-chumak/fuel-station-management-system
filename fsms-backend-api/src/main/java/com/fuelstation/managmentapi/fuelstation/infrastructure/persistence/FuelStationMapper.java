@@ -26,7 +26,7 @@ public class FuelStationMapper {
 
         List<FuelTank> fuelTanks = entity.getFuelTanks().stream()
             .map(tankEntity -> new FuelTank(
-                tankEntity.getId(),
+                tankEntity.getFuelTankId(),
                 tankEntity.getFuelGrade(),
                 tankEntity.getCurrentVolume(),
                 tankEntity.getMaxCapacity(),
@@ -46,7 +46,7 @@ public class FuelStationMapper {
         List<Long> managerIds = entity.getAssignedManagers();
 
         return new FuelStation(
-            entity.getId(),
+            entity.getFuelStationId(),
             address,
             fuelTanks,
             fuelPrices,
@@ -68,7 +68,7 @@ public class FuelStationMapper {
         );
 
         FuelStationEntity entity = new FuelStationEntity();
-        entity.setId(domain.getId());
+        entity.setFuelStationId(domain.getFuelStationId());
         entity.setAddress(addressEmbeddable);
         entity.setStatus(domain.getStatus());
         entity.setCreatedAt(domain.getCreatedAt());

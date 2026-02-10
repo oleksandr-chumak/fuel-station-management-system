@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,6 +12,5 @@ public interface FuelOrderRepository {
      Optional<FuelOrder> findById(long id);
      List<FuelOrder> findAll();
      List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId);
-     float getUnconfirmedFuelAmount(long gasStationId, FuelGrade fuelGrade);
-     void deleteAll();
+     BigDecimal getUnconfirmedFuelAmount(long fuelStationId, FuelGrade fuelGrade);
 }

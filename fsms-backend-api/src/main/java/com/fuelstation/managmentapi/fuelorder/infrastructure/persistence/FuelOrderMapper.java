@@ -9,7 +9,7 @@ public class FuelOrderMapper {
 
     public FuelOrder toDomain(FuelOrderEntity entity) {
         return new FuelOrder(
-            entity.getId(),
+            entity.getFuelOrderId(),
             entity.getStatus(),
             entity.getGrade(),
             entity.getAmount(),
@@ -20,7 +20,7 @@ public class FuelOrderMapper {
 
     public FuelOrderEntity toEntity(FuelOrder domain) {
         return new FuelOrderEntity(
-            domain.getId(),
+            domain.getFuelOrderId(),
             domain.getStatus(),
             domain.getGrade(),
             domain.getAmount(),

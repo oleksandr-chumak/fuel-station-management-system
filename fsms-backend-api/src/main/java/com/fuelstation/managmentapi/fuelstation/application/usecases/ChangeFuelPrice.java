@@ -10,6 +10,8 @@ import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
 
+import java.math.BigDecimal;
+
 @Component
 @AllArgsConstructor
 public class ChangeFuelPrice {
@@ -19,7 +21,7 @@ public class ChangeFuelPrice {
     private final GetFuelStationById getFuelStationById;
 
     @Transactional
-    public FuelStation process(long fuelStationId, FuelGrade fuelGrade, float newPrice, Credentials credentials) {
+    public FuelStation process(long fuelStationId, FuelGrade fuelGrade, BigDecimal newPrice, Credentials credentials) {
         FuelStation fuelStation = getFuelStationById.process(fuelStationId, credentials);
 
         fuelStation.changeFuelPrice(fuelGrade, newPrice);

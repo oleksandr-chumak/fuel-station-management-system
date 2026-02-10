@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
@@ -25,20 +26,23 @@ import lombok.NoArgsConstructor;
 public class FuelOrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "fuel_order_id")
+    private Long fuelOrderId;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false)
     private FuelOrderStatus status;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "fuel_grade", nullable = false)
     private FuelGrade grade;
 
     @Column(name = "amount", nullable = false)
-    private float amount;
+    private BigDecimal amount;
 
     @Column(name = "fuel_station_id", nullable = false)
     private long fuelStationId;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
+    private OffsetDateTime createdAt;
 }
