@@ -4,19 +4,17 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 
 @Repository
+@AllArgsConstructor
 public class FuelOrderRepositoryImpl implements FuelOrderRepository {
 
-    @Autowired
     private JpaFuelOrderRepository jpaFuelOrderRepository;
-
-    @Autowired
     private FuelOrderMapper fuelOrderMapper;
 
     @Override
@@ -34,7 +32,7 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
 
     @Override
     public BigDecimal getUnconfirmedFuelAmount(long fuelStationId, FuelGrade fuelGrade) {
-        BigDecimal res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(fuelStationId, fuelGrade);
+        BigDecimal res = jpaFuelOrderRepository.getUnconfirmedAmountByGradeAndStation(fuelStationId, fuelGrade.getId());
         return res != null ? res : BigDecimal.ZERO;
     }
 

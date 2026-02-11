@@ -1,7 +1,5 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.persistence;
 
-import com.fuelstation.managmentapi.authentication.domain.UserRole;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,9 +21,8 @@ public class CredentialsEntity {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", columnDefinition = "user_role", nullable = false)
-    private UserRole role;
+    @Column(name = "user_role_id", nullable = false)
+    private Long userRoleId;
 
     @Column(name = "username", nullable = false)
     private String username;

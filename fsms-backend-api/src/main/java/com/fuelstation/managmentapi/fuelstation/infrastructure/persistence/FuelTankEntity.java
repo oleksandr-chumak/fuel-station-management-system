@@ -3,12 +3,9 @@ package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,9 +26,8 @@ public class FuelTankEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long fuelTankId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "fuel_grade", nullable = false)
-    private FuelGrade fuelGrade;
+    @Column(name = "fuel_grade_id", nullable = false)
+    private Long fuelGradeId;
 
     @Column(name = "current_volume", nullable = false)
     private BigDecimal currentVolume;

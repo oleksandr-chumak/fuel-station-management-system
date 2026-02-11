@@ -1,13 +1,14 @@
 package com.fuelstation.managmentapi.authentication.infrastructure.persistence;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.UserRole;
 
 public class CredentialsMapper {
     public static Credentials toDomain(CredentialsEntity entity) {
         return new Credentials(
             entity.getCredentialsId(),
             entity.getEmail(),
-            entity.getRole(),
+            UserRole.fromId(entity.getUserRoleId()),
             entity.getUsername(),
             entity.getPassword()
         );
@@ -17,7 +18,7 @@ public class CredentialsMapper {
         return new CredentialsEntity(
             domain.getCredentialsId(),
             domain.getEmail(),
-            domain.getRole(),
+            domain.getRole().getId(),
             domain.getUsername(),
             domain.getPassword()
         );

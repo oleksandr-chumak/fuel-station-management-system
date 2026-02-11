@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.manager.infrastructure.persistence;
 
+import com.fuelstation.managmentapi.manager.domain.ManagerStatus;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -12,7 +13,7 @@ public class ManagerMapper {
             entity.getCredentialsId(),
             entity.getFirstName(),
             entity.getLastName(),
-            entity.getStatus()
+            ManagerStatus.fromId(entity.getManagerStatusId())
         );
     }
 
@@ -21,7 +22,7 @@ public class ManagerMapper {
             domain.getCredentialsId(),
             domain.getFirstName(),
             domain.getLastName(),
-            domain.getStatus()
+            domain.getStatus().getId()
         );
     }
 }

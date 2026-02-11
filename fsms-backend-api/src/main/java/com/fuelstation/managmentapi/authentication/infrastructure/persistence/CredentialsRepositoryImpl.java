@@ -31,7 +31,7 @@ public class CredentialsRepositoryImpl implements CredentialsRepository {
 
     @Override
     public Optional<Credentials> findByEmailAndRole(String email, UserRole role) {
-        return jpaCredentialsRepository.findByEmailAndRole(email, role).map(CredentialsMapper::toDomain);
+        return jpaCredentialsRepository.findByEmailAndUserRoleId(email, role.getId()).map(CredentialsMapper::toDomain);
     }
 
     @Override

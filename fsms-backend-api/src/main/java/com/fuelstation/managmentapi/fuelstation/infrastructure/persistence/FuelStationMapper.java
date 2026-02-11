@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelstation.domain.models.*;
 import org.springframework.stereotype.Component;
-
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress;
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTank;
 
 @Component
 public class FuelStationMapper {
@@ -17,42 +14,42 @@ public class FuelStationMapper {
     public FuelStation toDomain(FuelStationEntity entity) {
         FuelStationAddressEmbeddable addressEmbeddable = entity.getAddress();
         FuelStationAddress address = new FuelStationAddress(
-            addressEmbeddable.getStreet(),
-            addressEmbeddable.getBuildingNumber(),
-            addressEmbeddable.getCity(),
-            addressEmbeddable.getPostalCode(),
-            addressEmbeddable.getCountry()
+                addressEmbeddable.getStreet(),
+                addressEmbeddable.getBuildingNumber(),
+                addressEmbeddable.getCity(),
+                addressEmbeddable.getPostalCode(),
+                addressEmbeddable.getCountry()
         );
 
         List<FuelTank> fuelTanks = entity.getFuelTanks().stream()
-            .map(tankEntity -> new FuelTank(
-                tankEntity.getFuelTankId(),
-                tankEntity.getFuelGrade(),
-                tankEntity.getCurrentVolume(),
-                tankEntity.getMaxCapacity(),
-                tankEntity.getLastRefillDate() != null ? 
-                    Optional.of(tankEntity.getLastRefillDate()) : 
-                    Optional.empty()
-            ))
-            .collect(Collectors.toList());
+                .map(tankEntity -> new FuelTank(
+                        tankEntity.getFuelTankId(),
+                        FuelGrade.fromId(tankEntity.getFuelGradeId()),
+                        tankEntity.getCurrentVolume(),
+                        tankEntity.getMaxCapacity(),
+                        tankEntity.getLastRefillDate() != null ?
+                                Optional.of(tankEntity.getLastRefillDate()) :
+                                Optional.empty()
+                ))
+                .collect(Collectors.toList());
 
         List<FuelPrice> fuelPrices = entity.getFuelPrices().stream()
-            .map(priceEmbeddable -> new FuelPrice(
-                priceEmbeddable.getFuelGrade(),
-                priceEmbeddable.getPricePerLiter()
-            ))
-            .collect(Collectors.toList());
+                .map(priceEmbeddable -> new FuelPrice(
+                        FuelGrade.fromId(priceEmbeddable.getFuelGradeId()),
+                        priceEmbeddable.getPricePerLiter()
+                ))
+                .collect(Collectors.toList());
 
         List<Long> managerIds = entity.getAssignedManagers();
 
         return new FuelStation(
-            entity.getFuelStationId(),
-            address,
-            fuelTanks,
-            fuelPrices,
-            managerIds,
-            entity.getStatus(),
-            entity.getCreatedAt()
+                entity.getFuelStationId(),
+                address,
+                fuelTanks,
+                fuelPrices,
+                managerIds,
+                FuelStationStatus.fromId(entity.getFuelStationStatusId()),
+                entity.getCreatedAt()
         );
     }
 
@@ -60,43 +57,40 @@ public class FuelStationMapper {
 
         FuelStationAddress address = domain.getAddress();
         FuelStationAddressEmbeddable addressEmbeddable = new FuelStationAddressEmbeddable(
-            address.street(),
-            address.buildingNumber(),
-            address.city(),
-            address.postalCode(),
-            address.country()
+                address.street(),
+                address.buildingNumber(),
+                address.city(),
+                address.postalCode(),
+                address.country()
         );
 
         FuelStationEntity entity = new FuelStationEntity();
         entity.setFuelStationId(domain.getFuelStationId());
         entity.setAddress(addressEmbeddable);
-        entity.setStatus(domain.getStatus());
+        entity.setFuelStationStatusId(domain.getStatus().getId());
         entity.setCreatedAt(domain.getCreatedAt());
 
         List<FuelPriceEmbeddable> fuelPriceEmbeddables = domain.getFuelPrices().stream()
-            .map(price -> new FuelPriceEmbeddable(
-                price.fuelGrade(),
-                price.pricePerLiter()
-            ))
-            .collect(Collectors.toList());
+                .map(price -> new FuelPriceEmbeddable(
+                        price.fuelGrade().getId(),
+                        price.pricePerLiter()
+                ))
+                .collect(Collectors.toList());
         entity.setFuelPrices(fuelPriceEmbeddables);
 
         entity.setAssignedManagers(domain.getAssignedManagersIds());
 
         List<FuelTankEntity> fuelTankEntities = domain.getFuelTanks().stream()
-            .map(tank -> {
-                FuelTankEntity tankEntity = new FuelTankEntity(
-                    tank.getId(),
-                    tank.getFuelGrade(),
-                    tank.getCurrentVolume(),
-                    tank.getMaxCapacity(),
-                    entity,
-                    tank.getLastRefillDate().orElse(null)
-                );
-                return tankEntity;
-            })
-            .collect(Collectors.toList());
-            
+                .map(tank -> new FuelTankEntity(
+                        tank.getId(),
+                        tank.getFuelGrade().getId(),
+                        tank.getCurrentVolume(),
+                        tank.getMaxCapacity(),
+                        entity,
+                        tank.getLastRefillDate().orElse(null)
+                ))
+                .collect(Collectors.toList());
+
         entity.setFuelTanks(fuelTankEntities);
 
         return entity;

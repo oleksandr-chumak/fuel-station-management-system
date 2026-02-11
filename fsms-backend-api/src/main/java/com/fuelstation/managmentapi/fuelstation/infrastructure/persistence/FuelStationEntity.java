@@ -3,16 +3,12 @@ package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -50,9 +46,8 @@ public class FuelStationEntity {
     @Column(name = "manager_id", nullable = false)
     private List<Long> assignedManagers;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private FuelStationStatus status;
+    @Column(name = "fuel_station_status_id", nullable = false)
+    private Long fuelStationStatusId;
 
     @Column(name = "created_at", nullable = false)
     private OffsetDateTime createdAt;

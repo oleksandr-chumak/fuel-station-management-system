@@ -1,7 +1,5 @@
 package com.fuelstation.managmentapi.manager.infrastructure.persistence;
 
-import com.fuelstation.managmentapi.manager.domain.ManagerStatus;
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +20,6 @@ public class ManagerEntity {
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false)
-    private ManagerStatus status;
+    @Column(name = "manager_status_id", nullable = false)
+    private Long managerStatusId;
 }
