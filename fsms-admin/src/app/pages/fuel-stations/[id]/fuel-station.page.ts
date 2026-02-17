@@ -4,7 +4,10 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
-import AdminFuelStationContextService from '../../../modules/fuel-stations/services/admin-fuel-station-context.service';
+import { GetFuelStationByIdHandler } from '../../../modules/fuel-stations/handlers/get-fuel-station-by-id-handler';
+import { catchError } from 'rxjs';
+import { FuelStationStore } from '../../../modules/fuel-stations/fuel-station-store';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-fuel-station-page',
@@ -12,35 +15,37 @@ import AdminFuelStationContextService from '../../../modules/fuel-stations/servi
   templateUrl: './fuel-station.page.html'
 })
 export class FuelStationPage implements OnInit, OnDestroy {
-  private paramsStationId: string = '';
-  private router: Router = inject(Router);
-  private route: ActivatedRoute = inject(ActivatedRoute)
-  private messageService: MessageService = inject(MessageService);
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService)
+  private paramsFuelStationId = "";
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute)
+
+  private readonly getFuelStationByIdHandler = inject(GetFuelStationByIdHandler);
+  private readonly fuelStationStore = inject(FuelStationStore);
+
+  private readonly messageService: MessageService = inject(MessageService);
+
+  protected readonly fuelStation = toSignal(this.fuelStationStore.fuelStation$, { initialValue: null });
+  protected readonly loading = toSignal(this.getFuelStationByIdHandler.loading$, { initialValue: false });
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.paramsStationId = params["id"];
-      const stationId = Number(this.paramsStationId);
+      this.paramsFuelStationId = params["id"];
+      const fuelStationId = Number(this.paramsFuelStationId);
 
-      if(Number.isNaN(stationId)) {
+      if(Number.isNaN(fuelStationId)) {
         this.messageService.add({severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"]})
         this.router.navigate(["/admin"]);
         return;
       }
 
-      this.ctxService.getFuelStation(stationId)
-        .subscribe({
-          error: () => {
-            this.messageService.add({severity: "error", summary: "Not found", detail: "Fuel station with id: " + stationId + " doesn't exist"})
-            this.router.navigate(["/admin"]);
-          }
-        })
+      this.getFuelStationByIdHandler.handle({ fuelStationId })
+        .pipe(catchError(() => this.router.navigate(["/admin"])))
+        .subscribe()
     });
   }
 
   ngOnDestroy(): void {
-    this.ctxService.resetContext();
+    this.fuelStationStore.reset();
   }
 
   get tabs() {
@@ -49,34 +54,30 @@ export class FuelStationPage implements OnInit, OnDestroy {
         {
           label: "Info",
           icon: "pi pi-info-circle",
-          route: `/fuel-stations/${this.paramsStationId}/info`
+          route: `/fuel-stations/${this.paramsFuelStationId}/info`
         },
         {
           label: "Managers",
           icon: "pi pi-users",
-          route: `/fuel-stations/${this.paramsStationId}/managers`
+          route: `/fuel-stations/${this.paramsFuelStationId}/managers`
         },
         {
           label: "Fuel Orders",
           icon: "pi pi-list",
-          route: `/fuel-stations/${this.paramsStationId}/fuel-orders`
+          route: `/fuel-stations/${this.paramsFuelStationId}/fuel-orders`
         },
         {
           label: "Fuel Tanks", 
           icon: "pi pi-box",
-          route: `/fuel-stations/${this.paramsStationId}/fuel-tanks`
+          route: `/fuel-stations/${this.paramsFuelStationId}/fuel-tanks`
         },
         {
           label: "Fuel Prices", 
           icon: "pi pi-dollar",
-          route: `/fuel-stations/${this.paramsStationId}/fuel-prices`
+          route: `/fuel-stations/${this.paramsFuelStationId}/fuel-prices`
         }
       ]
     )
-  }
-
-  get ctx$() {
-    return this.ctxService.getContext();
   }
 
 }

@@ -1,16 +1,18 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
-import { ManagerApiService } from '../manager/manager-api.service';
-import { AuthApiService } from '../auth/auth-api.service';
-import { FuelOrderApiService } from '../fuel-order/fuel-order-api.service';
-import { FuelStationApiService } from '../fuel-station/fuel-station-api.service';
-import { ApiService } from './web-api.service';
+import { ManagerRestClient } from '../manager/manager-rest-client';
+import { AuthRestClient } from '../auth/auth-rest-client';
+import { FuelOrderRestClient } from '../fuel-order/fuel-order-rest-client';
+import { FuelStationRestClient } from '../fuel-station/fuel-station-rest-client';
+import { RestClient } from './rest-client';
 
 import { FuelOrderMapper } from '../fuel-order/fuel-order.mapper';
 import { ManagerMapper } from '../manager/manager.mapper';
 import { FuelStationMapper } from '../fuel-station/fuel-station.mapper';
 import { UserMapper } from '../auth/user.mapper';
+import { StompClient } from './stomp-client';
+import { FuelStationStompClient } from '../fuel-station/fuel-station-stomp-client';
 
 @NgModule({
   imports: []
@@ -21,12 +23,14 @@ export class WebApiModule {
       ngModule: WebApiModule,
       providers: [
         provideHttpClient(withInterceptorsFromDi()),
-        ApiService,
+        StompClient,
+        RestClient,
         
-        ManagerApiService,
-        AuthApiService,
-        FuelOrderApiService,
-        FuelStationApiService,
+        ManagerRestClient,
+        AuthRestClient,
+        FuelOrderRestClient,
+        FuelStationRestClient,
+        FuelStationStompClient,
         
         FuelOrderMapper,
         ManagerMapper,

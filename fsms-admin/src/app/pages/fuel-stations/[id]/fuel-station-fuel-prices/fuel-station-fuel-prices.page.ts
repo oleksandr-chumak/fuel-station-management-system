@@ -1,5 +1,5 @@
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -8,68 +8,70 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { FuelGrade, FuelPrice } from 'fsms-web-api';
-import AdminFuelStationContextService from '../../../../modules/fuel-stations/services/admin-fuel-station-context.service';
+import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { ChangeFuelPriceHandler } from '../../../../modules/fuel-stations/handlers/change-fuel-price-handler';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { catchError, EMPTY } from 'rxjs';
 
 @Component({
-  selector: 'app-fuel-station-fuel-prices-page',
-  imports: [CommonModule, TableModule, InputTextModule, SkeletonModule, PanelModule, FormsModule, ButtonModule],
-  templateUrl: './fuel-station-fuel-prices.page.html'
+    selector: 'app-fuel-station-fuel-prices-page',
+    imports: [CommonModule, TableModule, InputTextModule, SkeletonModule, PanelModule, FormsModule, ButtonModule],
+    templateUrl: './fuel-station-fuel-prices.page.html'
 })
-export class FuelStationFuelPricesPage implements OnInit {
-  
-  private messageService: MessageService = inject(MessageService);
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
+export class FuelStationFuelPricesPage {
+    private readonly fuelStationStore = inject(FuelStationStore);
+    private readonly changeFuelPriceHandler = inject(ChangeFuelPriceHandler);
+    private readonly messageService = inject(MessageService);
 
-  loading = false;
-  clonedFuelPrices = this.ctxService.getContextValue()?.fuelStation.clone().fuelPrices || [];
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(3).fill(null);
+    private readonly fuelStation = toSignal(this.fuelStationStore.fuelStation$);
 
-  ngOnInit(): void {
-    this.ctx$.subscribe((data) => {
-      this.clonedFuelPrices = data?.fuelStation.clone().fuelPrices || [];
-      console.log(this.ctxService.getContextValue()?.fuelStation.clone().fuelPrices)
-    })
-    this.ctxService.loading.changeFuelPrice.subscribe((value) => this.loading = value);
-  }
+    fuelPrices = signal<FuelPrice[]>(this.fuelStationStore.fuelStation.clone().fuelPrices);
+    loading = toSignal(this.changeFuelPriceHandler.loading$, { initialValue: false });
 
-  getFuelGradeValue(fuelGrade: FuelGrade) {
-    return FuelGrade[fuelGrade];
-  }
+    readonly skeletonRows = new Array(5).fill(null);
+    readonly skeletonCols = new Array(3).fill(null);
 
-  onRowEditInit() {
-    this.resetFuelPrices();
-  }
-
-  onRowEditSave(fuelPrice: FuelPrice) {
-    const newFuelPrice = Number(fuelPrice.pricePerLiter);
-    if(Number.isNaN(newFuelPrice)) {
-      this.resetFuelPrices();
-      this.messageService.add({ severity: "error", summary: "Validation", detail: "Fuel price must be a number"});
-      return;
+    getFuelGradeValue(fuelGrade: FuelGrade): string {
+        return FuelGrade[fuelGrade];
     }
 
-    this.ctxService.changeFuelPrice(fuelPrice.fuelGrade, newFuelPrice).subscribe({
-      error: () => {
+    onRowEditInit(): void {
         this.resetFuelPrices();
-        this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel orders"});
-      },
-      next: () => {
-        this.messageService.add({ severity: "success", summary: "Changed", detail: "Fuel price was successfully changed" });
-      }
-    });
-  }
+    }
 
-  onRowEditCancel() {
-    this.resetFuelPrices();
-  }
+    onRowEditSave(fuelPrice: FuelPrice): void {
+        const newFuelPrice = Number(fuelPrice.pricePerLiter);
 
-  private resetFuelPrices() {
-    this.clonedFuelPrices = this.ctxService.getContextValue()?.fuelStation.clone().fuelPrices || [];
-  }
+        if (Number.isNaN(newFuelPrice)) {
+            this.resetFuelPrices();
+            this.messageService.add({ 
+                severity: 'error', 
+                summary: 'Validation', 
+                detail: 'Fuel price must be a number' 
+            });
+            return;
+        }
 
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
+        this.changeFuelPriceHandler
+            .handle({
+                fuelStationId: this.fuelStation()!.fuelStationId,
+                fuelGrade: fuelPrice.fuelGrade,
+                newPrice: newFuelPrice
+            })
+            .pipe(
+                catchError(() => {
+                    this.resetFuelPrices();
+                    return EMPTY;
+                })
+            )
+            .subscribe();
+    }
 
+    onRowEditCancel(): void {
+        this.resetFuelPrices();
+    }
+
+    private resetFuelPrices(): void {
+        this.fuelPrices.set(this.fuelStation()!.clone().fuelPrices);
+    }
 }

@@ -2,7 +2,7 @@ import { ManagerStatus } from "./manager-status.enum";
 
 export class Manager {
     constructor(
-        public id: number,
+        public credentialsId: number,
         public firstName: string,
         public lastName: string,
         public status: ManagerStatus

@@ -4,7 +4,7 @@ import { FuelOrderStatus } from "./fuel-order-status.enum";
 export class FuelOrder {
 
     constructor(
-        public id: number, 
+        public fuelOrderId: number, 
         public status: FuelOrderStatus, 
         public fuelGrade: FuelGrade, 
         public amount: number, 
@@ -22,6 +22,14 @@ export class FuelOrder {
 
     get rejected() {
         return this.status === FuelOrderStatus.Rejected;
+    }
+
+    confirm(): void {
+        this.status = FuelOrderStatus.Confirmed;
+    }
+
+    reject(): void {
+        this.status = FuelOrderStatus.Rejected;
     }
     
 }

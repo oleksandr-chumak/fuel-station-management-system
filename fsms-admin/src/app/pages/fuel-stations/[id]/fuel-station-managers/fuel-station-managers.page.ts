@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
 import { SkeletonModule } from 'primeng/skeleton';
-import AdminFuelStationContextService from '../../../../modules/fuel-stations/services/admin-fuel-station-context.service';
 import { AssignManagerDialogComponent } from '../../../../modules/managers/components/assign-manager-dialog/assign-manager-dialog.component';
+import { UnassignManagerHandler } from '../../../../modules/fuel-stations/handlers/unassign-manager-handler';
+import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { GetAssignedManagersHandler } from '../../../../modules/fuel-stations/handlers/get-assigned-managers-handler';
 
 @Component({
   selector: 'app-fuel-station-managers-page',
@@ -15,42 +16,29 @@ import { AssignManagerDialogComponent } from '../../../../modules/managers/compo
 })
 export class FuelStationManagersPage implements OnInit {
 
-  private messageService: MessageService = inject(MessageService);
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
+  private fuelStationStore = inject(FuelStationStore);
+  private getAssignedManagersHandler = inject(GetAssignedManagersHandler);
+  private unassignManagerHandler = inject(UnassignManagerHandler)
+
+  private fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
+
+  managers$ = this.fuelStationStore.managers$;
+  loading$ = this.getAssignedManagersHandler.loading$;
+  loadingUnassignManager$ = this.unassignManagerHandler.loading$;
 
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(5).fill(null);
   
   ngOnInit(): void {
-    this.getManagers();
+    this.getAssignedManagersHandler
+      .handle({ fuelStationId: this.fuelStationId })
+      .subscribe()
   }
 
   unassignManger(managerId: number) {
-    this.ctxService.unassignManager(managerId)
-      .subscribe({
-        next: () => this.messageService.add({ severity: "success", summary: "Unassigned", detail: "Manager was successfully unassigned" }),
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while unassign manager"})
-      })
-  }
-
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
-
-  get loading$() {
-    return this.ctxService.loading.managers;
-  }
-
-  get loadingUnassignManager$() {
-    return this.ctxService.loading.unassignManager;
-  }
-
-
-  private getManagers() {
-    this.ctxService.getAssignedManagers()
-      .subscribe({
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching managers"})
-      })
+    this.unassignManagerHandler
+      .handle({ fuelStationId: this.fuelStationId, managerId })
+      .subscribe();
   }
 
 }

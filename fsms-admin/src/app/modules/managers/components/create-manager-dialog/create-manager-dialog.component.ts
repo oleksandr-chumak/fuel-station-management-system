@@ -1,11 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { ManagerFormComponent, ManagerFormData } from '../manager-form/manager-form.component';
-import { MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
 import BasicDialog from '../../../common/basic-dialog.component';
-import ManagersQueryService from '../../services/managers-query.service';
-import { ManagerApiService } from 'fsms-web-api';
+import { CreateManagerHandler } from '../../commands/create-manager-handler';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-create-manager-dialog',
@@ -14,31 +12,16 @@ import { ManagerApiService } from 'fsms-web-api';
 })
 export class CreateManagerDialogComponent extends BasicDialog {
 
-  private managersQueryService: ManagersQueryService = inject(ManagersQueryService);
-  private managerApiService: ManagerApiService = inject(ManagerApiService);
-  private messageService: MessageService = inject(MessageService);
+  private readonly createManagerHandler = inject(CreateManagerHandler);
 
-  loading = false;
+  loading = toSignal(this.createManagerHandler.loading$, {initialValue: false});
 
-  handleFormSubmission(e: ManagerFormData) {
-    this.loading = true;
-    this.managerApiService.createManager(e.firstName, e.lastName, e.email)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: (d) => {
-          // TODO This logic should be handled inside service 
-          this.managersQueryService.getManagers()
-            .subscribe({
-              error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error while fetching manager"})
-            });
-          this.messageService.add({ severity: "success", summary: "Created", detail: "A new manager was created"});
-          this.closeDialog();
-        },
-        error: (err) => {
-          console.error("Error: ", err);
-          this.messageService.add({severity: "error", summary: "Error", detail: "An error occurred while creating manager"});
-        }
-      })
+  handleFormSubmission({email, firstName, lastName}: ManagerFormData) {
+    this.createManagerHandler.handle({
+      email, 
+      firstName, 
+      lastName
+    });
   }
 
 }

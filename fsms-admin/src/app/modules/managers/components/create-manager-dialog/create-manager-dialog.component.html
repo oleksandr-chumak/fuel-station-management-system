@@ -1,3 +1,3 @@
 <p-dialog (visibleChange)="handleStateChange($event)" [visible]="open" header="Create manager dialog">
-    <app-manager-form [loading]="loading" buttonText="Create Manager" (formSubmitted)="handleFormSubmission($event)"></app-manager-form>
+    <app-manager-form [loading]="loading()" buttonText="Create Manager" (formSubmitted)="handleFormSubmission($event)"></app-manager-form>
 </p-dialog>

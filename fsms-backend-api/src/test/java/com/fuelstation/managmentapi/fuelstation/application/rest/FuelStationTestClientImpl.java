@@ -62,8 +62,8 @@ public class FuelStationTestClientImpl implements FuelStationTestClient {
                 .content(objectMapper.writeValueAsString(new AssignManagerRequest(managerId))));
     }
 
-    public FuelStationResponse assignManagerToFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception {
-        return getResponse(assignManagerToFuelStation(fuelStationId, managerId), FuelStationResponse.class, status().isOk());
+    public ManagerResponse assignManagerToFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception {
+        return getResponse(assignManagerToFuelStation(fuelStationId, managerId), ManagerResponse.class, status().isOk());
     }
 
     @Override
@@ -74,8 +74,8 @@ public class FuelStationTestClientImpl implements FuelStationTestClient {
     }
 
     @Override
-    public FuelStationResponse unassignManagerFromFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception {
-        return getResponse(unassignManagerFromFuelStation(fuelStationId, managerId), FuelStationResponse.class, status().isOk());
+    public ManagerResponse unassignManagerFromFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception {
+        return getResponse(unassignManagerFromFuelStation(fuelStationId, managerId), ManagerResponse.class, status().isOk());
     }
 
     @Override

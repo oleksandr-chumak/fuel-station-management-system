@@ -26,7 +26,7 @@ export class FuelStationPage {
 
       if(Number.isNaN(stationId)) {
         this.messageService.add({severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"]})
-        this.router.navigate(["/admin"]);
+        this.router.navigate(["/"]);
         return;
       }
 
@@ -34,7 +34,7 @@ export class FuelStationPage {
         .subscribe({
           error: () => {
             this.messageService.add({severity: "error", summary: "Not found", detail: "Fuel station with id: " + stationId + " doesn't exist"})
-            this.router.navigate(["/admin"]);
+            this.router.navigate(["/"]);
           }
         })
     });

@@ -1,5 +1,5 @@
-<p-panel header="Fuel tanks" *ngIf="ctx$ | async as ctx">
-    <p-table [value]="ctx.fuelStation.fuelTanks" size="small" [loading]="loading$ | async" [showLoader]="false"
+<p-panel header="Fuel tanks" *ngIf="fuelStation$ | async as fuelStation">
+    <p-table [value]="fuelStation.fuelTanks" size="small" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
@@ -17,13 +17,6 @@
                 <td>{{ fuelTank.maxCapacity }}</td>
                 <td>{{ getFuelGradeValue(fuelTank.fuelGrade) }}</td>
                 <td>{{ fuelTank.lastRefillDate | date: 'mediumDate' }}</td>
-            </tr>
-        </ng-template>
-        <ng-template #loadingbody>
-            <tr *ngFor="let row of skeletonRows" style="height:46px">
-                <td *ngFor="let col of skeletonCols">
-                    <p-skeleton></p-skeleton>
-                </td>
             </tr>
         </ng-template>
     </p-table>

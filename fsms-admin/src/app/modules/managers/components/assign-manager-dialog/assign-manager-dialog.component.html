@@ -4,6 +4,6 @@
             <app-manager-select (managerSelected)="handleMangerAssigned($event)"></app-manager-select>
             <p-message *ngIf="managerInvalid" severity="error" variant="simple" size="small">Manager is invalid</p-message>
         </div>
-        <p-button type="submit" styleClass="w-full" label="Assign Manager" [loading]="loading$ | async"/> 
+        <p-button type="submit" styleClass="w-full" label="Assign Manager" [loading]="loading()"/> 
     </form>
 </p-dialog>  

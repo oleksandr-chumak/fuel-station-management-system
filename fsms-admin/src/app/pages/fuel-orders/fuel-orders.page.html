@@ -1,5 +1,5 @@
 <p-panel header="Fuel Orders">
-    <p-table [value]="fuelOrders" size="small" [loading]="loading" [showLoader]="false"
+    <p-table [value]="fuelOrders()" size="small" [loading]="loading()" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }" size="small">
         <ng-template #header>
             <tr>
@@ -19,12 +19,16 @@
                 <td>{{ fuelOrder.amount }}L</td>
                 <td>{{ fuelOrder.createdAt }}</td>
                 <td>
-                    <div class="flex gap-2" *ngIf="fuelOrder.pending">
-                        <p-button (onClick)="confirmFuelOrder(fuelOrder.id)" [loading]="actionLoading" label="Confirm" variant="outlined" severity="success" size="small" />
-                        <p-button (onClick)="rejectFuelOrder(fuelOrder.id)" [loading]="actionLoading" label="Reject" variant="outlined" severity="danger" size="small" />
-                    </div>
-                    <div *ngIf="fuelOrder.rejected">Fuel order is already rejected</div>
-                    <div *ngIf="fuelOrder.confirmed">Fuel order is already confirmed</div>
+                    @if(fuelOrder.pending) {
+                        <div class="flex gap-2">
+                            <p-button (onClick)="confirmFuelOrder(fuelOrder.id)" [loading]="actionLoading()" label="Confirm" variant="outlined" severity="success" size="small" />
+                            <p-button (onClick)="rejectFuelOrder(fuelOrder.id)" [loading]="actionLoading()" label="Reject" variant="outlined" severity="danger" size="small" />
+                        </div>
+                    } @else if (fuelOrder.rejected) {
+                        <div>Fuel order is already rejected</div>
+                    } @else if (fuelOrder.confirmed) {
+                        <div>Fuel order is already confirmed</div>
+                    }
                 </td>
             </tr>
         </ng-template>

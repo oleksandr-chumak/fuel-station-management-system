@@ -1,3 +1,3 @@
 <p-dialog (visibleChange)="handleStateChange($event)" [visible]="open" header="Create fuel station dialog">
-    <app-fuel-station-form [loading]="loading" buttonText="Create Fuel Station" (formSubmitted)="handleFormSubmission($event)"></app-fuel-station-form>
+    <app-fuel-station-form [loading]="loading()" buttonText="Create Fuel Station" (formSubmitted)="handleFormSubmission($event)"></app-fuel-station-form>
 </p-dialog>

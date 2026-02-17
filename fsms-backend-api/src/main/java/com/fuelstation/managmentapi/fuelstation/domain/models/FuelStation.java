@@ -71,7 +71,7 @@ public class FuelStation extends AggregateRoot {
 
         fuelPrices.remove(oldPrice);
         fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
-        pushDomainEvent(new FuelPriceChanged(fuelStationId));
+        pushDomainEvent(new FuelPriceChanged(fuelStationId, fuelGrade, newPrice));
     }
 
     public void refillFuelTank(FuelTank fuelTank, BigDecimal volume) {

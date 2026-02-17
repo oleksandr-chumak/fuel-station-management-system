@@ -14,7 +14,7 @@ export class FuelOrderMapper {
     const createdAt = new Date((json as FuelOrder).createdAt);
 
     return new FuelOrder(
-      (json as FuelOrder).id,
+      (json as FuelOrder).fuelOrderId,
       status,
       fuelGrade,
       (json as FuelOrder).amount,

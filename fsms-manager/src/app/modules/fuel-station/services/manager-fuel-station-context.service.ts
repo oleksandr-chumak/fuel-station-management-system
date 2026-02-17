@@ -77,7 +77,7 @@ export default class ManagerFuelStationContextService {
 
         return this.withLoading(
             "managers",
-            this.fuelStationApi.getAssignedManagers(fuelStation.id).pipe(
+            this.fuelStationApi.getAssignedManagers(fuelStation.fuelStationId).pipe(
                 tap(managers => this.updateContext({ managers })),
                 catchError(error => {
                     console.error("Error fetching managers:", error);
@@ -92,7 +92,7 @@ export default class ManagerFuelStationContextService {
 
         return this.withLoading(
             "fuelOrders",
-            this.fuelStationApi.getFuelStationOrders(fuelStation.id).pipe(
+            this.fuelStationApi.getFuelStationOrders(fuelStation.fuelStationId).pipe(
                 tap(console.log),
                 tap(fuelOrders => this.updateContext({ fuelOrders })),
                 catchError(error => {
@@ -106,7 +106,7 @@ export default class ManagerFuelStationContextService {
     createFuelOrder(fuelGrade: FuelGrade, amount: number): Observable<FuelOrder[]> {
         const { fuelStation } = this.contextValue;
         return this.withLoading("createFuelOrder", 
-            this.fuelOrderApi.createFuelOrder(fuelStation.id, fuelGrade, amount).pipe(
+            this.fuelOrderApi.createFuelOrder(fuelStation.fuelStationId, fuelGrade, amount).pipe(
                 // TODO refactor to tap? 
                 switchMap(() => {
                     this.updateContext({ fuelOrders: [] });

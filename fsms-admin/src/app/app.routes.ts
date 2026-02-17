@@ -8,7 +8,7 @@ import { FuelStationFuelOrdersPage } from './pages/fuel-stations/[id]/fuel-stati
 import { FuelStationFuelTanksPage } from './pages/fuel-stations/[id]/fuel-station-fuel-tanks/fuel-station-fuel-tanks.page';
 import { FuelStationFuelPricesPage } from './pages/fuel-stations/[id]/fuel-station-fuel-prices/fuel-station-fuel-prices.page';
 import { ManagersPage } from './pages/managers/managers.page';
-import { FuelOrdersPage } from './pages/fuel-orders/fuel-orders.component';
+import { FuelOrdersPage } from './pages/fuel-orders/fuel-orders.page';
 import {adminGuard, } from "fsms-security"
 
 export const routes: Routes = [

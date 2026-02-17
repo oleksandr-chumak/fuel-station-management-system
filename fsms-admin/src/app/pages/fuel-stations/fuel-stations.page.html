@@ -3,7 +3,7 @@
     <ng-template #icons>
         <p-button severity="secondary" [outlined]="true" label="Create" (click)="dialog.openDialog()" />
     </ng-template>
-    <p-table [value]="fuelStations" size="small" [loading]="fuelStationQueryService.loading$ | async" [showLoader]="false"
+    <p-table [value]="fuelStations" size="small" [loading]="loading()" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
@@ -15,12 +15,12 @@
         </ng-template>
         <ng-template #body let-fuelStation>
             <tr>
-                <td>{{ fuelStation.id }}</td>
+                <td>{{ fuelStation.fuelStationId }}</td>
                 <td>{{ fuelStation.address }}</td>
                 <td><p-tag [value]="fuelStation.status" [severity]="getSeverity(fuelStation)" /></td>
                 <td>
                     <div class="flex items-center justify-center">
-                        <p-button (onClick)="handleViewClick(fuelStation.id)" size="small" severity="secondary" [outlined]="true">View</p-button>
+                        <p-button (onClick)="handleViewClick(fuelStation.fuelStationId)" size="small" severity="secondary" [outlined]="true">View</p-button>
                     </div>
                 </td>
             </tr>

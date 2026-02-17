@@ -76,31 +76,31 @@ public class FuelStationController {
     }
 
     @PutMapping("/{id}/assign-manager")
-    public ResponseEntity<FuelStationResponse> assignManager(
+    public ResponseEntity<ManagerResponse> assignManager(
             @PathVariable("id") long fuelStationId,
             @RequestBody @Valid AssignManagerRequest request,
             @CurrentUser Credentials credentials
     ) {
-        var fuelStation = assignManagerToFuelStation.process(
+        var manager = assignManagerToFuelStation.process(
                 fuelStationId,
                 request.getManagerId(),
                 credentials
         );
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(ManagerResponse.fromDomain(manager));
     }
 
     @PutMapping("/{id}/unassign-manager")
-    public ResponseEntity<FuelStationResponse> unassignManager(
+    public ResponseEntity<ManagerResponse> unassignManager(
             @PathVariable("id") long fuelStationId,
             @RequestBody @Valid AssignManagerRequest request,
             @CurrentUser Credentials credentials
     ) {
-        var fuelStation = unassignManagerFromFuelStation.process(
+        var manager = unassignManagerFromFuelStation.process(
                 fuelStationId,
                 request.getManagerId(),
                 credentials
         );
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(ManagerResponse.fromDomain(manager));
     }
 
     @PutMapping("/{id}/change-fuel-price")

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { IftaLabelModule } from 'primeng/iftalabel';
-import AdminFuelStationContextService from '../../../../modules/fuel-stations/services/admin-fuel-station-context.service';
+import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-info-page',
@@ -11,10 +11,8 @@ import AdminFuelStationContextService from '../../../../modules/fuel-stations/se
   templateUrl: './fuel-station-info.page.html'
 })
 export class FuelStationInfoPage {
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
-  
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
+  private fuelStationStore = inject(FuelStationStore);
+
+  fuelStation$ = this.fuelStationStore.fuelStation$;
 
 }

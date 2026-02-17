@@ -1,12 +1,12 @@
-<div class="flex flex-col gap-2" *ngIf="ctx$ | async as ctx">
+<div class="flex flex-col gap-2" *ngIf="fuelStation$ | async as fuelStation">
     <p-panel header="General">
         <div class="grid grid-cols-2 gap-3">
             <p-iftalabel variant="on">
-                <input class="w-full" id="id" pInputText disabled value="{{ctx.fuelStation.id}}"/>
+                <input class="w-full" id="id" pInputText disabled value="{{fuelStation.fuelStationId}}"/>
                 <label for="id">Id</label>
             </p-iftalabel>
             <p-iftalabel variant="on">
-                <input class="w-full" id="status" pInputText disabled value="{{ctx.fuelStation.status}}"/>
+                <input class="w-full" id="status" pInputText disabled value="{{fuelStation.status}}"/>
                 <label for="status">Status</label>
             </p-iftalabel>
         </div>
@@ -14,27 +14,27 @@
     <p-panel header="Location">
         <div class="grid grid-cols-2 gap-3">
             <p-iftalabel variant="on">
-                <input id="address" class="w-full" pInputText disabled value="{{ctx.fuelStation.address}}"/>
+                <input id="address" class="w-full" pInputText disabled value="{{fuelStation.address}}"/>
                 <label for="address">Full Address</label>
             </p-iftalabel>
             <p-iftalabel variant="on">
-                <input id="buildingNumber" class="w-full" pInputText disabled value="{{ctx.fuelStation.buildingNumber}}"/>
+                <input id="buildingNumber" class="w-full" pInputText disabled value="{{fuelStation.buildingNumber}}"/>
                 <label for="buildingNumber">Building Number</label>
             </p-iftalabel>
             <p-iftalabel variant="on">
-                <input id="street" class="w-full" pInputText disabled value="{{ctx.fuelStation.street}}"/>
+                <input id="street" class="w-full" pInputText disabled value="{{fuelStation.street}}"/>
                 <label for="street">Street</label>
             </p-iftalabel>
             <p-iftalabel variant="on">
-                <input id="city" class="w-full" pInputText disabled value="{{ctx.fuelStation.city}}"/>
+                <input id="city" class="w-full" pInputText disabled value="{{fuelStation.city}}"/>
                 <label for="city">City</label>
             </p-iftalabel>
             <p-iftalabel variant="on">
-                <input id="postalCode" class="w-full" pInputText disabled value="{{ctx.fuelStation.postalCode}}"/>
+                <input id="postalCode" class="w-full" pInputText disabled value="{{fuelStation.postalCode}}"/>
                 <label for="postalCode">Postal Code</label>
             </p-iftalabel>
             <p-iftalabel variant="on">
-                <input id="country" class="w-full" pInputText disabled value="{{ctx.fuelStation.country}}"/>
+                <input id="country" class="w-full" pInputText disabled value="{{fuelStation.country}}"/>
                 <label for="country">Country</label>
             </p-iftalabel>
         </div>

@@ -21,16 +21,16 @@ public class AssignManagerToFuelStation {
     private final GetFuelStationById getFuelStationById;
 
     @Transactional
-    public FuelStation process(long fuelStationId, long managerId, Credentials credentials) {
-        FuelStation fuelStation = getFuelStationById.process(fuelStationId, credentials);
-        Manager manager = getManagerByCredentialsId.process(managerId);
+    public Manager process(long fuelStationId, long managerId, Credentials credentials) {
+        var fuelStation = getFuelStationById.process(fuelStationId, credentials);
+        var manager = getManagerByCredentialsId.process(managerId);
 
         fuelStation.assignManager(manager.getCredentialsId());
 
         fuelStationRepository.save(fuelStation);
         domainEventPublisher.publishAll(fuelStation.getDomainEvents());
 
-        return fuelStation;
+        return manager;
     }
 
 }

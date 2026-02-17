@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.manager.domain.Manager;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class UnassignManagerFromFuelStation {
     private final GetManagerByCredentialsId getManagerByCredentialsId;
 
     @Transactional
-    public FuelStation process(long fuelStationId, long managerId, Credentials credentials) {
+    public Manager process(long fuelStationId, long managerId, Credentials credentials) {
         var fuelStation = getFuelStationById.process(fuelStationId, credentials);
         var manager = getManagerByCredentialsId.process(managerId);
 
@@ -29,6 +30,6 @@ public class UnassignManagerFromFuelStation {
         fuelStationRepository.save(fuelStation);
         domainEventPublisher.publishAll(fuelStation.getDomainEvents());
 
-        return fuelStation;
+        return manager;
     }
 }

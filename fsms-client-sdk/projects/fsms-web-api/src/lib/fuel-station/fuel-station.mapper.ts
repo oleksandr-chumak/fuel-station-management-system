@@ -12,7 +12,7 @@ export class FuelStationMapper {
 
   fromJson(json: unknown): FuelStation {
     return new FuelStation(
-      (json as FuelStation).id,
+      (json as FuelStation).fuelStationId,
       (json as FuelStation).street,
       (json as FuelStation).buildingNumber,
       (json as FuelStation).city,

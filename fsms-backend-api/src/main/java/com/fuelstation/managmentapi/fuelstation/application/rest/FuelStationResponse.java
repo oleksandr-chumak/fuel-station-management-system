@@ -59,7 +59,6 @@ public class FuelStationResponse {
     }
 
     @JsonProperty(value = "address")
-    @JsonIgnore()
     String getAddress() {
         return String.format("%s %s, %s %s, %s", street, buildingNumber, postalCode, city, country);
     }

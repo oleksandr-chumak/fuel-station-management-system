@@ -1,6 +1,8 @@
 <p-select appendTo="body" [options]="managers" [(ngModel)]="selectedManager" (onChange)="handleChange($event)" placeholder="Select Item" class="w-full">
     <ng-template #selectedItem let-selectedOption>
-        <div *ngIf="selectedOption">{{ selectedOption.fullName }}</div>
+        @if(selectedOption) {
+            <div>{{ selectedOption.fullName }}</div>
+        }
     </ng-template>
     <ng-template let-manager #item>
         <div>{{ manager.fullName }}</div>

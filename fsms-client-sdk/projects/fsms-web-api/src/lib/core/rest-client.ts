@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { WEB_API_CONFIG } from "./web-api-config.interface";
 
 @Injectable({ providedIn: "root" })
-export class ApiService {
+export class RestClient {
 
     private http = inject(HttpClient);
     private config = inject(WEB_API_CONFIG);
@@ -38,7 +38,7 @@ export class ApiService {
     } 
 
     private get baseUrl() {
-        return this.config.getApiUrl();
+        return this.config.restApiUrl();
     }
 
     private getUrl(endpoint: string) {

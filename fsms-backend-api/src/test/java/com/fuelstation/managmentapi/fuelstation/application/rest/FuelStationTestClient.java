@@ -17,10 +17,10 @@ public interface FuelStationTestClient {
     FuelStationResponse deactivateFuelStationAndReturnResponse(long fuelStationId) throws Exception;
 
     ResultActions assignManagerToFuelStation(long fuelStationId, long managerId) throws Exception;
-    FuelStationResponse assignManagerToFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception;
+    ManagerResponse assignManagerToFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception;
 
     ResultActions unassignManagerFromFuelStation(long fuelStationId, long managerId) throws Exception;
-    FuelStationResponse unassignManagerFromFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception;
+    ManagerResponse unassignManagerFromFuelStationAndReturnResponse(long fuelStationId, long managerId) throws Exception;
 
     ResultActions changeFuelPrice(long fuelStationId, ChangeFuelPriceRequest request) throws Exception;
     FuelStationResponse changeFuelPriceAndReturnResponse(long fuelStationId, ChangeFuelPriceRequest request) throws Exception;

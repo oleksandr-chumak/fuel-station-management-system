@@ -1,82 +1,75 @@
+import { Component, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
 import { FuelOrderStatus, FuelGrade } from 'fsms-web-api';
-import AdminFuelStationContextService from '../../../../modules/fuel-stations/services/admin-fuel-station-context.service';
-import FuelStationContext from '../../../../modules/fuel-stations/models/fuel-station-context.model';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { GetFuelStationOrdersHandler } from '../../../../modules/fuel-stations/handlers/get-fuel-station-orders-handler';
+import { ConfirmFuelStationOrderHandler } from '../../../../modules/fuel-stations/handlers/confirm-fuel-station-order-handler';
+import { RejectFuelStationOrderHandler } from '../../../../modules/fuel-stations/handlers/reject-fuel-station-order-handler';
 
 @Component({
-  selector: 'app-fuel-station-fuel-orders-page',
-  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
-  templateUrl: './fuel-station-fuel-orders.page.html'
+    selector: 'app-fuel-station-fuel-orders-page',
+    imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
+    templateUrl: './fuel-station-fuel-orders.page.html'
 })
 export class FuelStationFuelOrdersPage {
+    private readonly fuelStationStore = inject(FuelStationStore);
+    private readonly getFuelStationOrders = inject(GetFuelStationOrdersHandler);
+    private readonly confirmFuelStationOrder = inject(ConfirmFuelStationOrderHandler);
+    private readonly rejectFuelStationOrder = inject(RejectFuelStationOrderHandler);
 
-  private messageService: MessageService = inject(MessageService);
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
+    readonly fuelOrders = toSignal(this.fuelStationStore.fuelOrders$, { initialValue: [] });
+    readonly loadingOrders = toSignal(this.getFuelStationOrders.loading$, { initialValue: false });
+    readonly loadingAction = computed(() =>
+        toSignal(this.confirmFuelStationOrder.loading$, { initialValue: false })() ||
+        toSignal(this.rejectFuelStationOrder.loading$, { initialValue: false })()
+    );
 
-  actionLoading = false;
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(5).fill(null);
+    readonly skeletonRows = new Array(5).fill(null);
+    readonly skeletonCols = new Array(5).fill(null);
 
-  ngOnInit(): void {
-    this.getFuelOrders();
-    
-    this.ctxService.loading.rejectOrder.subscribe((value) => this.actionLoading = value)
-    this.ctxService.loading.confirmOrder.subscribe((value) => this.actionLoading = value);
-  }
+    constructor() {
+        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
 
-  getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
-    switch(fuelOrderStatus) {
-      case FuelOrderStatus.Confirmed:
-        return "success";
-      case FuelOrderStatus.Pending:
-        return "info";
-      case FuelOrderStatus.Rejected:
-        return "danger";
-      default:
-        return undefined
+        this.getFuelStationOrders
+            .handle({ fuelStationId })
+            .subscribe();
     }
-  }
 
-  confirmFuelOrder(fuelOrderId: number) {
-    // TODO add error handling
-    this.ctxService.confirmFuelOrder(fuelOrderId).subscribe();
-  }
-
-  rejectFuelOrder(fuelOrderId: number) {
-    // TODO add error handling
-    this.ctxService.rejectFuelOrder(fuelOrderId).subscribe();
-  }
-  
-  getValue(fuelOrderStatus: FuelOrderStatus) {
-    return FuelOrderStatus[fuelOrderStatus];
-  }
-
-  getFuelGradeValue(fuelGrade: FuelGrade) {
-    return FuelGrade[fuelGrade];
-  }
-
-  get loading$(): Observable<boolean> {
-    return this.ctxService.loading.fuelOrders;
-  }
-
-  get ctx$(): Observable<FuelStationContext | null>  {
-    return this.ctxService.getContext();
-  }
-
-  private getFuelOrders() {
-    this.ctxService.getFuelOrders()
-      .subscribe({
-        error: () => {
-          this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching fuel orders"})
+    getSeverity(status: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
+        switch (status) {
+            case FuelOrderStatus.Confirmed: return 'success';
+            case FuelOrderStatus.Pending:   return 'info';
+            case FuelOrderStatus.Rejected:  return 'danger';
+            default:                        return undefined;
         }
-      }) 
-  }
+    }
+
+    getFuelOrderStatusValue(status: FuelOrderStatus): string {
+        return FuelOrderStatus[status];
+    }
+
+    getFuelGradeValue(fuelGrade: FuelGrade): string {
+        return FuelGrade[fuelGrade];
+    }
+
+    confirmFuelOrder(fuelOrderId: number): void {
+        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
+        this.confirmFuelStationOrder
+            .handle({ fuelStationId, fuelOrderId })
+            .subscribe();
+    }
+
+    rejectFuelOrder(fuelOrderId: number): void {
+        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
+        this.rejectFuelStationOrder
+            .handle({ fuelStationId, fuelOrderId })
+            .subscribe();
+    }
+
 }

@@ -5,7 +5,7 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { FuelGrade } from 'fsms-web-api';
-import AdminFuelStationContextService from '../../../../modules/fuel-stations/services/admin-fuel-station-context.service';
+import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks-page',
@@ -13,23 +13,12 @@ import AdminFuelStationContextService from '../../../../modules/fuel-stations/se
   templateUrl: './fuel-station-fuel-tanks.component.html'
 })
 export class FuelStationFuelTanksPage {
-  private ctxService: AdminFuelStationContextService = inject(AdminFuelStationContextService);
+  private fuelStationStore = inject(FuelStationStore);
 
-  visible = false;
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(4).fill(null);
+  fuelStation$ = this.fuelStationStore.fuelStation$;
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
-    console.log(this.ctxService.getContextValue()?.fuelStation.fuelTanks)
     return FuelGrade[fuelGrade];
-  }
-
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
-
-  get loading$() {
-    return this.ctxService.loading.fuelStation;
   }
 
 }

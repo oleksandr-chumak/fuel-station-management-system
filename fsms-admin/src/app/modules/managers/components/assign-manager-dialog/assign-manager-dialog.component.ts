@@ -5,12 +5,13 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MessageService } from 'primeng/api';
-import { Observable } from 'rxjs';
+import { tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import BasicDialog from '../../../common/basic-dialog.component';
-import AdminFuelStationContextService from '../../../fuel-stations/services/admin-fuel-station-context.service';
 import { Manager } from 'fsms-web-api';
+import { AssignManagerHandler } from '../../../fuel-stations/handlers/assign-manager-handler';
+import { FuelStationStore } from '../../../fuel-stations/fuel-station-store';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-assign-manager-dialog',
@@ -19,25 +20,23 @@ import { Manager } from 'fsms-web-api';
 })
 export class AssignManagerDialogComponent extends BasicDialog {
 
-  private fuelStationContext: AdminFuelStationContextService = inject(AdminFuelStationContextService);
-  private messageService: MessageService = inject(MessageService);
+  private readonly fuelStationStore = inject(FuelStationStore);
+  private readonly assignManagerHandler = inject(AssignManagerHandler);
 
-  assignManagerForm = new FormGroup({
+  readonly loading = toSignal(this.assignManagerHandler.loading$, { initialValue: false });
+  readonly assignManagerForm = new FormGroup({
     manager: new FormControl<Manager | null>(null, Validators.required)
   })
 
   handleFormSubmission() {
     if (this.assignManagerForm.valid) {
-      // TODO make form data interface
       const formData = this.assignManagerForm.value as { manager: Manager };
-      this.fuelStationContext.assignManager(formData.manager.id)
-        .subscribe({
-          next: () => {
-            this.messageService.add({ severity: "success", summary: "Assigned", detail: "Manager was successfully assigned" });
-            this.closeDialog();
-          },
-          error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while assigning manager" })
-        });
+      this.assignManagerHandler.handle({
+        fuelStationId: this.fuelStationStore.fuelStation.fuelStationId,
+        managerId: formData.manager.credentialsId
+      })
+      .pipe(tap(() => this.closeDialog()))
+      .subscribe()
     }
 
     this.assignManagerForm.markAllAsTouched();
@@ -49,10 +48,6 @@ export class AssignManagerDialogComponent extends BasicDialog {
 
   get managerInvalid() {
     return this.isFieldInvalid(this.assignManagerForm, "manager");
-  }
-
-  get loading$(): Observable<boolean> {
-    return this.fuelStationContext.loading.assignManager;
   }
 
   // TODO rewrite it to util

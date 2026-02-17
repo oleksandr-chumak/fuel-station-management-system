@@ -7,15 +7,18 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './modules/common/app-config.service';
-import { WEB_API_CONFIG, WebApiConfig, WebApiModule } from 'fsms-web-api';
+import { StompClient, WEB_API_CONFIG, WebApiConfig, WebApiModule } from 'fsms-web-api';
 import { AuthService, SecurityModule } from 'fsms-security';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideAppInitializer(async () => {
-      const appConfigService: AppConfigService = inject(AppConfigService);
-      const authService: AuthService = inject(AuthService);
+      const appConfigService = inject(AppConfigService);
+      const stompClient = inject(StompClient)
+      const authService = inject(AuthService);
+
       await appConfigService.loadConfig(); 
+      stompClient.activate()
       return authService.loadUserData();
     }), 
 
@@ -23,15 +26,13 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom(SecurityModule),
     {
       provide: WEB_API_CONFIG,
-      useFactory: (appConfigService: AppConfigService): WebApiConfig => ({
-        getApiUrl: () => {
+      useFactory: (appConfigService: AppConfigService): WebApiConfig => {
           const config = appConfigService.getConfig();
-          if (!config) {
-            throw new Error('AppConfig not loaded yet');
+          return {
+            restApiUrl: () => config.restApiUrl,
+            stompApiUrl: () => config.stompApiUrl
           }
-          return config.apiUrl;
-        }
-      }),
+      } ,
       deps: [AppConfigService]
     },
 

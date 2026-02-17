@@ -1,6 +1,4 @@
 import { Component, inject, OnInit } from '@angular/core';
-import ManagersQueryService from '../../modules/managers/services/managers-query.service';
-import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
@@ -8,9 +6,10 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { PanelModule } from 'primeng/panel';
 import { TagModule } from 'primeng/tag';
 import { CreateManagerDialogComponent } from '../../modules/managers/components/create-manager-dialog/create-manager-dialog.component';
-import { AuthApiService , Manager, ManagerStatus } from "fsms-web-api";
-import { map } from 'rxjs';
+import { Manager, ManagerStatus } from "fsms-web-api";
 import { AppConfigService } from '../../modules/common/app-config.service';
+import { GetManagersHandler } from '../../modules/managers/commands/get-managers-handler';
+import { GetManagerAccessTokenHandler } from '../../modules/managers/commands/get-manager-access-token-handler';
 
 @Component({
   selector: 'app-managers-page',
@@ -19,21 +18,26 @@ import { AppConfigService } from '../../modules/common/app-config.service';
 })
 export class ManagersPage implements OnInit {
   
-  private managersQueryService = inject(ManagersQueryService);
   private appConfigService = inject(AppConfigService);
-  private messageService = inject(MessageService);
-  private authApiService = inject(AuthApiService);
+  private getManagersHandler = inject(GetManagersHandler);
+  private getManagerAccessTokenHandler = inject(GetManagerAccessTokenHandler);
 
   managers: Manager[] = [];
+  loading$ = this.getManagersHandler.loading$;
+
   skeletonRows = new Array(5).fill(null);
   skeletonCols = new Array(6).fill(null);
   
   ngOnInit(): void {
-    this.managersQueryService.getManagers()
-      .subscribe({
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching managers" })
-      })
-    this.managersQueryService.managers$.subscribe((data) => this.managers = data)
+    this.getManagersHandler.handle({})
+      .subscribe((managers) => this.managers = managers)
+  }
+
+  handleSignInAsManager(managerId: number) {
+    const managerUrl = this.appConfigService.getConfig().managerUrl;
+    this.getManagerAccessTokenHandler
+      .handle({ managerId })
+      .subscribe(token => window.open(`${managerUrl}/login?token=${token}`));
   }
 
   getSeverity(manager: Manager): "success" | undefined {
@@ -42,16 +46,4 @@ export class ManagersPage implements OnInit {
     }
     return undefined;
   }
-
-  handleSignInAsManager(managerId: number) {
-    const managerUrl = this.appConfigService.getConfig().managerUrl;
-    this.authApiService.getManagerAccessToken(managerId).subscribe({
-        next: (token) => window.open(`${managerUrl}/login?token=${token}`)
-      });
-  }
-
-  get loading$() {
-    return this.managersQueryService.loading$;
-  }
-
 }

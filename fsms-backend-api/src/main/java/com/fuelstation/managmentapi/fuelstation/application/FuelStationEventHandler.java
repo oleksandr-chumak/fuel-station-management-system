@@ -1,8 +1,10 @@
 package com.fuelstation.managmentapi.fuelstation.application;
 
+import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelDeliveryProcessed;
@@ -13,13 +15,16 @@ import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToF
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
 
 @Component
+@AllArgsConstructor
 public class FuelStationEventHandler {
 
     private final Logger logger = LoggerFactory.getLogger(FuelStationEventHandler.class);
-    
+    private final SimpMessagingTemplate messagingTemplate;
+
     @EventListener
     public void handle(FuelStationCreated event) {
         logger.info("Fuel station was created ID:{}", event.getFuelStationId());
+        messagingTemplate.convertAndSend("/topic/fuel-stations/created", event);
     }
     
     @EventListener

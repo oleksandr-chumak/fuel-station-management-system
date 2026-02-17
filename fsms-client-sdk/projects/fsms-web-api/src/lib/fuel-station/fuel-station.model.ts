@@ -5,7 +5,7 @@ import { FuelTank } from "./fuel-tank.model";
 export class FuelStation {
   
   constructor(
-    public id: number,
+    public fuelStationId: number,
     public street: string,
     public buildingNumber: string,
     public city: string,
@@ -32,7 +32,7 @@ export class FuelStation {
     const clonedManagerIds = [...this.assignedManagersIds];
     
     return new FuelStation(
-      this.id,
+      this.fuelStationId,
       this.street,
       this.buildingNumber,
       this.city,
@@ -45,4 +45,13 @@ export class FuelStation {
       this.status
     );
   }
+
+  assignManger(managerId: number): void {
+    this.assignedManagersIds.push(managerId);
+  }
+
+  unassignManger(managerId: number): void {
+    this.assignedManagersIds = this.assignedManagersIds.filter((id) => id !== managerId);
+  }
+
 }

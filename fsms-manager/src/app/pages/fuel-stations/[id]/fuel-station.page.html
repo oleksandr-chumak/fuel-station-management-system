@@ -2,7 +2,7 @@
     <ng-template #loading>
         <h2 class="text-2xl my-2 font-semibold">Loading...</h2>
     </ng-template>
-    <h2 class="text-2xl my-2 font-semibold" *ngIf="ctx$ | async as ctx; else loading">Fuel station ID: {{ctx.fuelStation.id}}</h2>
+    <h2 class="text-2xl my-2 font-semibold" *ngIf="ctx$ | async as ctx; else loading">Fuel station ID: {{ctx.fuelStation.fuelStationId}}</h2>
     <div class="rounded-lg">
         <p-tabs value="/dashboard" scrollable>
             <p-tablist>

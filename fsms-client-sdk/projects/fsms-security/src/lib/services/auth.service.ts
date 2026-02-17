@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, catchError, firstValueFrom, Observable, of, switchMap, tap, throwError } from "rxjs";
-import { AuthApiService, User } from "fsms-web-api";
+import { AuthRestClient, User } from "fsms-web-api";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -8,14 +8,14 @@ export class AuthService {
     private accessToken: string | null = this.getAccessTokenFromLocalStorage();
     private userSubject: BehaviorSubject<User | null> = new BehaviorSubject<User | null>(null);
     private user$: Observable<User | null> = this.userSubject.asObservable();
-    private authApiService: AuthApiService = inject(AuthApiService);
+    private api = inject(AuthRestClient);
 
     loadUserData(): Promise<User | null> {
         const token = this.getAccessToken();
         if(!token) {
             return Promise.resolve(null);
         }
-        return firstValueFrom(this.authApiService.getMe()
+        return firstValueFrom(this.api.getMe()
             .pipe(
                 tap(user => {
                     this.userSubject.next(user);
@@ -43,11 +43,11 @@ export class AuthService {
     setAccessToken(accessToken: string): void {
         this.saveAccessTokenAndSetState(accessToken);
     }
-8
+
     loginAdmin(email: string, password: string): Observable<User> {
-        return this.authApiService.loginAdmin(email, password).pipe(
+        return this.api.loginAdmin(email, password).pipe(
             tap((token) => this.saveAccessTokenAndSetState(token)),
-            switchMap(() => this.authApiService.getMe()),
+            switchMap(() => this.api.getMe()),
             tap(user => this.userSubject.next(user)),
             catchError(err => {
                 console.log("Error happened while fetching user", err);
@@ -57,9 +57,9 @@ export class AuthService {
     }
 
     loginManager(email: string, password: string): Observable<User> {
-        return this.authApiService.loginManager(email, password).pipe(
+        return this.api.loginManager(email, password).pipe(
             tap((token) => this.saveAccessTokenAndSetState(token)),
-            switchMap(() => this.authApiService.getMe()),
+            switchMap(() => this.api.getMe()),
             tap(user => this.userSubject.next(user)),
             catchError(err => {
                 console.log("Error happened while fetching user", err);

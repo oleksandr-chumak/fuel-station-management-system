@@ -141,8 +141,10 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should assign manager to fuel station")
         public void shouldAssignManagerToFuelStation() throws Exception {
-            FuelStationResponse fuelStationResponse = fuelStationTestClient.assignManagerToFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
-            assertThat(fuelStationResponse.getAssignedManagersIds()).contains(testManager.getCredentialsId());
+            var assignedManger = fuelStationTestClient.assignManagerToFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
+            var fuelStation = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
+
+            assertThat(fuelStation.getAssignedManagersIds()).contains(assignedManger.getCredentialsId());
         }
 
         @Test
@@ -186,8 +188,9 @@ public class FuelStationControllerTest {
         @DisplayName("Should unassign manager from fuel station")
         public void shouldUnassignManagerFromFuelStation() throws Exception {
             fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
-            FuelStationResponse fuelStationResponse = fuelStationTestClient.unassignManagerFromFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
-            assertThat(fuelStationResponse.getAssignedManagersIds()).isEmpty();
+            fuelStationTestClient.unassignManagerFromFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
+            var fuelStation = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
+            assertThat(fuelStation.getAssignedManagersIds()).isEmpty();
         }
 
         @Test
