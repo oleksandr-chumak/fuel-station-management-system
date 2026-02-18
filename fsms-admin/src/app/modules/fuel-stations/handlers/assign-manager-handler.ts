@@ -1,17 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { catchError, Observable, switchMap, tap, throwError } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { FuelStationRestClient, Manager } from 'fsms-web-api';
 import { FuelStationStore } from '../fuel-station-store';
 import { CommandHandler } from '../../common/command-handler';
 import { AssignManager } from '../fuel-station-commands';
 import { MessageService } from 'primeng/api';
-import { GetManagerByIdHandler } from '../../managers/commands/get-manager-by-id-handler';
 
 @Injectable({ providedIn: 'root' })
 export class AssignManagerHandler extends CommandHandler<AssignManager, Manager> {
 
     private readonly api = inject(FuelStationRestClient);
-    private readonly getManagerByIdHandler = inject(GetManagerByIdHandler);
     private readonly store = inject(FuelStationStore);
     
     private readonly messageService = inject(MessageService);

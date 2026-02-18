@@ -1,48 +1,35 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
-import { TableModule } from 'primeng/table';
-import { PanelModule } from 'primeng/panel';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
-import { SkeletonModule } from 'primeng/skeleton';
+import { PanelModule } from 'primeng/panel';
 import { AssignManagerDialogComponent } from '../../../../modules/managers/components/assign-manager-dialog/assign-manager-dialog.component';
-import { UnassignManagerHandler } from '../../../../modules/fuel-stations/handlers/unassign-manager-handler';
+import { ManagerTable } from '../../../../modules/managers/components/manager-table/manager-table';
+import { UnassignManagerButton } from '../../../../modules/fuel-stations/components/unassign-manager-button/unassign-manager-button';
 import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
 import { GetAssignedManagersHandler } from '../../../../modules/fuel-stations/handlers/get-assigned-managers-handler';
 
 @Component({
   selector: 'app-fuel-station-managers-page',
-  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, AssignManagerDialogComponent],
+  imports: [PanelModule, ButtonModule, AssignManagerDialogComponent, ManagerTable, UnassignManagerButton],
   templateUrl: './fuel-station-managers.page.html'
 })
 export class FuelStationManagersPage implements OnInit, OnDestroy {
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly fuelStationStore = inject(FuelStationStore);
+  private readonly getAssignedManagersHandler = inject(GetAssignedManagersHandler);
 
-  private fuelStationStore = inject(FuelStationStore);
-  private getAssignedManagersHandler = inject(GetAssignedManagersHandler);
-  private unassignManagerHandler = inject(UnassignManagerHandler)
+  protected readonly managers = toSignal(this.fuelStationStore.managers$, { initialValue: [] });
+  protected readonly loading = toSignal(this.getAssignedManagersHandler.loading$, { initialValue: false });
 
-  private fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
-
-  managers$ = this.fuelStationStore.managers$;
-  loading$ = this.getAssignedManagersHandler.loading$;
-  loadingUnassignManager$ = this.unassignManagerHandler.loading$;
-
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(5).fill(null);
-  
   ngOnInit(): void {
+    const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
     this.getAssignedManagersHandler
-      .handle({ fuelStationId: this.fuelStationId })
-      .subscribe()
+      .handle({ fuelStationId })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   ngOnDestroy(): void {
     this.fuelStationStore.resetManagers();
   }
-
-  protected unassignManger(managerId: number) {
-    this.unassignManagerHandler
-      .handle({ fuelStationId: this.fuelStationId, managerId })
-      .subscribe();
-  }
-
 }

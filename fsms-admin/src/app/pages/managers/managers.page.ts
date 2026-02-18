@@ -1,49 +1,37 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { TableModule } from 'primeng/table';
-import { SkeletonModule } from 'primeng/skeleton';
 import { PanelModule } from 'primeng/panel';
-import { TagModule } from 'primeng/tag';
 import { CreateManagerDialogComponent } from '../../modules/managers/components/create-manager-dialog/create-manager-dialog.component';
-import { Manager, ManagerStatus } from "fsms-web-api";
-import { AppConfigService } from '../../modules/common/app-config.service';
+import { ManagerTable } from '../../modules/managers/components/manager-table/manager-table';
+import { SignInAsManagerButton } from '../../modules/managers/components/sign-in-as-manager-button/sign-in-as-manager-button';
+import { Manager } from 'fsms-web-api';
 import { GetManagersHandler } from '../../modules/managers/commands/get-managers-handler';
-import { GetManagerAccessTokenHandler } from '../../modules/managers/commands/get-manager-access-token-handler';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-managers-page',
-  imports: [CommonModule, ButtonModule, TableModule, SkeletonModule, PanelModule, TagModule, CreateManagerDialogComponent],
+  imports: [PanelModule, ButtonModule, CreateManagerDialogComponent, ManagerTable, SignInAsManagerButton],
   templateUrl: './managers.page.html'
 })
 export class ManagersPage implements OnInit {
-  
-  private appConfigService = inject(AppConfigService);
-  private getManagersHandler = inject(GetManagersHandler);
-  private getManagerAccessTokenHandler = inject(GetManagerAccessTokenHandler);
+  private readonly destroyRef = inject(DestroyRef);
+  private readonly getManagersHandler = inject(GetManagersHandler);
 
-  managers: Manager[] = [];
-  loading$ = this.getManagersHandler.loading$;
+  protected managers: Manager[] = [];
+  protected readonly loading = toSignal(this.getManagersHandler.loading$, { initialValue: false });
 
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(6).fill(null);
-  
   ngOnInit(): void {
-    this.getManagersHandler.handle({})
-      .subscribe((managers) => this.managers = managers)
+    this.fetchManagers();
   }
 
-  handleSignInAsManager(managerId: number) {
-    const managerUrl = this.appConfigService.getConfig().managerUrl;
-    this.getManagerAccessTokenHandler
-      .handle({ managerId })
-      .subscribe(token => window.open(`${managerUrl}/login?token=${token}`));
-  }
-
-  getSeverity(manager: Manager): "success" | undefined {
-    if(manager.status === ManagerStatus.Active) {
-      return "success";
-    }
-    return undefined;
+  protected fetchManagers() {
+    this.getManagersHandler
+      .handle({})
+      .pipe(
+        tap(managers => this.managers = managers),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe();
   }
 }

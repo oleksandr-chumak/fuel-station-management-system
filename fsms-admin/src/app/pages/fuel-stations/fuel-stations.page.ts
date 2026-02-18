@@ -1,48 +1,43 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
-import { CommonModule } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
 import { Router } from '@angular/router';
-import { SkeletonModule } from 'primeng/skeleton';
 import { CreateFuelStationDialogComponent } from '../../modules/fuel-stations/components/create-fuel-station-dialog/create-fuel-station-dialog.component';
+import { FuelStationTable } from '../../modules/fuel-stations/components/fuel-station-table/fuel-station-table';
 import { FuelStation } from 'fsms-web-api';
 import { GetFuelStationsHandler } from '../../modules/fuel-stations/handlers/get-fuel-stations-handler';
 import { tap } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-fuel-stations-page',
-  imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule, DialogModule, CreateFuelStationDialogComponent, SkeletonModule],
+  imports: [PanelModule, ButtonModule, CreateFuelStationDialogComponent, FuelStationTable],
   templateUrl: './fuel-stations.page.html',
 })
 export class FuelStationsPage implements OnInit {
-  private router = inject(Router);
-  private getFuelStationsHandler = inject(GetFuelStationsHandler);
+  private readonly destroyRef = inject(DestroyRef)
+
+  private readonly router = inject(Router);
+  private readonly getFuelStationsHandler = inject(GetFuelStationsHandler);
 
   protected fuelStations: FuelStation[] = [];
-  protected readonly loading = toSignal(this.getFuelStationsHandler.loading$, { initialValue: false }) ;
-
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(5).fill(null);
-
-  getSeverity(fuelStation: FuelStation): "success" | undefined {
-    if(fuelStation.active) {
-      return "success";
-    }
-    return undefined;
-  }
+  protected readonly loading = toSignal(this.getFuelStationsHandler.loading$, { initialValue: false });
 
   ngOnInit(): void {
+    this.fetchFuelStations();
+  }
+
+  protected fetchFuelStations(): void {
     this.getFuelStationsHandler
       .handle({})
-      .pipe(tap((fuelStations) => this.fuelStations = fuelStations))
+      .pipe(
+        tap((fuelStations) => this.fuelStations = fuelStations),
+        takeUntilDestroyed(this.destroyRef)
+      )
       .subscribe();
   }
 
-  handleViewClick(fuelStationId: number) {
-    this.router.navigate(["/fuel-stations/" + fuelStationId + "/info"]);
+  protected viewFuelStation(fuelStationId: number): void {
+    this.router.navigate(['/fuel-stations/' + fuelStationId + '/info']);
   }
 }

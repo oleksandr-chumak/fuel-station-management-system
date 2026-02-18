@@ -1,0 +1,48 @@
+<p-table
+        [value]="managers()"
+        [loading]="loading()"
+        size="small"
+        [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+
+    <ng-template #header>
+        <tr>
+            <th>Id</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Full Name</th>
+            @if (showStatus()) {
+                <th>Status</th>
+            }
+            <th class="flex items-center justify-center">Actions</th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-manager>
+        <tr>
+            <td>{{ manager.credentialsId }}</td>
+            <td>{{ manager.firstName }}</td>
+            <td>{{ manager.lastName }}</td>
+            <td>{{ manager.fullName }}</td>
+            @if (showStatus()) {
+                <td><p-tag [value]="manager.status.toString()" [severity]="getStatusSeverity(manager)" /></td>
+            }
+            <td>
+                <div class="flex items-center justify-center">
+                    <ng-container *ngTemplateOutlet="actionsTemplate(); context: { $implicit: manager }" />
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template #loadingbody>
+        @for (row of skeletonRows; track $index) {
+            <tr style="height: 46px">
+                @for (col of skeletonCols(); track $index) {
+                    <td><p-skeleton /></td>
+                }
+            </tr>
+        }
+    </ng-template>
+
+</p-table>

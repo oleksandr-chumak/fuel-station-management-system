@@ -1,0 +1,40 @@
+<p-table
+        [value]="fuelStations()"
+        [loading]="loading()"
+        size="small"
+        [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+
+    <ng-template #header>
+        <tr>
+            <th>Id</th>
+            <th>Address</th>
+            <th>Status</th>
+            <th class="flex items-center justify-center">Action</th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-fuelStation>
+        <tr>
+            <td>{{ fuelStation.fuelStationId }}</td>
+            <td>{{ fuelStation.address }}</td>
+            <td><p-tag [value]="fuelStation.status" [severity]="getSeverity(fuelStation)" /></td>
+            <td>
+                <div class="flex items-center justify-center">
+                    <p-button (onClick)="viewClicked.emit(fuelStation.fuelStationId)" size="small" severity="secondary" [outlined]="true">View</p-button>
+                </div>
+            </td>
+        </tr>
+    </ng-template>
+
+    <ng-template #loadingbody>
+        @for (row of skeletonRows; track $index) {
+            <tr style="height: 46px">
+                @for (col of skeletonCols; track $index) {
+                    <td><p-skeleton /></td>
+                }
+            </tr>
+        }
+    </ng-template>
+
+</p-table>
