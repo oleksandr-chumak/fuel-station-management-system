@@ -1,5 +1,5 @@
 <p-panel header="Fuel stations">
-    <p-table [value]="fuelStations" size="small" [loading]="loading" [showLoader]="false"
+    <p-table [value]="fuelStations" size="small" [loading]="loading()" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>

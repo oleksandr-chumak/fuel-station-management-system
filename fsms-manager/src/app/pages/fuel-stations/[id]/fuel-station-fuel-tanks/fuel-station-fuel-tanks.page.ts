@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FuelGrade } from 'fsms-web-api';
+import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks-page',
@@ -14,22 +15,14 @@ import { FuelGrade } from 'fsms-web-api';
 })
 export class FuelStationFuelTanksPage {
 
-  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
+  private readonly store = inject(FuelStationStore);
 
-  visible = false;
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(4).fill(null);
+  protected readonly fuelStation = toSignal(this.store.fuelStation$, { initialValue: null });
+
+  protected readonly skeletonRows = new Array(5).fill(null);
+  protected readonly skeletonCols = new Array(4).fill(null);
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
     return FuelGrade[fuelGrade];
   }
-
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
-
-  get loading$() {
-    return this.ctxService.loading.fuelStation;
-  }
-
 }

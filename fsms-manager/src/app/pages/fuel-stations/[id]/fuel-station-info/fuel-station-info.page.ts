@@ -1,20 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FuelStation } from 'fsms-web-api';
+import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-info-page',
-  imports: [CommonModule, PanelModule, InputTextModule, IftaLabelModule],
+  imports: [PanelModule, InputTextModule, IftaLabelModule],
   templateUrl: './fuel-station-info.page.html'
 })
 export class FuelStationInfoPage {
-  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
-  
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
+  private readonly store = inject(FuelStationStore);
 
+  protected readonly fuelStation: Signal<FuelStation | null> = toSignal(this.store.fuelStation$, { initialValue: null });
 }

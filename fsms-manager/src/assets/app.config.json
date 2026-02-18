@@ -1,0 +1,4 @@
+{
+  "restApiUrl": "http://localhost:8080",
+  "stompApiUrl": "ws://localhost:8080/ws"
+}

@@ -1,67 +1,10 @@
 <p-panel header="Fuel Orders">
-    <p-table
-        [value]="fuelOrders()"
-        [loading]="loadingOrders()"
-        size="small"
-        [showLoader]="false"
-        [tableStyle]="{ 'min-width': '60rem' }">
-
-        <ng-template #header>
-            <tr>
-                <th>Order ID</th>
-                <th>Fuel Grade</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </ng-template>
-
-        <ng-template #body let-order>
-            <tr>
-                <td>{{ order.fuelOrderId }}</td>
-                <td>{{ getFuelGradeValue(order.fuelGrade) }}</td>
-                <td>{{ order.amount }}</td>
-                <td>
-                    <p-tag
-                        [value]="getFuelOrderStatusValue(order.fuelOrderStatus)"
-                        [severity]="getSeverity(order.fuelOrderStatus)" />
-                </td>
-                <td>
-                    <div class="flex items-center gap-2">
-                        @if (order.pending) {
-                            <button
-                                pButton pRipple
-                                type="button"
-                                icon="pi pi-check"
-                                severity="success"
-                                [loading]="loadingAction()"
-                                (click)="confirmFuelOrder(order.fuelOrderId)"
-                                text rounded>
-                            </button>
-                            <button
-                                pButton pRipple
-                                type="button"
-                                icon="pi pi-times"
-                                severity="danger"
-                                [loading]="loadingAction()"
-                                (click)="rejectFuelOrder(order.fuelOrderId)"
-                                text rounded>
-                            </button>
-                        }
-                    </div>
-                </td>
-            </tr>
-        </ng-template>
-
-        <ng-template #loadingbody>
-            @for (row of skeletonRows; track $index) {
-                <tr style="height: 46px">
-                    @for (col of skeletonCols; track $index) {
-                        <td><p-skeleton /></td>
-                    }
-                </tr>
-            }
-        </ng-template>
-
-    </p-table>
+    <app-fuel-order-table 
+        [fuelOrders]="fuelOrders()"
+        [fetchingFuelOrders]="fetchingFuelOrders()"
+        [confirmingFuelOrder]="confirmingFuelOrder()"
+        [rejectingFuelOrder]="rejectingFuelOrder()"
+        (confirmFuelOrderClicked)="confirmFuelOrder($event)"
+        (rejectFuelOrderClicked)="rejectFuelOrder($event)"
+    />
 </p-panel>

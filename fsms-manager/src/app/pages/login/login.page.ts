@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { finalize } from 'rxjs';
+import { catchError, EMPTY, finalize, tap } from 'rxjs';
 import { PanelModule } from 'primeng/panel';
 import { AuthService, LoginFormComponent } from 'fsms-security';
 
@@ -34,17 +34,26 @@ export class LoginPage implements OnInit {
     this.loading = true;
     this.authService
       .loginManager(data.email, data.password)
-      .pipe(finalize(() => this.loading = false))
-      .subscribe({
-        next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: "Login successful" });
+      .pipe(
+        catchError(() => {
+          this.messageService.add({ 
+            severity: "error", 
+            summary: "Error", 
+            detail: "Invalid credentials"
+          });
+          return EMPTY;
+        }),
+        tap(() => {
+          this.messageService.add({ 
+            severity: 'success', 
+            summary: 'Success', 
+            detail: "Login successful" 
+          });
           this.router.navigate(['/']);
-        },
-        error: (error) => {
-          console.error('Login failed', error);
-          this.messageService.add({ severity: "error", summary: "Error", detail: "Invalid credentials"});
-        },
-      });
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe();
   }
 
 }

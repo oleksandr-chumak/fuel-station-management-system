@@ -47,21 +47,9 @@ export class FuelStationStore {
     return this._fuelOrders.asObservable();
   }
 
-  resetFuelOrders(): void {
-    this._fuelOrders.next([]);
-  }
-
-  resetManagers(): void {
-    this._managers.next([]);
-  }
-
-  resetFuelStation(): void {
-    this._fuelStation.next(null);
-  }
-
   reset(): void {
-    this.resetFuelStation();
-    this.resetManagers();
-    this.resetFuelOrders();
+    this._fuelStation.next(null);
+    this._managers.next([]);
+    this._fuelOrders.next([]);
   }
 }

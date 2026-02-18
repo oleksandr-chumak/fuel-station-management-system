@@ -5,6 +5,7 @@ import { FuelOrder } from "../../../../../../fsms-client-sdk/dist/fsms-web-api/t
 import { Observable, tap } from "rxjs";
 import { RejectFuelOrderHandler } from "../../fuel-orders/handlers/reject-fuel-order-handler";
 import { FuelStationStore } from "../fuel-station-store";
+import { MessageService } from "primeng/api";
 
 @Injectable({ providedIn: "root" })
 export class RejectFuelStationOrderHandler 
@@ -12,6 +13,8 @@ export class RejectFuelStationOrderHandler
 
     private readonly fuelStationStore = inject(FuelStationStore);
     private readonly confirmFuelOrderHandler = inject(RejectFuelOrderHandler);
+
+    private readonly messageService = inject(MessageService);
 
     execute(command: RejectFuelStationOrder): Observable<FuelOrder> {
         return this.confirmFuelOrderHandler.handle({ fuelOrderId: command.fuelOrderId })
@@ -24,8 +27,13 @@ export class RejectFuelStationOrderHandler
                             }
                             return order;
                         });
-
                     this.fuelStationStore.fuelOrders = orders;
+
+                    this.messageService.add({
+                        severity: 'success', 
+                        summary: 'Order Rejected', 
+                        detail: 'The fuel order has been rejected'  
+                    });
                 })
             )
     }

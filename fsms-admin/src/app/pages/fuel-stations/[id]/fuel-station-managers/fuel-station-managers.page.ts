@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { TableModule } from 'primeng/table';
 import { PanelModule } from 'primeng/panel';
 import { ButtonModule } from 'primeng/button';
@@ -14,7 +14,7 @@ import { GetAssignedManagersHandler } from '../../../../modules/fuel-stations/ha
   imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, AssignManagerDialogComponent],
   templateUrl: './fuel-station-managers.page.html'
 })
-export class FuelStationManagersPage implements OnInit {
+export class FuelStationManagersPage implements OnInit, OnDestroy {
 
   private fuelStationStore = inject(FuelStationStore);
   private getAssignedManagersHandler = inject(GetAssignedManagersHandler);
@@ -35,7 +35,11 @@ export class FuelStationManagersPage implements OnInit {
       .subscribe()
   }
 
-  unassignManger(managerId: number) {
+  ngOnDestroy(): void {
+    this.fuelStationStore.resetManagers();
+  }
+
+  protected unassignManger(managerId: number) {
     this.unassignManagerHandler
       .handle({ fuelStationId: this.fuelStationId, managerId })
       .subscribe();

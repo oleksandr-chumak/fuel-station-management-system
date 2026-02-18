@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
-import { FuelGrade } from 'fsms-web-api';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FuelGrade, FuelStation } from 'fsms-web-api';
+import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-fuel-prices-page',
@@ -15,17 +16,14 @@ import { FuelGrade } from 'fsms-web-api';
   templateUrl: './fuel-station-fuel-prices.page.html'
 })
 export class FuelStationFuelPricesPage {
+  private readonly store = inject(FuelStationStore);
 
-  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
+  protected readonly fuelStation: Signal<FuelStation | null> = toSignal(this.store.fuelStation$, { initialValue: null });
 
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(3).fill(null);
+  protected readonly skeletonRows = new Array(5).fill(null);
+  protected readonly skeletonCols = new Array(3).fill(null);
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
     return FuelGrade[fuelGrade];
-  }
-
-  get ctx$() {
-    return this.ctxService.getContext();
   }
 }

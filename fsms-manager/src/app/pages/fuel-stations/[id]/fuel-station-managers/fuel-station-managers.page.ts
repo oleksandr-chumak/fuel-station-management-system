@@ -1,47 +1,33 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, Signal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import ManagerFuelStationContextService from '../../../../modules/fuel-station/services/manager-fuel-station-context.service';
-import { MessageService } from 'primeng/api';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { GetAssignedManagersHandler } from '../../../../modules/fuel-station/handlers/get-assigned-managers.handler';
+import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-managers-page',
   imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
   templateUrl: './fuel-station-managers.page.html'
 })
-export class FuelStationManagersPage {
+export class FuelStationManagersPage implements OnInit {
 
-  private messageService: MessageService = inject(MessageService);
-  private ctxService: ManagerFuelStationContextService = inject(ManagerFuelStationContextService);
+  private readonly handler = inject(GetAssignedManagersHandler);
+  private readonly store = inject(FuelStationStore);
 
-  visible = false;
-  skeletonRows = new Array(5).fill(null);
-  skeletonCols = new Array(4).fill(null);
-  
+  protected readonly managers = toSignal(this.store.managers$, { initialValue: [] });
+  protected readonly loading = toSignal(this.handler.loading$, { initialValue: false });
+
+  protected readonly skeletonRows = new Array(5).fill(null);
+  protected readonly skeletonCols = new Array(4).fill(null);
+
   ngOnInit(): void {
-    this.getManagers();
+    const fuelStationId = this.store.fuelStation.fuelStationId;
+    this.handler
+      .handle({ fuelStationId })
+      .subscribe();
   }
-
-  openDialog() { 
-    this.visible = true;
-  }
-
-  get ctx$() {
-    return this.ctxService.getContext();
-  }
-
-  get loading$() {
-    return this.ctxService.loading.managers;
-  }
-
-  private getManagers() {
-    this.ctxService.getAssignedManagers()
-      .subscribe({
-        error: () => this.messageService.add({ severity: "error", summary: "Error", detail: "An error occurred while fetching managers"})
-      })
-  }
-
 }

@@ -1,43 +1,10 @@
 <p-panel header="Fuel Orders">
-    <p-table [value]="fuelOrders()" size="small" [loading]="loading()" [showLoader]="false"
-        [tableStyle]="{ 'min-width': '50rem' }" size="small">
-        <ng-template #header>
-            <tr>
-                <th>Id</th>
-                <th>Status</th>
-                <th>Grade</th>
-                <th>Amount</th>
-                <th>Created At</th>
-                <th>Action</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-fuelOrder>
-            <tr>
-                <td>{{ fuelOrder.id }}</td>
-                <td><p-tag [value]="getValue(fuelOrder.status)" [severity]="getSeverity(fuelOrder.status)" /></td>
-                <td>{{ getFuelGradeValue(fuelOrder.fuelGrade) }}</td>
-                <td>{{ fuelOrder.amount }}L</td>
-                <td>{{ fuelOrder.createdAt }}</td>
-                <td>
-                    @if(fuelOrder.pending) {
-                        <div class="flex gap-2">
-                            <p-button (onClick)="confirmFuelOrder(fuelOrder.id)" [loading]="actionLoading()" label="Confirm" variant="outlined" severity="success" size="small" />
-                            <p-button (onClick)="rejectFuelOrder(fuelOrder.id)" [loading]="actionLoading()" label="Reject" variant="outlined" severity="danger" size="small" />
-                        </div>
-                    } @else if (fuelOrder.rejected) {
-                        <div>Fuel order is already rejected</div>
-                    } @else if (fuelOrder.confirmed) {
-                        <div>Fuel order is already confirmed</div>
-                    }
-                </td>
-            </tr>
-        </ng-template>
-        <ng-template #loadingbody>
-            <tr *ngFor="let row of skeletonRows" style="height:46px">
-                <td *ngFor="let col of skeletonCols">
-                    <p-skeleton></p-skeleton>
-                </td>
-            </tr>
-        </ng-template>
-    </p-table>
+    <app-fuel-order-table
+        [fuelOrders]="fuelOrders()"
+        [fetchingFuelOrders]="fetchingFuelOrders()"
+        [confirmingFuelOrder]="confirmingFuelOrder()"
+        [rejectingFuelOrder]="rejectingFuelOrder()"
+        (confirmFuelOrderClicked)="confirmFuelOrder($event)"
+        (rejectFuelOrderClicked)="rejectFuelOrder($event)"
+    />
 </p-panel>
