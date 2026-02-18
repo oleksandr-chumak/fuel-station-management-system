@@ -2,7 +2,6 @@ package com.fuelstation.managmentapi.fuelorder.domain;
 
 import lombok.Getter;
 
-// TODO use Processed
 @Getter
 public enum FuelOrderStatus {
     PENDING(1, "pending"),

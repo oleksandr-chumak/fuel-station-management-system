@@ -4,10 +4,11 @@ import { ButtonModule } from "primeng/button";
 import { SkeletonModule } from "primeng/skeleton";
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
+import { FuelStationTemplate } from "../../directives/fuel-station-template-directive";
 
 @Component({
     selector: 'app-fuel-station-table',
-    imports: [TableModule, TagModule, SkeletonModule, ButtonModule],
+    imports: [TableModule, TagModule, SkeletonModule, ButtonModule, FuelStationTemplate],
     templateUrl: './fuel-station-table.html'
 })
 export class FuelStationTable {

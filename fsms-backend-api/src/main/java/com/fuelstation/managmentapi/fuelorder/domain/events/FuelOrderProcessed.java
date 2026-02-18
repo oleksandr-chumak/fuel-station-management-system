@@ -2,14 +2,14 @@ package com.fuelstation.managmentapi.fuelorder.domain.events;
 
 import com.fuelstation.managmentapi.common.domain.DomainEvent;
 
-public record FuelOrderRejected(
+public record FuelOrderProcessed(
         FuelOrderEventType type,
         long fuelOrderId,
         long fuelStationId
 ) implements DomainEvent {
 
-    public FuelOrderRejected(long fuelOrderId, long fuelStationId) {
-        this(FuelOrderEventType.FUEL_ORDER_REJECTED, fuelOrderId, fuelStationId);
+    public FuelOrderProcessed(long fuelOrderId, long fuelStationId) {
+        this(FuelOrderEventType.FUEL_ORDER_PROCESSED, fuelOrderId, fuelStationId);
     }
 
 }

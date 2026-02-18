@@ -15,7 +15,7 @@
             </tr>
         </ng-template>
 
-        <ng-template #body let-order>
+        <ng-template fuelOrderTemplate #body let-order>
             <tr>
                 <td>{{ order.fuelOrderId }}</td>
                 <td><p-tag [value]="getFuelOrderStatusValue(order.status)" [severity]="getSeverity(order.status)" /></td>

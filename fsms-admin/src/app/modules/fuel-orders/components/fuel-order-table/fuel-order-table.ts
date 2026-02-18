@@ -6,10 +6,11 @@ import { PanelModule } from "primeng/panel";
 import { SkeletonModule } from "primeng/skeleton";
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
+import { FuelTankTemplate } from "../../directives/fuel-order-template-directive";
 
 @Component({
   selector: 'app-fuel-order-table',
-  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
+  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelTankTemplate],
   templateUrl: './fuel-order-table.html'
 })
 export class FuelOrderTable {

@@ -1,9 +1,10 @@
+import { FuelGrade } from "../core/fuel-grade.enum";
 import { FuelPrice } from "./fuel-price.model";
 import FuelStationStatus from "./fuel-station-status.enum";
 import { FuelTank } from "./fuel-tank.model";
 
 export class FuelStation {
-  
+
   constructor(
     public fuelStationId: number,
     public street: string,
@@ -16,21 +17,21 @@ export class FuelStation {
     public fuelTanks: FuelTank[] = [],
     public assignedManagersIds: number[] = [],
     public status: FuelStationStatus
-  ) {}
+  ) { }
 
   get active() {
     return this.status === FuelStationStatus.Active;
   }
-  
+
   get deactivated() {
     return this.status === FuelStationStatus.Deactivated;
   }
-  
+
   clone(): FuelStation {
     const clonedFuelPrices = this.fuelPrices.map(fuelPrice => fuelPrice.clone());
     const clonedFuelTanks = this.fuelTanks.map(fuelTank => fuelTank.clone())
     const clonedManagerIds = [...this.assignedManagersIds];
-    
+
     return new FuelStation(
       this.fuelStationId,
       this.street,
@@ -46,12 +47,25 @@ export class FuelStation {
     );
   }
 
+  isManagerAssigned(mangerId: number): boolean {
+    return this.assignedManagersIds.some((id) => id === mangerId);
+  }
+
   assignManger(managerId: number): void {
     this.assignedManagersIds.push(managerId);
   }
 
   unassignManger(managerId: number): void {
     this.assignedManagersIds = this.assignedManagersIds.filter((id) => id !== managerId);
+  }
+
+  updateFuelPrice(fuelGrade: FuelGrade, newPricePerLiter: number) {
+    this.fuelPrices = this.fuelPrices.map((price) => {
+        if (price.fuelGrade === fuelGrade) {
+          price.pricePerLiter = newPricePerLiter;
+        }
+        return price;
+      })
   }
 
 }

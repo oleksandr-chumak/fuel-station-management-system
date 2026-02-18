@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
-import com.fuelstation.managmentapi.fuelstation.domain.events.FuelDeliveryProcessed;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTank;
 
@@ -38,8 +37,6 @@ public class FuelDeliveryServiceImpl implements FuelDeliveryService {
                 fuelStation.refillFuelTank(fuelTank, fuelTank.getAvailableVolume());
             }
         }
-
-        fuelStation.pushDomainEvent(new FuelDeliveryProcessed(fuelOrder.getFuelOrderId()));
     }
 
 }

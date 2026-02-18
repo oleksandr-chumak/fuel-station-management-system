@@ -7,10 +7,11 @@ import { ManagerTable } from '../../../../modules/managers/components/manager-ta
 import { UnassignManagerButton } from '../../../../modules/fuel-stations/components/unassign-manager-button/unassign-manager-button';
 import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
 import { GetAssignedManagersHandler } from '../../../../modules/fuel-stations/handlers/get-assigned-managers-handler';
+import { ManagerTemplateDirective } from "../../../../modules/managers/directives/manager-template-directive";
 
 @Component({
   selector: 'app-fuel-station-managers-page',
-  imports: [PanelModule, ButtonModule, AssignManagerDialogComponent, ManagerTable, UnassignManagerButton],
+  imports: [PanelModule, ButtonModule, AssignManagerDialogComponent, ManagerTable, UnassignManagerButton, ManagerTemplateDirective],
   templateUrl: './fuel-station-managers.page.html'
 })
 export class FuelStationManagersPage implements OnInit, OnDestroy {

@@ -3,15 +3,16 @@ import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { CreateManagerDialogComponent } from '../../modules/managers/components/create-manager-dialog/create-manager-dialog.component';
 import { ManagerTable } from '../../modules/managers/components/manager-table/manager-table';
+import { ManagerTemplateDirective } from '../../modules/managers/directives/manager-template-directive';
 import { SignInAsManagerButton } from '../../modules/managers/components/sign-in-as-manager-button/sign-in-as-manager-button';
 import { Manager } from 'fsms-web-api';
-import { GetManagersHandler } from '../../modules/managers/commands/get-managers-handler';
+import { GetManagersHandler } from '../../modules/managers/handlers/get-managers-handler';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-managers-page',
-  imports: [PanelModule, ButtonModule, CreateManagerDialogComponent, ManagerTable, SignInAsManagerButton],
+  imports: [PanelModule, ButtonModule, CreateManagerDialogComponent, ManagerTable, ManagerTemplateDirective, SignInAsManagerButton],
   templateUrl: './managers.page.html'
 })
 export class ManagersPage implements OnInit {

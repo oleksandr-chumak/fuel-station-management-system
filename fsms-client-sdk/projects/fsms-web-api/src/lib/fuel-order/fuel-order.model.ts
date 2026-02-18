@@ -31,5 +31,9 @@ export class FuelOrder {
     reject(): void {
         this.status = FuelOrderStatus.Rejected;
     }
+
+    process(): void {
+        this.status = FuelOrderStatus.Processed;
+    }
     
 }

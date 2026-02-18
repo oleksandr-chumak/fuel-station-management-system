@@ -15,7 +15,7 @@ export class ManagerRestClient {
 
   getManagerById(managerId: number): Observable<Manager> {
     return this.restClient.get("api/managers/" + managerId)
-      .pipe(map(this.managerMapper.fromJson));
+      .pipe(map((data) => this.managerMapper.fromJson(data)));
   }
 
   getManagers(): Observable<Manager[]> {

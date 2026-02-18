@@ -32,6 +32,8 @@ export class FuelOrderMapper {
           return FuelOrderStatus.Confirmed;
         case "rejected":
           return FuelOrderStatus.Rejected;
+        case "processed":
+          return FuelOrderStatus.Processed;
         default:
           throw new Error(`Invalid status string: ${status}`);
       }

@@ -11,27 +11,32 @@ export class AssignManagerHandler extends CommandHandler<AssignManager, Manager>
 
     private readonly api = inject(FuelStationRestClient);
     private readonly store = inject(FuelStationStore);
-    
+
     private readonly messageService = inject(MessageService);
 
     execute({ fuelStationId, managerId }: AssignManager): Observable<Manager> {
         return this.api.assignManager(fuelStationId, managerId).pipe(
             catchError((e) => {
-                this.messageService.add({ 
-                    severity: "error", 
-                    summary: "Error", 
-                    detail: "An error occurred while assigning manager" 
+                this.messageService.add({
+                    severity: "error",
+                    summary: "Error",
+                    detail: "An error occurred while assigning manager"
                 });
                 return throwError(() => e);
             }),
             tap((manager) => {
-                this.messageService.add({ 
-                    severity: "success", 
-                    summary: "Assigned", 
-                    detail: "Manager was successfully assigned" 
+                this.messageService.add({
+                    severity: "success",
+                    summary: "Assigned",
+                    detail: "Manager was successfully assigned"
                 });
-                this.store.managers = [...this.store.managers, manager]; 
-                
+
+                if (this.store.fuelStation.isManagerAssigned(manager.credentialsId)) {
+                    return;
+                }
+
+                this.store.managers = [...this.store.managers, manager];
+
                 const clonedFuelStation = this.store.fuelStation.clone();
                 clonedFuelStation.assignManger(manager.credentialsId);
                 this.store.fuelStation = clonedFuelStation;

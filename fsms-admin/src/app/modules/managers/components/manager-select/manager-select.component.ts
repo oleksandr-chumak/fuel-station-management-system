@@ -4,7 +4,7 @@ import { tap } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Manager } from 'fsms-web-api';
-import { GetManagersHandler } from '../../commands/get-managers-handler';
+import { GetManagersHandler } from '../../handlers/get-managers-handler';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({

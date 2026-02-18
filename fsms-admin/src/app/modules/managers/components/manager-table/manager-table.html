@@ -3,8 +3,8 @@
         [loading]="loading()"
         size="small"
         [showLoader]="false"
-        [tableStyle]="{ 'min-width': '50rem' }">
-
+        [tableStyle]="{ 'min-width': '50rem' }"
+    >
     <ng-template #header>
         <tr>
             <th>Id</th>
@@ -18,7 +18,7 @@
         </tr>
     </ng-template>
 
-    <ng-template #body let-manager>
+    <ng-template managerTemplate #body let-manager>
         <tr>
             <td>{{ manager.credentialsId }}</td>
             <td>{{ manager.firstName }}</td>
@@ -29,7 +29,9 @@
             }
             <td>
                 <div class="flex items-center justify-center">
-                    <ng-container *ngTemplateOutlet="actionsTemplate(); context: { $implicit: manager }" />
+                    @if (actionsTemplate(); as tmpl) {
+                        <ng-container *ngTemplateOutlet="tmpl; context: { $implicit: manager }" />
+                    }
                 </div>
             </td>
         </tr>
@@ -44,5 +46,4 @@
             </tr>
         }
     </ng-template>
-
 </p-table>

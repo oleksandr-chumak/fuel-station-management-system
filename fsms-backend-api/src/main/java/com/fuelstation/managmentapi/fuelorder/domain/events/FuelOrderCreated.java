@@ -2,11 +2,14 @@ package com.fuelstation.managmentapi.fuelorder.domain.events;
 
 import com.fuelstation.managmentapi.common.domain.DomainEvent;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+public record FuelOrderCreated(
+        FuelOrderEventType type,
+        long fuelOrderId,
+        long fuelStationId
+) implements DomainEvent {
 
-@Data
-@AllArgsConstructor
-public class FuelOrderCreated implements DomainEvent {
-   private long fuelOrderId; 
+    public FuelOrderCreated(long fuelOrderId, long fuelStationId) {
+        this(FuelOrderEventType.FUEL_ORDER_CREATED, fuelOrderId, fuelStationId);
+    }
+
 }

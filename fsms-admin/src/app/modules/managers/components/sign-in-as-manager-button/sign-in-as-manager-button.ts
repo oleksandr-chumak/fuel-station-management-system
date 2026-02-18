@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, input } from "@angular/core";
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { ButtonModule } from "primeng/button";
 import { AppConfigService } from "../../../common/app-config.service";
-import { GetManagerAccessTokenHandler } from "../../commands/get-manager-access-token-handler";
+import { GetManagerAccessTokenHandler } from "../../handlers/get-manager-access-token-handler";
 
 @Component({
     selector: 'app-sign-in-as-manager-button',

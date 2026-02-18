@@ -10,7 +10,7 @@
                 <th>Last Refill Date</th>
             </tr>
         </ng-template>
-        <ng-template #body let-fuelTank>
+        <ng-template fuelTankTemplate #body let-fuelTank>
             <tr>
                 <td>{{ fuelTank.id }}</td>
                 <td>{{ fuelTank.currentVolume }}</td>
