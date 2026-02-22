@@ -1,6 +1,6 @@
 <p-panel header="Fuel Orders">
     <app-fuel-order-table 
-        [fuelOrders]="fuelOrders()"
+        [fuelOrders]="fuelOrders() || []"
         [fetchingFuelOrders]="fetchingFuelOrders()"
         [confirmingFuelOrder]="confirmingFuelOrder()"
         [rejectingFuelOrder]="rejectingFuelOrder()"

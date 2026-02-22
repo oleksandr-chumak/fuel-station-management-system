@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
@@ -43,6 +44,9 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
 
     @Override
     public List<FuelOrder> findAll() {
-        return jpaFuelOrderRepository.findAll().stream().map(fuelOrderMapper::toDomain).toList();
+        return jpaFuelOrderRepository.findAll(Sort.by("createdAt").descending())
+                .stream()
+                .map(fuelOrderMapper::toDomain)
+                .toList();
     }
 }

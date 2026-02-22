@@ -35,7 +35,6 @@ public class FuelOrderEventHandler {
     @EventListener
     public void handle(FuelOrderConfirmed event) {
         logger.info("Fuel order was confirmed ID:{}", event.fuelOrderId());
-        processFuelDelivery.process(event.fuelOrderId());
         messagingTemplate.convertAndSend(
                 "/topic/fuel-orders/" + event.fuelOrderId() + "/confirmed",
                 event
@@ -44,6 +43,7 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.fuelStationId() + "/fuel-order-confirmed",
                 event
         );
+        processFuelDelivery.process(event.fuelOrderId());
     }
 
     @EventListener

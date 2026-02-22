@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
@@ -47,17 +47,15 @@ export class FuelStationFuelOrdersPage implements OnInit, OnDestroy {
     }
 
     protected confirmFuelOrder(fuelOrderId: number): void {
-        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
         this.confirmFuelStationOrder
-            .handle({ fuelStationId, fuelOrderId })
+            .handle({ fuelOrderId })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }
 
     protected rejectFuelOrder(fuelOrderId: number): void {
-        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
         this.rejectFuelStationOrder
-            .handle({ fuelStationId, fuelOrderId })
+            .handle({ fuelOrderId })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
     }

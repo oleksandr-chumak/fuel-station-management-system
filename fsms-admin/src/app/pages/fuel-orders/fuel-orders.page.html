@@ -1,5 +1,6 @@
 <p-panel header="Fuel Orders">
     <app-fuel-order-table
+        [showFuelStation]="true"
         [fuelOrders]="fuelOrders()"
         [fetchingFuelOrders]="fetchingFuelOrders()"
         [confirmingFuelOrder]="confirmingFuelOrder()"

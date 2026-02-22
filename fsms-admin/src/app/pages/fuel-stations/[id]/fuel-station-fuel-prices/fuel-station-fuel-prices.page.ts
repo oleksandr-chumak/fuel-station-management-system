@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, effect, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
@@ -25,8 +25,17 @@ export class FuelStationFuelPricesPage {
 
     private readonly fuelStation = toSignal(this.fuelStationStore.fuelStation$);
 
-    fuelPrices = signal<FuelPrice[]>(this.fuelStationStore.fuelStation.clone().fuelPrices);
-    loading = toSignal(this.changeFuelPriceHandler.loading$, { initialValue: false });
+    protected readonly fuelPrices = signal<FuelPrice[]>(this.fuelStationStore.fuelStation.fuelPrices);
+    protected readonly loading = toSignal(this.changeFuelPriceHandler.loading$, { initialValue: false });
+
+    constructor() {
+        effect(() => {
+            const station = this.fuelStation();
+            if (station) {
+                this.fuelPrices.set(station.fuelPrices);
+            }
+        });
+    }
 
     readonly skeletonRows = new Array(5).fill(null);
     readonly skeletonCols = new Array(3).fill(null);

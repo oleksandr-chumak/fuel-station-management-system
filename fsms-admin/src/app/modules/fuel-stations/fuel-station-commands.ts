@@ -43,11 +43,9 @@ export interface ChangeFuelPrice {
 }
 
 export interface RejectFuelStationOrder {
-    fuelStationId: number;
     fuelOrderId: number;
 }
 
 export interface ConfirmFuelStationOrder {
-    fuelStationId: number;
     fuelOrderId: number;
 }

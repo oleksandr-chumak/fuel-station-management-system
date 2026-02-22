@@ -8,9 +8,13 @@
         <ng-template #header>
             <tr>
                 <th>Order ID</th>
+                @if (showFuelStation()) {
+                    <th>Fuel Station</th>
+                }
                 <th>Status</th>
                 <th>Fuel Grade</th>
                 <th>Amount</th>
+                <th>Created At</th>
                 <th>Actions</th>
             </tr>
         </ng-template>
@@ -18,9 +22,17 @@
         <ng-template fuelOrderTemplate #body let-order>
             <tr>
                 <td>{{ order.fuelOrderId }}</td>
+                @if (showFuelStation()) {
+                    <td>
+                        <a class="underline underline-offset-4" [routerLink]="['/fuel-stations', order.fuelStationId, 'info']">
+                            Fuel station ID: {{ order.fuelStationId }}
+                        </a>
+                    </td>
+                }
                 <td><p-tag [value]="getFuelOrderStatusValue(order.status)" [severity]="getSeverity(order.status)" /></td>
                 <td>{{ getFuelGradeValue(order.fuelGrade) }}</td>
                 <td>{{ order.amount }}</td>
+                <td>{{ order.createdAt | date:'dd MMM yyyy, HH:mm' }}</td>
                 <td>
                     <div class="flex items-center gap-2">
                         @if (order.pending) {
@@ -43,7 +55,7 @@
                                 text rounded>
                             </button>
                         } @else {
-                            No available actions
+                            No actions
                         }
                     </div>
                 </td>
@@ -53,7 +65,7 @@
         <ng-template #loadingbody>
             @for (row of skeletonRows; track $index) {
                 <tr style="height: 46px">
-                    @for (col of skeletonCols; track $index) {
+                    @for (col of skeletonCols(); track $index) {
                         <td><p-skeleton /></td>
                     }
                 </tr>

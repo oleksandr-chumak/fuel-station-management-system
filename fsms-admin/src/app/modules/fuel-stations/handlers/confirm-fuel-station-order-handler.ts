@@ -1,35 +1,41 @@
 import { inject, Injectable } from "@angular/core"
 import { CommandHandler } from "../../common/command-handler";
 import { ConfirmFuelStationOrder } from "../fuel-station-commands";
-import { FuelOrder } from "../../../../../../fsms-client-sdk/dist/fsms-web-api/types/fsms-web-api";
-import { Observable, tap } from "rxjs";
-import { ConfirmFuelOrderHandler } from "../../fuel-orders/handlers/confirm-fuel-order-handler";
+import { FuelOrder, FuelOrderRestClient } from "fsms-web-api";
+import { catchError, Observable, tap, throwError } from "rxjs";
 import { FuelStationStore } from "../fuel-station-store";
 import { MessageService } from "primeng/api";
+import { FuelOrderEventHandler } from "../../fuel-orders/fuel-order-event-handler";
 
 
 @Injectable({ providedIn: "root" })
 export class ConfirmFuelStationOrderHandler
     extends CommandHandler<ConfirmFuelStationOrder, FuelOrder> {
 
-    private readonly fuelStationStore = inject(FuelStationStore);
-    private readonly confirmFuelOrderHandler = inject(ConfirmFuelOrderHandler);
+    private readonly store = inject(FuelStationStore);
+    private readonly api = inject(FuelOrderRestClient);
+    private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
 
     private readonly messageService = inject(MessageService);
 
     execute(command: ConfirmFuelStationOrder): Observable<FuelOrder> {
-        return this.confirmFuelOrderHandler.handle({ fuelOrderId: command.fuelOrderId })
+        return this.api.confirmFuelOrder(command.fuelOrderId)
             .pipe(
+                catchError((e) => {
+                    this.messageService.add({ 
+                        severity: 'error', 
+                        summary: 'Error', 
+                        detail: 'Failed to confirm fuel order' 
+                    });
+                    return throwError(() => e);
+                }),
                 tap((fuelOrder) => {
-                    const orders = this.fuelStationStore.fuelOrders
-                        .map(order => {
-                            if (order.fuelOrderId === fuelOrder.fuelOrderId) {
-                                order.confirm();
-                            }
-                            return order;
-                        });
-                    this.fuelStationStore.fuelOrders = orders;
+                    if(this.store.fuelOrders == null) {
+                        return;
+                    }
 
+                    this.store.fuelOrders = this.fuelOrderEventHandler
+                        .handleFuelOrderConfirmed(fuelOrder.fuelOrderId, this.store.fuelOrders);
                     this.messageService.add({
                         severity: 'success', 
                         summary: 'Order Confirmed', 

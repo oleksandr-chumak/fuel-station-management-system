@@ -1,38 +1,44 @@
 import { inject, Injectable } from "@angular/core";
 import { CommandHandler } from "../../common/command-handler";
 import { RejectFuelStationOrder } from "../fuel-station-commands";
-import { FuelOrder } from "../../../../../../fsms-client-sdk/dist/fsms-web-api/types/fsms-web-api";
-import { Observable, tap } from "rxjs";
-import { RejectFuelOrderHandler } from "../../fuel-orders/handlers/reject-fuel-order-handler";
+import { FuelOrder, FuelOrderRestClient } from "fsms-web-api";
+import { catchError, Observable, tap, throwError } from "rxjs";
 import { FuelStationStore } from "../fuel-station-store";
 import { MessageService } from "primeng/api";
+import { FuelOrderEventHandler } from "../../fuel-orders/fuel-order-event-handler";
 
 @Injectable({ providedIn: "root" })
-export class RejectFuelStationOrderHandler 
+export class RejectFuelStationOrderHandler
     extends CommandHandler<RejectFuelStationOrder, FuelOrder> {
 
-    private readonly fuelStationStore = inject(FuelStationStore);
-    private readonly confirmFuelOrderHandler = inject(RejectFuelOrderHandler);
+    private readonly store = inject(FuelStationStore);
+    private readonly api = inject(FuelOrderRestClient);
+    private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
 
     private readonly messageService = inject(MessageService);
 
     execute(command: RejectFuelStationOrder): Observable<FuelOrder> {
-        return this.confirmFuelOrderHandler.handle({ fuelOrderId: command.fuelOrderId })
+        return this.api.rejectFuelOrder(command.fuelOrderId)
             .pipe(
+                catchError((e) => {
+                    this.messageService.add({ 
+                        severity: 'error', 
+                        summary: 'Error', 
+                        detail: 'Failed to reject fuel order' 
+                    });
+                    return throwError(() => e);
+                }),
                 tap((fuelOrder) => {
-                    const orders = this.fuelStationStore.fuelOrders
-                        .map(order => {
-                            if (order.fuelOrderId === fuelOrder.fuelOrderId) {
-                                order.reject();
-                            }
-                            return order;
-                        });
-                    this.fuelStationStore.fuelOrders = orders;
+                    if (this.store.fuelOrders == null) {
+                        return;
+                    }
 
+                    this.store.fuelOrders = this.fuelOrderEventHandler
+                        .handleFuelOrderRejected(fuelOrder.fuelOrderId, this.store.fuelOrders);
                     this.messageService.add({
-                        severity: 'success', 
-                        summary: 'Order Rejected', 
-                        detail: 'The fuel order has been rejected'  
+                        severity: 'success',
+                        summary: 'Order Rejected',
+                        detail: 'The fuel order has been rejected'
                     });
                 })
             )

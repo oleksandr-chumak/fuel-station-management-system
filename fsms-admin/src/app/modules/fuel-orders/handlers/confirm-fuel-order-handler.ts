@@ -5,6 +5,7 @@ import { CommandHandler } from '../../common/command-handler';
 import { ConfirmFuelOrder } from '../fuel-order-commands';
 import { MessageService } from 'primeng/api';
 import { FuelOrdersStore } from '../fuel-orders-store';
+import { FuelOrderEventHandler } from '../fuel-order-event-handler';
 
 @Injectable({ providedIn: 'root' })
 export class ConfirmFuelOrderHandler
@@ -12,6 +13,7 @@ export class ConfirmFuelOrderHandler
 
     private readonly store = inject(FuelOrdersStore);
     private readonly api = inject(FuelOrderRestClient);
+    private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
 
     private readonly messageService = inject(MessageService);
 
@@ -26,15 +28,13 @@ export class ConfirmFuelOrderHandler
                 return throwError(() => e);
             }),
             tap((fuelOrder) => {
-                const orders = this.store.fuelOrders
-                    .map(order => {
-                        if (order.fuelOrderId === fuelOrder.fuelOrderId) {
-                            order.confirm();
-                        }
-                        return order;
-                    });
-
-                this.store.fuelOrders = orders;
+                this.messageService.add({
+                    severity: 'success', 
+                    summary: 'Order Confirmed', 
+                    detail: 'The fuel order has been confirmed'  
+                });
+                this.store.fuelOrders = this.fuelOrderEventHandler
+                    .handleFuelOrderConfirmed(fuelOrder.fuelOrderId, this.store.fuelOrders);
             })
         );
     }

@@ -4,7 +4,7 @@
         <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
     </ng-template>
     <app-manager-table
-        [managers]="managers()"
+        [managers]="managers() || []"
         [loading]="loading()"
         [actionsTemplate]="actions"
     />

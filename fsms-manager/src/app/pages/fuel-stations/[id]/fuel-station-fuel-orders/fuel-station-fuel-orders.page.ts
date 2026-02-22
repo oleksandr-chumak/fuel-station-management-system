@@ -6,7 +6,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FuelGrade, FuelOrder, FuelOrderStatus } from 'fsms-web-api';
+import { FuelGrade, FuelOrderStatus } from 'fsms-web-api';
 import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { GetFuelStationOrdersHandler } from '../../../../modules/fuel-station/handlers/get-fuel-station-orders.handler';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';

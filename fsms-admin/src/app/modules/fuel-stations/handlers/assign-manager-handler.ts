@@ -35,11 +35,14 @@ export class AssignManagerHandler extends CommandHandler<AssignManager, Manager>
                     return;
                 }
 
-                this.store.managers = [...this.store.managers, manager];
-
                 const clonedFuelStation = this.store.fuelStation.clone();
                 clonedFuelStation.assignManger(manager.credentialsId);
                 this.store.fuelStation = clonedFuelStation;
+
+                if(this.store.managers === null) {
+                    return;
+                }
+                this.store.managers = [...this.store.managers, manager];
             })
         );
     }

@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 public class FuelDeliveryServiceImpl implements FuelDeliveryService {
 
     public void processFuelDelivery(FuelStation fuelStation, FuelOrder fuelOrder) {
-
         if (fuelOrder.getStatus() != FuelOrderStatus.CONFIRMED) {
             throw new IllegalStateException("Fuel order must be in Confirmed status to process.");
         }

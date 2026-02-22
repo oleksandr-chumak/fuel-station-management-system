@@ -5,7 +5,6 @@ import {
   FuelOrderEvent,
   FuelOrderProcessed,
   FuelOrderRejected,
-  FuelOrderRestClient,
   FuelPriceChanged,
   FuelStationDeactivated,
   FuelStationEvent,
@@ -16,16 +15,18 @@ import {
   ManagerUnassignedFromFuelStation,
 } from "fsms-web-api";
 import { Observable, tap } from "rxjs";
-import { FuelStationStore } from "./fuel-station-store";
 import { LoggerService } from "../common/logger";
+import { FuelOrderEventHandler } from "../fuel-orders/fuel-order-event-handler";
+import { FuelStationStore } from "./fuel-station-store";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationEventHandler {
-  private readonly store = inject(FuelStationStore);
+
+  private readonly fuelStationStore = inject(FuelStationStore);
   private readonly managerRestClient = inject(ManagerRestClient);
-  private readonly fuelOrderRestClient = inject(FuelOrderRestClient);
-  private readonly fuelStationRestClient = inject(FuelStationRestClient);
   private readonly fuelStationStompClient = inject(FuelStationStompClient);
+  private readonly fuelStationRestClient = inject(FuelStationRestClient);
+  private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
   private readonly logger = inject(LoggerService);
 
   start(fuelStationId: number): Observable<FuelStationEvent | FuelOrderEvent> {
@@ -55,9 +56,9 @@ export class FuelStationEventHandler {
   }
 
   private handleFuelPriceChanged(event: FuelPriceChanged): void {
-    const newFuelStation = this.store.fuelStation.clone();
+    const newFuelStation = this.fuelStationStore.fuelStation.clone();
     newFuelStation.updateFuelPrice(event.fuelGrade, event.pricePerLiter);
-    this.store.fuelStation = newFuelStation;
+    this.fuelStationStore.fuelStation = newFuelStation;
   }
 
   private handleFuelStationDeactivated(event: FuelStationDeactivated): void {
@@ -65,60 +66,79 @@ export class FuelStationEventHandler {
   }
 
   private handleManagerAssigned(event: ManagerAssignedToFuelStation): void {
-    if(this.store.fuelStation.isManagerAssigned(event.managerId)) {
+    if(this.fuelStationStore.fuelStation.isManagerAssigned(event.managerId)) {
       return;
     }
 
-    const newFuelStation = this.store.fuelStation.clone();
+    const newFuelStation = this.fuelStationStore.fuelStation.clone();
     newFuelStation.assignManger(event.managerId);
-    this.store.fuelStation = newFuelStation;
+    this.fuelStationStore.fuelStation = newFuelStation;
+
+    if(this.fuelStationStore.managers === null) {
+      return;
+    }
 
     this.managerRestClient.getManagerById(event.managerId)
       .pipe(tap((manager) => {
-        this.store.managers = [...this.store.managers, manager];
+        if(this.fuelStationStore.managers === null) {
+          return;
+        }
+        this.fuelStationStore.managers = [...this.fuelStationStore.managers, manager];
       }))
       .subscribe();
   }
 
   private handleManagerUnassigned(event: ManagerUnassignedFromFuelStation): void {
-    const newFuelStation = this.store.fuelStation.clone();
+    const newFuelStation = this.fuelStationStore.fuelStation.clone();
     newFuelStation.unassignManger(event.managerId);
-    this.store.managers = this.store.managers.filter(
-      (manager) => manager.credentialsId !== event.managerId
-    );
-    this.store.fuelStation = newFuelStation;
+
+    this.fuelStationStore.fuelStation = newFuelStation;
+
+    if(this.fuelStationStore.managers !== null) {
+      this.fuelStationStore.managers = this.fuelStationStore.managers.filter(
+        (manager) => manager.credentialsId !== event.managerId
+      );
+    }
   }
 
   private handleFuelOrderCreated(event: FuelOrderCreated): void {
-    this.fuelOrderRestClient.getFuelOrderById(event.fuelOrderId)
-      .pipe(tap((fuelOrder) => {
-        this.store.fuelOrders = [...this.store.fuelOrders, fuelOrder];
-      }))
-      .subscribe();
-  }
+    if(this.fuelStationStore.fuelOrders === null) {
+      return;
+    }
 
-  private handleFuelOrderConfirmed(event: FuelOrderConfirmed): void {
-    this.updateFuelOrder(event.fuelOrderId, (order) => order.confirm());
-  }
-
-  private handleFuelOrderRejected(event: FuelOrderRejected): void {
-    this.updateFuelOrder(event.fuelOrderId, (order) => order.reject());
-  }
-
-  private handleFuelOrderProcessed(event: FuelOrderProcessed): void {
-    this.updateFuelOrder(event.fuelOrderId, (order) => order.process());
-
-    this.fuelStationRestClient.getFuelStationById(event.fuelStationId)
-      .pipe(tap((fuelStation) => this.store.fuelStation = fuelStation))
+    this.fuelOrderEventHandler.handleFuelOrderCreated(event.fuelOrderId, this.fuelStationStore.fuelOrders)
+      .pipe(tap((fuelOrders) => this.fuelStationStore.fuelOrders = fuelOrders))
       .subscribe()
   }
 
-  private updateFuelOrder(fuelOrderId: number, action: (order: any) => void): void {
-    this.store.fuelOrders = this.store.fuelOrders.map((fuelOrder) => {
-      if (fuelOrder.fuelOrderId === fuelOrderId) {
-        action(fuelOrder);
-      }
-      return fuelOrder;
-    });
+  private handleFuelOrderConfirmed(event: FuelOrderConfirmed): void {
+    if(this.fuelStationStore.fuelOrders === null) {
+      return;
+    }
+
+    this.fuelStationStore.fuelOrders = this.fuelOrderEventHandler
+      .handleFuelOrderConfirmed(event.fuelOrderId, this.fuelStationStore.fuelOrders)
   }
+
+  private handleFuelOrderRejected(event: FuelOrderRejected): void {
+    if(this.fuelStationStore.fuelOrders === null) {
+      return;
+    }
+
+    this.fuelStationStore.fuelOrders = this.fuelOrderEventHandler
+      .handleFuelOrderRejected(event.fuelOrderId, this.fuelStationStore.fuelOrders)
+  }
+
+  private handleFuelOrderProcessed(event: FuelOrderProcessed): void {
+    this.fuelStationRestClient.getFuelStationById(event.fuelStationId)
+      .pipe(tap((fuelStation) => this.fuelStationStore.fuelStation = fuelStation))
+      .subscribe()
+
+    if(this.fuelStationStore.fuelOrders === null) {
+      return;
+    }
+    this.fuelStationStore.fuelOrders = this.fuelOrderEventHandler
+      .handleFuelOrderProcessed(event.fuelOrderId, this.fuelStationStore.fuelOrders)
+  }
+
 }

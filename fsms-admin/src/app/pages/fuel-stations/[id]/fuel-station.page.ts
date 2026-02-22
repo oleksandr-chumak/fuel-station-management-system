@@ -1,13 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
 import { GetFuelStationByIdHandler } from '../../../modules/fuel-stations/handlers/get-fuel-station-by-id-handler';
-import { catchError, EMPTY, Subscription, tap } from 'rxjs';
+import { catchError, EMPTY } from 'rxjs';
 import { FuelStationStore } from '../../../modules/fuel-stations/fuel-station-store';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FuelStationEventHandler } from '../../../modules/fuel-stations/fuel-station-event-handler';
 
 @Component({
@@ -16,7 +16,7 @@ import { FuelStationEventHandler } from '../../../modules/fuel-stations/fuel-sta
   templateUrl: './fuel-station.page.html'
 })
 export class FuelStationPage implements OnInit, OnDestroy {
-  private eventSubscription: Subscription | null = null;
+  private readonly destroyRef = inject(DestroyRef)
   private paramsFuelStationId = "";
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute)
@@ -35,31 +35,38 @@ export class FuelStationPage implements OnInit, OnDestroy {
       this.paramsFuelStationId = params["id"];
       const fuelStationId = Number(this.paramsFuelStationId);
 
-      if(Number.isNaN(fuelStationId)) {
-        this.messageService.add({severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"]})
+      if (Number.isNaN(fuelStationId)) {
+        this.messageService.add({ severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"] })
         this.router.navigate(["/admin"]);
         return;
       }
 
-      this.getFuelStationByIdHandler.handle({ fuelStationId })
-        .pipe(
-          catchError(() => { 
-            this.router.navigate(["/admin"]); 
-            return EMPTY; 
-          }),
-          tap((fuelStation) => {
-            this.eventSubscription = this.fuelStationEventHandler
-              .start(fuelStation.fuelStationId)
-              .subscribe();
-          })
-        )
-        .subscribe()
+      this.fetchFuelStation(fuelStationId);
+      this.handleFuelStationEvents(fuelStationId);
     });
   }
 
   ngOnDestroy(): void {
-    this.eventSubscription?.unsubscribe();
     this.fuelStationStore.reset();
+  }
+
+  private handleFuelStationEvents(fuelStationId: number) {
+    this.fuelStationEventHandler
+      .start(fuelStationId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
+  }
+
+  private fetchFuelStation(fuelStationId: number) {
+    this.getFuelStationByIdHandler.handle({ fuelStationId })
+      .pipe(
+        catchError(() => {
+          this.router.navigate(["/admin"]);
+          return EMPTY;
+        }),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe()
   }
 
   get tabs() {
@@ -81,12 +88,12 @@ export class FuelStationPage implements OnInit, OnDestroy {
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-orders`
         },
         {
-          label: "Fuel Tanks", 
+          label: "Fuel Tanks",
           icon: "pi pi-box",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-tanks`
         },
         {
-          label: "Fuel Prices", 
+          label: "Fuel Prices",
           icon: "pi pi-dollar",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-prices`
         }

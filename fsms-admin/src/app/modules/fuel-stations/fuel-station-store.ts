@@ -5,8 +5,8 @@ import { FuelOrder, FuelStation, Manager } from "fsms-web-api";
 @Injectable({ providedIn: "root" })
 export class FuelStationStore {
   private _fuelStation = new BehaviorSubject<FuelStation | null>(null);
-  private _managers = new BehaviorSubject<Manager[]>([]);
-  private _fuelOrders = new BehaviorSubject<FuelOrder[]>([]);
+  private _managers = new BehaviorSubject<Manager[] | null>(null);
+  private _fuelOrders = new BehaviorSubject<FuelOrder[] | null>(null);
 
   get fuelStation(): FuelStation {
     const value = this._fuelStation.getValue();
@@ -23,7 +23,7 @@ export class FuelStationStore {
     return this._fuelStation.asObservable();
   }
 
-  get managers(): Manager[] {
+  get managers(): Manager[] | null {
     return this._managers.getValue();
   }
 
@@ -35,7 +35,7 @@ export class FuelStationStore {
     return this._managers.asObservable();
   }
 
-  get fuelOrders(): FuelOrder[] {
+  get fuelOrders(): FuelOrder[] | null {
     return this._fuelOrders.getValue();
   }
 
@@ -48,11 +48,11 @@ export class FuelStationStore {
   }
 
   resetFuelOrders(): void {
-    this._fuelOrders.next([]);
+    this._fuelOrders.next(null);
   }
 
   resetManagers(): void {
-    this._managers.next([]);
+    this._managers.next(null);
   }
 
   resetFuelStation(): void {

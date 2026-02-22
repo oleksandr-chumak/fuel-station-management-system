@@ -1,3 +1,8 @@
+export enum ManagerEventType {
+    MANAGER_CREATED = "MANAGER_CREATED",
+    MANAGER_TERMINATED = "MANAGER_TERMINATED"
+}
+
 export class ManagerEvent {
     constructor(public managerId: number) {}
 }

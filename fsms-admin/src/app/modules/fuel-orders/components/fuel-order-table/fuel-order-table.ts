@@ -1,5 +1,6 @@
 import { CommonModule } from "@angular/common";
-import { Component, input, output } from "@angular/core";
+import { Component, computed, input, output } from "@angular/core";
+import { RouterLink } from "@angular/router";
 import { FuelGrade, FuelOrder, FuelOrderStatus } from "fsms-web-api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
@@ -10,7 +11,7 @@ import { FuelTankTemplate } from "../../directives/fuel-order-template-directive
 
 @Component({
   selector: 'app-fuel-order-table',
-  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelTankTemplate],
+  imports: [CommonModule, RouterLink, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelTankTemplate],
   templateUrl: './fuel-order-table.html'
 })
 export class FuelOrderTable {
@@ -21,9 +22,10 @@ export class FuelOrderTable {
     fetchingFuelOrders = input<boolean>(false);
     confirmingFuelOrder = input<boolean>(false);
     rejectingFuelOrder = input<boolean>(false);
+    showFuelStation = input<boolean>(false);
 
     protected readonly skeletonRows = new Array(5).fill(null);
-    protected readonly skeletonCols = new Array(5).fill(null);
+    protected readonly skeletonCols = computed(() => new Array(this.showFuelStation() ? 7 : 6).fill(null));
 
     protected getSeverity(status: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
         switch (status) {

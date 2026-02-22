@@ -24,6 +24,10 @@ export class FuelOrder {
         return this.status === FuelOrderStatus.Rejected;
     }
 
+    get processed() {
+        return this.status === FuelOrderStatus.Processed;
+    }
+
     confirm(): void {
         this.status = FuelOrderStatus.Confirmed;
     }
