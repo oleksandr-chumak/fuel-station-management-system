@@ -19,6 +19,10 @@ export class FuelStationStore {
     this._fuelStation.next(value);
   }
 
+  get hasFuelStation(): boolean {
+    return this._fuelStation.getValue() !== null;
+  }
+
   get fuelStation$() {
     return this._fuelStation.asObservable();
   }

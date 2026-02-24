@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { DashboardPage } from './pages/dashboard/dashboard.page';
+import { AssignedFuelStationsPage } from './pages/fuel-stations/assigned-fuel-stations-page';
 import { LoginPage } from './pages/login/login.page';
 import { FuelStationPage } from './pages/fuel-stations/[id]/fuel-station.page';
 import { FuelStationInfoPage } from './pages/fuel-stations/[id]/fuel-station-info/fuel-station-info.page';
@@ -10,7 +10,7 @@ import { FuelStationFuelPricesPage } from './pages/fuel-stations/[id]/fuel-stati
 import { managerGuard } from 'fsms-security';
 
 export const routes: Routes = [
-    { path: "", component: DashboardPage, canActivate: [managerGuard] },
+    { path: "", component: AssignedFuelStationsPage, canActivate: [managerGuard] },
     { path: "login", component: LoginPage },
     { 
         path: "fuel-station/:id", 

@@ -51,13 +51,21 @@ public class FuelStationEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/manager-assigned",
                 event
         );
+        messagingTemplate.convertAndSend(
+                "/topic/managers/" + event.getManagerId() + "/assigned-to-fuel-station",
+                event
+        );
     }
-    
+
     @EventListener
     public void handle(ManagerUnassignedFromFuelStation event) {
         logger.info("Manager was unassigned from fuel station ID:{} MANAGER ID:{}", event.getFuelStationId(), event.getManagerId());
         messagingTemplate.convertAndSend(
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/manager-unassigned",
+                event
+        );
+        messagingTemplate.convertAndSend(
+                "/topic/managers/" + event.getManagerId() + "/unassigned-from-fuel-station",
                 event
         );
     }

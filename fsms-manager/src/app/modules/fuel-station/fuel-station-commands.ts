@@ -1,6 +1,6 @@
 import { FuelGrade } from "fsms-web-api";
 
-export interface GetManagerFuelStations {
+export interface GetAssignedFuelStations {
     managerId: number;
 }
 

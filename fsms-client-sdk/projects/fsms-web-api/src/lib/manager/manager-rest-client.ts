@@ -23,7 +23,7 @@ export class ManagerRestClient {
       .pipe(map(data => this.restClient.assertArray(data, this.managerMapper.fromJson.bind(this.managerMapper))));
   }
 
-  getManagerFuelStations(managerId: number): Observable<FuelStation[]> {
+  getAssignedFuelStations(managerId: number): Observable<FuelStation[]> {
     return this.restClient.get("api/managers/" + managerId + "/fuel-stations")
       .pipe(map(data => this.restClient.assertArray(data, this.fuelStationMapper.fromJson.bind(this.fuelStationMapper))));
   }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnDestroy, OnInit, Signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -8,6 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FuelStation } from 'fsms-web-api';
 import { GetFuelStationByIdHandler } from '../../../modules/fuel-station/handlers/get-fuel-station-by-id.handler';
 import { FuelStationStore } from '../../../modules/fuel-station/fuel-station-store';
+import { FuelStationEventHandler } from '../../../modules/fuel-station/fuel-station-event-handler';
 import { catchError, EMPTY } from 'rxjs';
 
 @Component({
@@ -19,8 +21,10 @@ export class FuelStationPage implements OnInit, OnDestroy {
   private paramsStationId: string = '';
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   private readonly getFuelStationByIdHandler = inject(GetFuelStationByIdHandler);
+  private readonly fuelStationEventHandler = inject(FuelStationEventHandler);
   private readonly store = inject(FuelStationStore);
 
   private readonly messageService = inject(MessageService);
@@ -48,11 +52,19 @@ export class FuelStationPage implements OnInit, OnDestroy {
           })
         )
         .subscribe();
+
+      this.handleFuelStationEvents(stationId);
     });
   }
 
   ngOnDestroy(): void {
     this.store.reset();
+  }
+
+  private handleFuelStationEvents(fuelStationId: number): void {
+    this.fuelStationEventHandler.start(fuelStationId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 
   get tabs() {

@@ -1,13 +1,16 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { ManagerCreated, ManagerEvent, ManagerEventType, ManagerTerminated } from "./manager-events";
+import { ManagerAssignedToFuelStation, ManagerUnassignedFromFuelStation } from "../fuel-station/fuel-station-events";
 import { StompClient } from "../core/stomp-client";
 import { IMessage } from "@stomp/rx-stomp";
 
 interface IManagerStompClient {
     onManagerCreated(): Observable<ManagerCreated>
     onManagerTerminated(managerId: number): Observable<ManagerTerminated>
-    onAll(): Observable<ManagerEvent> 
+    onAll(): Observable<ManagerEvent>
+    onAssignedToFuelStation(managerId: number): Observable<ManagerAssignedToFuelStation>
+    onUnassignedFromFuelStation(managerId: number): Observable<ManagerUnassignedFromFuelStation>
 }
 
 @Injectable({ providedIn: "root" })
@@ -25,6 +28,24 @@ export class ManagerStompClient implements IManagerStompClient {
         return this.stompClient
             .watch({ destination: `/topic/managers/${managerId}/terminated` })
             .pipe(map(this.parseManagerTerminated));
+    }
+
+    onAssignedToFuelStation(managerId: number): Observable<ManagerAssignedToFuelStation> {
+        return this.stompClient
+            .watch({ destination: `/topic/managers/${managerId}/assigned-to-fuel-station` })
+            .pipe(map((message) => {
+                const json = JSON.parse(message.body);
+                return new ManagerAssignedToFuelStation(json.fuelStationId, json.managerId);
+            }));
+    }
+
+    onUnassignedFromFuelStation(managerId: number): Observable<ManagerUnassignedFromFuelStation> {
+        return this.stompClient
+            .watch({ destination: `/topic/managers/${managerId}/unassigned-from-fuel-station` })
+            .pipe(map((message) => {
+                const json = JSON.parse(message.body);
+                return new ManagerUnassignedFromFuelStation(json.fuelStationId, json.managerId);
+            }));
     }
 
     onAll(): Observable<ManagerEvent> {
