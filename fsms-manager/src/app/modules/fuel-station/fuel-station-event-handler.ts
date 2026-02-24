@@ -8,7 +8,6 @@ import {
     FuelOrderRejected,
     FuelOrderRestClient,
     FuelPriceChanged,
-    FuelStationDeactivated,
     FuelStationEvent,
     FuelStationRestClient,
     FuelStationStompClient,
@@ -32,20 +31,17 @@ export class FuelStationEventHandler {
 
     private readonly authService = inject(AuthService);
     private readonly fuelStationStore = inject(FuelStationStore);
-    private readonly managerRestClient = inject(ManagerRestClient);
     private readonly fuelOrderRestClient = inject(FuelOrderRestClient);
     private readonly fuelStationStompClient = inject(FuelStationStompClient);
     private readonly fuelStationRestClient = inject(FuelStationRestClient);
 
     start(fuelStationId: number): Observable<FuelStationEvent | FuelOrderEvent> {
         this.logger.log('[FuelStationEventHandler] Starting event subscription for fuelStationId:', fuelStationId);
-        return this.fuelStationStompClient.onAll(fuelStationId).pipe(
+        return this.fuelStationStompClient.onFuelStationAll(fuelStationId).pipe(
             tap((event) => {
                 this.logger.log('[FuelStationEventHandler] Event received:', event.constructor.name, event);
                 if (event instanceof FuelPriceChanged) {
                     this.handleFuelPriceChanged(event);
-                } else if (event instanceof FuelStationDeactivated) {
-                    this.handleFuelStationDeactivated(event);
                 } else if (event instanceof ManagerAssignedToFuelStation) {
                     this.handleManagerAssigned(event);
                 } else if (event instanceof ManagerUnassignedFromFuelStation) {
@@ -67,10 +63,6 @@ export class FuelStationEventHandler {
         const newFuelStation = this.fuelStationStore.fuelStation.clone();
         newFuelStation.updateFuelPrice(event.fuelGrade, event.pricePerLiter);
         this.fuelStationStore.fuelStation = newFuelStation;
-    }
-
-    private handleFuelStationDeactivated(event: FuelStationDeactivated): void {
-        // TODO
     }
 
     private handleManagerAssigned(event: ManagerAssignedToFuelStation): void {

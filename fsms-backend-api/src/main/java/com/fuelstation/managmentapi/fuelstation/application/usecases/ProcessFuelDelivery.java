@@ -1,6 +1,8 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
+import com.fuelstation.managmentapi.fuelorder.application.support.FuelOrderFetcher;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
+import com.fuelstation.managmentapi.fuelstation.application.support.FuelStationFetcher;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -18,11 +20,13 @@ public class ProcessFuelDelivery {
     private final FuelOrderRepository fuelOrderRepository;
     private final FuelDeliveryService fuelDeliveryService;
     private final DomainEventPublisher domainEventPublisher;
+    private final FuelStationFetcher fuelStationFetcher;
+    private final FuelOrderFetcher fuelOrderFetcher;
 
     @Transactional
     public FuelStation process(long fuelOrderId) {
-        var fuelOrder = fuelOrderRepository.findById(fuelOrderId).get();
-        var fuelStation = fuelStationRepository.findById(fuelOrder.getFuelStationId()).get();
+        var fuelOrder = fuelOrderFetcher.fetchById(fuelOrderId);
+        var fuelStation = fuelStationFetcher.fetchActiveById(fuelOrder.getFuelStationId());
 
         fuelDeliveryService.processFuelDelivery(fuelStation, fuelOrder);
         fuelOrder.process();

@@ -18,26 +18,29 @@ import { Observable, tap } from "rxjs";
 import { LoggerService } from "../common/logger";
 import { FuelOrderEventHandler } from "../fuel-orders/fuel-order-event-handler";
 import { FuelStationStore } from "./fuel-station-store";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationEventHandler {
+
+  private readonly router = inject(Router);
+  private readonly logger = inject(LoggerService);
 
   private readonly fuelStationStore = inject(FuelStationStore);
   private readonly managerRestClient = inject(ManagerRestClient);
   private readonly fuelStationStompClient = inject(FuelStationStompClient);
   private readonly fuelStationRestClient = inject(FuelStationRestClient);
   private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
-  private readonly logger = inject(LoggerService);
 
   start(fuelStationId: number): Observable<FuelStationEvent | FuelOrderEvent> {
     this.logger.log('[FuelStationEventHandler] Starting event subscription for fuelStationId:', fuelStationId);
-    return this.fuelStationStompClient.onAll(fuelStationId).pipe(
+    return this.fuelStationStompClient.onFuelStationAll(fuelStationId).pipe(
       tap((event) => {
         this.logger.log('[FuelStationEventHandler] Event received:',event.constructor.name, event);
         if (event instanceof FuelPriceChanged) {
           this.handleFuelPriceChanged(event);
         } else if (event instanceof FuelStationDeactivated) {
-          this.handleFuelStationDeactivated(event);
+          this.handleFuelStationDeactivated();
         } else if (event instanceof ManagerAssignedToFuelStation) {
           this.handleManagerAssigned(event);
         } else if (event instanceof ManagerUnassignedFromFuelStation) {
@@ -61,8 +64,8 @@ export class FuelStationEventHandler {
     this.fuelStationStore.fuelStation = newFuelStation;
   }
 
-  private handleFuelStationDeactivated(event: FuelStationDeactivated): void {
-    // TODO
+  private handleFuelStationDeactivated(): void {
+    this.router.navigate(["/"])
   }
 
   private handleManagerAssigned(event: ManagerAssignedToFuelStation): void {

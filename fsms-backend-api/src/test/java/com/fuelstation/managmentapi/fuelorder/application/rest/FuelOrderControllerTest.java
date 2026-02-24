@@ -113,8 +113,8 @@ public class FuelOrderControllerTest {
 
         @Test
         @WithMockCustomUser
-        @DisplayName("Should return Not Found when the fuel station does not exist")
-        public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
+        @DisplayName("Should return Not Found when the fuel order does not exist")
+        public void shouldReturnNotFoundWhenFuelOrderDoesNotExist() throws Exception {
             fuelOrderTestClient.confirmFuelOrder(99999L).andExpect(status().isNotFound());
         }
 
@@ -147,8 +147,8 @@ public class FuelOrderControllerTest {
 
         @Test
         @WithMockCustomUser
-        @DisplayName("Should return Not Found when the fuel station does not exist")
-        public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
+        @DisplayName("Should return Not Found when the fuel order does not exist")
+        public void shouldReturnNotFoundWhenFuelOrderDoesNotExist() throws Exception {
             fuelOrderTestClient.rejectFuelOrder(99999L).andExpect(status().isNotFound());
         }
 

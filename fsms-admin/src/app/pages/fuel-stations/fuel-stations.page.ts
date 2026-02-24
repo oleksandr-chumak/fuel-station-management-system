@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
 import { CreateFuelStationDialogComponent } from '../../modules/fuel-stations/components/create-fuel-station-dialog/create-fuel-station-dialog.component';
 import { FuelStationTable } from '../../modules/fuel-stations/components/fuel-station-table/fuel-station-table';
-import { FuelStation, FuelStationRestClient, FuelStationStompClient } from 'fsms-web-api';
+import { FuelStation, FuelStationCreated, FuelStationDeactivated, FuelStationEvent, FuelStationRestClient, FuelStationStatus, FuelStationStompClient } from 'fsms-web-api';
 import { GetFuelStationsHandler } from '../../modules/fuel-stations/handlers/get-fuel-stations-handler';
 import { tap } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -26,23 +26,40 @@ export class FuelStationsPage implements OnInit {
   protected readonly loading = toSignal(this.getFuelStationsHandler.loading$, { initialValue: false });
 
   ngOnInit(): void {
-    this.handleFuelStationCreation();
+    this.handleFuelStationEvents();
     this.fetchFuelStations();
   }
 
-  protected handleFuelStationCreation(): void {
-    this.fuelStationStompClient.onFuelStationCreated()
+  protected handleFuelStationEvents(): void {
+    this.fuelStationStompClient.onAll()
       .pipe(
-        tap((event) => {
-          this.fuelStationRestClient.getFuelStationById(event.fuelStationId)
-            .pipe(
-              tap((fuelStation) => this.fuelStations = [...this.fuelStations, fuelStation])
-            )
-            .subscribe()
+        tap((event: FuelStationEvent) => {
+          if (event instanceof FuelStationCreated) {
+            this.fuelStationRestClient.getFuelStationById(event.fuelStationId)
+              .pipe(
+                tap((fuelStation) => this.fuelStations = [fuelStation, ...this.fuelStations])
+              )
+              .subscribe()
+          } else if (event instanceof FuelStationDeactivated) {
+            const newFuelStations = this.fuelStations
+              .map((fuelStation) => {
+                if (fuelStation.fuelStationId === event.fuelStationId) {
+                  fuelStation.deactivate();
+                }
+                return fuelStation;
+              })
+              .sort((a, b) => {
+                if (a.status !== b.status) {
+                  return a.status === FuelStationStatus.Active ? -1 : 1;
+                }
+                return b.fuelStationId - a.fuelStationId;
+              });
+            this.fuelStations = newFuelStations;
+          }
         }),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe()
+      .subscribe();
   }
 
   protected fetchFuelStations(): void {

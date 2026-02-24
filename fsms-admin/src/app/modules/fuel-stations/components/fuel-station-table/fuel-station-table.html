@@ -10,7 +10,7 @@
             <th>Id</th>
             <th>Address</th>
             <th>Status</th>
-            <th class="flex items-center justify-center">Action</th>
+            <th class="w-60 !text-center">Action</th>
         </tr>
     </ng-template>
 
@@ -20,10 +20,31 @@
             <td>{{ fuelStation.address }}</td>
             <td><p-tag [value]="fuelStation.status" [severity]="getSeverity(fuelStation)" /></td>
             <td>
-                <div class="flex items-center justify-center">
-                    <p-button (onClick)="viewClicked.emit(fuelStation.fuelStationId)" size="small" severity="secondary" [outlined]="true">View</p-button>
-                </div>
+                    @if(fuelStation.active) { 
+                        <div class="flex items-center justify-center gap-2">
+                            <p-button 
+                                size="small" 
+                                severity="secondary" 
+                                [outlined]="true"
+                                (onClick)="viewClicked.emit(fuelStation.fuelStationId)" 
+                            >
+                                View
+                            </p-button>
+                            <p-button
+                                size="small"
+                                severity="danger"
+                                [outlined]="true"
+                                [loading]="deactivateLoading()"
+                                (onClick)="deactivate(fuelStation.fuelStationId)"
+                            >
+                                Deactivate Station
+                            </p-button>
+                        </div>
+                    } @else {
+                        <div class="flex justify-center">No actions</div>
+                    }
             </td>
+            <td>
         </tr>
     </ng-template>
 

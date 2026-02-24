@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { FuelGradeMapper } from "../core/fuel-grade.mapper";
 import { FuelStation } from "./fuel-station.model";
-import FuelStationStatus from "./fuel-station-status.enum";
+import { FuelStationStatus } from "./fuel-station-status.enum";
 import { FuelTank } from "./fuel-tank.model";
 import { FuelPrice } from "./fuel-price.model";
 

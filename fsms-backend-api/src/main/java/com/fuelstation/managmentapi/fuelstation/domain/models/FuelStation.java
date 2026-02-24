@@ -33,6 +33,10 @@ public class FuelStation extends AggregateRoot {
     private FuelStationStatus status;
     private OffsetDateTime createdAt;
 
+    public boolean deactivated() {
+        return status == FuelStationStatus.DEACTIVATED;
+    }
+
     public List<FuelTank> getFuelTanksByFuelGrade(FuelGrade fuelGrade) {
         return fuelTanks.stream()
                 .filter(ft -> ft.getFuelGrade() == fuelGrade)

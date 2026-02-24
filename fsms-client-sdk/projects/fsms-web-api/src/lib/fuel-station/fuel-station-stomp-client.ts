@@ -17,7 +17,8 @@ interface IFuelStationStompClient {
     onFuelOrderConfirmed(fuelStationId: number): Observable<FuelOrderConfirmed>
     onFuelOrderRejected(fuelStationId: number): Observable<FuelOrderRejected>
     onFuelOrderProcessed(fuelStationId: number): Observable<FuelOrderProcessed>
-    onAll(fuelStationId: number): Observable<FuelStationEvent>
+    onFuelStationAll(fuelStationId: number): Observable<FuelStationEvent>
+    onAll(): Observable<FuelStationEvent>
 }
 
 @Injectable({ providedIn: "root" })
@@ -81,37 +82,45 @@ export class FuelStationStompClient implements IFuelStationStompClient {
             .pipe(map(this.fuelOrderEventMapper.parseFuelOrderProcessed));
     }
 
-    onAll(fuelStationId: number): Observable<FuelStationEvent | FuelOrderEvent> {
+    onFuelStationAll(fuelStationId: number): Observable<FuelStationEvent> {
         return this.stompClient
             .watch({ destination: `/topic/fuel-stations/${fuelStationId}/**` })
-            .pipe(map((message) => {
-                const json = JSON.parse(message.body);
-                const eventType = json.type as FuelStationEventType;
+            .pipe(map((message) => this.parseEvent(message)));
+    }
 
-                switch (eventType) {
-                    case FuelStationEventType.FUEL_STATION_CREATED:
-                        return this.parseFuelStationCreated(message);
-                    case FuelStationEventType.FUEL_STATION_DEACTIVATED:
-                        return this.parseFuelStationDeactivated(message);
-                    case FuelStationEventType.FUEL_STATION_FUEL_PRICE_CHANGED:
-                        return this.parseFuelPriceChanged(message);
-                    case FuelStationEventType.MANAGER_ASSIGNED_TO_FUEL_STATION:
-                        return this.parseManagerAssignedToFuelStation(message);
-                    case FuelStationEventType.MANAGER_UNASSIGNED_FROM_FUEL_STATION:
-                        return this.parseManagerUnassignedFromFuelStation(message);
-                    case FuelStationEventType.FUEL_ORDER_CREATED:
-                        return this.fuelOrderEventMapper.parseFuelOrderCreated(message);
-                    case FuelStationEventType.FUEL_ORDER_CONFIRMED:
-                        return this.fuelOrderEventMapper.parseFuelOrderConfirmed(message);
-                    case FuelStationEventType.FUEL_ORDER_REJECTED:
-                        return this.fuelOrderEventMapper.parseFuelOrderRejected(message);
-                    case FuelStationEventType.FUEL_ORDER_PROCESSED:
-                        return this.fuelOrderEventMapper.parseFuelOrderProcessed(message);
-                    default:
-                        const exhaustiveCheck: never = eventType;
-                        throw new Error(`Unknown fuel station event type: ${eventType}`);
-                }
-            }));
+    onAll(): Observable<FuelStationEvent> {
+        return this.stompClient
+            .watch({ destination: `/topic/fuel-stations/**` })
+            .pipe(map((message) => this.parseEvent(message)));
+    }
+
+    private parseEvent(message: IMessage): FuelStationEvent {
+        const json = JSON.parse(message.body);
+        const eventType = json.type as FuelStationEventType;
+
+        switch (eventType) {
+            case FuelStationEventType.FUEL_STATION_CREATED:
+                return this.parseFuelStationCreated(message);
+            case FuelStationEventType.FUEL_STATION_DEACTIVATED:
+                return this.parseFuelStationDeactivated(message);
+            case FuelStationEventType.FUEL_STATION_FUEL_PRICE_CHANGED:
+                return this.parseFuelPriceChanged(message);
+            case FuelStationEventType.MANAGER_ASSIGNED_TO_FUEL_STATION:
+                return this.parseManagerAssignedToFuelStation(message);
+            case FuelStationEventType.MANAGER_UNASSIGNED_FROM_FUEL_STATION:
+                return this.parseManagerUnassignedFromFuelStation(message);
+            case FuelStationEventType.FUEL_ORDER_CREATED:
+                return this.fuelOrderEventMapper.parseFuelOrderCreated(message);
+            case FuelStationEventType.FUEL_ORDER_CONFIRMED:
+                return this.fuelOrderEventMapper.parseFuelOrderConfirmed(message);
+            case FuelStationEventType.FUEL_ORDER_REJECTED:
+                return this.fuelOrderEventMapper.parseFuelOrderRejected(message);
+            case FuelStationEventType.FUEL_ORDER_PROCESSED:
+                return this.fuelOrderEventMapper.parseFuelOrderProcessed(message);
+            default:
+                const exhaustiveCheck: never = eventType;
+                throw new Error(`Unknown fuel station event type: ${eventType}`);
+        }
     }
 
     private parseFuelStationCreated(message: IMessage): FuelStationCreated {

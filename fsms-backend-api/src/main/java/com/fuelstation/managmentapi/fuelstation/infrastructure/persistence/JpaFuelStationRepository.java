@@ -11,4 +11,6 @@ public interface JpaFuelStationRepository extends JpaRepository<FuelStationEntit
     @Query("SELECT f FROM FuelStationEntity f JOIN f.assignedManagers m WHERE m = :managerId")
     List<FuelStationEntity> findByManagerId(@Param("managerId") Long managerId);
 
+    @Query("SELECT f FROM FuelStationEntity f ORDER BY f.fuelStationStatusId ASC, f.createdAt DESC")
+    List<FuelStationEntity> findAll();
 }

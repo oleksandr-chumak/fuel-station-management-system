@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.domain.exceptions;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /**
  * Exception thrown when a specific fuel grade is not found at a fuel station
@@ -13,6 +14,7 @@ public class FuelGradeNotFoundException extends FuelStationDomainException {
     public FuelGradeNotFoundException(String fuelGrade, long fuelStationId) {
         super(
             String.format("Fuel grade %s not found in fuel station %d", fuelGrade, fuelStationId),
+            HttpStatus.NOT_FOUND,
             "FUEL_GRADE_NOT_FOUND"
         );
         this.fuelGrade = fuelGrade;

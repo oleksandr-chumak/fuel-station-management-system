@@ -1,6 +1,6 @@
 import { FuelGrade } from "../core/fuel-grade.enum";
 import { FuelPrice } from "./fuel-price.model";
-import FuelStationStatus from "./fuel-station-status.enum";
+import { FuelStationStatus } from "./fuel-station-status.enum";
 import { FuelTank } from "./fuel-tank.model";
 
 export class FuelStation {
@@ -45,6 +45,10 @@ export class FuelStation {
       clonedManagerIds,
       this.status
     );
+  }
+
+  deactivate() {
+    this.status = FuelStationStatus.Deactivated;
   }
 
   isManagerAssigned(mangerId: number): boolean {
