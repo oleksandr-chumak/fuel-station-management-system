@@ -11,17 +11,20 @@ import com.fuelstation.managmentapi.authentication.domain.UserRole;
 @Component
 public class CredentialsEventHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(CredentialsCreated.class);
-    
+    private final Logger logger = LoggerFactory.getLogger(CredentialsEventHandler.class);
+    private final CredentialsEmailService credentialsEmailService;
+
+    public CredentialsEventHandler(CredentialsEmailService credentialsEmailService) {
+        this.credentialsEmailService = credentialsEmailService;
+    }
+
     @EventListener
     public void handle(CredentialsCreated event) {
-        logger.info("Credentials was created ID:{}", event.getCredentialsId());
+        logger.info("Credentials created ID:{}", event.getCredentialsId());
 
-        // TODO move this from credentials 
         if (event.getRole() == UserRole.MANAGER) {
-            // TODO implement id with EmailService and do not log credentials to console
-            logger.info("Credentials was sent to the manager EMAIL:{} PASSWORD:{}", event.getEmail(), event.getPlainPassword());
-            
+            credentialsEmailService.sendManagerCredentials(event.getEmail(), event.getPlainPassword());
+            logger.info("Credentials email sent to manager EMAIL:{}", event.getEmail());
         }
     }
 }

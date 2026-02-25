@@ -20,6 +20,11 @@ spring:
     drop-first: false
     change-log: classpath:/db/changelog/db.changelog-master.yaml
 
+  mail:
+    host: localhost
+    port: 1025
+    from: noreply@fuelstation.com
+
 logging:
   level:
     liquibase: INFO

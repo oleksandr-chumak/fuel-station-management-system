@@ -29,7 +29,8 @@ export class FuelStationPage implements OnInit, OnDestroy {
 
   private readonly messageService = inject(MessageService);
 
-  fuelStation: Signal<FuelStation | null> = toSignal(this.store.fuelStation$, { initialValue: null });
+  protected readonly initialRoute = this.router.url;
+  protected readonly fuelStation = toSignal(this.store.fuelStation$, { initialValue: null });
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {

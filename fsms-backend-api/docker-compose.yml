@@ -13,6 +13,15 @@ services:
     networks:
       - demo_network
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: mailpit_demo
+    ports:
+      - "8025:8025"   # Web UI
+      - "1025:1025"   # SMTP
+    networks:
+      - demo_network
+
 volumes:
   postgres_data:
 

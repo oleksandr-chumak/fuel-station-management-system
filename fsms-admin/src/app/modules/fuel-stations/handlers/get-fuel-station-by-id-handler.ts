@@ -24,9 +24,9 @@ export class GetFuelStationByIdHandler
                         summary: "Not found", 
                         detail: "Fuel station with id: " + fuelStationId + " doesn't exist"
                     })
+                } else {
+                    this.messageService.add({severity: "error", summary: "Error", detail: "Failed to fetch fuel station with id: " + fuelStationId})
                 }
-
-                this.messageService.add({severity: "error", summary: "Error", detail: "Failed to fetch fuel station with id: " + fuelStationId})
 
                 return throwError(() => e);
             }),

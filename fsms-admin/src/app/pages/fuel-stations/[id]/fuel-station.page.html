@@ -6,7 +6,7 @@
         <h2 class="text-2xl my-2 font-semibold">Loading...</h2>
     }
     <div class="rounded-lg">
-        <p-tabs  value="/dashboard" scrollable>
+        <p-tabs [value]="initialRoute" scrollable>
             <p-tablist>
                 @for(tab of tabs; track tab.route){
                     <p-tab [value]="tab.route" [routerLink]="tab.route" class="flex items-center !gap-2 text-inherit">

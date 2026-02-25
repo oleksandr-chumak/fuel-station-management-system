@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, inject, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
@@ -27,19 +27,16 @@ export class FuelStationPage implements OnInit, OnDestroy {
 
   private readonly messageService: MessageService = inject(MessageService);
 
+  protected readonly initialRoute = this.router.url;
   protected readonly fuelStation = toSignal(this.fuelStationStore.fuelStation$, { initialValue: null });
   protected readonly loading = toSignal(this.getFuelStationByIdHandler.loading$, { initialValue: false });
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.paramsFuelStationId = params["id"];
-      const fuelStationId = Number(this.paramsFuelStationId);
-
-      if (Number.isNaN(fuelStationId)) {
-        this.messageService.add({ severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"] })
-        this.router.navigate(["/admin"]);
+      const fuelStationId = this.getFuelStationIdFromParams(params);
+      if(fuelStationId === null) {
         return;
-      }
+      };
 
       this.fetchFuelStation(fuelStationId);
       this.handleFuelStationEvents(fuelStationId);
@@ -48,6 +45,21 @@ export class FuelStationPage implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.fuelStationStore.reset();
+  }
+
+  private getFuelStationIdFromParams(params: Params): number | null {
+      this.paramsFuelStationId = params["id"];
+      const fuelStationId = Number(this.paramsFuelStationId);
+      if (Number.isNaN(fuelStationId)) {
+        this.messageService.add({ 
+          severity: "error", 
+          summary: "Unable to parse id", 
+          detail: "Unable to parse fuel station id: " + params["id"]
+        });
+        this.router.navigate(["/"]);
+        return null;
+      }
+      return fuelStationId
   }
 
   private handleFuelStationEvents(fuelStationId: number) {
@@ -61,7 +73,7 @@ export class FuelStationPage implements OnInit, OnDestroy {
     this.getFuelStationByIdHandler.handle({ fuelStationId })
       .pipe(
         catchError(() => {
-          this.router.navigate(["/admin"]);
+          this.router.navigate(["/"]);
           return EMPTY;
         }),
         takeUntilDestroyed(this.destroyRef)

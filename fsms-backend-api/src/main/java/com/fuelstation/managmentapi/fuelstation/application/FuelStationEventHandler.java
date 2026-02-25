@@ -12,6 +12,7 @@ import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationCreated
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.FuelStationEmailService;
 
 @Component
 @AllArgsConstructor
@@ -19,6 +20,7 @@ public class FuelStationEventHandler {
 
     private final Logger logger = LoggerFactory.getLogger(FuelStationEventHandler.class);
     private final SimpMessagingTemplate messagingTemplate;
+    private final FuelStationEmailService fuelStationEmailService;
 
     @EventListener
     public void handle(FuelStationCreated event) {
@@ -55,6 +57,7 @@ public class FuelStationEventHandler {
                 "/topic/managers/" + event.getManagerId() + "/assigned-to-fuel-station",
                 event
         );
+        this.fuelStationEmailService.sendManagerAssigned(event.getManagerId(), event.getFuelStationId());
     }
 
     @EventListener
@@ -68,5 +71,7 @@ public class FuelStationEventHandler {
                 "/topic/managers/" + event.getManagerId() + "/unassigned-from-fuel-station",
                 event
         );
+        this.fuelStationEmailService.sendManagerUnassigned(event.getManagerId(), event.getFuelStationId());
     }
-}        
+
+}
