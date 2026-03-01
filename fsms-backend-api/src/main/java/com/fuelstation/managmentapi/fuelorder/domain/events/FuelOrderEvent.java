@@ -22,4 +22,17 @@ public class FuelOrderEvent extends DomainEvent {
         this.fuelOrderId = fuelOrderId;
         this.fuelStationId = fuelStationId;
     }
+
+    public FuelOrderEvent(
+            FuelOrderEventType type,
+            long fuelOrderId,
+            long fuelStationId,
+            Actor performedBy,
+            java.time.Instant occurredAt
+    ) {
+        super(performedBy, occurredAt);
+        this.type = type;
+        this.fuelOrderId = fuelOrderId;
+        this.fuelStationId = fuelStationId;
+    }
 }

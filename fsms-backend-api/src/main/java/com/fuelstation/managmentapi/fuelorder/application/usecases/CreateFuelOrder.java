@@ -50,7 +50,7 @@ public class CreateFuelOrder {
  
         var createdFuelOrder = fuelOrderFactory.create(fuelStationId, fuelGrade, amount);
         var savedFuelOrder = fuelOrderRepository.save(createdFuelOrder);
-        domainEventPublisher.publish(new FuelOrderCreated(savedFuelOrder.getFuelOrderId(), fuelStationId, Actor.system()));
+        domainEventPublisher.publish(new FuelOrderCreated(savedFuelOrder.getFuelOrderId(), fuelStationId, performedBy));
         return savedFuelOrder;
     }
 

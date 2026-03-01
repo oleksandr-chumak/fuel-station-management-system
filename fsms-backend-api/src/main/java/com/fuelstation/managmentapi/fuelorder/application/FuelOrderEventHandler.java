@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.application;
 
+import com.fuelstation.managmentapi.fuelorder.application.usecases.CreateFuelOrderEvent;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderProcessed;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
@@ -13,13 +14,12 @@ import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ProcessFuelDelivery;
 
-import java.util.Map;
-
 @Component
 @AllArgsConstructor
 public class FuelOrderEventHandler {
 
     private ProcessFuelDelivery processFuelDelivery;
+    private CreateFuelOrderEvent createFuelOrderEvent;
 
     private static final Logger logger = LoggerFactory.getLogger(FuelOrderEventHandler.class);
     private final SimpMessagingTemplate messagingTemplate;
@@ -32,11 +32,7 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-created",
                 event
         );
-/*
-        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_CREATED.name(), Map.of(
-                "fuelOrderId", event.getFuelOrderId()
-        ));
-*/
+        createFuelOrderEvent.process(event);
     }
 
     @EventListener
@@ -51,11 +47,7 @@ public class FuelOrderEventHandler {
                 event
         );
         processFuelDelivery.process(event.getFuelOrderId());
-/*
-        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_CONFIRMED.name(), Map.of(
-                "fuelOrderId", event.getFuelOrderId()
-        ));
-*/
+        createFuelOrderEvent.process(event);
     }
 
     @EventListener
@@ -69,11 +61,7 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-rejected",
                 event
         );
-/*
-        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_REJECTED.name(), Map.of(
-                "fuelOrderId", event.getFuelOrderId()
-        ));
-*/
+        createFuelOrderEvent.process(event);
     }
 
     @EventListener
@@ -87,10 +75,6 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-processed",
                 event
         );
-/*
-        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_PROCESSED.name(), Map.of(
-                "fuelOrderId", event.getFuelOrderId()
-        ));
-*/
+        createFuelOrderEvent.process(event);
     }
 }

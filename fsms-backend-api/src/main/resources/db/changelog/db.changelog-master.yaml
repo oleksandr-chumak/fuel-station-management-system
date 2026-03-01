@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/changes/006-create-fuel-orders-table.sql
   - include:
       file: db/changelog/changes/007-create-fuel-station-events-table.sql
+  - include:
+      file: db/changelog/changes/008-create-fuel-order-events-table.sql

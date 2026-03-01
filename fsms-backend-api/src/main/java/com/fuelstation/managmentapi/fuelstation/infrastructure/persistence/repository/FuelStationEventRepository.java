@@ -1,15 +1,12 @@
 package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository;
 
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationEvent;
-import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationEventType;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
+import java.time.Instant;
+import java.util.List;
 
 public interface FuelStationEventRepository {
-    Page<FuelStationEvent> findByFuelStationId(Long fuelStationId, Pageable pageable);
-    Page<FuelStationEvent> findByFuelStationIdAndEventType(
-            Long fuelStationId,
-            FuelStationEventType eventType,
-            Pageable pageable
-    );
+    FuelStationEvent save(FuelStationEvent event);
+    List<FuelStationEvent> findByFuelStationIdAfter(Long fuelStationId, Instant occurredAfter, int limit);
+    List<FuelStationEvent> findLatestByFuelStationId(Long fuelStationId, int limit);
 }

@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest;
 
+import java.time.Instant;
 import java.util.List;
 
 import com.fuelstation.managmentapi.authentication.application.CurrentUser;
@@ -7,7 +8,6 @@ import com.fuelstation.managmentapi.authentication.domain.User;
 import com.fuelstation.managmentapi.common.application.DomainEventResponse;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -164,13 +164,11 @@ public class FuelStationController {
     }
 
     @GetMapping("/{id}/events")
-    public ResponseEntity<Page<DomainEventResponse>> getFuelStationEvents(
+    public ResponseEntity<List<DomainEventResponse>> getFuelStationEvents(
             @PathVariable("id") long fuelStationId,
-            @RequestParam(required = false) String eventType,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size
+            @RequestParam(required = false) Instant occurredAfter
     ) {
-        return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, eventType, page, size));
+        return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, occurredAfter));
     }
 
 }
