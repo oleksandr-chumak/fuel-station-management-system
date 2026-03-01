@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 import { WEB_API_CONFIG } from "./web-api-config.interface";
@@ -9,8 +9,11 @@ export class RestClient {
     private http = inject(HttpClient);
     private config = inject(WEB_API_CONFIG);
 
-    get<T>(endpoint: string, options?: Record<string, string | string[]>): Observable<T>   {
-        return this.http.get<T>(this.getUrl(endpoint), options);
+    get<T>(endpoint: string, options?: {
+        params?: Record<string, string>,
+        responseType?: string 
+    }): Observable<T>   {
+        return this.http.get<T>(this.getUrl(endpoint), options as any) as Observable<T>;
     }
 
     post<T>(endpoint: string, body: Record<string, unknown>, options?: Record<string, string | string[]>): Observable<T>   {

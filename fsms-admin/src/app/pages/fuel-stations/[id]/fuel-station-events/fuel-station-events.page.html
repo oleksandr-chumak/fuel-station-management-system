@@ -1,0 +1,67 @@
+<p-panel header="Event History">
+    <p-table
+        [value]="events()"
+        [loading]="loading()"
+        size="small"
+        [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }">
+
+        <ng-template #header>
+            <tr>
+                <th>Time</th>
+                <th>Event</th>
+                <th>Details</th>
+                <th>Performed By</th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-event>
+            <tr class="h-16">
+                <td>{{ formatDate(event.occurredAt) }}</td>
+                <td>
+                    <p-tag [value]="eventLabel(event.type)" [severity]="eventSeverity(event.type)" />
+                </td>
+                <td>{{ eventDetails(event) }}</td>
+                <td>
+                    @if (event.performedBy; as performer) {
+                        <span>{{ performer.firstName }} {{ performer.lastName }}</span>
+                        <br>
+                        <small class="text-gray-500">{{ performer.email }}</small>
+                    } @else {
+                        <p-tag value="System" severity="secondary" />
+                    }
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template #loadingbody>
+            @for (row of skeletonRows; track $index) {
+                <tr style="height: 46px">
+                    @for (col of skeletonCols; track $index) {
+                        <td><p-skeleton /></td>
+                    }
+                </tr>
+            }
+        </ng-template>
+
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="4" class="text-center py-4">No events found for this fuel station.</td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+
+    @if (hasMore()) {
+        <div class="flex justify-center mt-4">
+            <p-button
+                label="Load More"
+                [loading]="loadingMore()"
+                [disabled]="loadingMore()"
+                severity="secondary"
+                [outlined]="true"
+                (onClick)="loadMore()"
+            />
+        </div>
+    }
+</p-panel>

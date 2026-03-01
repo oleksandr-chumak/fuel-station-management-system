@@ -11,6 +11,7 @@ export * from './lib/fuel-station/fuel-station-status.enum';
 export * from './lib/fuel-station/fuel-price.model';
 export * from './lib/fuel-station/fuel-tank.model';
 export * from './lib/fuel-station/fuel-station-events';
+export * from './lib/fuel-station/fuel-station-event-response';
 export * from './lib/fuel-station/fuel-station-rest-client';
 export * from './lib/fuel-station/fuel-station-stomp-client';
 

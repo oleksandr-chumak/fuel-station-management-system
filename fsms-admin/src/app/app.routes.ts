@@ -7,6 +7,7 @@ import { FuelStationManagersPage } from './pages/fuel-stations/[id]/fuel-station
 import { FuelStationFuelOrdersPage } from './pages/fuel-stations/[id]/fuel-station-fuel-orders/fuel-station-fuel-orders.page';
 import { FuelStationFuelTanksPage } from './pages/fuel-stations/[id]/fuel-station-fuel-tanks/fuel-station-fuel-tanks.page';
 import { FuelStationFuelPricesPage } from './pages/fuel-stations/[id]/fuel-station-fuel-prices/fuel-station-fuel-prices.page';
+import { FuelStationEventsPage } from './pages/fuel-stations/[id]/fuel-station-events/fuel-station-events.page';
 import { ManagersPage } from './pages/managers/managers.page';
 import { FuelOrdersPage } from './pages/fuel-orders/fuel-orders.page';
 import {adminGuard, } from "fsms-security"
@@ -24,6 +25,7 @@ export const routes: Routes = [
             { path: "fuel-orders", component: FuelStationFuelOrdersPage },
             { path: "fuel-tanks", component: FuelStationFuelTanksPage },
             { path: "fuel-prices", component: FuelStationFuelPricesPage },
+            { path: "events", component: FuelStationEventsPage },
             { path: "", redirectTo: "info", pathMatch: "full" }
         ]
     },

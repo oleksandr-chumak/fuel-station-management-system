@@ -8,6 +8,7 @@ import { FuelOrder } from "../fuel-order/fuel-order.model";
 import { Manager } from "../manager/manager.model";
 import { FuelStation } from "./fuel-station.model";
 import { FuelGrade } from "../core/fuel-grade.enum";
+import { DomainEventResponse } from "./fuel-station-event-response";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationRestClient {
@@ -59,6 +60,12 @@ export class FuelStationRestClient {
     deactivateFuelStation(fuelStationId: number): Observable<FuelStation> {
         return this.restClient.put(`api/fuel-stations/${fuelStationId}/deactivate`)
             .pipe(map(data => this.fuelStationMapper.fromJson(data)));
+    }
+
+    getFuelStationEvents(fuelStationId: number, occurredAfter?: string): Observable<DomainEventResponse[]> {
+        const params = occurredAfter ? { occurredAfter } : undefined;
+        return this.restClient.get(`api/fuel-stations/${fuelStationId}/events`, { params })
+            .pipe(map(data => this.restClient.assertArray(data)));
     }
 
     createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: string): Observable<FuelStation> {
