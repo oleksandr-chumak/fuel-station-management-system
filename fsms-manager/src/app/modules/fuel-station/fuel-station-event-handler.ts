@@ -12,7 +12,6 @@ import {
     FuelStationRestClient,
     FuelStationStompClient,
     ManagerAssignedToFuelStation,
-    ManagerRestClient,
     ManagerUnassignedFromFuelStation,
 } from "fsms-web-api";
 import { catchError, EMPTY, Observable, tap } from "rxjs";

@@ -1,20 +1,11 @@
-export interface FuelStationEventPerformer {
-    userId: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-}
+import { User } from "../auth/user.model";
+import { Manager } from "../manager/manager.model";
 
-export interface FuelStationEventManagerResponse {
-    managerId: number;
-    firstName: string;
-    lastName: string;
-}
 
 export interface DomainEventResponse {
     type: string;
     occurredAt: string;
-    performedBy: FuelStationEventPerformer | null;
+    performedBy: User | null;
 }
 
 export interface FuelPriceChangedEventResponse extends DomainEventResponse {
@@ -23,11 +14,11 @@ export interface FuelPriceChangedEventResponse extends DomainEventResponse {
 }
 
 export interface ManagerAssignedEventResponse extends DomainEventResponse {
-    manager: FuelStationEventManagerResponse;
+    manager: Manager;
 }
 
 export interface ManagerUnassignedEventResponse extends DomainEventResponse {
-    manager: FuelStationEventManagerResponse;
+    manager: Manager;
 }
 
 export interface FuelOrderDomainEventResponse extends DomainEventResponse {

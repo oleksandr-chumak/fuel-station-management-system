@@ -1,9 +1,5 @@
 <p-panel header="Event History">
-    <p-table
-        [value]="events()"
-        [loading]="loading()"
-        size="small"
-        [showLoader]="false"
+    <p-table [value]="events()" [loading]="loading()" size="small" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
 
         <ng-template #header>
@@ -21,14 +17,44 @@
                 <td>
                     <p-tag [value]="eventLabel(event.type)" [severity]="eventSeverity(event.type)" />
                 </td>
-                <td>{{ eventDetails(event) }}</td>
+                <td>
+                    @switch(event.type) {
+                    @case ("MANAGER_ASSIGNED_TO_FUEL_STATION")
+                    @case ("MANAGER_UNASSIGNED_FROM_FUEL_STATION") {
+                    <span>{{ event.manager.fullName }}</span>
+                    <br>
+                    <small class="text-gray-500">{{ event.manager.email }}</small>
+                    }
+                    @case ("FUEL_ORDER_CREATED")
+                    @case ("FUEL_ORDER_REJECTED")
+                    @case ("FUEL_ORDER_CREATED")
+                    @case ("FUEL_ORDER_PROCESSED") {
+                    Order #{{event.fuelOrderId}}
+                    }
+                    @case ("FUEL_STATION_FUEL_PRICE_CHANGED") {
+                    {{event.fuelGrade}}: {{event.pricePerLiter}}/L
+                    }
+                    @default {
+                    —
+                    }
+                    }
+                </td>
                 <td>
                     @if (event.performedBy; as performer) {
-                        <span>{{ performer.firstName }} {{ performer.lastName }}</span>
-                        <br>
-                        <small class="text-gray-500">{{ performer.email }}</small>
+                    <div class="flex items-center gap-2">
+                        @if (performer.role === 'administrator') {
+                        <p-tag value="Admin" severity="warn" class="w-18" />
+                        } @else if (performer.role === 'manager') {
+                        <p-tag value="Manager" severity="info" class="w-18" />
+                        }
+                        <div>
+                            <span>{{ performer.fullName }}</span>
+                            <br>
+                            <small class="text-gray-500">{{ performer.email }}</small>
+                        </div>
+                    </div>
                     } @else {
-                        <p-tag value="System" severity="secondary" />
+                    <p-tag value="System" severity="secondary" class="w-18" />
                     }
                 </td>
             </tr>
@@ -36,11 +62,11 @@
 
         <ng-template #loadingbody>
             @for (row of skeletonRows; track $index) {
-                <tr style="height: 46px">
-                    @for (col of skeletonCols; track $index) {
-                        <td><p-skeleton /></td>
-                    }
-                </tr>
+            <tr style="height: 46px">
+                @for (col of skeletonCols; track $index) {
+                <td><p-skeleton /></td>
+                }
+            </tr>
             }
         </ng-template>
 
@@ -53,15 +79,9 @@
     </p-table>
 
     @if (hasMore()) {
-        <div class="flex justify-center mt-4">
-            <p-button
-                label="Load More"
-                [loading]="loadingMore()"
-                [disabled]="loadingMore()"
-                severity="secondary"
-                [outlined]="true"
-                (onClick)="loadMore()"
-            />
-        </div>
+    <div class="flex justify-center mt-4">
+        <p-button label="Load More" [loading]="loadingMore()" [disabled]="loadingMore()" severity="secondary"
+            [outlined]="true" (onClick)="loadMore()" />
+    </div>
     }
 </p-panel>

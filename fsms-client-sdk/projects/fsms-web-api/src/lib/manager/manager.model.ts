@@ -5,6 +5,8 @@ export class Manager {
         public managerId: number,
         public firstName: string,
         public lastName: string,
+        public fullName: string,
+        public email: string,
         public status: ManagerStatus
     ) {}
 
@@ -12,7 +14,4 @@ export class Manager {
         this.status = ManagerStatus.Deactivated;
     }
 
-    get fullName() {
-        return this.firstName + " " + this.lastName;
-    }
 }

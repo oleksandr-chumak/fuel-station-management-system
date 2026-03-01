@@ -10,6 +10,9 @@ export class UserMapper {
 
     return new User(
       (json as User).userId,
+      (json as User).firstName,
+      (json as User).lastName,
+      (json as User).fullName,
       (json as User).email,
       role
     );

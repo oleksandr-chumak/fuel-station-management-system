@@ -7,12 +7,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
-import {
-    DomainEventResponse,
-    FuelOrderDomainEventResponse,
-    FuelPriceChangedEventResponse,
-    ManagerAssignedEventResponse
-} from 'fsms-web-api';
+import { DomainEventResponse } from 'fsms-web-api';
 import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
 import { GetFuelStationEventsHandler } from '../../../../modules/fuel-stations/handlers/get-fuel-station-events-handler';
 
@@ -102,29 +97,6 @@ export class FuelStationEventsPage implements OnInit {
             case 'FUEL_ORDER_REJECTED':                  return 'danger';
             case 'FUEL_ORDER_PROCESSED':                 return 'success';
             default:                                     return undefined;
-        }
-    }
-
-    protected eventDetails(event: DomainEventResponse): string {
-        switch (event.type) {
-            case 'FUEL_STATION_FUEL_PRICE_CHANGED': {
-                const e = event as FuelPriceChangedEventResponse;
-                return `${e.fuelGrade}: ${e.pricePerLiter}/L`;
-            }
-            case 'MANAGER_ASSIGNED_TO_FUEL_STATION':
-            case 'MANAGER_UNASSIGNED_FROM_FUEL_STATION': {
-                const e = event as ManagerAssignedEventResponse;
-                return `${e.manager.firstName} ${e.manager.lastName}`;
-            }
-            case 'FUEL_ORDER_CREATED':
-            case 'FUEL_ORDER_CONFIRMED':
-            case 'FUEL_ORDER_REJECTED':
-            case 'FUEL_ORDER_PROCESSED': {
-                const e = event as FuelOrderDomainEventResponse;
-                return `Order #${e.fuelOrderId}`;
-            }
-            default:
-                return '—';
         }
     }
 

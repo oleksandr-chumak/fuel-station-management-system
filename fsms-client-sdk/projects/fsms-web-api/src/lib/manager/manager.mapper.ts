@@ -12,6 +12,8 @@ export class ManagerMapper {
       (json as Manager).managerId,
       (json as Manager).firstName,
       (json as Manager).lastName,
+      (json as Manager).fullName,
+      (json as Manager).email,
       status
     );
   }
