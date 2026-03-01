@@ -33,7 +33,7 @@ export class AssignManagerDialogComponent extends BasicDialog {
       const formData = this.assignManagerForm.value as { manager: Manager };
       this.assignManagerHandler.handle({
         fuelStationId: this.fuelStationStore.fuelStation.fuelStationId,
-        managerId: formData.manager.credentialsId
+        managerId: formData.manager.managerId
       })
       .pipe(tap(() => this.closeDialog()))
       .subscribe()

@@ -5,6 +5,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fuelstation.managmentapi.administrator.application.usecases.CreateAdministrator;
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.UserRepository;
+import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.manager.application.usecases.CreateManager;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import jakarta.transaction.Transactional;
@@ -18,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.util.stream.Stream;
 
@@ -39,6 +42,8 @@ public class AuthControllerTest {
     private AuthTestClient authTestClient;
 
     private final String testAdminEmail = "test-admin@gmail.com";
+    private final String testAdminFirstName = "Test";
+    private final String testAdminLastName = "Admin";
     private final String testAdminPassword = "test-admin-password";
     private final String testManagerEmail = "test-manager@gmail.com";
     private final String testManagerPassword = "test-manager-password";
@@ -49,8 +54,7 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Should login admin")
         void shouldLoginAdmin() throws Exception {
-            createAdministrator.process(testAdminEmail, testAdminPassword);
-
+            createTestAdmin();
             authTestClient.loginAdmin(new AuthRequest(testAdminEmail, testAdminPassword))
                     .andExpect(status().isOk());
         }
@@ -58,8 +62,7 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Should return Unauthorized for invalid credentials")
         void shouldReturnUnauthorizedForInvalidCredentials() throws Exception {
-            createAdministrator.process(testAdminEmail, testAdminPassword);
-
+            createTestAdmin();
             authTestClient.loginAdmin(new AuthRequest(testAdminEmail, "wrongPassword"))
                     .andExpect(status().isUnauthorized());
         }
@@ -101,7 +104,7 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Should login manager")
         void shouldLoginManager() throws Exception {
-            createManager.process("John", "Doe", testManagerEmail, testManagerPassword);
+            createManager.process("John", "Doe", testManagerEmail, testManagerPassword, Actor.system());
 
             authTestClient.loginManager(new AuthRequest(testManagerEmail, testManagerPassword))
                     .andExpect(status().isOk());
@@ -110,7 +113,7 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Should return Unauthorized for invalid credentials")
         void shouldReturnUnauthorizedForInvalidCredentials() throws Exception {
-            createManager.process("John", "Doe", testAdminEmail, testAdminPassword);
+            createManager.process("John", "Doe", testAdminEmail, testAdminPassword, Actor.system());
 
             authTestClient.loginManager(new AuthRequest(testAdminEmail, "wrongPassword"))
                     .andExpect(status().isUnauthorized());
@@ -153,26 +156,32 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Should get admin")
         void shouldGetAdmin() throws Exception {
-            Administrator administrator = createAdministrator.process(testAdminEmail, testAdminPassword);
+            Administrator administrator = createAdministrator.process(
+                    testAdminEmail,
+                    testAdminFirstName,
+                    testAdminLastName,
+                    testAdminPassword,
+                    Actor.system()
+            );
 
             String token = authTestClient.loginAdminAndGetToken(new AuthRequest(testAdminEmail, testAdminPassword));
-            Me me = authTestClient.getMeAndReturnResponse(token);
+            UserResponse me = authTestClient.getMeAndReturnResponse(token);
 
-            assertThat(me.userId()).isEqualTo(administrator.getCredentialsId());
-            assertThat(me.role()).isEqualTo(UserRole.ADMINISTRATOR.toString());
+            assertThat(me.userId()).isEqualTo(administrator.getAdministratorId());
+            assertThat(me.role()).isEqualTo(UserRole.ADMINISTRATOR);
             assertThat(me.email()).isEqualTo(testAdminEmail);
         }
 
         @Test
         @DisplayName("Should get manager")
         void shouldGetManager() throws Exception {
-            Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword);
+            Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword, Actor.system());
 
             String token = authTestClient.loginManagerAndGetToken(new AuthRequest(testManagerEmail, testManagerPassword));
-            Me me = authTestClient.getMeAndReturnResponse(token);
+            UserResponse me = authTestClient.getMeAndReturnResponse(token);
 
-            assertThat(me.userId()).isEqualTo(manager.getCredentialsId());
-            assertThat(me.role()).isEqualTo(UserRole.MANAGER.toString());
+            assertThat(me.userId()).isEqualTo(manager.getManagerId());
+            assertThat(me.role()).isEqualTo(UserRole.MANAGER);
             assertThat(me.email()).isEqualTo(testManagerEmail);
         }
 
@@ -185,15 +194,15 @@ public class AuthControllerTest {
         @DisplayName("Should generate valid access token for manager")
         void shouldGenerateValidAccessTokenForManager() throws Exception {
             String adminToken = getAdminAccessToken();
-            Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword);
+            Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword, Actor.system());
 
-            String token = authTestClient.getManagerAccessTokenAndReturn(manager.getCredentialsId(), adminToken);
+            String token = authTestClient.getManagerAccessTokenAndReturn(manager.getManagerId(), adminToken);
 
             assertThat(token).isNotNull().isNotEmpty();
 
-            Me me = authTestClient.getMeAndReturnResponse(token);
-            assertThat(me.userId()).isEqualTo(manager.getCredentialsId());
-            assertThat(me.role()).isEqualTo(UserRole.MANAGER.toString());
+            UserResponse me = authTestClient.getMeAndReturnResponse(token);
+            assertThat(me.userId()).isEqualTo(manager.getManagerId());
+            assertThat(me.role()).isEqualTo(UserRole.MANAGER);
             assertThat(me.email()).isEqualTo(testManagerEmail);
         }
 
@@ -211,20 +220,20 @@ public class AuthControllerTest {
         @DisplayName("Should generate different tokens for different managers")
         void shouldGenerateDifferentTokensForDifferentManagers() throws Exception {
             String adminToken = getAdminAccessToken();
-            Manager manager1 = createManager.process("John", "Doe", "manager1@gmail.com", "password1");
-            Manager manager2 = createManager.process("Jane", "Smith", "manager2@gmail.com", "password2");
+            Manager manager1 = createManager.process("John", "Doe", "manager1@gmail.com", "password1", Actor.system());
+            Manager manager2 = createManager.process("Jane", "Smith", "manager2@gmail.com", "password2", Actor.system());
 
-            String token1 = authTestClient.getManagerAccessTokenAndReturn(manager1.getCredentialsId(), adminToken);
-            String token2 = authTestClient.getManagerAccessTokenAndReturn(manager2.getCredentialsId(), adminToken);
+            String token1 = authTestClient.getManagerAccessTokenAndReturn(manager1.getManagerId(), adminToken);
+            String token2 = authTestClient.getManagerAccessTokenAndReturn(manager2.getManagerId(), adminToken);
 
             assertThat(token1).isNotEqualTo(token2);
 
-            Me me1 = authTestClient.getMeAndReturnResponse(token1);
-            Me me2 = authTestClient.getMeAndReturnResponse(token2);
+            UserResponse me1 = authTestClient.getMeAndReturnResponse(token1);
+            UserResponse me2 = authTestClient.getMeAndReturnResponse(token2);
 
-            assertThat(me1.userId()).isEqualTo(manager1.getCredentialsId());
+            assertThat(me1.userId()).isEqualTo(manager1.getManagerId());
             assertThat(me1.email()).isEqualTo("manager1@gmail.com");
-            assertThat(me2.userId()).isEqualTo(manager2.getCredentialsId());
+            assertThat(me2.userId()).isEqualTo(manager2.getManagerId());
             assertThat(me2.email()).isEqualTo("manager2@gmail.com");
         }
 
@@ -237,7 +246,7 @@ public class AuthControllerTest {
         }
 
         private String getAdminAccessToken() throws Exception {
-            createAdministrator.process(testAdminEmail, testAdminPassword);
+            createTestAdmin();
             return authTestClient.loginAdminAndGetToken(
                     new AuthRequest(testAdminEmail, testAdminPassword)
             );
@@ -254,35 +263,46 @@ public class AuthControllerTest {
         @Test
         @DisplayName("Should handle same email for admin and manager - admin login")
         void shouldHandleSameEmailAdminLogin() throws Exception {
-            Administrator administrator = createAdministrator.process(sharedEmail, adminPassword);
-            createManager.process("John", "Doe", sharedEmail, managerPassword);
+            Administrator administrator = createTestAdmin(sharedEmail, adminPassword);
+            createManager.process("John", "Doe", sharedEmail, managerPassword, Actor.system());
 
-            // Login as admin
             String adminToken = authTestClient.loginAdminAndGetToken(new AuthRequest(sharedEmail, adminPassword));
-            Me adminMe = authTestClient.getMeAndReturnResponse(adminToken);
+            UserResponse user = authTestClient.getMeAndReturnResponse(adminToken);
 
-            // Verify admin identity
-            assertThat(adminMe.userId()).isEqualTo(administrator.getCredentialsId());
-            assertThat(adminMe.role()).isEqualTo(UserRole.ADMINISTRATOR.toString());
-            assertThat(adminMe.email()).isEqualTo(sharedEmail);
+            assertThat(user.userId()).isEqualTo(administrator.getAdministratorId());
+            assertThat(user.role()).isEqualTo(UserRole.ADMINISTRATOR);
+            assertThat(user.email()).isEqualTo(sharedEmail);
         }
 
         @Test
         @DisplayName("Should handle same email for admin and manager - manager login")
         void shouldHandleSameEmailManagerLogin() throws Exception {
-            createAdministrator.process(sharedEmail, adminPassword);
-            Manager manager = createManager.process("John", "Doe", sharedEmail, managerPassword);
+            createTestAdmin();
+            Manager manager = createManager.process("John", "Doe", sharedEmail, managerPassword, Actor.system());
 
-            // Login as manager
             String managerToken = authTestClient.loginManagerAndGetToken(new AuthRequest(sharedEmail, managerPassword));
-            Me managerMe = authTestClient.getMeAndReturnResponse(managerToken);
+            UserResponse user = authTestClient.getMeAndReturnResponse(managerToken);
 
-            // Verify manager identity
-            assertThat(managerMe.userId()).isEqualTo(manager.getCredentialsId());
-            assertThat(managerMe.role()).isEqualTo(UserRole.MANAGER.toString());
-            assertThat(managerMe.email()).isEqualTo(sharedEmail);
+            assertThat(user.userId()).isEqualTo(manager.getManagerId());
+            assertThat(user.role()).isEqualTo(UserRole.MANAGER);
+            assertThat(user.email()).isEqualTo(sharedEmail);
         }
 
+    }
+
+
+    private Administrator createTestAdmin() {
+        return createTestAdmin(testAdminEmail, testAdminPassword);
+    }
+
+    private Administrator createTestAdmin(String email, String password) {
+        return createAdministrator.process(
+                email,
+                testAdminFirstName,
+                testAdminLastName,
+                password,
+                Actor.system()
+        );
     }
 
 }

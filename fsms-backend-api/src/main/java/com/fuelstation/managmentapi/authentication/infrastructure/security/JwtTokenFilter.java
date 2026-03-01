@@ -9,8 +9,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
-import com.fuelstation.managmentapi.authentication.infrastructure.persistence.CredentialsRepository;
+import com.fuelstation.managmentapi.authentication.domain.User;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.UserRepository;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -22,11 +22,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 
-    private final CredentialsRepository credentialsRepository;
+    private final UserRepository userRepository;
 
-    public JwtTokenFilter(JwtTokenService jwtTokenService, CredentialsRepository credentialsRepository) {
+    public JwtTokenFilter(JwtTokenService jwtTokenService, UserRepository userRepository) {
         this.jwtTokenService = jwtTokenService;
-        this.credentialsRepository = credentialsRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -39,13 +39,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String token = authorizationHeader.substring(7);
 
             try {
-                String username = jwtTokenService.getUsernameFromToken(token);
+                long userId = Long.parseLong(jwtTokenService.getUsernameFromToken(token));
 
-                if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    Credentials credentials = credentialsRepository.findByUsername(username)
-                            .orElseThrow(() -> new UsernameNotFoundException(
-                                    "User with username: " + username + " does not exist"));
-                    SecurityUserDetails userDetails = new SecurityUserDetails(credentials);
+                if (userId != 0 && SecurityContextHolder.getContext().getAuthentication() == null) {
+                    User user = userRepository.findById(userId).orElseThrow(
+                            () -> new UsernameNotFoundException("User with id: " + userId + " does not exist")
+                    );
+                    SecurityUserDetails userDetails = new SecurityUserDetails(user);
                     if (jwtTokenService.isValidAccessToken(token, userDetails.getUsername())) {
                         UsernamePasswordAuthenticationToken authenticationToken =
                                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

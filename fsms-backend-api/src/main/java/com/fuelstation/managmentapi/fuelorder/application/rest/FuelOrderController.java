@@ -3,7 +3,7 @@ package com.fuelstation.managmentapi.fuelorder.application.rest;
 import java.util.List;
 
 import com.fuelstation.managmentapi.authentication.application.CurrentUser;
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.User;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeConfirmedException;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeRejectedException;
@@ -41,14 +41,14 @@ public class FuelOrderController {
     @PostMapping("/")
     public ResponseEntity<FuelOrderResponse> createFuelOrder(
             @RequestBody @Valid CreateFuelOrderRequest request,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
             ) {
         try{
             FuelOrder fuelOrder = createFuelOrder.process(
                     request.getFuelStationId(),
                     request.getFuelGrade(),
                     request.getAmount(),
-                    credentials
+                    user.getActor()
             );
 
             return new ResponseEntity<>(FuelOrderResponse.fromDomain(fuelOrder), HttpStatus.CREATED);
@@ -58,9 +58,12 @@ public class FuelOrderController {
     }
 
     @PutMapping("/{id}/confirm")
-    public ResponseEntity<FuelOrderResponse> confirmFuelOrder(@PathVariable("id") long fuelOrderId) {
+    public ResponseEntity<FuelOrderResponse> confirmFuelOrder(
+            @PathVariable("id") long fuelOrderId,
+            @CurrentUser User user
+    ) {
         try {
-            FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId);
+            FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId, user.getActor());
             return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
         } catch (FuelOrderCannotBeConfirmedException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -68,9 +71,12 @@ public class FuelOrderController {
     }
 
     @PutMapping("/{id}/reject")
-    public ResponseEntity<FuelOrderResponse> rejectFuelOrder(@PathVariable("id") long fuelOrderId) {
+    public ResponseEntity<FuelOrderResponse> rejectFuelOrder(
+            @PathVariable("id") long fuelOrderId,
+            @CurrentUser User user
+    ) {
         try {
-            FuelOrder fuelOrder = rejectFuelOrder.process(fuelOrderId);
+            FuelOrder fuelOrder = rejectFuelOrder.process(fuelOrderId, user.getActor());
             return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
         } catch (FuelOrderCannotBeRejectedException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());

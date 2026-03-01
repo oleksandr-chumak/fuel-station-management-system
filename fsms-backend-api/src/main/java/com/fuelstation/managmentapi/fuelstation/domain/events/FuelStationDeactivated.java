@@ -1,18 +1,19 @@
 package com.fuelstation.managmentapi.fuelstation.domain.events;
 
-import com.fuelstation.managmentapi.common.domain.DomainEvent;
-
-import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationDomainException;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fuelstation.managmentapi.common.domain.Actor;
 import lombok.Getter;
 
-@Getter
-public class FuelStationDeactivated implements DomainEvent {
-    private final FuelStationEventType type = FuelStationEventType.FUEL_STATION_DEACTIVATED;
-    private final long fuelStationId;
+import java.time.Instant;
 
-    public FuelStationDeactivated(long fuelStationId) {
-        this.fuelStationId = fuelStationId;
+@Getter
+public class FuelStationDeactivated extends FuelStationEvent {
+
+    public FuelStationDeactivated(long fuelStationId, Actor performedBy) {
+        super(FuelStationEventType.FUEL_STATION_DEACTIVATED, fuelStationId, performedBy);
     }
+
+    public FuelStationDeactivated(long fuelStationId, Actor performedBy, Instant occurredAt) {
+        super(FuelStationEventType.FUEL_STATION_DEACTIVATED, fuelStationId, performedBy, occurredAt);
+    }
+
 }

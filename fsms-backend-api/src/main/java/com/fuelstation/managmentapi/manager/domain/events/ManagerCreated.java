@@ -1,11 +1,11 @@
 package com.fuelstation.managmentapi.manager.domain.events;
 
-import com.fuelstation.managmentapi.common.domain.DomainEvent;
+import com.fuelstation.managmentapi.common.domain.Actor;
 
-public record ManagerCreated(ManagerEventType type, long managerId) implements DomainEvent {
+public final class ManagerCreated extends ManagerEvent {
 
-    public ManagerCreated(long managerId) {
-        this(ManagerEventType.MANAGER_CREATED, managerId);
+    public ManagerCreated(long managerId, Actor performedBy) {
+        super(ManagerEventType.MANAGER_CREATED, managerId, performedBy);
     }
 
 }

@@ -102,7 +102,7 @@ export class FuelStationEventHandler {
         this.fuelStationStore.fuelStation = newFuelStation;
 
         this.fuelStationStore.managers = this.fuelStationStore.managers.filter(
-            (manager) => manager.credentialsId !== event.managerId
+            (manager) => manager.managerId !== event.managerId
         );
     }
 

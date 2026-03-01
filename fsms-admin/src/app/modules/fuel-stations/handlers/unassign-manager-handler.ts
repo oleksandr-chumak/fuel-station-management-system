@@ -33,11 +33,11 @@ export class UnassignManagerHandler extends CommandHandler<UnassignManager, Mana
 
                 if(this.store.managers !== null) {
                     this.store.managers = this.store.managers
-                        .filter((manager) => manager.credentialsId !== unassignedManager.credentialsId); 
+                        .filter((manager) => manager.managerId !== unassignedManager.managerId); 
                 }
 
                 const clonedFuelStation = this.store.fuelStation.clone();
-                clonedFuelStation.unassignManger(unassignedManager.credentialsId);
+                clonedFuelStation.unassignManger(unassignedManager.managerId);
                 this.store.fuelStation = clonedFuelStation;
             })
         );

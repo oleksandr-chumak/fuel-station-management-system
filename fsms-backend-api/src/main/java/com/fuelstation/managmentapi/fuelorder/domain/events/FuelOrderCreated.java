@@ -1,15 +1,11 @@
 package com.fuelstation.managmentapi.fuelorder.domain.events;
 
-import com.fuelstation.managmentapi.common.domain.DomainEvent;
+import com.fuelstation.managmentapi.common.domain.Actor;
 
-public record FuelOrderCreated(
-        FuelOrderEventType type,
-        long fuelOrderId,
-        long fuelStationId
-) implements DomainEvent {
+public final class FuelOrderCreated extends FuelOrderEvent {
 
-    public FuelOrderCreated(long fuelOrderId, long fuelStationId) {
-        this(FuelOrderEventType.FUEL_ORDER_CREATED, fuelOrderId, fuelStationId);
+    public FuelOrderCreated(long fuelOrderId, long fuelStationId, Actor performedBy) {
+        super(FuelOrderEventType.FUEL_ORDER_CREATED, fuelOrderId, fuelStationId, performedBy);
     }
 
 }

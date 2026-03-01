@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fuelstation.managmentapi.common.domain.Actor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -69,13 +70,13 @@ public class FuelStationTest {
         @DisplayName("Should throw exception when trying to assign an already assigned manager")
         void shouldThrowExceptionWhenAssigningAlreadyAssignedManager() {
             // Given
-            Manager manager = new Manager(1L, null, null, null);
-            fuelStation.getAssignedManagersIds().add(manager.getCredentialsId());
+            Manager manager = new Manager(1L, null, null, null, null, null, null);
+            fuelStation.getAssignedManagersIds().add(manager.getManagerId());
             
             // When & Then
             assertThrows(
                 ManagerAlreadyAssignedException.class,
-                () -> fuelStation.assignManager(manager.getCredentialsId())
+                () -> fuelStation.assignManager(manager.getManagerId(), Actor.system())
             );
         }
         
@@ -83,14 +84,14 @@ public class FuelStationTest {
         @DisplayName("Should assign a new manager")
         void shouldAssignNewManager() {
             // Given
-            Manager newManager = new Manager(2L, null, null, null);
-            assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getCredentialsId()));
+            Manager newManager = new Manager(2L, null, null, null, null, null, null);
+            assertFalse(fuelStation.getAssignedManagersIds().contains(newManager.getManagerId()));
 
             // When
-            fuelStation.assignManager(newManager.getCredentialsId());
+            fuelStation.assignManager(newManager.getManagerId(), Actor.system());
 
             // Then
-            assertTrue(fuelStation.getAssignedManagersIds().contains(newManager.getCredentialsId()));
+            assertTrue(fuelStation.getAssignedManagersIds().contains(newManager.getManagerId()));
             assertEquals(1, fuelStation.getAssignedManagersIds().size());
         }
         
@@ -98,27 +99,27 @@ public class FuelStationTest {
         @DisplayName("Should unassign a manager")
         void shouldUnassignManager() {
             // Given
-            Manager manager = new Manager(3L, null, null, null);
-            fuelStation.getAssignedManagersIds().add(manager.getCredentialsId());
+            Manager manager = new Manager(3L, null, null, null, null, null, null);
+            fuelStation.getAssignedManagersIds().add(manager.getManagerId());
             assertEquals(1, fuelStation.getAssignedManagersIds().size());
             
             // When
-            fuelStation.unassignManager(manager.getCredentialsId());
+            fuelStation.unassignManager(manager.getManagerId(), Actor.system());
             
             // Then
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
-            assertFalse(fuelStation.getAssignedManagersIds().contains(manager.getCredentialsId()));
+            assertFalse(fuelStation.getAssignedManagersIds().contains(manager.getManagerId()));
         }
         
         @Test
         @DisplayName("Should do nothing when unassign a manager that isn't assigned")
         void shouldDoNothingWhenUnassigningNonAssignedManager() {
             // Given
-            Manager manager = new Manager(4L, null, null, null);
+            Manager manager = new Manager(4L, null, null, null, null, null, null);
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
             
             // When
-            fuelStation.unassignManager(manager.getCredentialsId());
+            fuelStation.unassignManager(manager.getManagerId(), Actor.system());
             
             // Then
             assertEquals(0, fuelStation.getAssignedManagersIds().size());
@@ -139,7 +140,7 @@ public class FuelStationTest {
             // When & Then
             assertThrows(
                 FuelGradeNotFoundException.class,
-                () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, BigDecimal.valueOf(4.2f))
+                () -> fuelStation.changeFuelPrice(FuelGrade.DIESEL, BigDecimal.valueOf(4.2f), Actor.system())
             );
         }
         
@@ -150,7 +151,7 @@ public class FuelStationTest {
             var newPrice = BigDecimal.valueOf(4.5f);
             
             // When
-            fuelStation.changeFuelPrice(FuelGrade.RON_95, newPrice);
+            fuelStation.changeFuelPrice(FuelGrade.RON_95, newPrice, Actor.system());
             
             // Then
             FuelPrice updatedPrice = fuelStation.getFuelPrices().stream()

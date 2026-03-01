@@ -23,8 +23,11 @@ public class AuthController {
 
     @PostMapping("/admins/login")
     public ResponseEntity<String> loginAdmin(@RequestBody @Valid AuthRequest authRequest) {
-        var accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(),
-                UserRole.ADMINISTRATOR);
+        var accessToken = authService.authenticate(
+                authRequest.getEmail(),
+                authRequest.getPassword(),
+                UserRole.ADMINISTRATOR
+        );
         return new ResponseEntity<>(accessToken, HttpStatus.OK);
     }
 
@@ -41,8 +44,8 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<Me> getCurrentUser(Authentication authentication) {
-        return ResponseEntity.ok(getMe.process(authentication.getName()));
+    public ResponseEntity<UserResponse> getCurrentUser(Authentication authentication) {
+        return ResponseEntity.ok(UserResponse.fromUser(getMe.process(authentication.getName())));
     }
 
 }

@@ -99,7 +99,7 @@ export class FuelStationEventHandler {
 
     if(this.fuelStationStore.managers !== null) {
       this.fuelStationStore.managers = this.fuelStationStore.managers.filter(
-        (manager) => manager.credentialsId !== event.managerId
+        (manager) => manager.managerId !== event.managerId
       );
     }
   }

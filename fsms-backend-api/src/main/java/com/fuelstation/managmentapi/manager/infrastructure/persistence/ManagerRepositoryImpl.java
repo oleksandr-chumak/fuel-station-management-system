@@ -3,6 +3,8 @@ package com.fuelstation.managmentapi.manager.infrastructure.persistence;
 import java.util.List;
 import java.util.Optional;
 
+import com.fuelstation.managmentapi.authentication.domain.UserRole;
+import com.fuelstation.managmentapi.authentication.infrastructure.persistence.JpaUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -12,29 +14,27 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 @AllArgsConstructor
 public class ManagerRepositoryImpl implements ManagerRepository {
 
-    private JpaManagerRepository jpaManagerRepository;
+    private JpaUserRepository jpaUserRepository;
     private ManagerMapper managerMapper;
-    
+
     @Override
     public Manager save(Manager manager) {
-        var test = managerMapper.toEntity(manager);
-        ManagerEntity managerEntity = jpaManagerRepository.save(test);
-        return managerMapper.toDomain(managerEntity);
+        return managerMapper.toDomain(jpaUserRepository.save(managerMapper.toEntity(manager)));
     }
 
     @Override
     public List<Manager> findAll() {
-        return jpaManagerRepository.findAll().stream().map(managerMapper::toDomain).toList();
+        return jpaUserRepository.findByUserRoleId(UserRole.MANAGER.getId()).stream().map(managerMapper::toDomain).toList();
     }
 
     @Override
-    public List<Manager> findManagersByIds(List<Long> assignedManagerIds) {
-        return jpaManagerRepository.findAllById(assignedManagerIds).stream().map(managerMapper::toDomain).toList();
+    public List<Manager> findByIds(List<Long> managerIds) {
+        return jpaUserRepository.findAllById(managerIds).stream().map(managerMapper::toDomain).toList();
     }
 
     @Override
-    public Optional<Manager> findByCredentialsId(long id) {
-        return jpaManagerRepository.findByCredentialsId(id).map(managerMapper::toDomain);
+    public Optional<Manager> findById(long id) {
+        return jpaUserRepository.findByUserIdAndUserRoleId(id, UserRole.MANAGER.getId()).map(managerMapper::toDomain);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
+import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.fuelorder.application.support.FuelOrderFetcher;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 import com.fuelstation.managmentapi.fuelstation.application.support.FuelStationFetcher;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.fuelstation.domain.FuelDeliveryService;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationRepository;
 
 @Component
 @AllArgsConstructor
@@ -29,7 +30,7 @@ public class ProcessFuelDelivery {
         var fuelStation = fuelStationFetcher.fetchActiveById(fuelOrder.getFuelStationId());
 
         fuelDeliveryService.processFuelDelivery(fuelStation, fuelOrder);
-        fuelOrder.process();
+        fuelOrder.process(Actor.system());
 
         fuelStationRepository.save(fuelStation);
         fuelOrderRepository.save(fuelOrder);

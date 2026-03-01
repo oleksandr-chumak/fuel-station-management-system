@@ -3,6 +3,7 @@ package com.fuelstation.managmentapi.fuelorder.domain;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
@@ -29,27 +30,27 @@ public class FuelOrder extends AggregateRoot {
     private Long fuelStationId; 
     private OffsetDateTime createdAt;
 
-    public void confirm() {
+    public void confirm(Actor performedBy) {
         if (status != FuelOrderStatus.PENDING) {
             throw new FuelOrderCannotBeConfirmedException(fuelOrderId, status);
         }
         status = FuelOrderStatus.CONFIRMED;
-        pushDomainEvent(new FuelOrderConfirmed(fuelOrderId, fuelStationId));
+        pushDomainEvent(new FuelOrderConfirmed(fuelOrderId, fuelStationId, performedBy));
     }
 
-    public void reject() {
+    public void reject(Actor performedBy) {
         if (status != FuelOrderStatus.PENDING) {
             throw new FuelOrderCannotBeRejectedException(fuelOrderId, status);
         }
         status = FuelOrderStatus.REJECTED;
-        pushDomainEvent(new FuelOrderRejected(fuelOrderId, fuelStationId));
+        pushDomainEvent(new FuelOrderRejected(fuelOrderId, fuelStationId, performedBy));
     }
 
-    public void process() {
+    public void process(Actor performedBy) {
         if (status != FuelOrderStatus.CONFIRMED) {
             throw new FuelOrderCannotBeProcessedException(fuelOrderId, status);
         }
         status = FuelOrderStatus.PROCESSED;
-        pushDomainEvent(new FuelOrderProcessed(fuelOrderId, fuelStationId));
+        pushDomainEvent(new FuelOrderProcessed(fuelOrderId, fuelStationId, performedBy));
     }
 }

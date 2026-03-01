@@ -31,12 +31,12 @@ export class AssignManagerHandler extends CommandHandler<AssignManager, Manager>
                     detail: "Manager was successfully assigned"
                 });
 
-                if (this.store.fuelStation.isManagerAssigned(manager.credentialsId)) {
+                if (this.store.fuelStation.isManagerAssigned(manager.managerId)) {
                     return;
                 }
 
                 const clonedFuelStation = this.store.fuelStation.clone();
-                clonedFuelStation.assignManger(manager.credentialsId);
+                clonedFuelStation.assignManger(manager.managerId);
                 this.store.fuelStation = clonedFuelStation;
 
                 if(this.store.managers === null) {

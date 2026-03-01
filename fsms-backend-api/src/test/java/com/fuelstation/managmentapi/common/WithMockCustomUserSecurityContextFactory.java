@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.common;
 
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.User;
+import com.fuelstation.managmentapi.authentication.domain.UserStatus;
 import com.fuelstation.managmentapi.authentication.infrastructure.security.SecurityUserDetails;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,14 +16,17 @@ public class WithMockCustomUserSecurityContextFactory
     public SecurityContext createSecurityContext(WithMockCustomUser annotation) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-        var credentials = new Credentials(
-                9999L,
+        var user = new User(
+                1L,
+                null,
+                null,
+                null,
                 annotation.email(),
+                UserStatus.ACTIVE,
                 annotation.role(),
-                annotation.username(),
                 "password"
         );
-        var principal = new SecurityUserDetails(credentials);
+        var principal = new SecurityUserDetails(user);
 
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 principal,

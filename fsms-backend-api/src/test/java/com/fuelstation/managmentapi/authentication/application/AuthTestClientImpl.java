@@ -1,6 +1,5 @@
 package com.fuelstation.managmentapi.authentication.application;
 
-import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -63,8 +62,8 @@ public class AuthTestClientImpl implements AuthTestClient {
     }
 
     @Override
-    public Me getMeAndReturnResponse(String token) throws Exception {
-        return getResponse(getMe(token), Me.class, status().isOk());
+    public UserResponse getMeAndReturnResponse(String token) throws Exception {
+        return getResponse(getMe(token), UserResponse.class, status().isOk());
     }
 
     // TODO make it reusable

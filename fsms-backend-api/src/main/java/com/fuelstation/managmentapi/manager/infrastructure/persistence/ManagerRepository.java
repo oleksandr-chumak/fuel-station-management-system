@@ -7,7 +7,7 @@ import com.fuelstation.managmentapi.manager.domain.Manager;
 
 public interface ManagerRepository {
    Manager save(Manager manager);
-   Optional<Manager> findByCredentialsId(long id);
+   Optional<Manager> findById(long id);
    List<Manager> findAll();
-   List<Manager> findManagersByIds(List<Long> assignedManagerIds);
+   List<Manager> findByIds(List<Long> managerIds);
 }

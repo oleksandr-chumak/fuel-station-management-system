@@ -13,5 +13,5 @@ public interface AuthTestClient {
    String getManagerAccessTokenAndReturn(Long managerId, String adminToken) throws Exception;
 
    ResultActions getMe(String token) throws Exception;
-   Me getMeAndReturnResponse(String token) throws Exception;
+   UserResponse getMeAndReturnResponse(String token) throws Exception;
 }

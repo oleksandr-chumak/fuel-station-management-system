@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
@@ -49,25 +50,25 @@ public class FuelStation extends AggregateRoot {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void assignManager(long credentialsId) {
-        if (isManagerAssigned(credentialsId)) {
-            throw new ManagerAlreadyAssignedException(credentialsId, fuelStationId);
+    public void assignManager(long managerId, Actor performedBy) {
+        if (isManagerAssigned(managerId)) {
+            throw new ManagerAlreadyAssignedException(managerId, fuelStationId);
         }
 
-        assignedManagersIds.add(credentialsId);
-        pushDomainEvent(new ManagerAssignedToFuelStation(fuelStationId, credentialsId));
+        assignedManagersIds.add(managerId);
+        pushDomainEvent(new ManagerAssignedToFuelStation(fuelStationId, managerId, performedBy));
     }
 
-    public void unassignManager(long credentialsId) {
-        assignedManagersIds.removeIf((id) -> id == credentialsId);
-        pushDomainEvent(new ManagerUnassignedFromFuelStation(fuelStationId, credentialsId));
+    public void unassignManager(long managerId, Actor performedBy) {
+        assignedManagersIds.removeIf((id) -> id == managerId);
+        pushDomainEvent(new ManagerUnassignedFromFuelStation(fuelStationId, managerId, performedBy));
     }
 
     public boolean isManagerAssigned(long credentialsId) {
         return assignedManagersIds.contains(credentialsId);
     }
 
-    public void changeFuelPrice(FuelGrade fuelGrade, BigDecimal newPrice) {
+    public void changeFuelPrice(FuelGrade fuelGrade, BigDecimal newPrice, Actor performedBy) {
         FuelPrice oldPrice = fuelPrices.stream()
                 .filter(fp -> fp.fuelGrade() == fuelGrade)
                 .findFirst()
@@ -75,7 +76,7 @@ public class FuelStation extends AggregateRoot {
 
         fuelPrices.remove(oldPrice);
         fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
-        pushDomainEvent(new FuelPriceChanged(fuelStationId, fuelGrade, newPrice));
+        pushDomainEvent(new FuelPriceChanged(fuelStationId, fuelGrade, newPrice, performedBy));
     }
 
     public void refillFuelTank(FuelTank fuelTank, BigDecimal volume) {
@@ -92,20 +93,20 @@ public class FuelStation extends AggregateRoot {
         fuelTank.setLastRefillDate(Optional.of(OffsetDateTime.now()));
     }
 
-    public void deactivate() {
+    public void deactivate(Actor performedBy) {
         if (status == FuelStationStatus.DEACTIVATED) {
             throw new FuelStationAlreadyDeactivatedException(this.fuelStationId);
         }
 
         this.status = FuelStationStatus.DEACTIVATED;
-        this.unassignAllManagers();
-        pushDomainEvent(new FuelStationDeactivated(fuelStationId));
+        this.unassignAllManagers(performedBy);
+        pushDomainEvent(new FuelStationDeactivated(fuelStationId, performedBy));
     }
 
-    private void unassignAllManagers() {
+    private void unassignAllManagers(Actor performedBy) {
         List<Long> cloneAssignedManagersIds = new ArrayList<>(assignedManagersIds);
         for (long credentialsId : cloneAssignedManagersIds) {
-            unassignManager(credentialsId);
+            unassignManager(credentialsId, performedBy);
         }
     }
 }

@@ -13,7 +13,7 @@ public class ManagerFetcher {
     private final ManagerRepository managerRepository;
 
     public Manager fetchById(long managerId) {
-        return managerRepository.findByCredentialsId(managerId)
+        return managerRepository.findById(managerId)
                 .orElseThrow(() -> new ManagerNotFoundException(managerId));
     }
 }

@@ -1,18 +1,19 @@
 package com.fuelstation.managmentapi.fuelstation.domain.events;
 
-import com.fuelstation.managmentapi.common.domain.DomainEvent;
-
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.fuelstation.managmentapi.common.domain.Actor;
 import lombok.Getter;
 
-@Getter
-public class FuelStationCreated implements DomainEvent {
-    private final FuelStationEventType type = FuelStationEventType.FUEL_STATION_CREATED;
-    private final long fuelStationId;
+import java.time.Instant;
 
-    public FuelStationCreated(long fuelStationId) {
-        this.fuelStationId = fuelStationId;
+@Getter
+public class FuelStationCreated extends FuelStationEvent {
+    private final FuelStationEventType type = FuelStationEventType.FUEL_STATION_CREATED;
+
+    public FuelStationCreated(long fuelStationId, Actor performedBy) {
+        super(FuelStationEventType.FUEL_STATION_CREATED, fuelStationId, performedBy);
+    }
+
+    public FuelStationCreated(long fuelStationId, Actor performedBy, Instant occurredAt) {
+        super(FuelStationEventType.FUEL_STATION_CREATED, fuelStationId, performedBy, occurredAt);
     }
 }

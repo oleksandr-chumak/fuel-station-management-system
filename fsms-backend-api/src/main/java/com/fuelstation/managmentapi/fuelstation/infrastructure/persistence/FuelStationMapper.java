@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.models.*;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelPriceEmbeddable;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationAddressEmbeddable;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationEntity;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelTankEntity;
 import org.springframework.stereotype.Component;
 
 @Component

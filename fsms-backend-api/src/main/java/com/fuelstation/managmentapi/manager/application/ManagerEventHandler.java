@@ -19,14 +19,14 @@ public class ManagerEventHandler {
 
     @EventListener
     public void handle(ManagerCreated event) {
-        logger.info("Manager was created ID:{}", event.managerId());
+        logger.info("Manager was created ID:{}", event.getManagerId());
         messagingTemplate.convertAndSend("/topic/managers/created", event);
     }
 
     @EventListener
     public void handle(ManagerTerminated event) {
-        logger.info("Manager was terminated ID:{}", event.mangerId());
-        messagingTemplate.convertAndSend("/topic/managers/" + event.mangerId() + "/terminated", event);
+        logger.info("Manager was terminated ID:{}", event.getManagerId());
+        messagingTemplate.convertAndSend("/topic/managers/" + event.getManagerId() + "/terminated", event);
     }
 
 }

@@ -25,10 +25,10 @@ spring:
     port: 1025
     from: noreply@fuelstation.com
 
-logging:
-  level:
-    liquibase: INFO
-    liquibase.executor: DEBUG
+#logging:
+#  level:
+#    liquibase: INFO
+#    liquibase.executor: DEBUG
 
 security:
   jwt:

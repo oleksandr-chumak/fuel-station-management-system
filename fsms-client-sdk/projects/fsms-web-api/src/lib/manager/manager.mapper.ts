@@ -9,7 +9,7 @@ export class ManagerMapper {
     const status = this.parseStatus((json as Manager).status);
 
     return new Manager(
-      (json as Manager).credentialsId,
+      (json as Manager).managerId,
       (json as Manager).firstName,
       (json as Manager).lastName,
       status

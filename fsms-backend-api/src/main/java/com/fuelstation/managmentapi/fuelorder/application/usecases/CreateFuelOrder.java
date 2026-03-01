@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.common.domain.Actor;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
@@ -30,8 +30,8 @@ public class CreateFuelOrder {
      * minus the amount of fuel already ordered for that grade which hasn't been confirmed or rejected.
      */
     @Transactional
-    public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, BigDecimal amount, Credentials credentials) {
-        var fuelStation = getFuelStationById.process(fuelStationId, credentials);
+    public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, BigDecimal amount, Actor performedBy) {
+        var fuelStation = getFuelStationById.process(fuelStationId, performedBy);
 
         var availableVolume = fuelStation.getAvailableVolume(fuelGrade);
         var pendingAmount = fuelOrderRepository.getUnconfirmedFuelAmount(fuelStationId, fuelGrade);
@@ -50,7 +50,7 @@ public class CreateFuelOrder {
  
         var createdFuelOrder = fuelOrderFactory.create(fuelStationId, fuelGrade, amount);
         var savedFuelOrder = fuelOrderRepository.save(createdFuelOrder);
-        domainEventPublisher.publish(new FuelOrderCreated(savedFuelOrder.getFuelOrderId(), fuelStationId));
+        domainEventPublisher.publish(new FuelOrderCreated(savedFuelOrder.getFuelOrderId(), fuelStationId, Actor.system()));
         return savedFuelOrder;
     }
 

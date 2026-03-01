@@ -38,7 +38,7 @@ export class ManagersPage implements OnInit {
             if(this.managerExists(event.managerId))return; 
             this.managerRestClient.getManagerById(event.managerId)
               .pipe(tap((manager) => {
-                if(this.managerExists(manager.credentialsId))return; 
+                if(this.managerExists(manager.managerId))return; 
                 this.managers = [...this.managers, manager]
               }))
               .subscribe();
@@ -59,11 +59,11 @@ export class ManagersPage implements OnInit {
   }
 
   private managerExists(managerId: number): boolean {
-    return this.managers.some((manager) => manager.credentialsId === managerId)
+    return this.managers.some((manager) => manager.managerId === managerId)
   }
 
   protected handleManagerCreated(manager: Manager) {
-    if(this.managerExists(manager.credentialsId)) return;
+    if(this.managerExists(manager.managerId)) return;
     this.managers = [...this.managers, manager];
   }
 

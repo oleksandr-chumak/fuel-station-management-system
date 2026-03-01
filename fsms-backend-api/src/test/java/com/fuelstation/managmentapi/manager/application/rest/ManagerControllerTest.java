@@ -5,11 +5,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fuelstation.managmentapi.common.AdminUserTest;
 import com.fuelstation.managmentapi.common.WithMockAdminUser;
-import com.fuelstation.managmentapi.manager.domain.ManagerStatus;
+import com.fuelstation.managmentapi.authentication.domain.UserStatus;
+import com.fuelstation.managmentapi.common.WithMockCustomUser;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -35,7 +37,9 @@ public class ManagerControllerTest {
         @AdminUserTest
         @DisplayName("Should create manager")
         void shouldCreateManager() throws Exception {
-            managerTestClient.createManagerAndReturnResponse();
+            var manager = managerTestClient.createManagerAndReturnResponse();
+
+            assertThat(manager.getStatus()).isEqualTo(UserStatus.ACTIVE.toString());
         }
 
         @ParameterizedTest
@@ -95,21 +99,25 @@ public class ManagerControllerTest {
             testManager = managerTestClient.createManagerAndReturnResponse();
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should terminate manager")
         void shouldTerminateManager() throws Exception {
-            ManagerResponse managerResponse = managerTestClient.terminateManagerAndReturnResponse(testManager.getCredentialsId());
-            assertThat(managerResponse.getStatus()).isEqualTo(ManagerStatus.TERMINATED.toString());
+            ManagerResponse managerResponse = managerTestClient.terminateManagerAndReturnResponse(testManager.getManagerId());
+            assertThat(managerResponse.getManagerId()).isEqualTo(testManager.getManagerId());
+            assertThat(managerResponse.getStatus()).isEqualTo(UserStatus.TERMINATED.toString());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Conflict when manger is already terminated")
         void shouldReturnConflictWhenManagerIsAlreadyTerminated() throws Exception {
-            managerTestClient.terminateManager(testManager.getCredentialsId());
-            managerTestClient.terminateManager(testManager.getCredentialsId()).andExpect(status().isConflict());
+            managerTestClient.terminateManager(testManager.getManagerId());
+            managerTestClient.terminateManager(testManager.getManagerId()).andExpect(status().isConflict());
         }
 
-        @AdminUserTest
+        @Test
+        @WithMockCustomUser
         @DisplayName("Should return Not Found when manager does not exist")
         void shouldReturnNotFoundWhenManagerDoesNotExist() throws Exception {
             managerTestClient.terminateManager(99999L).andExpect(status().isNotFound());
@@ -125,7 +133,7 @@ public class ManagerControllerTest {
     }
 
     @Nested
-    class GetManagerByCredentialsIdTests {
+    class GetManagerByUserIdTests {
 
         private ManagerResponse testManager;
 
@@ -137,7 +145,7 @@ public class ManagerControllerTest {
         @AdminUserTest
         @DisplayName("Should get manager by id")
         void shouldGetManagerById() throws Exception {
-            managerTestClient.getManagerByIdAndReturnResponse(testManager.getCredentialsId());
+            managerTestClient.getManagerByIdAndReturnResponse(testManager.getManagerId());
         }
 
         @AdminUserTest
@@ -161,7 +169,7 @@ public class ManagerControllerTest {
         @AdminUserTest
         @DisplayName("Should get manager fuel stations")
         void shouldGetManagerFuelStations() throws Exception {
-            managerTestClient.getManagerFuelStationsAndReturnResponse(testManager.getCredentialsId());
+            managerTestClient.getManagerFuelStationsAndReturnResponse(testManager.getManagerId());
         }
 
         @AdminUserTest

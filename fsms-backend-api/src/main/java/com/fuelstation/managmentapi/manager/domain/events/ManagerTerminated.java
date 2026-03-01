@@ -1,11 +1,10 @@
 package com.fuelstation.managmentapi.manager.domain.events;
 
-import com.fuelstation.managmentapi.common.domain.DomainEvent;
+import com.fuelstation.managmentapi.common.domain.Actor;
 
-public record ManagerTerminated(ManagerEventType type, long mangerId) implements DomainEvent {
+public final class ManagerTerminated extends ManagerEvent {
 
-    public ManagerTerminated(long managerId) {
-        this(ManagerEventType.MANAGER_TERMINATED, managerId);
+    public ManagerTerminated(long managerId, Actor performedBy) {
+        super(ManagerEventType.MANAGER_TERMINATED, managerId, performedBy);
     }
-
 }

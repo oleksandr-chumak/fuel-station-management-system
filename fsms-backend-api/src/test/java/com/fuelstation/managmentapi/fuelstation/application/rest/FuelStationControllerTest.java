@@ -141,25 +141,25 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should assign manager to fuel station")
         public void shouldAssignManagerToFuelStation() throws Exception {
-            var assignedManger = fuelStationTestClient.assignManagerToFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
+            var assignedManger = fuelStationTestClient.assignManagerToFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getManagerId());
             var fuelStation = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
 
-            assertThat(fuelStation.getAssignedManagersIds()).contains(assignedManger.getCredentialsId());
+            assertThat(fuelStation.getAssignedManagersIds()).contains(assignedManger.getManagerId());
         }
 
         @Test
         @WithMockCustomUser
         @DisplayName("Should return Conflict when the manager is already assigned")
         public void shouldReturnConflictWhenManagerIsAlreadyAssigned() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getCredentialsId()).andExpect(status().isOk());
-            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getCredentialsId()).andExpect(status().isConflict());
+            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getManagerId()).andExpect(status().isOk());
+            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getManagerId()).andExpect(status().isConflict());
         }
 
         @Test
         @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getCredentialsId()).andExpect(status().isNotFound());
+            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getManagerId()).andExpect(status().isNotFound());
         }
 
         @Test
@@ -187,8 +187,8 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should unassign manager from fuel station")
         public void shouldUnassignManagerFromFuelStation() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
-            fuelStationTestClient.unassignManagerFromFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
+            fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getManagerId());
+            fuelStationTestClient.unassignManagerFromFuelStationAndReturnResponse(testFuelStation.getFuelStationId(), testManager.getManagerId());
             var fuelStation = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
             assertThat(fuelStation.getAssignedManagersIds()).isEmpty();
         }
@@ -197,14 +197,14 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should return Conflict when the manager is not assigned ")
         public void shouldReturnConflictWhenManagerIsNotAssigned() throws Exception {
-            fuelStationTestClient.unassignManagerFromFuelStation(testFuelStation.getFuelStationId(), testManager.getCredentialsId()).andExpect(status().isOk());
+            fuelStationTestClient.unassignManagerFromFuelStation(testFuelStation.getFuelStationId(), testManager.getManagerId()).andExpect(status().isOk());
         }
 
         @Test
         @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
-            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getCredentialsId()).andExpect(status().isNotFound());
+            fuelStationTestClient.assignManagerToFuelStation(99999L, testManager.getManagerId()).andExpect(status().isNotFound());
         }
 
         @Test
@@ -298,7 +298,7 @@ public class FuelStationControllerTest {
         ManagerResponse testManager = managerTestClient.createManagerAndReturnResponse();
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
 
-        fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getCredentialsId());
+        fuelStationTestClient.assignManagerToFuelStation(testFuelStation.getFuelStationId(), testManager.getManagerId());
         List<ManagerResponse> managers = fuelStationTestClient.getManagersAssignedToFuelStationAndReturnResponse(testFuelStation.getFuelStationId());
         assertThat(managers.size()).isEqualTo(1);
     }

@@ -32,7 +32,7 @@ public class CurrentUserArgumentResolver implements HandlerMethodArgumentResolve
         }
 
         if (authentication.getPrincipal() instanceof SecurityUserDetails) {
-            return ((SecurityUserDetails) authentication.getPrincipal()).getCredentials();
+            return ((SecurityUserDetails) authentication.getPrincipal()).getUser();
         }
 
         return null;

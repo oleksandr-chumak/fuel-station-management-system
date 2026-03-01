@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import java.util.List;
 
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.User;
 import com.fuelstation.managmentapi.fuelstation.application.support.FuelStationAccessControlChecker;
 import com.fuelstation.managmentapi.fuelstation.application.support.FuelStationFetcher;
 import jakarta.transaction.Transactional;
@@ -21,9 +21,9 @@ public class GetFuelStationOrders {
     private final FuelStationAccessControlChecker accessControlChecker;
 
     @Transactional
-    public List<FuelOrder> process(long fuelStationId, Credentials credentials) {
+    public List<FuelOrder> process(long fuelStationId, User user) {
         var fuelStation = fuelStationFetcher.fetchActiveById(fuelStationId);
-        accessControlChecker.checkAccess(fuelStation, credentials);
+        accessControlChecker.checkAccess(fuelStation, user);
         return fuelOrderRepository.findFuelOrdersByFuelStationId(fuelStationId);
     }
 }

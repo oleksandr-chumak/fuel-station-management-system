@@ -14,7 +14,7 @@ public class GetManagerByCredentialsId {
     private final ManagerRepository managerRepository;
 
     public Manager process(long managerId) {
-        return managerRepository.findByCredentialsId(managerId)
+        return managerRepository.findById(managerId)
             .orElseThrow(() -> new ManagerNotFoundException(managerId));
     }
 }

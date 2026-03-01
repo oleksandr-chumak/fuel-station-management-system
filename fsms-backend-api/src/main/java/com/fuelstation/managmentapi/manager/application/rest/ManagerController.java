@@ -2,6 +2,8 @@ package com.fuelstation.managmentapi.manager.application.rest;
 
 import java.util.List;
 
+import com.fuelstation.managmentapi.authentication.application.CurrentUser;
+import com.fuelstation.managmentapi.authentication.domain.User;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,8 +52,11 @@ public class ManagerController {
     }
 
     @PutMapping("/{id}/terminate")
-    public ResponseEntity<ManagerResponse> terminateManager(@PathVariable("id") long managerId) {
-        Manager manager = terminateManager.process(managerId);
+    public ResponseEntity<ManagerResponse> terminateManager(
+            @PathVariable("id") long managerId,
+            @CurrentUser User user
+    ) {
+        Manager manager = terminateManager.process(managerId, user.getActor());
         return ResponseEntity.ok(ManagerResponse.fromDomain(manager));
     }
 

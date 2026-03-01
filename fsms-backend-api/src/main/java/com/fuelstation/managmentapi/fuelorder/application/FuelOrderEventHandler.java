@@ -13,6 +13,8 @@ import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ProcessFuelDelivery;
 
+import java.util.Map;
+
 @Component
 @AllArgsConstructor
 public class FuelOrderEventHandler {
@@ -24,51 +26,71 @@ public class FuelOrderEventHandler {
 
     @EventListener
     public void handle(FuelOrderCreated event) {
-        logger.info("Fuel order was created ID:{}", event.fuelOrderId());
+        logger.info("Fuel order was created ID:{}", event.getFuelOrderId());
         messagingTemplate.convertAndSend("/topic/fuel-orders/created", event);
         messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.fuelStationId() + "/fuel-order-created",
+                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-created",
                 event
         );
+/*
+        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_CREATED.name(), Map.of(
+                "fuelOrderId", event.getFuelOrderId()
+        ));
+*/
     }
 
     @EventListener
     public void handle(FuelOrderConfirmed event) {
-        logger.info("Fuel order was confirmed ID:{}", event.fuelOrderId());
+        logger.info("Fuel order was confirmed ID:{}", event.getFuelOrderId());
         messagingTemplate.convertAndSend(
-                "/topic/fuel-orders/" + event.fuelOrderId() + "/confirmed",
+                "/topic/fuel-orders/" + event.getFuelOrderId() + "/confirmed",
                 event
         );
         messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.fuelStationId() + "/fuel-order-confirmed",
+                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-confirmed",
                 event
         );
-        processFuelDelivery.process(event.fuelOrderId());
+        processFuelDelivery.process(event.getFuelOrderId());
+/*
+        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_CONFIRMED.name(), Map.of(
+                "fuelOrderId", event.getFuelOrderId()
+        ));
+*/
     }
 
     @EventListener
     public void handle(FuelOrderRejected event) {
-        logger.info("Fuel order was rejected ID{}", event.fuelOrderId());
+        logger.info("Fuel order was rejected ID{}", event.getFuelOrderId());
         messagingTemplate.convertAndSend(
-                "/topic/fuel-orders/" + event.fuelOrderId() + "/rejected",
+                "/topic/fuel-orders/" + event.getFuelOrderId() + "/rejected",
                 event
         );
         messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.fuelStationId() + "/fuel-order-rejected",
+                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-rejected",
                 event
         );
+/*
+        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_REJECTED.name(), Map.of(
+                "fuelOrderId", event.getFuelOrderId()
+        ));
+*/
     }
 
     @EventListener
     public void handle(FuelOrderProcessed event) {
-        logger.info("Fuel order was processed ID:{}", event.fuelOrderId());
+        logger.info("Fuel order was processed ID:{}", event.getFuelOrderId());
         messagingTemplate.convertAndSend(
-                "/topic/fuel-orders/" + event.fuelOrderId() + "/processed",
+                "/topic/fuel-orders/" + event.getFuelOrderId() + "/processed",
                 event
         );
         messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.fuelStationId() + "/fuel-order-processed",
+                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-processed",
                 event
         );
+/*
+        eventLogger.log(event.getFuelStationId(), FuelOrderEventType.FUEL_ORDER_PROCESSED.name(), Map.of(
+                "fuelOrderId", event.getFuelOrderId()
+        ));
+*/
     }
 }

@@ -8,29 +8,29 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.User;
 
 @Getter
 public class SecurityUserDetails implements UserDetails {
-    private final Credentials credentials;
+    private final User user;
 
-    public SecurityUserDetails(Credentials credentials) {
-        this.credentials = credentials;
+    public SecurityUserDetails(User user) {
+        this.user = user;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(credentials.getRole().name()));
+        return List.of(new SimpleGrantedAuthority(user.getRole().name()));
     }
 
     @Override
     public String getPassword() {
-        return credentials.getPassword();
+        return user.getPassword();
     }
 
     @Override
     public String getUsername() {
-        return credentials.getUsername();
+        return user.getUserId().toString();
     }
 
     @Override public boolean isAccountNonExpired() { return true; }

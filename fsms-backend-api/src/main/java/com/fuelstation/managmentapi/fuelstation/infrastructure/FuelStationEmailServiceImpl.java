@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.infrastructure;
 
-import com.fuelstation.managmentapi.authentication.application.CredentialsFetcher;
+import com.fuelstation.managmentapi.authentication.application.UserFetcher;
 import com.fuelstation.managmentapi.common.infrastructure.EmailService;
 import com.fuelstation.managmentapi.manager.application.support.ManagerFetcher;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ public class FuelStationEmailServiceImpl implements FuelStationEmailService {
 
     private final Logger logger = LoggerFactory.getLogger(FuelStationEmailServiceImpl.class);
     private final ManagerFetcher managerFetcher;
-    private final CredentialsFetcher credentialsFetcher;
+    private final UserFetcher userFetcher;
     private final EmailService emailService;
 
     @Override
@@ -38,7 +38,7 @@ public class FuelStationEmailServiceImpl implements FuelStationEmailService {
     @Override
     public void sendManagerAssigned(long managerId, long fuelStationId) {
         try {
-            var credentials = credentialsFetcher.fetchById(managerId);
+            var credentials = userFetcher.fetchById(managerId);
             var manager = managerFetcher.fetchById(managerId);
             this.sendManagerAssigned(credentials.getEmail(), manager.getFirstName(), fuelStationId);
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class FuelStationEmailServiceImpl implements FuelStationEmailService {
     @Override
     public void sendManagerUnassigned(long managerId, long fuelStationId) {
         try {
-            var credentials = credentialsFetcher.fetchById(managerId);
+            var credentials = userFetcher.fetchById(managerId);
             var manager = managerFetcher.fetchById(managerId);
             this.sendManagerUnassigned(credentials.getEmail(), manager.getFirstName(), fuelStationId);
         } catch (Exception e) {

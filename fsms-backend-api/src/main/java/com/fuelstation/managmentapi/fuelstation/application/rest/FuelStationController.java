@@ -3,9 +3,11 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 import java.util.List;
 
 import com.fuelstation.managmentapi.authentication.application.CurrentUser;
-import com.fuelstation.managmentapi.authentication.domain.Credentials;
+import com.fuelstation.managmentapi.authentication.domain.User;
+import com.fuelstation.managmentapi.common.application.DomainEventResponse;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
@@ -28,6 +31,7 @@ import com.fuelstation.managmentapi.fuelstation.application.usecases.DeactivateF
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetAllFuelStations;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationManagers;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationEvents;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationOrders;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerFromFuelStation;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
@@ -49,15 +53,20 @@ public class FuelStationController {
     private final GetAllFuelStations getAllFuelStations;
     private final GetFuelStationManagers getFuelStationManagers;
     private final GetFuelStationOrders getFuelStationOrders;
+    private final GetFuelStationEvents getFuelStationEvents;
 
     @PostMapping("/")
-    public ResponseEntity<FuelStationResponse> createFuelStation(@RequestBody @Valid CreateFuelStationRequest request) {
+    public ResponseEntity<FuelStationResponse> createFuelStation(
+            @RequestBody @Valid CreateFuelStationRequest request,
+            @CurrentUser User user
+            ) {
         var fuelStation = createFuelStation.process(
             request.getStreet(),
             request.getBuildingNumber(),
             request.getCity(),
             request.getPostalCode(),
-            request.getCountry()
+            request.getCountry(),
+            user.getActor()
         );
         return new ResponseEntity<>(FuelStationResponse.fromDomain(fuelStation), HttpStatus.CREATED);
     }
@@ -65,10 +74,10 @@ public class FuelStationController {
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<FuelStationResponse> deactivateFuelStation(
             @PathVariable("id") long fuelStationId,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
         try {
-            var fuelStation = deactivateFuelStation.process(fuelStationId, credentials);
+            var fuelStation = deactivateFuelStation.process(fuelStationId, user.getActor());
             return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
         } catch (FuelStationAlreadyDeactivatedException fuelStationAlreadyDeactivatedException) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, fuelStationAlreadyDeactivatedException.getMessage());
@@ -79,12 +88,12 @@ public class FuelStationController {
     public ResponseEntity<ManagerResponse> assignManager(
             @PathVariable("id") long fuelStationId,
             @RequestBody @Valid AssignManagerRequest request,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
         var manager = assignManagerToFuelStation.process(
                 fuelStationId,
                 request.getManagerId(),
-                credentials
+                user.getActor()
         );
         return ResponseEntity.ok(ManagerResponse.fromDomain(manager));
     }
@@ -93,12 +102,12 @@ public class FuelStationController {
     public ResponseEntity<ManagerResponse> unassignManager(
             @PathVariable("id") long fuelStationId,
             @RequestBody @Valid AssignManagerRequest request,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
         var manager = unassignManagerFromFuelStation.process(
                 fuelStationId,
                 request.getManagerId(),
-                credentials
+                user.getActor()
         );
         return ResponseEntity.ok(ManagerResponse.fromDomain(manager));
     }
@@ -107,13 +116,13 @@ public class FuelStationController {
     public ResponseEntity<FuelStationResponse> changeFuelPrice(
             @PathVariable("id") long fuelStationId,
             @RequestBody @Valid ChangeFuelPriceRequest request,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
         var fuelStation = changeFuelPrice.process(
             fuelStationId,
             request.getFuelGrade(),
             request.getNewPrice(),
-            credentials
+            user.getActor()
         );
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
@@ -121,9 +130,9 @@ public class FuelStationController {
     @GetMapping("/{id}")
     public ResponseEntity<FuelStationResponse> getFuelStation(
             @PathVariable("id") long fuelStationId,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
-        var fuelStation = getFuelStationById.process(fuelStationId, credentials);
+        var fuelStation = getFuelStationById.process(fuelStationId, user.getActor());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
@@ -137,9 +146,9 @@ public class FuelStationController {
     @GetMapping("/{id}/managers")
     public ResponseEntity<List<ManagerResponse>> getAssignedManagers(
             @PathVariable("id") long fuelStationId,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
-        var managers = getFuelStationManagers.process(fuelStationId, credentials);
+        var managers = getFuelStationManagers.process(fuelStationId, user);
         var response = managers.stream().map(ManagerResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
@@ -147,11 +156,21 @@ public class FuelStationController {
     @GetMapping("/{id}/fuel-orders")
     public ResponseEntity<List<FuelOrderResponse>> getFuelOrders(
             @PathVariable("id") long fuelStationId,
-            @CurrentUser Credentials credentials
+            @CurrentUser User user
     ) {
-        List<FuelOrder> orders = getFuelStationOrders.process(fuelStationId, credentials);
+        List<FuelOrder> orders = getFuelStationOrders.process(fuelStationId, user);
         List<FuelOrderResponse> response = orders.stream().map(FuelOrderResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
-    
+
+    @GetMapping("/{id}/events")
+    public ResponseEntity<Page<DomainEventResponse>> getFuelStationEvents(
+            @PathVariable("id") long fuelStationId,
+            @RequestParam(required = false) String eventType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size
+    ) {
+        return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, eventType, page, size));
+    }
+
 }

@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @Getter
 @ResponseStatus(HttpStatus.NOT_FOUND)
-public class ManagerNotFoundException extends RuntimeException {
+public class ManagerNotFoundException extends ManagerDomainException {
 
     public ManagerNotFoundException(long managerId) {
-        super("Manager with ID " + managerId + " not found");
+        super("Manager #%d does not exist".formatted(managerId), HttpStatus.NOT_FOUND, "NOT_FOUND");
     }
     
 }

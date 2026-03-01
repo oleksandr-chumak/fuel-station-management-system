@@ -3,7 +3,7 @@ package com.fuelstation.managmentapi.fuelstation.application.support;
 import com.fuelstation.managmentapi.fuelstation.application.exceptions.FuelStationNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationDeactivatedException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
-import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.FuelStationRepository;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
