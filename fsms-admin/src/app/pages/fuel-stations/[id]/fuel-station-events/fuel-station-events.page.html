@@ -16,7 +16,6 @@
         [rows]="eventsPerPage"
         [totalRecords]="totalEvents()"
         (onPage)="onPageChange($event)"
-                [tableStyle]="{ 'min-width': '50rem' }"
     >
 
         <ng-template #header>
@@ -45,6 +44,7 @@
                     @case ("FUEL_ORDER_CREATED")
                     @case ("FUEL_ORDER_REJECTED")
                     @case ("FUEL_ORDER_CREATED")
+                    @case ("FUEL_ORDER_CONFIRMED")
                     @case ("FUEL_ORDER_PROCESSED") {
                     Order #{{event.fuelOrderId}}
                     }

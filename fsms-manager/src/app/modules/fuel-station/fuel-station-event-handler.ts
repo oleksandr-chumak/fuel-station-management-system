@@ -114,7 +114,11 @@ export class FuelStationEventHandler {
     }
 
     private handleFuelOrderConfirmed(event: FuelOrderConfirmed): void {
-        this.updateFuelOrder(event.fuelOrderId, (order) => order.confirm());
+        this.updateFuelOrder(event.fuelOrderId, (order) => {
+            if(!order.processed) {
+                order.confirm()
+            }
+        });
     }
 
     private handleFuelOrderRejected(event: FuelOrderRejected): void {

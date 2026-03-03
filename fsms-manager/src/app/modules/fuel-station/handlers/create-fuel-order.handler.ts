@@ -24,7 +24,7 @@ export class CreateFuelOrderHandler extends CommandHandler<CreateFuelOrder, Fuel
                 return throwError(() => e);
             }),
             tap(fuelOrder => {
-                this.store.fuelOrders = [...this.store.fuelOrders, fuelOrder];
+                this.store.fuelOrders = [fuelOrder, ...this.store.fuelOrders];
                 this.messageService.add({
                     severity: "success",
                     summary: "Created",
