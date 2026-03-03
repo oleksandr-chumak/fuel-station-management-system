@@ -41,12 +41,7 @@ export class FuelStationEventHandler {
     return this.fuelStationStompClient.onFuelStationAll(fuelStationId).pipe(
       tap((event) => {
         this.logger.log('[FuelStationEventHandler] Event received:',event.constructor.name, event);
-
-        // TODO
-        // this.fuelStationEventsStore.incrementTotalEvents();
-        // if (this.fuelStationEventsStore.isFirstPage()) {
-        //   this.fuelStationEventsStore.fetchEvents();
-        // }
+        this.fuelStationEventsStore.prependEventByOccurredAt(event.occurredAt);
 
         if (event instanceof FuelPriceChanged) {
           this.handleFuelPriceChanged(event);

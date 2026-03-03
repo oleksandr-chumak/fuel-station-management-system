@@ -27,17 +27,19 @@ public class FuelOrderEventHandler {
     @EventListener
     public void handle(FuelOrderCreated event) {
         logger.info("Fuel order was created ID:{}", event.getFuelOrderId());
+        createFuelOrderEvent.process(event);
         messagingTemplate.convertAndSend("/topic/fuel-orders/created", event);
         messagingTemplate.convertAndSend(
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-created",
                 event
         );
-        createFuelOrderEvent.process(event);
     }
 
     @EventListener
     public void handle(FuelOrderConfirmed event) {
         logger.info("Fuel order was confirmed ID:{}", event.getFuelOrderId());
+        createFuelOrderEvent.process(event);
+        processFuelDelivery.process(event.getFuelOrderId());
         messagingTemplate.convertAndSend(
                 "/topic/fuel-orders/" + event.getFuelOrderId() + "/confirmed",
                 event
@@ -46,13 +48,12 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-confirmed",
                 event
         );
-        processFuelDelivery.process(event.getFuelOrderId());
-        createFuelOrderEvent.process(event);
     }
 
     @EventListener
     public void handle(FuelOrderRejected event) {
         logger.info("Fuel order was rejected ID{}", event.getFuelOrderId());
+        createFuelOrderEvent.process(event);
         messagingTemplate.convertAndSend(
                 "/topic/fuel-orders/" + event.getFuelOrderId() + "/rejected",
                 event
@@ -61,12 +62,12 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-rejected",
                 event
         );
-        createFuelOrderEvent.process(event);
     }
 
     @EventListener
     public void handle(FuelOrderProcessed event) {
         logger.info("Fuel order was processed ID:{}", event.getFuelOrderId());
+        createFuelOrderEvent.process(event);
         messagingTemplate.convertAndSend(
                 "/topic/fuel-orders/" + event.getFuelOrderId() + "/processed",
                 event
@@ -75,6 +76,5 @@ public class FuelOrderEventHandler {
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-order-processed",
                 event
         );
-        createFuelOrderEvent.process(event);
     }
 }

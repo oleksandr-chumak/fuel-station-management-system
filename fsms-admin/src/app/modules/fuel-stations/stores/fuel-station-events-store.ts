@@ -8,6 +8,7 @@ export class FuelStationEventsStore implements OnDestroy {
   private readonly fuelStationRestClient = inject(FuelStationRestClient);
   private readonly fuelStationStore = inject(FuelStationStore);
 
+  private _isEventsLoaded = false;
   private readonly _currentPageEvents = new BehaviorSubject<DomainEventResponse[]>([]);
   private readonly _prefetchedEvents = new BehaviorSubject<DomainEventResponse[]>([]);
   private readonly _currentPage = new BehaviorSubject<number>(1);
@@ -28,6 +29,7 @@ export class FuelStationEventsStore implements OnDestroy {
     this._currentPage.next(1);
     this._totalEvents.next(0);
     this._loading.next(false);
+    this._isEventsLoaded = false;
   }
 
   ngOnDestroy(): void {
@@ -86,6 +88,10 @@ export class FuelStationEventsStore implements OnDestroy {
   }
 
   fetchEvents() {
+    if(this._isEventsLoaded) {
+      return;
+    }
+
     const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
     const limit = this.eventsPerPage * this.paginationRange;
 
@@ -98,6 +104,7 @@ export class FuelStationEventsStore implements OnDestroy {
           this._totalEvents.next(page.totalElements);
           this._prefetchedEvents.next(page.content);
           this._currentPageEvents.next(page.content.slice(0, this.eventsPerPage));
+          this._isEventsLoaded = true;
         }),
         catchError((error) => {
           console.error("Failed to fetch more events:", error);
@@ -108,14 +115,50 @@ export class FuelStationEventsStore implements OnDestroy {
       .subscribe()
   }
 
-  // TODO
-  // incrementTotalEvents(): void {
-  //   const current = this._totalEvents.getValue();
-  //   if (current !== null) this._totalEvents.next(current + 1);
-  // }
-  // isFirstPage() {
-  //   return this._currentPage.getValue() === 1;
-  // }
+  prependEventByOccurredAt(occurredAt: string): void {
+    console.log({occurredAt, isEventsLoaded: this._isEventsLoaded});
+    if(!this._isEventsLoaded) {
+      return;
+    }
+
+    const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
+    const occurredAfter = this.addOneMicroSecond(occurredAt);
+
+    this.fuelStationRestClient
+      .getFuelStationEvents(fuelStationId, 1, occurredAfter)
+      .pipe(
+        take(1),
+        tap((page) => {
+          if (page.content.length !== 1) {
+            console.error("[FuelStationEventsStore] Failed to fetch event by occurred at: ", occurredAt);
+            return;
+          };
+
+          this._prefetchedEvents.next([page.content[0], ...this._prefetchedEvents.getValue()]);
+          this._totalEvents.next(this._totalEvents.getValue() + 1);
+          this._currentPageEvents.next(this.getEventsForPage(this._currentPage.getValue()));
+        }),
+        catchError((error) => {
+          console.error("[FuelStationEventsStore] Failed to fetch event by occurred at: ", occurredAt, error);
+          return EMPTY;
+        })
+      )
+      .subscribe();
+  }
+
+  private addOneMicroSecond(timestamp: string) {
+    const [datePart, fractional] = timestamp.split(".");
+    const microseconds = fractional.slice(0, 6);
+    const tz = fractional.slice(6); 
+
+    const date = new Date(datePart + "Z");
+    date.setUTCMilliseconds(date.getUTCMilliseconds());
+
+    const newDatePart = date.toISOString().split(".")[0];
+    const newMicro = String(Number(microseconds) + 1).padStart(6, "0");
+
+    return `${newDatePart}.${newMicro}${tz}`;
+  }
 
   private getEventsForPage(page: number): DomainEventResponse[] {
     if (!this.hasPrefetchedPage(page)) {

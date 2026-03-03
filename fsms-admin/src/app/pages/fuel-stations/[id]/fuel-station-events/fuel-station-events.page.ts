@@ -11,7 +11,15 @@ import { FuelStationEventsStore } from '../../../../modules/fuel-stations/stores
 @Component({
     selector: 'app-fuel-station-events-page',
     imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
-    templateUrl: './fuel-station-events.page.html'
+    templateUrl: './fuel-station-events.page.html',
+    styles: [`
+        :host ::ng-deep .p-paginator {
+            justify-content: flex-end;
+        }
+        :host ::ng-deep .p-panel-header {
+            padding: 0;
+        }
+    `]
 })
 export class FuelStationEventsPage implements OnInit, OnDestroy {
     protected readonly fuelStationEventsStore = inject(FuelStationEventsStore);

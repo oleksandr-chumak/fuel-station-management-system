@@ -1,4 +1,5 @@
-<p-panel header="Event History">
+<p-panel class="relative">
+    <h2 class="absolute top-4 left-5 z-1 font-bold">Fuel Station Events</h2>
     <p-table
         [value]="events()"
         [loading]="loading()"
@@ -6,12 +7,16 @@
         [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }"
         [paginator]="true"
+        paginatorPosition="top"
         [pageLinks]="paginationRange"
+        [showCurrentPageReport]="true"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} events"
         [showFirstLastIcon]="false"
         [lazy]="true"
         [rows]="eventsPerPage"
         [totalRecords]="totalEvents()"
         (onPage)="onPageChange($event)"
+                [tableStyle]="{ 'min-width': '50rem' }"
     >
 
         <ng-template #header>
