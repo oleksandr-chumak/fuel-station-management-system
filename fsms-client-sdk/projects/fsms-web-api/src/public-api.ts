@@ -28,6 +28,7 @@ export * from './lib/manager/manager-rest-client';
 export * from './lib/manager/manager-stomp-client';
 
 export * from './lib/core/fuel-grade.enum';
-export * from './lib/core/stomp-client'
+export * from './lib/core/cursor-page';
+export * from './lib/core/stomp-client';
 export * from './lib/core/web-api-config.interface';
 export * from './lib/core/web-api.module';

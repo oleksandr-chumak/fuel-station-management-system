@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, input } from "@angular/core";
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { ButtonModule } from "primeng/button";
-import { FuelStationStore } from "../../fuel-station-store";
+import { FuelStationStore } from "../../stores/fuel-station-store";
 import { UnassignManagerHandler } from "../../handlers/unassign-manager-handler";
 
 @Component({

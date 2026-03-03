@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fuelstation.managmentapi.authentication.application.CurrentUser;
 import com.fuelstation.managmentapi.authentication.domain.User;
+import com.fuelstation.managmentapi.common.application.CursorPage;
 import com.fuelstation.managmentapi.common.application.DomainEventResponse;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
 import lombok.AllArgsConstructor;
@@ -164,11 +165,12 @@ public class FuelStationController {
     }
 
     @GetMapping("/{id}/events")
-    public ResponseEntity<List<DomainEventResponse>> getFuelStationEvents(
+    public ResponseEntity<CursorPage<DomainEventResponse, Instant>> getFuelStationEvents(
             @PathVariable("id") long fuelStationId,
-            @RequestParam(required = false) Instant occurredAfter
+            @RequestParam(required = false) Instant occurredAfter,
+            @RequestParam(defaultValue = "10") short limit
     ) {
-        return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, occurredAfter));
+        return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, occurredAfter, limit));
     }
 
 }

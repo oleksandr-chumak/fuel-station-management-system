@@ -3,7 +3,7 @@ import { catchError, Observable, tap, throwError } from 'rxjs';
 import { FuelStation, FuelStationRestClient } from 'fsms-web-api';
 import { CommandHandler } from '../../common/command-handler';
 import { DeactivateFuelStation } from '../fuel-station-commands';
-import { FuelStationStore } from '../fuel-station-store';
+import { FuelStationStore } from '../stores/fuel-station-store';
 import { MessageService } from 'primeng/api';
 
 @Injectable({ providedIn: 'root' })

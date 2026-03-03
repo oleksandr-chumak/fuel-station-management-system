@@ -8,7 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { FuelGrade, FuelPrice } from 'fsms-web-api';
-import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 import { ChangeFuelPriceHandler } from '../../../../modules/fuel-stations/handlers/change-fuel-price-handler';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY } from 'rxjs';

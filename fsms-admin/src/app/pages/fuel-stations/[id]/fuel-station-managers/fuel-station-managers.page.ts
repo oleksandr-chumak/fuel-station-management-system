@@ -5,7 +5,7 @@ import { PanelModule } from 'primeng/panel';
 import { AssignManagerDialogComponent } from '../../../../modules/managers/components/assign-manager-dialog/assign-manager-dialog.component';
 import { ManagerTable } from '../../../../modules/managers/components/manager-table/manager-table';
 import { UnassignManagerButton } from '../../../../modules/fuel-stations/components/unassign-manager-button/unassign-manager-button';
-import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 import { GetAssignedManagersHandler } from '../../../../modules/fuel-stations/handlers/get-assigned-managers-handler';
 import { ManagerTemplateDirective } from "../../../../modules/managers/directives/manager-template-directive";
 

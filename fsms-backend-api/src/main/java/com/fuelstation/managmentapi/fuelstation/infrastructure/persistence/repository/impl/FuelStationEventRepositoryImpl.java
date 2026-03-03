@@ -7,6 +7,7 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entit
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationEventRepository;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.jpa.JpaFuelStationEventRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
@@ -16,7 +17,6 @@ import tools.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -47,25 +47,14 @@ public class FuelStationEventRepositoryImpl implements FuelStationEventRepositor
     }
 
     @Override
-    public List<FuelStationEvent> findByFuelStationIdAfter(Long fuelStationId, Instant occurredAfter, int limit) {
+    public Page<FuelStationEvent> findByFuelStationIdAfter(Long fuelStationId, Instant occurredAfter, int limit) {
         return jpaFuelStationEventRepository
                 .findByFuelStationIdAndOccurredAt(
                         fuelStationId,
                         occurredAfter.atOffset(ZoneOffset.UTC),
                         PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "occurredAt"))
                 )
-                .stream()
-                .map(this::toFuelStationEvent)
-                .toList();
-    }
-
-    @Override
-    public List<FuelStationEvent> findLatestByFuelStationId(Long fuelStationId, int limit) {
-        return jpaFuelStationEventRepository
-                .findByFuelStationId(fuelStationId, PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "occurredAt")))
-                .stream()
-                .map(this::toFuelStationEvent)
-                .toList();
+                .map(this::toFuelStationEvent);
     }
 
     private FuelStationEvent toFuelStationEvent(FuelStationEventEntity entity) {

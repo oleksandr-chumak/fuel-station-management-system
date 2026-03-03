@@ -1,3 +1,6 @@
+import { Actor } from "../core/actor";
+import { DomainEvent } from "../core/domain-event";
+
 export enum FuelOrderEventType {
     FUEL_ORDER_CREATED = "FUEL_ORDER_CREATED",
     FUEL_ORDER_CONFIRMED = "FUEL_ORDER_CONFIRMED",
@@ -5,8 +8,15 @@ export enum FuelOrderEventType {
     FUEL_ORDER_PROCESSED = "FUEL_ORDER_PROCESSED"
 }
 
-export class FuelOrderEvent {
-    constructor(public fuelOrderId: number, public fuelStationId: number) {}
+export class FuelOrderEvent extends DomainEvent {
+    constructor(
+        public fuelOrderId: number, 
+        public fuelStationId: number, 
+        occurredAt: string, 
+        performedBy: Actor
+    ) {
+        super(occurredAt, performedBy);
+    }
 }
 
 export class FuelOrderCreated extends FuelOrderEvent {}

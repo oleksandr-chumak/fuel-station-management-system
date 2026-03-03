@@ -8,13 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.OffsetDateTime;
-import java.util.List;
 
 public interface JpaFuelStationEventRepository extends JpaRepository<FuelStationEventEntity, Long> {
 
-    @Query("SELECT e FROM FuelStationEventEntity e WHERE e.fuelStationId = :fuelStationId")
-    Page<FuelStationEventEntity> findByFuelStationId(@Param("fuelStationId") Long fuelStationId, Pageable pageable);
-
     @Query("SELECT e FROM FuelStationEventEntity e WHERE e.fuelStationId = :fuelStationId AND e.occurredAt < :occurredAfter")
-    List<FuelStationEventEntity> findByFuelStationIdAndOccurredAt(@Param("fuelStationId") Long fuelStationId, @Param("occurredAfter") OffsetDateTime occurredAfter, Pageable pageable);
+    Page<FuelStationEventEntity> findByFuelStationIdAndOccurredAt(
+            @Param("fuelStationId") Long fuelStationId,
+            @Param("occurredAfter") OffsetDateTime occurredAfter,
+            Pageable pageable
+    );
 }

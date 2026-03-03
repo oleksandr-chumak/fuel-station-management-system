@@ -3,6 +3,7 @@ package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.fuelorder.domain.events.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
@@ -11,7 +12,6 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.List;
 import java.util.Map;
 
 @Repository
@@ -44,28 +44,14 @@ public class FuelOrderEventRepositoryImpl implements FuelOrderEventRepository {
     }
 
     @Override
-    public List<FuelOrderEvent> findByFuelStationIdAfter(Long fuelStationId, Instant occurredAfter, int limit) {
+    public Page<FuelOrderEvent> findByFuelStationIdAfter(Long fuelStationId, Instant occurredAfter, int limit) {
         return jpaFuelOrderEventRepository
                 .findByFuelStationIdAndOccurredAt(
                         fuelStationId,
                         occurredAfter.atOffset(ZoneOffset.UTC),
                         PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "occurredAt"))
                 )
-                .stream()
-                .map(this::toFuelOrderEvent)
-                .toList();
-    }
-
-    @Override
-    public List<FuelOrderEvent> findLatestByFuelStationId(Long fuelStationId, int limit) {
-        return jpaFuelOrderEventRepository
-                .findByFuelStationId(
-                        fuelStationId,
-                        PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "occurredAt"))
-                )
-                .stream()
-                .map(this::toFuelOrderEvent)
-                .toList();
+                .map(this::toFuelOrderEvent);
     }
 
     private FuelOrderEvent toFuelOrderEvent(FuelOrderEventEntity entity) {

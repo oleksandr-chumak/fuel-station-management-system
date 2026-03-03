@@ -10,7 +10,7 @@ export class RestClient {
     private config = inject(WEB_API_CONFIG);
 
     get<T>(endpoint: string, options?: {
-        params?: Record<string, string>,
+        params?: Record<string, unknown>,
         responseType?: string 
     }): Observable<T>   {
         return this.http.get<T>(this.getUrl(endpoint), options as any) as Observable<T>;

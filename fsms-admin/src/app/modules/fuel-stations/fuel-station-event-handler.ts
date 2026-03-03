@@ -17,8 +17,9 @@ import {
 import { Observable, tap } from "rxjs";
 import { LoggerService } from "../common/logger";
 import { FuelOrderEventHandler } from "../fuel-orders/fuel-order-event-handler";
-import { FuelStationStore } from "./fuel-station-store";
+import { FuelStationStore } from "./stores/fuel-station-store";
 import { Router } from "@angular/router";
+import { FuelStationEventsStore } from "./stores/fuel-station-events-store";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationEventHandler {
@@ -27,9 +28,12 @@ export class FuelStationEventHandler {
   private readonly logger = inject(LoggerService);
 
   private readonly fuelStationStore = inject(FuelStationStore);
+  private readonly fuelStationEventsStore = inject(FuelStationEventsStore);
+
   private readonly managerRestClient = inject(ManagerRestClient);
   private readonly fuelStationStompClient = inject(FuelStationStompClient);
   private readonly fuelStationRestClient = inject(FuelStationRestClient);
+
   private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
 
   start(fuelStationId: number): Observable<FuelStationEvent | FuelOrderEvent> {
@@ -37,6 +41,13 @@ export class FuelStationEventHandler {
     return this.fuelStationStompClient.onFuelStationAll(fuelStationId).pipe(
       tap((event) => {
         this.logger.log('[FuelStationEventHandler] Event received:',event.constructor.name, event);
+
+        // TODO
+        // this.fuelStationEventsStore.incrementTotalEvents();
+        // if (this.fuelStationEventsStore.isFirstPage()) {
+        //   this.fuelStationEventsStore.fetchEvents();
+        // }
+
         if (event instanceof FuelPriceChanged) {
           this.handleFuelPriceChanged(event);
         } else if (event instanceof FuelStationDeactivated) {

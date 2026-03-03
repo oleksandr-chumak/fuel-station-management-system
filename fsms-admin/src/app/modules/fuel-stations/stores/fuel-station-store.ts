@@ -64,4 +64,5 @@ export class FuelStationStore {
     this.resetManagers();
     this.resetFuelOrders();
   }
+
 }

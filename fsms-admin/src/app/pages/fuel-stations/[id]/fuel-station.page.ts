@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { SkeletonModule } from 'primeng/skeleton';
 import { GetFuelStationByIdHandler } from '../../../modules/fuel-stations/handlers/get-fuel-station-by-id-handler';
 import { catchError, EMPTY } from 'rxjs';
-import { FuelStationStore } from '../../../modules/fuel-stations/fuel-station-store';
+import { FuelStationStore } from '../../../modules/fuel-stations/stores/fuel-station-store';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FuelStationEventHandler } from '../../../modules/fuel-stations/fuel-station-event-handler';
 

@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import BasicDialog from '../../../common/basic-dialog.component';
 import { Manager } from 'fsms-web-api';
 import { AssignManagerHandler } from '../../../fuel-stations/handlers/assign-manager-handler';
-import { FuelStationStore } from '../../../fuel-stations/fuel-station-store';
+import { FuelStationStore } from '../../../fuel-stations/stores/fuel-station-store';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({

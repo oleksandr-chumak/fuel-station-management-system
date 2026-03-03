@@ -1,3 +1,5 @@
+import { Actor } from "../core/actor";
+import { DomainEvent } from "../core/domain-event";
 import { FuelGrade } from "../core/fuel-grade.enum";
 
 export enum FuelStationEventType {
@@ -12,16 +14,24 @@ export enum FuelStationEventType {
     FUEL_ORDER_PROCESSED = "FUEL_ORDER_PROCESSED"
 }
 
-export class FuelStationEvent {
-    constructor(public fuelStationId: number) {}
+export class FuelStationEvent extends DomainEvent {
+    constructor(public fuelStationId: number, occurredAt: string, performedBy: Actor) {
+        super(occurredAt, performedBy);
+    }
 }
 
 export class FuelStationCreated extends FuelStationEvent {
 }  
 
 export class FuelPriceChanged extends FuelStationEvent {
-    constructor(fuelStationId: number, public fuelGrade: FuelGrade, public pricePerLiter: number ) {
-        super(fuelStationId);
+    constructor(
+        fuelStationId: number, 
+        public fuelGrade: FuelGrade, 
+        public pricePerLiter: number,
+        occurredAt: string, 
+        performedBy: Actor
+    ) {
+        super(fuelStationId, occurredAt, performedBy);
     }
 }
 
@@ -30,13 +40,23 @@ export class FuelStationDeactivated extends FuelStationEvent {
 }
 
 export class ManagerAssignedToFuelStation extends FuelStationEvent {
-    constructor(fuelStationId: number, public managerId: number) {
-        super(fuelStationId);
+    constructor(
+        fuelStationId: number, 
+        public managerId: number,
+        occurredAt: string, 
+        performedBy: Actor
+    ) {
+        super(fuelStationId, occurredAt, performedBy);
     }
 }
 
 export class ManagerUnassignedFromFuelStation extends FuelStationEvent {
-    constructor(fuelStationId: number, public managerId: number) {
-        super(fuelStationId);
+    constructor(
+        fuelStationId: number, 
+        public managerId: number,
+        occurredAt: string, 
+        performedBy: Actor
+    ) {
+        super(fuelStationId, occurredAt, performedBy);
     }
 }

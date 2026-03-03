@@ -9,6 +9,7 @@ import { Manager } from "../manager/manager.model";
 import { FuelStation } from "./fuel-station.model";
 import { FuelGrade } from "../core/fuel-grade.enum";
 import { DomainEventResponse } from "./fuel-station-event-response";
+import { CursorPage } from "../core/cursor-page";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationRestClient {
@@ -62,10 +63,14 @@ export class FuelStationRestClient {
             .pipe(map(data => this.fuelStationMapper.fromJson(data)));
     }
 
-    getFuelStationEvents(fuelStationId: number, occurredAfter?: string): Observable<DomainEventResponse[]> {
-        const params = occurredAfter ? { occurredAfter } : undefined;
-        return this.restClient.get(`api/fuel-stations/${fuelStationId}/events`, { params })
-            .pipe(map(data => this.restClient.assertArray(data)));
+    getFuelStationEvents(fuelStationId: number, limit?: number, occurredAfter?: string): Observable<CursorPage<DomainEventResponse, string>> {
+        const params = { occurredAfter, limit };
+        (Object.keys(params) as Array<keyof typeof params>)
+            .forEach(key => params[key] === undefined && delete params[key]);
+
+        return this.restClient.get<CursorPage<DomainEventResponse, string>>(
+            `api/fuel-stations/${fuelStationId}/events`, { params }
+        );
     }
 
     createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: string): Observable<FuelStation> {

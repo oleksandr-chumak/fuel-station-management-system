@@ -4,6 +4,7 @@ import { ManagerCreated, ManagerEvent, ManagerEventType, ManagerTerminated } fro
 import { ManagerAssignedToFuelStation, ManagerUnassignedFromFuelStation } from "../fuel-station/fuel-station-events";
 import { StompClient } from "../core/stomp-client";
 import { IMessage } from "@stomp/rx-stomp";
+import { Actor } from "../core/actor";
 
 interface IManagerStompClient {
     onManagerCreated(): Observable<ManagerCreated>
@@ -35,7 +36,12 @@ export class ManagerStompClient implements IManagerStompClient {
             .watch({ destination: `/topic/managers/${managerId}/assigned-to-fuel-station` })
             .pipe(map((message) => {
                 const json = JSON.parse(message.body);
-                return new ManagerAssignedToFuelStation(json.fuelStationId, json.managerId);
+                return new ManagerAssignedToFuelStation(
+                    json.fuelStationId, 
+                    json.managerId,
+                    json.occurredAt,
+                    new Actor(json.performedBy.id, json.performedBy.type)
+                );
             }));
     }
 
@@ -44,7 +50,12 @@ export class ManagerStompClient implements IManagerStompClient {
             .watch({ destination: `/topic/managers/${managerId}/unassigned-from-fuel-station` })
             .pipe(map((message) => {
                 const json = JSON.parse(message.body);
-                return new ManagerUnassignedFromFuelStation(json.fuelStationId, json.managerId);
+                return new ManagerUnassignedFromFuelStation(
+                    json.fuelStationId, 
+                    json.managerId,
+                    json.occurredAt,
+                    new Actor(json.performedBy.id, json.performedBy.type)
+                );
             }));
     }
 

@@ -1,102 +1,72 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
-import { TableModule } from 'primeng/table';
+import { TableModule, TablePageEvent } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
-import { DomainEventResponse } from 'fsms-web-api';
-import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
-import { GetFuelStationEventsHandler } from '../../../../modules/fuel-stations/handlers/get-fuel-station-events-handler';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FuelStationEventsStore } from '../../../../modules/fuel-stations/stores/fuel-station-events-store';
 
 @Component({
     selector: 'app-fuel-station-events-page',
     imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule],
     templateUrl: './fuel-station-events.page.html'
 })
-export class FuelStationEventsPage implements OnInit {
-    private readonly destroyRef = inject(DestroyRef);
-    private readonly fuelStationStore = inject(FuelStationStore);
-    private readonly getFuelStationEventsHandler = inject(GetFuelStationEventsHandler);
+export class FuelStationEventsPage implements OnInit, OnDestroy {
+    protected readonly fuelStationEventsStore = inject(FuelStationEventsStore);
 
-    protected readonly events = signal<DomainEventResponse[]>([]);
-    protected readonly loading = signal(false);
-    protected readonly loadingMore = signal(false);
-    protected readonly hasMore = signal(false);
+    protected readonly events = toSignal(this.fuelStationEventsStore.currentPageEvents$, { initialValue: [] });
+    protected readonly loading = toSignal(this.fuelStationEventsStore.loading$, { initialValue: false });
+    protected readonly totalEvents = toSignal(this.fuelStationEventsStore.totalEvents$, { initialValue: 0 });
+    protected readonly paginationRange = this.fuelStationEventsStore.paginationRange;
+    protected readonly eventsPerPage = this.fuelStationEventsStore.eventsPerPage;
 
-    protected readonly skeletonRows = new Array(5).fill(null);
+    protected readonly skeletonRows = new Array(this.eventsPerPage).fill(null);
     protected readonly skeletonCols = new Array(4).fill(null);
 
     ngOnInit(): void {
-        this.loadEvents();
+        this.fuelStationEventsStore.fetchEvents();
     }
 
-    private loadEvents(): void {
-        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
-        this.loading.set(true);
-        this.getFuelStationEventsHandler
-            .handle({ fuelStationId })
-            .pipe(
-                finalize(() => this.loading.set(false)),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe({
-                next: (events) => {
-                    this.events.set(events);
-                    this.hasMore.set(events.length === 10);
-                }
-            });
+    ngOnDestroy(): void {
+        this.fuelStationEventsStore.reset();
     }
 
-    protected loadMore(): void {
-        const current = this.events();
-        if (current.length === 0) return;
-        const occurredAfter = current[current.length - 1].occurredAt;
-        const fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;
-        this.loadingMore.set(true);
-        this.getFuelStationEventsHandler
-            .handle({ fuelStationId, occurredAfter })
-            .pipe(
-                finalize(() => this.loadingMore.set(false)),
-                takeUntilDestroyed(this.destroyRef)
-            )
-            .subscribe({
-                next: (newEvents) => {
-                    this.events.update(prev => [...prev, ...newEvents]);
-                    this.hasMore.set(newEvents.length === 10);
-                }
-            });
+    protected onPageChange(event: TablePageEvent): void {
+        if(this.loading()) {
+            return;
+        }
+        this.fuelStationEventsStore.changePage(Math.ceil(event.first / event.rows) + 1);
     }
 
     protected eventLabel(type: string): string {
         switch (type) {
-            case 'FUEL_STATION_CREATED':                 return 'Station Created';
-            case 'FUEL_STATION_DEACTIVATED':             return 'Station Deactivated';
-            case 'FUEL_STATION_FUEL_PRICE_CHANGED':      return 'Price Changed';
-            case 'MANAGER_ASSIGNED_TO_FUEL_STATION':     return 'Manager Assigned';
+            case 'FUEL_STATION_CREATED': return 'Station Created';
+            case 'FUEL_STATION_DEACTIVATED': return 'Station Deactivated';
+            case 'FUEL_STATION_FUEL_PRICE_CHANGED': return 'Price Changed';
+            case 'MANAGER_ASSIGNED_TO_FUEL_STATION': return 'Manager Assigned';
             case 'MANAGER_UNASSIGNED_FROM_FUEL_STATION': return 'Manager Unassigned';
-            case 'FUEL_ORDER_CREATED':                   return 'Order Created';
-            case 'FUEL_ORDER_CONFIRMED':                 return 'Order Confirmed';
-            case 'FUEL_ORDER_REJECTED':                  return 'Order Rejected';
-            case 'FUEL_ORDER_PROCESSED':                 return 'Order Processed';
-            default:                                     return type;
+            case 'FUEL_ORDER_CREATED': return 'Order Created';
+            case 'FUEL_ORDER_CONFIRMED': return 'Order Confirmed';
+            case 'FUEL_ORDER_REJECTED': return 'Order Rejected';
+            case 'FUEL_ORDER_PROCESSED': return 'Order Processed';
+            default: return type;
         }
     }
 
     protected eventSeverity(type: string): 'success' | 'info' | 'warn' | 'danger' | undefined {
         switch (type) {
-            case 'FUEL_STATION_CREATED':                 return 'success';
-            case 'FUEL_STATION_DEACTIVATED':             return 'danger';
-            case 'FUEL_STATION_FUEL_PRICE_CHANGED':      return 'info';
-            case 'MANAGER_ASSIGNED_TO_FUEL_STATION':     return 'success';
+            case 'FUEL_STATION_CREATED': return 'success';
+            case 'FUEL_STATION_DEACTIVATED': return 'danger';
+            case 'FUEL_STATION_FUEL_PRICE_CHANGED': return 'info';
+            case 'MANAGER_ASSIGNED_TO_FUEL_STATION': return 'success';
             case 'MANAGER_UNASSIGNED_FROM_FUEL_STATION': return 'warn';
-            case 'FUEL_ORDER_CREATED':                   return 'info';
-            case 'FUEL_ORDER_CONFIRMED':                 return 'success';
-            case 'FUEL_ORDER_REJECTED':                  return 'danger';
-            case 'FUEL_ORDER_PROCESSED':                 return 'success';
-            default:                                     return undefined;
+            case 'FUEL_ORDER_CREATED': return 'info';
+            case 'FUEL_ORDER_CONFIRMED': return 'success';
+            case 'FUEL_ORDER_REJECTED': return 'danger';
+            case 'FUEL_ORDER_PROCESSED': return 'success';
+            default: return undefined;
         }
     }
 

@@ -4,7 +4,7 @@ import { PanelModule } from 'primeng/panel';
 import { InputTextModule } from 'primeng/inputtext';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { ButtonModule } from 'primeng/button';
-import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-info-page',

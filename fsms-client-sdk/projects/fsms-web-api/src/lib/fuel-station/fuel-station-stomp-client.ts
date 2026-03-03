@@ -5,7 +5,8 @@ import { StompClient } from "../core/stomp-client";
 import { FuelGradeMapper } from "../core/fuel-grade.mapper";
 import { IMessage } from "@stomp/rx-stomp";
 import { FuelOrderEventMapper } from "../fuel-order/fuel-order-event-mapper";
-import { FuelOrderConfirmed, FuelOrderCreated, FuelOrderEvent, FuelOrderProcessed, FuelOrderRejected } from "../../public-api";
+import { FuelOrderConfirmed, FuelOrderCreated, FuelOrderProcessed, FuelOrderRejected } from "../../public-api";
+import { Actor } from "../core/actor";
 
 interface IFuelStationStompClient {
     onFuelStationCreated(): Observable<FuelStationCreated>
@@ -125,7 +126,11 @@ export class FuelStationStompClient implements IFuelStationStompClient {
 
     private parseFuelStationCreated(message: IMessage): FuelStationCreated {
         const json = JSON.parse(message.body);
-        return new FuelStationCreated(json.fuelStationId);
+        return new FuelStationCreated(
+            json.fuelStationId, 
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
     }
 
     private parseFuelPriceChanged(message: IMessage): FuelPriceChanged {
@@ -133,22 +138,38 @@ export class FuelStationStompClient implements IFuelStationStompClient {
         return new FuelPriceChanged(
             json.fuelStationId,
             this.fuelGradeMapper.map(json.fuelGrade),
-            json.pricePerLiter
+            json.pricePerLiter,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
         );
     }
 
     private parseFuelStationDeactivated(message: IMessage): FuelStationDeactivated {
         const json = JSON.parse(message.body);
-        return new FuelStationDeactivated(json.fuelStationId);
+        return new FuelStationDeactivated(
+            json.fuelStationId,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
     }
 
     private parseManagerAssignedToFuelStation(message: IMessage): ManagerAssignedToFuelStation {
         const json = JSON.parse(message.body);
-        return new ManagerAssignedToFuelStation(json.fuelStationId, json.managerId);
+        return new ManagerAssignedToFuelStation(
+            json.fuelStationId, 
+            json.managerId,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
     }
 
     private parseManagerUnassignedFromFuelStation(message: IMessage): ManagerUnassignedFromFuelStation {
         const json = JSON.parse(message.body);
-        return new ManagerUnassignedFromFuelStation(json.fuelStationId, json.managerId);
+        return new ManagerUnassignedFromFuelStation(
+            json.fuelStationId, 
+            json.managerId,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
     }
 }

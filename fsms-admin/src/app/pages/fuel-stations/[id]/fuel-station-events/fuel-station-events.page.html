@@ -1,6 +1,18 @@
 <p-panel header="Event History">
-    <p-table [value]="events()" [loading]="loading()" size="small" [showLoader]="false"
-        [tableStyle]="{ 'min-width': '50rem' }">
+    <p-table
+        [value]="events()"
+        [loading]="loading()"
+        size="small"
+        [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        [paginator]="true"
+        [pageLinks]="paginationRange"
+        [showFirstLastIcon]="false"
+        [lazy]="true"
+        [rows]="eventsPerPage"
+        [totalRecords]="totalEvents()"
+        (onPage)="onPageChange($event)"
+    >
 
         <ng-template #header>
             <tr>
@@ -62,11 +74,11 @@
 
         <ng-template #loadingbody>
             @for (row of skeletonRows; track $index) {
-            <tr style="height: 46px">
-                @for (col of skeletonCols; track $index) {
-                <td><p-skeleton /></td>
-                }
-            </tr>
+                <tr class="h-16">
+                    @for (col of skeletonCols; track $index) {
+                    <td><p-skeleton /></td>
+                    }
+                </tr>
             }
         </ng-template>
 
@@ -77,11 +89,4 @@
         </ng-template>
 
     </p-table>
-
-    @if (hasMore()) {
-    <div class="flex justify-center mt-4">
-        <p-button label="Load More" [loading]="loadingMore()" [disabled]="loadingMore()" severity="secondary"
-            [outlined]="true" (onClick)="loadMore()" />
-    </div>
-    }
 </p-panel>

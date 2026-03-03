@@ -4,6 +4,7 @@ import com.fuelstation.managmentapi.authentication.application.UserResponse;
 import com.fuelstation.managmentapi.authentication.domain.User;
 import com.fuelstation.managmentapi.authentication.domain.exceptions.UserNotFound;
 import com.fuelstation.managmentapi.authentication.infrastructure.persistence.UserRepository;
+import com.fuelstation.managmentapi.common.application.CursorPage;
 import com.fuelstation.managmentapi.common.application.DomainEventResponse;
 import com.fuelstation.managmentapi.common.domain.DomainEvent;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderEventResponse;
@@ -17,6 +18,7 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repos
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -29,28 +31,26 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class GetFuelStationEvents {
 
-    private static final int DEFAULT_LIMIT = 10;
-
     private final FuelStationEventRepository fuelStationEventRepository;
     private final FuelOrderEventRepository fuelOrderEventRepository;
     private final UserRepository userRepository;
 
-    public List<DomainEventResponse> process(long fuelStationId, Instant occurredAfter) {
-        List<DomainEvent> events = new ArrayList<>();
-        if (occurredAfter != null) {
-            events.addAll(
-                    fuelStationEventRepository.findByFuelStationIdAfter(fuelStationId, occurredAfter, DEFAULT_LIMIT)
-            );
-            events.addAll(
-                    fuelOrderEventRepository.findByFuelStationIdAfter(fuelStationId, occurredAfter, DEFAULT_LIMIT)
-            );
-        } else {
-            events.addAll(fuelStationEventRepository.findLatestByFuelStationId(fuelStationId, DEFAULT_LIMIT));
-            events.addAll(fuelOrderEventRepository.findLatestByFuelStationId(fuelStationId, DEFAULT_LIMIT));
-        }
-        events = events.stream()
+    public CursorPage<DomainEventResponse, Instant> process(long fuelStationId, Instant occurredAfter, short limit) {
+        Page<FuelStationEvent> fuelStationEventPage = fuelStationEventRepository.findByFuelStationIdAfter(
+                fuelStationId,
+                occurredAfter == null ? Instant.now() : occurredAfter,
+                limit
+        );
+        Page<FuelOrderEvent> fuelOrderEventPage = fuelOrderEventRepository.findByFuelStationIdAfter(
+                fuelStationId,
+                occurredAfter == null ? Instant.now() : occurredAfter,
+                limit
+        );
+
+        var totalElements = fuelStationEventPage.getTotalElements() + fuelOrderEventPage.getTotalElements();
+        List<DomainEvent> events = Stream.concat(fuelStationEventPage.getContent().stream(), fuelOrderEventPage.getContent().stream())
                 .sorted(Comparator.comparing(DomainEvent::getOccurredAt).reversed())
-                .limit(DEFAULT_LIMIT)
+                .limit(limit)
                 .toList();
 
         Set<Long> userIds = events.stream()
@@ -67,7 +67,7 @@ public class GetFuelStationEvents {
         Map<Long, User> usersById = userRepository.findByIds(userIds).stream()
                 .collect(Collectors.toMap(User::getUserId, Function.identity()));
 
-        return events.stream()
+        List<DomainEventResponse> responses = events.stream()
                 .map(event -> {
                     var performerResponse = event.getPerformedBy().isSystem()
                             ? null
@@ -108,6 +108,13 @@ public class GetFuelStationEvents {
                     };
                 })
                 .toList();
+
+        Instant nextCursor = events.isEmpty()
+                ? null
+                : events.getLast().getOccurredAt();
+        boolean hasMore = totalElements > limit;
+
+        return new CursorPage<>(responses, totalElements, hasMore, nextCursor);
     }
 
     private User getUserById(long userId, Map<Long, User> usersById) {

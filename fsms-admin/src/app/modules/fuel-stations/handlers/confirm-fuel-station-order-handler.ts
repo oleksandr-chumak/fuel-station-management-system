@@ -3,7 +3,7 @@ import { CommandHandler } from "../../common/command-handler";
 import { ConfirmFuelStationOrder } from "../fuel-station-commands";
 import { FuelOrder, FuelOrderRestClient } from "fsms-web-api";
 import { catchError, Observable, tap, throwError } from "rxjs";
-import { FuelStationStore } from "../fuel-station-store";
+import { FuelStationStore } from "../stores/fuel-station-store";
 import { MessageService } from "primeng/api";
 import { FuelOrderEventHandler } from "../../fuel-orders/fuel-order-event-handler";
 

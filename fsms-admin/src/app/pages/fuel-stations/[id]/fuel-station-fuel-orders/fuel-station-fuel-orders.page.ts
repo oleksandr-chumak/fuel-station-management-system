@@ -6,7 +6,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { FuelStationStore } from '../../../../modules/fuel-stations/fuel-station-store';
+import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 import { GetFuelStationOrdersHandler } from '../../../../modules/fuel-stations/handlers/get-fuel-station-orders-handler';
 import { ConfirmFuelStationOrderHandler } from '../../../../modules/fuel-stations/handlers/confirm-fuel-station-order-handler';
 import { RejectFuelStationOrderHandler } from '../../../../modules/fuel-stations/handlers/reject-fuel-station-order-handler';

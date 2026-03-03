@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { FuelStationRestClient, FuelStation, Manager } from 'fsms-web-api';
 import { CommandHandler } from '../../common/command-handler';
-import { FuelStationStore } from '../fuel-station-store';
+import { FuelStationStore } from '../stores/fuel-station-store';
 import { UnassignManager } from '../fuel-station-commands';
 import { MessageService } from 'primeng/api';
 
