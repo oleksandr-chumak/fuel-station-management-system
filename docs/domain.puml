@@ -1,0 +1,235 @@
+@startuml
+title <size:20><b>Fuel Station Management System</b></size>\n<size:14>Domain Model</size>
+
+hide empty members
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam packageStyle frame
+skinparam defaultFontName  "Segoe UI"
+skinparam defaultFontSize  11
+skinparam ArrowThickness   1.2
+skinparam ArrowColor       #666666
+skinparam RoundCorner      8
+
+skinparam package {
+    BackgroundColor     #FAFAFA
+    BorderColor         #BBBBBB
+    FontColor           #333333
+    FontStyle           bold
+}
+
+skinparam class {
+    BackgroundColor       #FFFFFF
+    BorderColor           #999999
+    HeaderBackgroundColor #E8E8E8
+    FontColor             #222222
+    AttributeFontColor    #444444
+    StereotypeFontColor   #777777
+}
+
+skinparam enum {
+    BackgroundColor       #F5F0FF
+    BorderColor           #9B8EC4
+    HeaderBackgroundColor #E0D4F5
+    FontColor             #333333
+}
+
+legend bottom right
+  |<back:#DAE8FC>      </back>| Aggregate Root |
+  |<back:#FFF2CC>      </back>| Value Object   |
+  |<back:#F5F0FF>      </back>| Enum           |
+  |<back:#E8F5E9>      </back>| Domain Event   |
+endlegend
+
+package "Common" as common #F9F9F9 {
+
+    abstract class DomainEvent <<Event>> #E8F5E9 {
+        # performedBy : Actor
+        # occurredAt  : Instant
+    }
+
+    class Actor <<Value Object>> #FFF2CC {
+        + id   : Long
+        + type : ActorType
+        __
+        + {static} system() : Actor
+        + {static} user(userId) : Actor
+    }
+
+    enum ActorType {
+        USER
+        SYSTEM
+    }
+
+    enum FuelGrade {
+        RON_92
+        RON_95
+        DIESEL
+    }
+
+    DomainEvent "1" o-right- "1" Actor : performedBy >
+    Actor -down-> ActorType
+}
+
+package "Authentication" as auth #F0F4FF {
+
+    class User <<Aggregate Root>> #DAE8FC {
+        + userId    : Long
+        + firstName : String
+        + lastName  : String
+        + email     : String
+        + status    : UserStatus
+        + role      : UserRole
+        + password  : String
+        __
+        + admin()  : boolean
+        + manager(): boolean
+    }
+
+    enum UserRole {
+        ADMINISTRATOR
+        MANAGER
+    }
+
+    enum UserStatus {
+        ACTIVE
+        TERMINATED
+    }
+
+    User -down-> UserRole
+    User -down-> UserStatus
+}
+
+package "Fuel Station" as station #FFF8F0 {
+
+    class FuelStation <<Aggregate Root>> #DAE8FC {
+        + fuelStationId      : Long
+        + status             : FuelStationStatus
+        + createdAt          : OffsetDateTime
+        + assignedManagerIds : List<Long>
+        __
+        + assignManager(managerId, actor)
+        + unassignManager(managerId, actor)
+        + changeFuelPrice(grade, price, actor)
+        + refillFuelTank(tank, volume)
+        + deactivate(actor)
+        + getAvailableVolume(grade) : BigDecimal
+    }
+
+    class FuelStationAddress <<Value Object>> #FFF2CC {
+        + street         : String
+        + buildingNumber : String
+        + city           : String
+        + postalCode     : String
+        + country        : String
+    }
+
+    class FuelTank #FFFFFF {
+        + id             : Long
+        + fuelGrade      : FuelGrade
+        + currentVolume  : BigDecimal
+        + maxCapacity    : BigDecimal
+        + lastRefillDate : OffsetDateTime?
+        __
+        + getAvailableVolume() : BigDecimal
+    }
+
+    class FuelPrice <<Value Object>> #FFF2CC {
+        + fuelGrade     : FuelGrade
+        + pricePerLiter : BigDecimal
+    }
+
+    enum FuelStationStatus {
+        ACTIVE
+        DEACTIVATED
+    }
+
+    enum FuelStationEventType #E8F5E9 {
+        FUEL_STATION_CREATED
+        FUEL_STATION_DEACTIVATED
+        FUEL_PRICE_CHANGED
+        MANAGER_ASSIGNED
+        MANAGER_UNASSIGNED
+    }
+
+    FuelStation "1" *-right- "1" FuelStationAddress : address
+    FuelStation "1" *-down-  "*" FuelTank           : fuelTanks
+    FuelStation "1" *-down-  "*" FuelPrice          : fuelPrices
+    FuelStation -left-> FuelStationStatus
+    FuelStation .right.> FuelStationEventType : <size:10>emits</size>
+
+    FuelTank  --> FuelGrade
+    FuelPrice --> FuelGrade
+}
+
+package "Fuel Order" as order #F0FFF4 {
+
+    class FuelOrder <<Aggregate Root>> #DAE8FC {
+        + fuelOrderId   : Long
+        + status        : FuelOrderStatus
+        + grade         : FuelGrade
+        + amount        : BigDecimal
+        + fuelStationId : Long
+        + createdAt     : OffsetDateTime
+        __
+        + confirm(actor)
+        + reject(actor)
+        + process(actor)
+    }
+
+    enum FuelOrderStatus {
+        PENDING
+        CONFIRMED
+        REJECTED
+        PROCESSED
+    }
+
+    enum FuelOrderEventType #E8F5E9 {
+        FUEL_ORDER_CREATED
+        FUEL_ORDER_CONFIRMED
+        FUEL_ORDER_REJECTED
+        FUEL_ORDER_PROCESSED
+    }
+
+    FuelOrder -down-> FuelOrderStatus
+    FuelOrder --> FuelGrade
+    FuelOrder .right.> FuelOrderEventType : <size:10>emits</size>
+}
+
+package "Manager" as mgr #FFF0F5 {
+
+    class Manager <<Aggregate Root>> #DAE8FC {
+        + managerId : Long
+        + firstName : String
+        + lastName  : String
+        + email     : String
+        + password  : String
+        + status    : UserStatus
+        __
+        + terminate(actor)
+    }
+
+    enum ManagerEventType #E8F5E9 {
+        MANAGER_CREATED
+        MANAGER_TERMINATED
+    }
+
+    Manager --> UserStatus
+    Manager .right.> ManagerEventType : <size:10>emits</size>
+}
+
+package "Administrator" as adm #FFFFF0 {
+
+    class Administrator <<Aggregate Root>> #DAE8FC {
+        + administratorId : Long
+        + firstName : String
+        + lastName  : String
+        + email     : String
+        + password  : String
+        + status    : UserStatus
+    }
+
+    Administrator --> UserStatus
+}
+
+@enduml

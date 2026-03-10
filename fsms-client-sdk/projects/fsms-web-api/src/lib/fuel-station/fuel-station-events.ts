@@ -17,18 +17,18 @@ export enum FuelStationEventType {
 export class FuelStationEvent extends DomainEvent {
     constructor(public fuelStationId: number, occurredAt: string, performedBy: Actor) {
         super(occurredAt, performedBy);
-    }
+      }
 }
 
 export class FuelStationCreated extends FuelStationEvent {
-}  
+}
 
 export class FuelPriceChanged extends FuelStationEvent {
     constructor(
-        fuelStationId: number, 
-        public fuelGrade: FuelGrade, 
+        fuelStationId: number,
+        public fuelGrade: FuelGrade,
         public pricePerLiter: number,
-        occurredAt: string, 
+        occurredAt: string,
         performedBy: Actor
     ) {
         super(fuelStationId, occurredAt, performedBy);
@@ -41,9 +41,9 @@ export class FuelStationDeactivated extends FuelStationEvent {
 
 export class ManagerAssignedToFuelStation extends FuelStationEvent {
     constructor(
-        fuelStationId: number, 
+        fuelStationId: number,
         public managerId: number,
-        occurredAt: string, 
+        occurredAt: string,
         performedBy: Actor
     ) {
         super(fuelStationId, occurredAt, performedBy);
@@ -52,9 +52,9 @@ export class ManagerAssignedToFuelStation extends FuelStationEvent {
 
 export class ManagerUnassignedFromFuelStation extends FuelStationEvent {
     constructor(
-        fuelStationId: number, 
+        fuelStationId: number,
         public managerId: number,
-        occurredAt: string, 
+        occurredAt: string,
         performedBy: Actor
     ) {
         super(fuelStationId, occurredAt, performedBy);

@@ -1,63 +1,90 @@
-# FsmsSecurity
+# fsms-security
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.0.
+Angular library providing authentication, JWT route guards, and login UI components for the Fuel Station Management System apps.
 
-## Code scaffolding
+## Setup
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Register `SecurityModule` in your app's providers:
 
-```bash
-ng generate component component-name
+```typescript
+import { SecurityModule } from 'fsms-security';
+
+// app.config.ts
+export const appConfig: ApplicationConfig = {
+  providers: [
+    importProvidersFrom(SecurityModule),
+    // ... other providers
+  ],
+};
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+`SecurityModule` registers `AuthInterceptor` globally, which automatically attaches the JWT access token to every outgoing HTTP request.
 
-```bash
-ng generate --help
+## Services
+
+### `AuthService`
+
+```typescript
+import { AuthService } from 'fsms-security';
 ```
 
-## Building
+| Method | Description |
+|---|---|
+| `loginAdmin(req)` | Authenticate as administrator, store tokens |
+| `loginManager(req)` | Authenticate as manager, store tokens |
+| `logout()` | Clear stored tokens and redirect to login |
+| `getUser()` | Get the current authenticated user (`User \| null`) |
+| `getAccessToken()` | Get the raw JWT access token string |
+| `isLoggedIn()` | Returns `true` if a valid token is present |
 
-To build the library, run:
+Tokens are stored in `localStorage` and read back on page refresh.
 
-```bash
-ng build fsms-security
+## Route Guards
+
+```typescript
+import { adminGuard, managerGuard } from 'fsms-security';
 ```
 
-This command will compile your project, and the build artifacts will be placed in the `dist/` directory.
+| Guard | Description |
+|---|---|
+| `adminGuard` | Allows access only to users with the `ADMINISTRATOR` role |
+| `managerGuard` | Allows access only to users with the `MANAGER` role |
 
-### Publishing the Library
+Both guards redirect to `/login` if the user is not authenticated or lacks the required role.
 
-Once the project is built, you can publish your library by following these steps:
+**Usage:**
 
-1. Navigate to the `dist` directory:
-   ```bash
-   cd dist/fsms-security
-   ```
-
-2. Run the `npm publish` command to publish your library to the npm registry:
-   ```bash
-   npm publish
-   ```
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+```typescript
+// app.routes.ts
+export const routes: Routes = [
+  {
+    path: 'dashboard',
+    canActivate: [adminGuard],
+    component: DashboardPage,
+  },
+];
 ```
 
-## Running end-to-end tests
+## Components
 
-For end-to-end (e2e) testing, run:
+### `LoginFormComponent`
 
-```bash
-ng e2e
+Reusable login form with username/password fields and a submit button. Emits a `login` event with credentials on submit.
+
+```html
+<fsms-login-form (login)="onLogin($event)" />
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+### `NotLoggedInHeaderComponent`
 
-## Additional Resources
+Minimal page header displayed on unauthenticated pages (e.g., the login page).
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+```html
+<fsms-not-logged-in-header />
+```
+
+## Implementation Notes
+
+- JWT tokens are stored in `localStorage` under well-known keys
+- `AuthInterceptor` is an Angular `HttpInterceptor` that reads the access token and adds the `Authorization: Bearer <token>` header automatically
+- Token expiry is not tracked client-side — the API returns 401 when a token expires, triggering a logout

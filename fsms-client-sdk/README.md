@@ -1,59 +1,46 @@
-# FsmsClientSdk
+# fsms-client-sdk
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.2.
+Angular workspace containing the shared SDK libraries for the Fuel Station Management System front-end apps.
 
-## Development server
+## Libraries
 
-To start a local development server, run:
+| Library | Package | Description |
+|---|---|---|
+| `fsms-web-api` | `projects/fsms-web-api/` | Typed REST + STOMP clients for all API domains |
+| `fsms-security` | `projects/fsms-security/` | Auth service, JWT guards, login UI components |
 
-```bash
-ng serve
-```
+See the individual library READMEs for detailed API references:
+- [fsms-web-api](projects/fsms-web-api/README.md)
+- [fsms-security](projects/fsms-security/README.md)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Workspace Setup
 
 ```bash
-ng generate --help
+npm install
 ```
 
-## Building
-
-To build the project run:
+## Building the Libraries
 
 ```bash
-ng build
+# Build the REST/STOMP client library
+ng build fsms-web-api
+
+# Build the security/auth library
+ng build fsms-security
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Build artifacts are placed in `dist/`.
 
-## Running unit tests
+## How Libraries Are Consumed
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Both libraries are declared as local workspace packages in the consumer apps (`fsms-admin`, `fsms-manager`). They are resolved directly from the `dist/` directory — **no npm publish step is needed**.
+
+After building, the apps pick up the latest output automatically when you run `npm install` in the app directory.
+
+## Running Tests
 
 ```bash
-ng test
+npm test
 ```
 
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Tests run with [Vitest](https://vitest.dev/).

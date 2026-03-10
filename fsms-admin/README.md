@@ -1,59 +1,106 @@
-# FSMS Admin
+# fsms-admin
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.8.
+Angular administrator dashboard for the Fuel Station Management System.
 
-## Development server
+## Tech Stack
 
-To start a local development server, run:
+| Technology | Version |
+|---|---|
+| Angular | 21.1.3 |
+| PrimeNG | 21.1.1 |
+| Tailwind CSS | 4.1.18 |
+| RxJS | 7.8.2 |
+| @stomp/rx-stomp | 2.3.0 |
 
-```bash
-ng serve
-```
+## Features
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Manage fuel stations (create, deactivate, assign/unassign managers)
+- Manage manager accounts (create, terminate)
+- View and manage fuel orders (confirm/reject)
+- Update fuel prices per station
+- Monitor fuel tank levels
+- Real-time event timeline per fuel station (unified fuel station + fuel order events)
 
-## Code scaffolding
+## Prerequisites
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- Node.js 22+ and npm 11+
+- Backend API running on port 8080
+- `fsms-client-sdk` dependencies installed (run `npm install` in `fsms-client-sdk/` first)
 
-```bash
-ng generate component component-name
-```
+## Getting Started
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### 1. Install dependencies
 
 ```bash
-ng test
+npm install
 ```
 
-## Running end-to-end tests
+### 2. Configure the app
 
-For end-to-end (e2e) testing, run:
+Edit `public/app.config.json`:
+
+```json
+{
+  "restApiUrl": "http://localhost:8080",
+  "stompApiUrl": "ws://localhost:8080/ws",
+  "managerUrl": "http://localhost:4201"
+}
+```
+
+### 3. Start the dev server
 
 ```bash
-ng e2e
+npm start
+# App available at http://localhost:4200
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Runtime Configuration
 
-## Additional Resources
+The app reads `public/app.config.json` at startup — no rebuild needed when changing URLs:
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+| Key | Description |
+|---|---|
+| `restApiUrl` | Base URL for the REST API |
+| `stompApiUrl` | WebSocket URL for STOMP events |
+| `managerUrl` | URL of the manager app (used for cross-app links) |
+
+## Project Structure
+
+```
+src/app/
+├── modules/
+│   ├── common/          # AppConfigService, LoggerService, CommandHandler base, dialogs
+│   ├── fuel-orders/     # Fuel order components and handlers
+│   ├── fuel-stations/   # Fuel station components, handlers, stores
+│   ├── managers/        # Manager components and handlers
+│   └── ui/              # Shared UI components
+└── pages/
+    ├── login/           # Login page
+    ├── managers/        # Manager list page
+    ├── fuel-orders/     # Fuel order list page
+    └── fuel-stations/   # Fuel station list page
+        └── [id]/        # Station detail with tabs:
+            ├── fuel-station-info/
+            ├── fuel-station-managers/
+            ├── fuel-station-fuel-prices/
+            ├── fuel-station-fuel-tanks/
+            ├── fuel-station-fuel-orders/
+            └── fuel-station-events/    # Unified event timeline
+```
+
+## Available Scripts
+
+| Script | Description |
+|---|---|
+| `npm start` | Dev server on port 4200 (auto-reload) |
+| `npm run build` | Production build to `dist/` |
+| `npm run watch` | Incremental dev build |
+| `npm test` | Unit tests with Karma |
+| `npm run lint` | ESLint |
+
+## SDK Dependencies
+
+This app consumes two local workspace packages from `fsms-client-sdk/`:
+
+- **`fsms-web-api`** — Typed REST clients and STOMP event clients for all API domains
+- **`fsms-security`** — `AuthService`, `adminGuard`, `LoginFormComponent`, JWT interceptor
