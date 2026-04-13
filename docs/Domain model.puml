@@ -147,16 +147,51 @@ package "Fuel Station" as station #FFF8F0 {
     enum FuelStationEventType #E8F5E9 {
         FUEL_STATION_CREATED
         FUEL_STATION_DEACTIVATED
-        FUEL_PRICE_CHANGED
-        MANAGER_ASSIGNED
-        MANAGER_UNASSIGNED
+        FUEL_STATION_FUEL_PRICE_CHANGED
+        MANAGER_ASSIGNED_TO_FUEL_STATION
+        MANAGER_UNASSIGNED_FROM_FUEL_STATION
+    }
+
+    class FuelStationEvent <<Event>> #E8F5E9 {
+        + type          : FuelStationEventType
+        + fuelStationId : Long
+    }
+
+    class FuelStationCreated <<Event>> #E8F5E9 {
+    }
+
+    class FuelStationDeactivated <<Event>> #E8F5E9 {
+    }
+
+    class FuelPriceChanged <<Event>> #E8F5E9 {
+        + fuelGrade     : FuelGrade
+        + pricePerLiter : BigDecimal
+    }
+
+    class ManagerAssignedToFuelStation <<Event>> #E8F5E9 {
+        + managerId : Long
+    }
+
+    class ManagerUnassignedFromFuelStation <<Event>> #E8F5E9 {
+        + managerId : Long
     }
 
     FuelStation "1" *-right- "1" FuelStationAddress : address
     FuelStation "1" *-down-  "*" FuelTank           : fuelTanks
     FuelStation "1" *-down-  "*" FuelPrice          : fuelPrices
     FuelStation -left-> FuelStationStatus
-    FuelStation .right.> FuelStationEventType : <size:10>emits</size>
+    FuelStation .right.> FuelStationEvent : <size:10>emits</size>
+
+    FuelStationEvent -down-> FuelStationEventType
+    FuelStationEvent -up-|> DomainEvent
+
+    FuelStationCreated              -up-|> FuelStationEvent
+    FuelStationDeactivated          -up-|> FuelStationEvent
+    FuelPriceChanged                -up-|> FuelStationEvent
+    ManagerAssignedToFuelStation     -up-|> FuelStationEvent
+    ManagerUnassignedFromFuelStation -up-|> FuelStationEvent
+
+    FuelPriceChanged --> FuelGrade
 
     FuelTank  --> FuelGrade
     FuelPrice --> FuelGrade
@@ -191,9 +226,35 @@ package "Fuel Order" as order #F0FFF4 {
         FUEL_ORDER_PROCESSED
     }
 
+    class FuelOrderEvent <<Event>> #E8F5E9 {
+        + type          : FuelOrderEventType
+        + fuelOrderId   : Long
+        + fuelStationId : Long
+    }
+
+    class FuelOrderCreated <<Event>> #E8F5E9 {
+    }
+
+    class FuelOrderConfirmed <<Event>> #E8F5E9 {
+    }
+
+    class FuelOrderRejected <<Event>> #E8F5E9 {
+    }
+
+    class FuelOrderProcessed <<Event>> #E8F5E9 {
+    }
+
     FuelOrder -down-> FuelOrderStatus
     FuelOrder --> FuelGrade
-    FuelOrder .right.> FuelOrderEventType : <size:10>emits</size>
+    FuelOrder .right.> FuelOrderEvent : <size:10>emits</size>
+
+    FuelOrderEvent -down-> FuelOrderEventType
+    FuelOrderEvent -up-|> DomainEvent
+
+    FuelOrderCreated   -up-|>  FuelOrderEvent
+    FuelOrderConfirmed -up-|>  FuelOrderEvent
+    FuelOrderRejected  -up-|>  FuelOrderEvent
+    FuelOrderProcessed -up-|>  FuelOrderEvent
 }
 
 package "Manager" as mgr #FFF0F5 {
@@ -214,8 +275,25 @@ package "Manager" as mgr #FFF0F5 {
         MANAGER_TERMINATED
     }
 
+    class ManagerEvent <<Event>> #E8F5E9 {
+        + type      : ManagerEventType
+        + managerId : Long
+    }
+
+    class ManagerCreated <<Event>> #E8F5E9 {
+    }
+
+    class ManagerTerminated <<Event>> #E8F5E9 {
+    }
+
     Manager --> UserStatus
-    Manager .right.> ManagerEventType : <size:10>emits</size>
+    Manager .right.> ManagerEvent : <size:10>emits</size>
+
+    ManagerEvent -down-> ManagerEventType
+    ManagerEvent -up-|> DomainEvent
+
+    ManagerCreated    -up-|> ManagerEvent
+    ManagerTerminated -up-|> ManagerEvent
 }
 
 package "Administrator" as adm #FFFFF0 {

@@ -1,0 +1,126 @@
+@startuml
+title <size:20><b>Fuel Station Management System</b></size>\n<size:14>Component Diagram</size>
+
+skinparam shadowing false
+skinparam defaultFontName  "Segoe UI"
+skinparam defaultFontSize  11
+skinparam ArrowThickness   1.2
+skinparam ArrowColor       #555555
+skinparam RoundCorner      8
+skinparam componentStyle   rectangle
+
+skinparam package {
+    BackgroundColor     #FAFAFA
+    BorderColor         #BBBBBB
+    FontColor           #333333
+    FontStyle           bold
+}
+
+skinparam component {
+    BackgroundColor       #FFFFFF
+    BorderColor           #999999
+    FontColor             #222222
+}
+
+skinparam database {
+    BackgroundColor       #FFF8DC
+    BorderColor           #C8A200
+    FontColor             #333333
+}
+
+skinparam note {
+    BackgroundColor       #F9F9F9
+    BorderColor           #CCCCCC
+    FontColor             #555555
+}
+
+package "Frontend" as frontend {
+
+    package "fsms-admin\n(Angular)" as admin #F0F4FF {
+        [Fuel Station Module]  as adminFS
+        [Manager Module]       as adminMgr
+        [Fuel Order Module]    as adminFO
+    }
+
+    package "fsms-manager\n(Angular)" as manager #F0FFF4 {
+        [Fuel Station Module]   as mgrFS
+        [Manager Module]        as mgrMgr
+        [Fuel Order Module]     as mgrFO
+    }
+
+    package "fsms-client-sdk\n(Angular Library)" as sdk #FFFBEA {
+        package "fsms-web-api" as webApi #FFFFF0 {
+            [REST Clients]              as restClients
+            [STOMP Clients]             as stompClients
+        }
+        package "fsms-security" as security #FFF0F5 {
+            [SecurityModule]    as secModule
+            [AuthService]       as secService
+            [AuthGuard]         as secGuard
+        }
+    }
+}
+
+package "Backend — fsms-backend-api\n(Spring Boot)" as backend #FFF8F0 {
+
+    package "Application Layer" as appLayer {
+        [REST Controllers]          as controllers
+        [WebSocket / STOMP Broker]  as wsBroker
+    }
+
+    package "Use Cases" as useCases #E8F0FF {
+        [Fuel Station Use Cases]    as ucFS
+        [Fuel Order Use Cases]      as ucFO
+        [Manager Use Cases]         as ucMgr
+        [Auth Use Cases]            as ucAuth
+    }
+
+
+    package "Domain Layer" as domainLayer {
+        [Aggregates]                as aggregates
+        [Domain Events]             as domEvents
+    }
+
+    package "Infrastructure Layer" as infraLayer {
+        [JWT Security Filter]       as jwtFilter
+        [Persistence\n(Spring Data JPA / Hibernate)] as persistence
+        [Liquibase Migrations]      as liquibase
+        [Email Service]             as emailService
+    }
+}
+
+database "PostgreSQL" as db
+cloud "SMTP Server" as smtp
+
+interface "REST API\n(HTTP/JSON)" as restAPI
+interface "WebSocket\n(STOMP over SockJS)" as wsAPI
+
+admin   ..> restClients
+admin   ..> stompClients
+admin   ..> secModule
+manager ..> restClients
+manager ..> stompClients
+manager ..> secModule
+
+secService ..> restClients
+secGuard   ..> secService
+
+restClients  --> restAPI
+stompClients --> wsAPI
+
+restAPI --> jwtFilter
+jwtFilter --> controllers
+wsAPI --> wsBroker
+
+controllers --> useCases
+useCases    --> aggregates
+useCases    ..> persistence
+
+aggregates  --> domEvents
+domEvents   --> wsBroker
+
+persistence --> db
+liquibase   --> db
+emailService --> smtp
+
+@enduml
