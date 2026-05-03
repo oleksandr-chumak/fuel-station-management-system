@@ -44,6 +44,10 @@ security:
     # Refresh token expiration in milliseconds (e.g. 7 days)
     refresh-token-expiration: 604800000
 
+oilprice:
+  api:
+    token: TOKEN
+
 client:
   origin: http://localhost:4200, http://localhost:4201
 
