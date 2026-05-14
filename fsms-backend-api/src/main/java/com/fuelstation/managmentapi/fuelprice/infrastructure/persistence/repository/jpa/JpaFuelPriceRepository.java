@@ -1,5 +1,6 @@
-package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence;
+package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.jpa;
 
+import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model.FuelPriceEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

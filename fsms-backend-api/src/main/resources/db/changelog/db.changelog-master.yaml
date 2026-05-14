@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/changes/008-create-fuel-order-events-table.sql
   - include:
       file: db/changelog/changes/009-create-fuel-prices-table.sql
+  - include:
+      file: db/changelog/changes/0010-create-fuel-tax-rules-table.sql

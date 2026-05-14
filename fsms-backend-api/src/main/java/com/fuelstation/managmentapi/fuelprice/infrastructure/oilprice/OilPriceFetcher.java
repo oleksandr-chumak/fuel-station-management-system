@@ -1,10 +1,10 @@
 package com.fuelstation.managmentapi.fuelprice.infrastructure.oilprice;
 
-import com.fuelstation.managmentapi.common.domain.Currency;
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.common.domain.FuelUnit;
-import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.FuelPriceEntity;
-import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.JpaFuelPriceRepository;
+import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model.FuelPriceEntity;
+import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.jpa.JpaFuelPriceRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 
@@ -49,11 +50,13 @@ public class OilPriceFetcher {
             }
 
             var benchmark = apiCache.computeIfAbsent(fuelGradeToCode(fuelGrade), oilPriceClient::getBenchmark);
+            var fuelUnit = FuelUnit.fromString(benchmark.getData().getUnit());
+            var normalizedPrice = normalizePrice(fuelUnit, benchmark.getData().getPrice());
             var newFuelPrice = FuelPriceEntity.builder()
                 .fuelGradeId(fuelGrade.getId())
-                .unit(FuelUnit.fromString(benchmark.getData().getUnit()))
-                .price(getPriceWithSpread(fuelGrade, benchmark.getData().getPrice()))
-                .currency(Currency.fromString(benchmark.getData().getCurrency()))
+                .unit(FuelUnit.LITER)
+                .price(getPriceWithSpread(fuelGrade, normalizedPrice))
+                .currencyCode(CurrencyCode.fromString(benchmark.getData().getCurrency()))
                 .source("OilPriceApi")
                 .fetchedAt(OffsetDateTime.now())
                 .build();
@@ -61,6 +64,13 @@ public class OilPriceFetcher {
             jpaFuelPriceRepository.save(newFuelPrice);
         }
 
+    }
+
+    private BigDecimal normalizePrice(FuelUnit fuelUnit, BigDecimal price) {
+        return switch (fuelUnit) {
+            case LITER -> price;
+            case GALLON -> price.divide(new BigDecimal("3.78541178"), 6, RoundingMode.HALF_UP);
+        };
     }
 
     private OilPriceCommodity fuelGradeToCode(FuelGrade fuelGrade) {

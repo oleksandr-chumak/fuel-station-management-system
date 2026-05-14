@@ -1,6 +1,6 @@
-package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence;
+package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model;
 
-import com.fuelstation.managmentapi.common.domain.Currency;
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.common.domain.FuelUnit;
 import jakarta.persistence.*;
 import lombok.*;
@@ -31,7 +31,7 @@ public class FuelPriceEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "currency", nullable = false)
-    private Currency currency;
+    private CurrencyCode currencyCode;
 
     @Column(name = "source", nullable = false)
     private String source;

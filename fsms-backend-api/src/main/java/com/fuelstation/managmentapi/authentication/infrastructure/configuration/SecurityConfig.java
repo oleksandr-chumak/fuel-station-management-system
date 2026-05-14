@@ -42,50 +42,54 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(
-                        req -> req
-                                .requestMatchers("/ws/**").permitAll()
-                                .requestMatchers(
-                                        "/api/auth/admins/login",
-                                        "/api/auth/managers/login"
-                                ).permitAll()
-                                .requestMatchers(
-                                        "/api/auth/managers/{managerId}/token",
+            .csrf(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(
+                req -> req
+                    .requestMatchers("/ws/**").permitAll()
+                    .requestMatchers(
+                        "/api/auth/admins/login",
+                        "/api/auth/managers/login"
+                    ).permitAll()
+                    .requestMatchers(
+                        "/api/auth/managers/{managerId}/token",
 
-                                        "/api/fuel-stations/",
-                                        "/api/fuel-stations/{id}/deactivate",
-                                        "/api/fuel-stations/{id}/assign-manager",
-                                        "/api/fuel-stations/{id}/unassign-manager",
-                                        "/api/fuel-stations/{id}/change-fuel-price",
-                                        "/api/fuel-stations/{id}/unassign-manager",
+                        "/api/fuel-stations/",
+                        "/api/fuel-stations/{id}/deactivate",
+                        "/api/fuel-stations/{id}/assign-manager",
+                        "/api/fuel-stations/{id}/unassign-manager",
+                        "/api/fuel-stations/{id}/change-fuel-price",
+                        "/api/fuel-stations/{id}/unassign-manager",
 
-                                        "/api/managers/",
-                                        "/api/managers/{id}/terminate",
-                                        "/api/managers/{id}",
+                        "/api/managers/",
+                        "/api/managers/{id}/terminate",
+                        "/api/managers/{id}",
 
-                                        "/api/fuel-orders/{id}/confirm",
-                                        "/api/fuel-orders/{id}/reject",
-                                        "/api/fuel-orders/{id}"
-                                ).hasAuthority(UserRole.ADMINISTRATOR.name())
-                                .requestMatchers(
-                                        "/api/fuel-stations/{id}",
-                                        "/api/fuel-stations/{id}/managers",
-                                        "/api/fuel-stations/{id}/fuel-orders",
+                        "/api/fuel-orders/{id}/confirm",
+                        "/api/fuel-orders/{id}/reject",
+                        "/api/fuel-orders/{id}",
 
-                                        "/api/fuel-orders/",
+                        "/api/fuel-prices",
+                        "/api/fuel-prices/latest",
+                        "/api/countries/{countryCode}/fuel-prices/latest"
+                    ).hasAuthority(UserRole.ADMINISTRATOR.name())
+                    .requestMatchers(
+                        "/api/fuel-stations/{id}",
+                        "/api/fuel-stations/{id}/managers",
+                        "/api/fuel-stations/{id}/fuel-orders",
 
-                                        "/api/manager/{id}/fuel-stations"
-                                ).hasAnyAuthority(UserRole.ADMINISTRATOR.name(), UserRole.MANAGER.name())
-                                .anyRequest().authenticated()
-                ).userDetailsService(userDetailsServiceImp)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(
-                        e -> e.accessDeniedHandler((ignored, response, ignored2) -> response.setStatus(403))
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                );
+                        "/api/fuel-orders/",
+
+                        "/api/manager/{id}/fuel-stations"
+                    ).hasAnyAuthority(UserRole.ADMINISTRATOR.name(), UserRole.MANAGER.name())
+                    .anyRequest().authenticated()
+            ).userDetailsService(userDetailsServiceImp)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(
+                e -> e.accessDeniedHandler((ignored, response, ignored2) -> response.setStatus(403))
+                    .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+            );
         return http.build();
     }
 

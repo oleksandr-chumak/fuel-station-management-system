@@ -44,6 +44,10 @@ security:
     # Refresh token expiration in milliseconds (e.g. 7 days)
     refresh-token-expiration: 604800000
 
+exchangerate:
+  api:
+    key: KEY
+
 oilprice:
   api:
     token: TOKEN
