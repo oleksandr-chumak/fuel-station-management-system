@@ -69,8 +69,7 @@ public class SecurityConfig {
                         "/api/fuel-orders/{id}",
 
                         "/api/fuel-prices",
-                        "/api/fuel-prices/latest",
-                        "/api/countries/{countryCode}/fuel-prices/latest"
+                        "/api/countries/{countryCode}/fuel-prices"
                     ).hasAuthority(UserRole.ADMINISTRATOR.name())
                     .requestMatchers(
                         "/api/fuel-stations/{id}",

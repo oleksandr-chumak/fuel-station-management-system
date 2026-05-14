@@ -2,8 +2,7 @@ package com.fuelstation.managmentapi.fuelprice.application.rest;
 
 import com.fuelstation.managmentapi.common.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelprice.application.query.ListFuelPricesQuery;
-import com.fuelstation.managmentapi.fuelprice.application.query.ListLatestFuelPricesQuery;
-import com.fuelstation.managmentapi.fuelprice.application.query.ListLatestTaxedFuelPriceQuery;
+import com.fuelstation.managmentapi.fuelprice.application.query.ListTaxedFuelPriceQuery;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.FuelPriceResponse;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.TaxedFuelPriceResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,24 +17,21 @@ import java.util.List;
 public class FuelPriceController {
 
     private final ListFuelPricesQuery listFuelPricesQuery;
-    private final ListLatestFuelPricesQuery listLatestFuelPricesQuery;
-    private final ListLatestTaxedFuelPriceQuery listLatestTaxedFuelPriceQuery;
+    private final ListTaxedFuelPriceQuery listTaxedFuelPriceQuery;
 
-    @GetMapping("/fuel-prices/latest")
-    public ResponseEntity<List<FuelPriceResponse>> getLatestFuelPrices() {
-        return ResponseEntity.ok(listLatestFuelPricesQuery.handle());
-    }
-
-    @GetMapping("/countries/{countryCode}/fuel-prices/latest")
-    public ResponseEntity<List<TaxedFuelPriceResponse>> getLatestFuelPricesByCountryCode(
-        @PathVariable CountryCode countryCode
+    @GetMapping("/countries/{countryCode}/fuel-prices")
+    public ResponseEntity<List<TaxedFuelPriceResponse>> getAllFuelPricesByCountryCode(
+        @PathVariable CountryCode countryCode,
+        @RequestParam(value = "latest", defaultValue = "false") boolean latest
     ) {
-        return ResponseEntity.ok(listLatestTaxedFuelPriceQuery.handle(countryCode));
+        return ResponseEntity.ok(listTaxedFuelPriceQuery.handle(countryCode, latest));
     }
 
     @GetMapping("/fuel-prices")
-    public ResponseEntity<List<FuelPriceResponse>> getFuelPrices() {
-        return ResponseEntity.ok(listFuelPricesQuery.handle());
+    public ResponseEntity<List<FuelPriceResponse>> getFuelPrices(
+        @RequestParam(value = "latest", defaultValue = "false") boolean latest
+    ) {
+        return ResponseEntity.ok(listFuelPricesQuery.handle(latest));
     }
 
 }

@@ -1,4 +1,5 @@
 import { ApplicationConfig, importProvidersFrom, inject, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { provideEchartsCore } from 'ngx-echarts';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
@@ -39,7 +40,8 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
 
-    MessageService, 
+    MessageService,
+    provideEchartsCore({ echarts: () => import('echarts') }),
     provideAnimationsAsync(),
     providePrimeNG({
         theme: {

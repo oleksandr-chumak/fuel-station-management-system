@@ -38,6 +38,7 @@ export class HeaderComponent {
       { label: "Fuel Stations", routerLink: ["/"] },
       { label: "Managers", routerLink: ["/managers"] },
       { label: "Fuel Orders", routerLink: ["/fuel-orders"] },
+      { label: "Fuel Prices", routerLink: ["/fuel-prices"] },
     ];
   }
   

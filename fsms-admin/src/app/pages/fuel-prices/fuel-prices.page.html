@@ -1,0 +1,62 @@
+<div class="flex flex-col gap-4 py-4">
+    <div class="flex justify-end">
+        <p-selectbutton
+            [options]="chartTabs"
+            [ngModel]="selectedTab()"
+            (ngModelChange)="onTabChange($event)"
+            optionLabel="label"
+            optionValue="value"
+            [allowEmpty]="false"
+        />
+    </div>
+
+    <p-panel header="Latest Fuel Prices">
+        <p-table
+            [value]="displayedLatestPrices()"
+            [loading]="loadingTable()"
+            [showLoader]="false"
+            size="small"
+            [tableStyle]="{ 'min-width': '40rem' }"
+        >
+            <ng-template #header>
+                <tr>
+                    <th>Fuel Grade</th>
+                    <th>Price</th>
+                    <th>Fetched At</th>
+                </tr>
+            </ng-template>
+
+            <ng-template #body let-item>
+                <tr>
+                    <td>{{ formatGrade(item.fuelGrade) }}</td>
+                    <td>{{ formatPrice(item.price, item.currency) }}</td>
+                    <td>{{ formatDate(item.fetchedAt) }}</td>
+                </tr>
+            </ng-template>
+
+            <ng-template #loadingbody>
+                @for (row of skeletonRows; track $index) {
+                    <tr style="height: 46px">
+                        @for (col of skeletonCols; track $index) {
+                            <td><p-skeleton /></td>
+                        }
+                    </tr>
+                }
+            </ng-template>
+
+            <ng-template #emptymessage>
+                <tr>
+                    <td colspan="3" class="text-center py-4">No fuel price data available.</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </p-panel>
+
+    <p-panel header="Price History">
+        @if (loadingHistory() || loadingTaxed()) {
+            <p-skeleton height="300px" />
+        } @else {
+            <div echarts [options]="chartOptions()" style="height: 350px;"></div>
+        }
+    </p-panel>
+</div>

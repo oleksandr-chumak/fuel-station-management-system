@@ -6,6 +6,11 @@ export * from './lib/auth/user-role.enum';
 export * from './lib/auth/user.model';
 export * from './lib/auth/auth-rest-client';
 
+export * from './lib/fuel-price/fuel-price-response';
+export * from './lib/fuel-price/fuel-tax-rule-response';
+export * from './lib/fuel-price/taxed-fuel-price-response';
+export * from './lib/fuel-price/fuel-price-rest-client';
+
 export * from './lib/fuel-station/fuel-station.model';
 export * from './lib/fuel-station/fuel-station-status.enum';
 export * from './lib/fuel-station/fuel-price.model';

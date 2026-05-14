@@ -21,18 +21,18 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class ListLatestTaxedFuelPriceQuery {
+public class ListTaxedFuelPriceQuery {
 
     private final FuelPriceRepository fuelPriceRepository;
     private final FuelTaxRuleRepository fuelTaxRuleRepository;
 
     private final ExchangeRateClient exchangeRateClient;
 
-    public List<TaxedFuelPriceResponse> handle(CountryCode countryCode) {
+    public List<TaxedFuelPriceResponse> handle(CountryCode countryCode, boolean latest) {
         var taxedFuelPrices = new ArrayList<TaxedFuelPriceResponse>();
         var currencyCode = CurrencyCode.fromCountryCode(countryCode);
 
-        var fuelPrices = fuelPriceRepository.findLatest();
+        var fuelPrices = latest ? fuelPriceRepository.findLatest() : fuelPriceRepository.findAll();
         var fuelTaxRules = fuelTaxRuleRepository.findEffectiveByCountyCode(countryCode);
 
         for (var fuelPrice : fuelPrices) {

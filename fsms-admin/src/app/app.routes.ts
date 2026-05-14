@@ -10,6 +10,7 @@ import { FuelStationFuelPricesPage } from './pages/fuel-stations/[id]/fuel-stati
 import { FuelStationEventsPage } from './pages/fuel-stations/[id]/fuel-station-events/fuel-station-events.page';
 import { ManagersPage } from './pages/managers/managers.page';
 import { FuelOrdersPage } from './pages/fuel-orders/fuel-orders.page';
+import { FuelPricesPage } from './pages/fuel-prices/fuel-prices.page';
 import {adminGuard, } from "fsms-security"
 
 export const routes: Routes = [
@@ -30,5 +31,6 @@ export const routes: Routes = [
         ]
     },
     { path: "managers", component: ManagersPage, canActivate: [adminGuard]},
-    { path: "fuel-orders", component: FuelOrdersPage, canActivate: [adminGuard]}
+    { path: "fuel-orders", component: FuelOrdersPage, canActivate: [adminGuard]},
+    { path: "fuel-prices", component: FuelPricesPage, canActivate: [adminGuard]}
 ];

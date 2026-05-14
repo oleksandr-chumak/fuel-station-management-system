@@ -13,7 +13,8 @@ public class ListFuelPricesQuery {
 
     private final FuelPriceRepository fuelPriceRepository;
 
-    public List<FuelPriceResponse> handle() {
-        return fuelPriceRepository.findAll().stream().map(FuelPriceResponse::from).toList();
+    public List<FuelPriceResponse> handle(boolean latest) {
+        var fuelPrices = latest ? fuelPriceRepository.findLatest() : fuelPriceRepository.findAll();
+        return fuelPrices.stream().map(FuelPriceResponse::from).toList();
     }
 }
