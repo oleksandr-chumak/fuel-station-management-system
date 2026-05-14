@@ -2,6 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
@@ -44,7 +45,7 @@ public class FuelStationTestClientImpl implements FuelStationTestClient {
                 "Test",
                 "Test",
                 "12345",
-                "Test"
+                CountryCode.UA
         ));
     }
 

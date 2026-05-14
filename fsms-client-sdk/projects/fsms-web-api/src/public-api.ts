@@ -11,6 +11,7 @@ export * from './lib/fuel-price/fuel-tax-rule-response';
 export * from './lib/fuel-price/taxed-fuel-price-response';
 export * from './lib/fuel-price/fuel-price-rest-client';
 
+export * from './lib/fuel-station/country-code.enum';
 export * from './lib/fuel-station/fuel-station.model';
 export * from './lib/fuel-station/fuel-station-status.enum';
 export * from './lib/fuel-station/fuel-price.model';

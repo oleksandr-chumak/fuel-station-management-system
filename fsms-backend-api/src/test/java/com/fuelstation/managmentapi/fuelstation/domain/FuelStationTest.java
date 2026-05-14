@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -36,7 +37,7 @@ public class FuelStationTest {
 
     @BeforeEach
     void setUp() {
-        FuelStationAddress address = new FuelStationAddress("Main St", "123", "New York", "10001", "USA");
+        FuelStationAddress address = new FuelStationAddress("Main St", "123", "New York", "10001", CountryCode.UA);
 
         List<FuelTank> fuelTanks = new ArrayList<>();
         fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), Optional.empty()));

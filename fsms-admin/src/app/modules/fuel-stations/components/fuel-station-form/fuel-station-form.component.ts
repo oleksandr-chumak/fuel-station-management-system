@@ -4,13 +4,15 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
+import { Select } from 'primeng/select';
+import { CountryCode } from 'fsms-web-api';
 
 export interface FuelStationFormData {
     street: string,
     buildingNumber: string,
     city: string,
     postalCode: string,
-    country: string,
+    country: CountryCode,
     address: string,
 }
 
@@ -18,11 +20,12 @@ export interface FuelStationFormData {
   selector: 'app-fuel-station-form',
   standalone: true,
   imports: [
-    CommonModule, 
-    MessageModule, 
-    ReactiveFormsModule, 
-    ButtonModule, 
-    InputTextModule
+    CommonModule,
+    MessageModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputTextModule,
+    Select,
   ],
   templateUrl: './fuel-station-form.component.html'
 })
@@ -32,12 +35,14 @@ export class FuelStationFormComponent {
   @Input() disabled: boolean = false;
   @Output() formSubmitted = new EventEmitter<FuelStationFormData>();
 
+  protected readonly countryCodes = Object.values(CountryCode);
+
   fuelStationForm = new FormGroup({
      street: new FormControl('', Validators.required),
      buildingNumber: new FormControl('', Validators.required),
      city: new FormControl('', Validators.required),
      postalCode: new FormControl('', Validators.required),
-     country: new FormControl('', Validators.required),
+     country: new FormControl<CountryCode | null>(null, Validators.required),
   })
   
   handleSubmit() {

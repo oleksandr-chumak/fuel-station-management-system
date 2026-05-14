@@ -5,8 +5,8 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class FuelStationResponse {
     private List<Long> assignedManagersIds;
     private List<FuelTankResponse> fuelTanks;
     private List<FuelPriceResponse> fuelPrices;
-    private String country;
+    private CountryCode country;
     private String status;
 
     public static FuelStationResponse fromDomain(FuelStation fuelStation) {

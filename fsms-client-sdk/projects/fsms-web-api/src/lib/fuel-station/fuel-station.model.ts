@@ -1,4 +1,5 @@
 import { FuelGrade } from "../core/fuel-grade.enum";
+import { CountryCode } from "./country-code.enum";
 import { FuelPrice } from "./fuel-price.model";
 import { FuelStationStatus } from "./fuel-station-status.enum";
 import { FuelTank } from "./fuel-tank.model";
@@ -11,7 +12,7 @@ export class FuelStation {
     public buildingNumber: string,
     public city: string,
     public postalCode: string,
-    public country: string,
+    public country: CountryCode,
     public address: string,
     public fuelPrices: FuelPrice[] = [],
     public fuelTanks: FuelTank[] = [],

@@ -36,13 +36,14 @@
         <p-message *ngIf="postalCodeInvalid" severity="error" variant="simple" size="small">Postal Code is invalid</p-message>
     </div>
     <div class="flex flex-col gap-1">
-        <input 
-            type="country"
-            pInputText
-            placeholder="Country"
-            formControlName="country" 
+        <p-select
+            [options]="countryCodes"
+            placeholder="Select country"
+            formControlName="country"
+            styleClass="w-full"
+            appendTo="body"
         />
-        <p-message *ngIf="countryInvalid" severity="error" variant="simple" size="small">Country is invalid</p-message>
+        <p-message *ngIf="countryInvalid" severity="error" variant="simple" size="small">Country is required</p-message>
     </div>
     <p-button type="submit" icon="pi pi-sign-in" styleClass="w-full" [label]="buttonText" [loading]="loading"/> 
 </form>

@@ -1,6 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
 import { RestClient } from "../core/rest-client";
+import { CountryCode } from "./country-code.enum";
 import { FuelStationMapper } from "./fuel-station.mapper";
 import { ManagerMapper } from "../manager/manager.mapper";
 import { FuelOrderMapper } from "../fuel-order/fuel-order.mapper";
@@ -73,7 +74,7 @@ export class FuelStationRestClient {
         );
     }
 
-    createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: string): Observable<FuelStation> {
+    createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: CountryCode): Observable<FuelStation> {
         return this.restClient.post("api/fuel-stations/", { street, buildingNumber, city, postalCode, country })
             .pipe(map(data => this.fuelStationMapper.fromJson(data)));
     }

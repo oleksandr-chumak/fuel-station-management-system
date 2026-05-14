@@ -1,4 +1,4 @@
-import { FuelGrade } from "fsms-web-api";
+import { CountryCode, FuelGrade } from "fsms-web-api";
 
 export interface GetFuelStations {}
 
@@ -19,7 +19,7 @@ export interface CreateFuelStation {
     buildingNumber: string,
     city: string,
     postalCode: string,
-    country: string
+    country: CountryCode
 }
 
 export interface DeactivateFuelStation {

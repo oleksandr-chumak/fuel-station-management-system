@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class CreateFuelStation {
             String buildingNumber,
             String city,
             String postalCode,
-            String country,
+            CountryCode country,
             Actor performedBy
     ) {
         var fuelStation = fuelStationFactory.create(street, buildingNumber, city, postalCode, country);

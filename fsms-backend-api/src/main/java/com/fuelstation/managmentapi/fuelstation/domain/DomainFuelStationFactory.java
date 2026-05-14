@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
@@ -19,7 +20,7 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTank;
 public class DomainFuelStationFactory implements FuelStationFactory {
 
     @Override
-    public FuelStation create(String street, String buildingNumber, String city, String postalCode, String country) {
+    public FuelStation create(String street, String buildingNumber, String city, String postalCode, CountryCode country) {
         FuelStationAddress address = new FuelStationAddress(street, buildingNumber, city, postalCode, country);
 
         List<FuelTank> fuelTanks = new ArrayList<>();

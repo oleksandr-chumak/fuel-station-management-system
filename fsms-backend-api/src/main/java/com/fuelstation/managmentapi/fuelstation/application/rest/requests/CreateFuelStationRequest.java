@@ -1,5 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest.requests;
 
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,8 +33,6 @@ public class CreateFuelStationRequest {
     )
     private String postalCode;
 
-    @NotBlank(message = "Country must not be blank")
-    @Size(min = 2, max = 60, message = "Country must be between 2 and 60 characters")
-    @Pattern(regexp = "^[a-zA-Z\\s\\-']+$", message = "Country can only contain letters, spaces, hyphens, and apostrophes")
-    private String country;
+    @NotNull(message = "Country must not be null")
+    private CountryCode country;
 }

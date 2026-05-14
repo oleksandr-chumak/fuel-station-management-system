@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fuelstation.managmentapi.common.WithMockCustomUser;
+import com.fuelstation.managmentapi.common.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.CreateFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
@@ -71,19 +72,18 @@ public class FuelStationControllerTest {
 
         private static Stream<Arguments> invalidCreateFuelStationRequests() {
             return Stream.of(
-                    Arguments.of(new CreateFuelStationRequest(null, "Street", "City", "12345", "Ukraine"), "null building number"),
-                    Arguments.of(new CreateFuelStationRequest("", "Street", "City", "12345", "Ukraine"), "empty building number"),
-                    Arguments.of(new CreateFuelStationRequest("   ", "Street", "City", "12345", "Ukraine"), "blank building number"),
-                    Arguments.of(new CreateFuelStationRequest("123", null, "City", "12345", "Ukraine"), "null street"),
-                    Arguments.of(new CreateFuelStationRequest("123", "", "City", "12345", "Ukraine"), "empty street"),
-                    Arguments.of(new CreateFuelStationRequest("123", "Street", null, "12345", "Ukraine"), "null city"),
-                    Arguments.of(new CreateFuelStationRequest("123", "Street", "", "12345", "Ukraine"), "empty city"),
-                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", null, "Ukraine"), "null postal code"),
-                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", "", "Ukraine"), "empty postal code"),
-                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", "invalid", "Ukraine"), "invalid postal code format"),
-                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", "12345", ""), "empty country"),
+                    Arguments.of(new CreateFuelStationRequest(null, "Street", "City", "12345", CountryCode.UA), "null building number"),
+                    Arguments.of(new CreateFuelStationRequest("", "Street", "City", "12345", CountryCode.UA), "empty building number"),
+                    Arguments.of(new CreateFuelStationRequest("   ", "Street", "City", "12345", CountryCode.UA), "blank building number"),
+                    Arguments.of(new CreateFuelStationRequest("123", null, "City", "12345", CountryCode.UA), "null street"),
+                    Arguments.of(new CreateFuelStationRequest("123", "", "City", "12345", CountryCode.UA), "empty street"),
+                    Arguments.of(new CreateFuelStationRequest("123", "Street", null, "12345", CountryCode.UA), "null city"),
+                    Arguments.of(new CreateFuelStationRequest("123", "Street", "", "12345", CountryCode.UA), "empty city"),
+                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", null, CountryCode.UA), "null postal code"),
+                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", "", CountryCode.UA), "empty postal code"),
+                    Arguments.of(new CreateFuelStationRequest("123", "Street", "City", "invalid", CountryCode.UA), "invalid postal code format"),
                     Arguments.of(new CreateFuelStationRequest("123", "Street", "City", "12345", null), "null country"),
-                    Arguments.of(new CreateFuelStationRequest("A".repeat(256), "Street", "City", "12345", "Ukraine"), "building number too long"),
+                    Arguments.of(new CreateFuelStationRequest("A".repeat(256), "Street", "City", "12345", CountryCode.UA), "building number too long"),
                     Arguments.of(new CreateFuelStationRequest(null, null, null, null, null), "all fields null")
             );
         }
