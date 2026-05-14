@@ -1,0 +1,57 @@
+<p-panel header="Fuel Purchases">
+    <p-table
+        [value]="purchases() ?? []"
+        [loading]="loading()"
+        [showLoader]="false"
+        size="small"
+        [tableStyle]="{ 'min-width': '55rem' }"
+    >
+        <ng-template #header>
+            <tr>
+                <th>ID</th>
+                <th>Fuel Grade</th>
+                <th>Amount (L)</th>
+                <th>Price / L</th>
+                <th>Total</th>
+                <th>Purchased At</th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-purchase>
+            <tr>
+                <td>{{ purchase.fuelPurchaseId }}</td>
+                <td>{{ formatGrade(purchase.fuelGrade) }}</td>
+                <td>{{ purchase.amount | number: '1.2-2' }} L</td>
+                <td>{{ purchase.pricePerLiter | money: purchase.currency }}</td>
+                <td><strong>{{ purchase.totalPrice | money: purchase.currency }}</strong></td>
+                <td>{{ formatDate(purchase.purchasedAt) }}</td>
+            </tr>
+        </ng-template>
+
+        <ng-template #loadingbody>
+            @for (row of skeletonRows; track $index) {
+                <tr style="height: 46px">
+                    @for (col of skeletonCols; track $index) {
+                        <td><p-skeleton /></td>
+                    }
+                </tr>
+            }
+        </ng-template>
+
+        <ng-template #footer>
+            @for (row of totalByCurrency(); track row.currency) {
+                <tr>
+                    <td colspan="4" class="text-right font-semibold">Total spent</td>
+                    <td><strong>{{ row.total | money: row.currency }}</strong></td>
+                    <td></td>
+                </tr>
+            }
+        </ng-template>
+
+        <ng-template #emptymessage>
+            <tr>
+                <td colspan="6" class="text-center py-4 text-muted-color">No fuel purchases found for this station.</td>
+            </tr>
+        </ng-template>
+    </p-table>
+</p-panel>

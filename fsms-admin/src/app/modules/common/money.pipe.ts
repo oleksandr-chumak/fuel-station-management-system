@@ -11,6 +11,6 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 export class MoneyPipe implements PipeTransform {
     transform(amount: number, currency: string): string {
         const symbol = CURRENCY_SYMBOLS[currency] ?? currency;
-        return `${Number(amount).toFixed(2)} ${symbol}`;
+        return `${Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${symbol}`;
     }
 }

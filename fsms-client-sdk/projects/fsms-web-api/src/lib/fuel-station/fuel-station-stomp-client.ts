@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { FuelPriceChanged, FuelStationCreated, FuelStationDeactivated, FuelStationEvent, FuelStationEventType, ManagerAssignedToFuelStation, ManagerUnassignedFromFuelStation } from "./fuel-station-events";
+import { FuelPriceChanged, FuelPurchaseCreated, FuelStationCreated, FuelStationDeactivated, FuelStationEvent, FuelStationEventType, ManagerAssignedToFuelStation, ManagerUnassignedFromFuelStation } from "./fuel-station-events";
 import { StompClient } from "../core/stomp-client";
 import { FuelGradeMapper } from "../core/fuel-grade.mapper";
 import { IMessage } from "@stomp/rx-stomp";
@@ -18,6 +18,7 @@ interface IFuelStationStompClient {
     onFuelOrderConfirmed(fuelStationId: number): Observable<FuelOrderConfirmed>
     onFuelOrderRejected(fuelStationId: number): Observable<FuelOrderRejected>
     onFuelOrderProcessed(fuelStationId: number): Observable<FuelOrderProcessed>
+    onFuelPurchaseCreated(fuelStationId: number): Observable<FuelPurchaseCreated>
     onFuelStationAll(fuelStationId: number): Observable<FuelStationEvent>
     onAll(): Observable<FuelStationEvent>
 }
@@ -83,6 +84,12 @@ export class FuelStationStompClient implements IFuelStationStompClient {
             .pipe(map(this.fuelOrderEventMapper.parseFuelOrderProcessed));
     }
 
+    onFuelPurchaseCreated(fuelStationId: number): Observable<FuelPurchaseCreated> {
+        return this.stompClient
+            .watch({ destination: `/topic/fuel-stations/${fuelStationId}/fuel-purchases` })
+            .pipe(map(this.parseFuelPurchaseCreated.bind(this)));
+    }
+
     onFuelStationAll(fuelStationId: number): Observable<FuelStationEvent> {
         return this.stompClient
             .watch({ destination: `/topic/fuel-stations/${fuelStationId}/**` })
@@ -118,9 +125,11 @@ export class FuelStationStompClient implements IFuelStationStompClient {
                 return this.fuelOrderEventMapper.parseFuelOrderRejected(message);
             case FuelStationEventType.FUEL_ORDER_PROCESSED:
                 return this.fuelOrderEventMapper.parseFuelOrderProcessed(message);
+            case FuelStationEventType.FUEL_PURCHASE_CREATED:
+                return this.parseFuelPurchaseCreated(message);
             default:
                 const exhaustiveCheck: never = eventType;
-                throw new Error(`Unknown fuel station event type: ${eventType}`);
+                throw new Error(`Unknown fuel station event type: ${exhaustiveCheck}`);
         }
     }
 
@@ -166,8 +175,19 @@ export class FuelStationStompClient implements IFuelStationStompClient {
     private parseManagerUnassignedFromFuelStation(message: IMessage): ManagerUnassignedFromFuelStation {
         const json = JSON.parse(message.body);
         return new ManagerUnassignedFromFuelStation(
-            json.fuelStationId, 
+            json.fuelStationId,
             json.managerId,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
+    }
+
+    private parseFuelPurchaseCreated(message: IMessage): FuelPurchaseCreated {
+        const json = JSON.parse(message.body);
+        return new FuelPurchaseCreated(
+            json.fuelStationId,
+            json.fuelPurchaseId,
+            json.fuelOrderId,
             json.occurredAt,
             new Actor(json.performedBy.id, json.performedBy.type)
         );

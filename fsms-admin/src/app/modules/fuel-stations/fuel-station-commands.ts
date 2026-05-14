@@ -54,3 +54,7 @@ export interface GetFuelStationEvents {
     fuelStationId: number;
     occurredAfter?: string;
 }
+
+export interface GetFuelStationFuelPurchases {
+    fuelStationId: number;
+}

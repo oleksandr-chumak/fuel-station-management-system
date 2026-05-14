@@ -13,6 +13,6 @@ public interface JpaFuelOrderRepository extends JpaRepository<FuelOrderEntity, L
     @Query("SELECT f FROM FuelOrderEntity f WHERE f.fuelStationId = :fuelStationId ORDER BY f.createdAt DESC")
     List<FuelOrderEntity> findByFuelStationId(@Param("fuelStationId") Long fuelStationId);
     
-    @Query("SELECT SUM(f.amount) FROM FuelOrderEntity f WHERE f.fuelStationId = :stationId AND f.fuelGradeId = :fuelGradeId AND f.fuelOrderId NOT IN (2, 3)")
+    @Query("SELECT SUM(f.amount) FROM FuelOrderEntity f WHERE f.fuelStationId = :stationId AND f.fuelGradeId = :fuelGradeId AND f.fuelOrderStatusId = 1")
     BigDecimal getUnconfirmedAmountByGradeAndStation(@Param("stationId") Long stationId, @Param("fuelGradeId") Long fuelGradeId);
 }

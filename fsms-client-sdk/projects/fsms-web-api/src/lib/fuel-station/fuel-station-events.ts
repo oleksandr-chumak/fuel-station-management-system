@@ -11,7 +11,8 @@ export enum FuelStationEventType {
     FUEL_ORDER_CREATED = "FUEL_ORDER_CREATED",
     FUEL_ORDER_CONFIRMED = "FUEL_ORDER_CONFIRMED",
     FUEL_ORDER_REJECTED = "FUEL_ORDER_REJECTED",
-    FUEL_ORDER_PROCESSED = "FUEL_ORDER_PROCESSED"
+    FUEL_ORDER_PROCESSED = "FUEL_ORDER_PROCESSED",
+    FUEL_PURCHASE_CREATED = "FUEL_PURCHASE_CREATED"
 }
 
 export class FuelStationEvent extends DomainEvent {
@@ -54,6 +55,18 @@ export class ManagerUnassignedFromFuelStation extends FuelStationEvent {
     constructor(
         fuelStationId: number,
         public managerId: number,
+        occurredAt: string,
+        performedBy: Actor
+    ) {
+        super(fuelStationId, occurredAt, performedBy);
+    }
+}
+
+export class FuelPurchaseCreated extends FuelStationEvent {
+    constructor(
+        fuelStationId: number,
+        public fuelPurchaseId: number,
+        public fuelOrderId: number,
         occurredAt: string,
         performedBy: Actor
     ) {
