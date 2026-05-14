@@ -1,7 +1,7 @@
-import { FuelPriceResponse } from './fuel-price-response';
-import { FuelTaxRuleResponse } from './fuel-tax-rule-response';
+import { FuelPrice } from './fuel-price-response';
+import { FuelTaxRule } from './fuel-tax-rule-response';
 
-export interface TaxedFuelPriceResponse {
-    fuelPrice: FuelPriceResponse;
-    taxRules: FuelTaxRuleResponse[];
+export interface TaxedFuelPrice {
+    fuelPrice: FuelPrice;
+    taxRules: FuelTaxRule[];
 }

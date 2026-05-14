@@ -9,10 +9,11 @@ import { TableModule } from 'primeng/table';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FuelGrade, FuelStation } from 'fsms-web-api';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
+import { MoneyPipe } from '../../../../modules/common/money.pipe';
 
 @Component({
   selector: 'app-fuel-station-fuel-prices-page',
-  imports: [CommonModule, TableModule, InputTextModule, SkeletonModule, PanelModule, FormsModule, ButtonModule],
+  imports: [CommonModule, TableModule, InputTextModule, SkeletonModule, PanelModule, FormsModule, ButtonModule, MoneyPipe],
   templateUrl: './fuel-station-fuel-prices.page.html'
 })
 export class FuelStationFuelPricesPage {

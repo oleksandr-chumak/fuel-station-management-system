@@ -1,13 +1,15 @@
+import { CurrencyCode } from "../core/currency";
 import { FuelGrade } from "../core/fuel-grade.enum";
 
-export class FuelPrice {
+export class FuelStationFuelPrice {
 
-  constructor(public fuelGrade: FuelGrade, public pricePerLiter: number) {}
+  constructor(public fuelGrade: FuelGrade, public pricePerLiter: number, public currency: CurrencyCode) {}
 
-  clone(): FuelPrice {
-    return new FuelPrice(
+  clone(): FuelStationFuelPrice {
+    return new FuelStationFuelPrice(
       this.fuelGrade,
-      this.pricePerLiter
+      this.pricePerLiter,
+      this.currency
     );
   }
 

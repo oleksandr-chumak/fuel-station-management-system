@@ -29,7 +29,7 @@
             <ng-template #body let-item>
                 <tr>
                     <td>{{ formatGrade(item.fuelGrade) }}</td>
-                    <td>{{ formatPrice(item.price, item.currency) }}</td>
+                    <td>{{ item.price | money: item.currency }}</td>
                     <td>{{ formatDate(item.fetchedAt) }}</td>
                 </tr>
             </ng-template>

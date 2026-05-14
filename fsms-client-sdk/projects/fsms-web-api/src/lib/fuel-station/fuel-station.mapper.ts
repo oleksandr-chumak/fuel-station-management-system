@@ -3,7 +3,7 @@ import { FuelGradeMapper } from "../core/fuel-grade.mapper";
 import { FuelStation } from "./fuel-station.model";
 import { FuelStationStatus } from "./fuel-station-status.enum";
 import { FuelTank } from "./fuel-tank.model";
-import { FuelPrice } from "./fuel-price.model";
+import { FuelStationFuelPrice } from "./fuel-price.model";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationMapper {
@@ -19,9 +19,10 @@ export class FuelStationMapper {
       (json as FuelStation).postalCode,
       (json as FuelStation).country,
       (json as FuelStation).address,
-      (json as FuelStation).fuelPrices.map((price) => new FuelPrice(
+      (json as FuelStation).fuelPrices.map((price) => new FuelStationFuelPrice(
         this.fuelGradeMapper.map(price.fuelGrade), 
-        price.pricePerLiter
+        price.pricePerLiter,
+        price.currency
       )),
       (json as FuelStation).fuelTanks.map((tank) => new FuelTank(
         tank.id, 

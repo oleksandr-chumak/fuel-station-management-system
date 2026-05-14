@@ -1,14 +1,14 @@
 import { Directive } from "@angular/core";
-import { FuelPrice } from "fsms-web-api";
+import { FuelStationFuelPrice } from "fsms-web-api";
 
 @Directive({
     selector: 'ng-template[fuelPriceTemplate]'
 })
-export class FuelPriceTemplate {
+export class FuelStationFuelPriceTemplate {
     static ngTemplateContextGuard(
-        _dir: FuelPriceTemplate,
+        _dir: FuelStationFuelPriceTemplate,
         ctx: unknown
-    ): ctx is { $implicit: FuelPrice } {
+    ): ctx is { $implicit: FuelStationFuelPrice } {
         return true;
     }
 }

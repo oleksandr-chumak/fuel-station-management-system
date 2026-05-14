@@ -1,4 +1,4 @@
-export interface FuelTaxRuleResponse {
+export interface FuelTaxRule {
     taxRuleId: number;
     countryCode: string;
     fuelGrade: string;

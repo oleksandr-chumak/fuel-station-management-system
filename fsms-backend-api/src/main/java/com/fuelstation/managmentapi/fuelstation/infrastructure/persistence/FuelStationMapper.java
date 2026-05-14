@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.models.*;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelPriceEmbeddable;
@@ -37,10 +38,11 @@ public class FuelStationMapper {
                 ))
                 .collect(Collectors.toList());
 
-        List<FuelPrice> fuelPrices = entity.getFuelPrices().stream()
-                .map(priceEmbeddable -> new FuelPrice(
+        List<FuelStationFuelPrice> fuelPrices = entity.getFuelPrices().stream()
+                .map(priceEmbeddable -> new FuelStationFuelPrice(
                         FuelGrade.fromId(priceEmbeddable.getFuelGradeId()),
-                        priceEmbeddable.getPricePerLiter()
+                        priceEmbeddable.getPricePerLiter(),
+                        CurrencyCode.fromString(priceEmbeddable.getCurrency())
                 ))
                 .collect(Collectors.toList());
 
@@ -77,7 +79,8 @@ public class FuelStationMapper {
         List<FuelPriceEmbeddable> fuelPriceEmbeddables = domain.getFuelPrices().stream()
                 .map(price -> new FuelPriceEmbeddable(
                         price.fuelGrade().getId(),
-                        price.pricePerLiter()
+                        price.pricePerLiter(),
+                        price.currency().name()
                 ))
                 .collect(Collectors.toList());
         entity.setFuelPrices(fuelPriceEmbeddables);

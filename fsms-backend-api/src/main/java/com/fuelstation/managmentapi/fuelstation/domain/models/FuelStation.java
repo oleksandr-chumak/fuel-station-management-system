@@ -29,7 +29,7 @@ public class FuelStation extends AggregateRoot {
     private Long fuelStationId;
     private FuelStationAddress address;
     private List<FuelTank> fuelTanks;
-    private List<FuelPrice> fuelPrices;
+    private List<FuelStationFuelPrice> fuelPrices;
     private List<Long> assignedManagersIds;
     private FuelStationStatus status;
     private OffsetDateTime createdAt;
@@ -69,13 +69,13 @@ public class FuelStation extends AggregateRoot {
     }
 
     public void changeFuelPrice(FuelGrade fuelGrade, BigDecimal newPrice, Actor performedBy) {
-        FuelPrice oldPrice = fuelPrices.stream()
+        FuelStationFuelPrice oldPrice = fuelPrices.stream()
                 .filter(fp -> fp.fuelGrade() == fuelGrade)
                 .findFirst()
                 .orElseThrow(() -> new FuelGradeNotFoundException(fuelGrade.toString(), fuelStationId));
 
         fuelPrices.remove(oldPrice);
-        fuelPrices.add(new FuelPrice(fuelGrade, newPrice));
+        fuelPrices.add(new FuelStationFuelPrice(fuelGrade, newPrice, oldPrice.currency()));
         pushDomainEvent(new FuelPriceChanged(fuelStationId, fuelGrade, newPrice, performedBy));
     }
 

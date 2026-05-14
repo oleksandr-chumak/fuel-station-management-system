@@ -21,3 +21,5 @@ databaseChangeLog:
       file: db/changelog/changes/0010-create-fuel-tax-rules-table.sql
   - include:
       file: db/changelog/changes/0011-alter-fuel-stations-country-to-code.sql
+  - include:
+      file: db/changelog/changes/0012-add-currency-to-fuel-station-fuel-prices.sql

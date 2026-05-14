@@ -19,4 +19,7 @@ public class FuelPriceEmbeddable {
 
     @Column(name = "price_per_liter", nullable = false)
     private BigDecimal pricePerLiter;
+
+    @Column(name = "currency", nullable = false, length = 8)
+    private String currency;
 }

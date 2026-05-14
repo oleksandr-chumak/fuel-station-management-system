@@ -1,4 +1,4 @@
-export interface FuelPriceResponse {
+export interface FuelPrice {
     fuelPriceId: number;
     fuelGrade: string;
     unit: string;

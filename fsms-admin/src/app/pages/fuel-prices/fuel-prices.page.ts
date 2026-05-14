@@ -9,7 +9,8 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import type { EChartsCoreOption } from 'echarts/core';
-import { FuelPriceResponse, TaxedFuelPriceResponse } from 'fsms-web-api';
+import { FuelPrice, TaxedFuelPrice } from 'fsms-web-api';
+import { MoneyPipe } from '../../modules/common/money.pipe';
 import { GetLatestFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-latest-fuel-prices-handler';
 import { GetAllFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-all-fuel-prices-handler';
 import { GetAllTaxedFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-all-taxed-fuel-prices-handler';
@@ -17,7 +18,7 @@ import { GetAllTaxedFuelPricesHandler } from '../../modules/fuel-prices/handlers
 @Component({
     selector: 'app-fuel-prices-page',
     standalone: true,
-    imports: [CommonModule, FormsModule, PanelModule, TableModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective],
+    imports: [CommonModule, FormsModule, PanelModule, TableModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective, MoneyPipe],
     templateUrl: './fuel-prices.page.html',
 })
 export class FuelPricesPage implements OnInit {
@@ -26,9 +27,9 @@ export class FuelPricesPage implements OnInit {
     private readonly getAllHandler = inject(GetAllFuelPricesHandler);
     private readonly getTaxedHandler = inject(GetAllTaxedFuelPricesHandler);
 
-    protected readonly latestPrices = signal<FuelPriceResponse[]>([]);
-    protected readonly priceHistory = signal<FuelPriceResponse[]>([]);
-    protected readonly taxedPricesCache = signal<Record<string, TaxedFuelPriceResponse[]>>({});
+    protected readonly latestPrices = signal<FuelPrice[]>([]);
+    protected readonly priceHistory = signal<FuelPrice[]>([]);
+    protected readonly taxedPricesCache = signal<Record<string, TaxedFuelPrice[]>>({});
     protected readonly selectedTab = signal<string>('no-tax');
 
     protected readonly loadingLatest = toSignal(this.getLatestHandler.loading$, { initialValue: false });
@@ -49,11 +50,11 @@ export class FuelPricesPage implements OnInit {
         return this.buildLineChartOptions(taxedHistory, taxedHistory[0]?.currency);
     });
 
-    protected readonly displayedLatestPrices = computed<FuelPriceResponse[]>(() => {
+    protected readonly displayedLatestPrices = computed<FuelPrice[]>(() => {
         const tab = this.selectedTab();
         if (tab === 'no-tax') return this.latestPrices();
         const cached = this.taxedPricesCache()[tab] ?? [];
-        const latestByGrade = new Map<string, FuelPriceResponse>();
+        const latestByGrade = new Map<string, FuelPrice>();
         for (const item of cached) {
             const existing = latestByGrade.get(item.fuelPrice.fuelGrade);
             if (!existing || item.fuelPrice.fetchedAt > existing.fetchedAt) {
@@ -113,16 +114,7 @@ export class FuelPricesPage implements OnInit {
         });
     }
 
-    protected formatPrice(price: number, currency: string): string {
-        return `${Number(price).toFixed(2)} ${this.currencySymbol(currency)}`;
-    }
-
-    private currencySymbol(currency: string): string {
-        const symbols: Record<string, string> = { USD: '$', EUR: '€', NOK: 'kr', UAH: '₴' };
-        return symbols[currency] ?? currency;
-    }
-
-    private buildLineChartOptions(history: FuelPriceResponse[], currency?: string): EChartsCoreOption {
+    private buildLineChartOptions(history: FuelPrice[], currency?: string): EChartsCoreOption {
         const toDateLabel = (ts: string) =>
             new Date(ts).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
 
@@ -147,13 +139,13 @@ export class FuelPricesPage implements OnInit {
             { key: 'diesel', label: 'Diesel', color: '#F59E0B' },
         ];
 
-        const sym = currency ? this.currencySymbol(currency) : '';
+        const money = new MoneyPipe();
         return {
             tooltip: {
                 trigger: 'axis',
                 formatter: (params: any) =>
                     (params as any[]).filter(p => p.value != null)
-                        .map(p => `${p.marker}${p.seriesName}: ${Number(p.value).toFixed(2)} ${sym}`)
+                        .map(p => `${p.marker}${p.seriesName}: ${money.transform(Number(p.value), currency ?? '')}`)
                         .join('<br/>'),
             },
             legend: { data: gradeConfig.map(g => g.label) },

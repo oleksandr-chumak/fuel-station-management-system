@@ -20,10 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
-import com.fuelstation.managmentapi.fuelstation.domain.models.FuelPrice;
+import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationFuelPrice;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
@@ -44,10 +45,10 @@ public class FuelStationTest {
         fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, BigDecimal.valueOf(2000), BigDecimal.valueOf(8000), Optional.empty()));
         fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, BigDecimal.valueOf(3000), BigDecimal.valueOf(12000), Optional.empty()));
 
-        List<FuelPrice> fuelPrices = new ArrayList<>();
-        fuelPrices.add(new FuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f)));
-        fuelPrices.add(new FuelPrice(FuelGrade.RON_95, BigDecimal.valueOf(4.0f)));
-        fuelPrices.add(new FuelPrice(FuelGrade.DIESEL, BigDecimal.valueOf(3.8f)));
+        List<FuelStationFuelPrice> fuelPrices = new ArrayList<>();
+        fuelPrices.add(new FuelStationFuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f), CurrencyCode.EUR));
+        fuelPrices.add(new FuelStationFuelPrice(FuelGrade.RON_95, BigDecimal.valueOf(4.0f), CurrencyCode.EUR));
+        fuelPrices.add(new FuelStationFuelPrice(FuelGrade.DIESEL, BigDecimal.valueOf(3.8f), CurrencyCode.EUR));
 
         List<Long> assignedManagersIds = new ArrayList<>();
         var createdAt = OffsetDateTime.now();
@@ -136,7 +137,7 @@ public class FuelStationTest {
         void shouldThrowExceptionWhenFuelGradeDoesntExist() {
             // First, clear fuel prices and add only one
             fuelStation.getFuelPrices().clear();
-            fuelStation.getFuelPrices().add(new FuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f)));
+            fuelStation.getFuelPrices().add(new FuelStationFuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f), CurrencyCode.EUR));
             
             // When & Then
             assertThrows(
@@ -155,7 +156,7 @@ public class FuelStationTest {
             fuelStation.changeFuelPrice(FuelGrade.RON_95, newPrice, Actor.system());
             
             // Then
-            FuelPrice updatedPrice = fuelStation.getFuelPrices().stream()
+            FuelStationFuelPrice updatedPrice = fuelStation.getFuelPrices().stream()
                 .filter(fp -> fp.fuelGrade() == FuelGrade.RON_95)
                 .findFirst()
                 .orElseThrow();

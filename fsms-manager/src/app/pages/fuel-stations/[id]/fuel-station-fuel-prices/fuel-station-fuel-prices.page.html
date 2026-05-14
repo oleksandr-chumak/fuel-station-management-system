@@ -10,7 +10,7 @@
             <ng-template #body let-fuelPrice let-editing="editing" let-ri="rowIndex">
                 <tr [pEditableRow]="fuelPrice">
                     <td>{{ getFuelGradeValue(fuelPrice.fuelGrade) }}</td>
-                    <td>{{fuelPrice.pricePerLiter | currency: 'USD'}}</td>
+                    <td>{{ fuelPrice.pricePerLiter | money: fuelPrice.currency }}</td>
                 </tr>
             </ng-template>
             <ng-template #loadingbody>

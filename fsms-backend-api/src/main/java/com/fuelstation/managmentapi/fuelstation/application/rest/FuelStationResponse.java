@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 
 import lombok.AllArgsConstructor;
@@ -33,22 +34,24 @@ public class FuelStationResponse {
         response.setFuelStationId(fuelStation.getFuelStationId());
         response.setStreet(fuelStation.getAddress().street());
         response.setFuelTanks(
-                fuelStation.getFuelTanks()
-                        .stream()
-                        .map(t -> new FuelTankResponse(
-                                t.getId(),
-                                t.getFuelGrade().toString(),
-                                t.getCurrentVolume(),
-                                t.getMaxCapacity(),
-                                t.getLastRefillDate()))
-                        .toList());
+            fuelStation.getFuelTanks()
+                .stream()
+                .map(t -> new FuelTankResponse(
+                    t.getId(),
+                    t.getFuelGrade().toString(),
+                    t.getCurrentVolume(),
+                    t.getMaxCapacity(),
+                    t.getLastRefillDate()))
+                .toList());
         response.setFuelPrices(
-                fuelStation.getFuelPrices()
-                        .stream()
-                        .map(p -> new FuelPriceResponse(
-                                p.fuelGrade().toString(),
-                                p.pricePerLiter()))
-                        .toList());
+            fuelStation.getFuelPrices()
+                .stream()
+                .map(p -> new FuelPriceResponse(
+                    p.fuelGrade().toString(),
+                    p.pricePerLiter(),
+                    p.currency()
+                ))
+                .toList());
         response.setBuildingNumber(fuelStation.getAddress().buildingNumber());
         response.setCity(fuelStation.getAddress().city());
         response.setPostalCode(fuelStation.getAddress().postalCode());
@@ -64,14 +67,14 @@ public class FuelStationResponse {
     }
 
     private record FuelTankResponse(
-            Long id,
-            String fuelGrade,
-            BigDecimal currentVolume,
-            BigDecimal maxCapacity,
-            Optional<OffsetDateTime> lastRefillDate) {
+        Long id,
+        String fuelGrade,
+        BigDecimal currentVolume,
+        BigDecimal maxCapacity,
+        Optional<OffsetDateTime> lastRefillDate) {
     }
 
-    public record FuelPriceResponse(String fuelGrade, BigDecimal pricePerLiter) {
+    public record FuelPriceResponse(String fuelGrade, BigDecimal pricePerLiter, CurrencyCode currency) {
     }
 
 }

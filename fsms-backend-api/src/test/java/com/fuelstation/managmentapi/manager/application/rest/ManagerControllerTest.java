@@ -39,7 +39,7 @@ public class ManagerControllerTest {
         void shouldCreateManager() throws Exception {
             var manager = managerTestClient.createManagerAndReturnResponse();
 
-            assertThat(manager.getStatus()).isEqualTo(UserStatus.ACTIVE.toString());
+            assertThat(manager.getStatus()).isEqualTo(UserStatus.ACTIVE);
         }
 
         @ParameterizedTest
@@ -105,7 +105,7 @@ public class ManagerControllerTest {
         void shouldTerminateManager() throws Exception {
             ManagerResponse managerResponse = managerTestClient.terminateManagerAndReturnResponse(testManager.getManagerId());
             assertThat(managerResponse.getManagerId()).isEqualTo(testManager.getManagerId());
-            assertThat(managerResponse.getStatus()).isEqualTo(UserStatus.TERMINATED.toString());
+            assertThat(managerResponse.getStatus()).isEqualTo(UserStatus.TERMINATED);
         }
 
         @Test
