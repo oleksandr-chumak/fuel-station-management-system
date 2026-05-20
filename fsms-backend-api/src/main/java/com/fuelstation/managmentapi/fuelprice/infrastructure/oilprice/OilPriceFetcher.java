@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.HashMap;
 
 @Component
@@ -43,7 +44,7 @@ public class OilPriceFetcher {
                 .findFirst();
 
             var hasRefreshIntervalPassed = latestFuelPrice
-                .map(fp -> fp.getFetchedAt().isBefore(OffsetDateTime.now().minusHours(REFRESH_INTERVAL_HOURS)))
+                .map(fp -> fp.getFetchedAt().isBefore(OffsetDateTime.now(ZoneOffset.UTC).minusHours(REFRESH_INTERVAL_HOURS)))
                 .orElse(true);
             if(!hasRefreshIntervalPassed) {
                 continue;
@@ -58,7 +59,7 @@ public class OilPriceFetcher {
                 .price(getPriceWithSpread(fuelGrade, normalizedPrice))
                 .currencyCode(CurrencyCode.fromString(benchmark.getData().getCurrency()))
                 .source("OilPriceApi")
-                .fetchedAt(OffsetDateTime.now())
+                .fetchedAt(OffsetDateTime.now(ZoneOffset.UTC))
                 .build();
 
             jpaFuelPriceRepository.save(newFuelPrice);

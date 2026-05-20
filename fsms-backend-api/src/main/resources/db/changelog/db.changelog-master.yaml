@@ -25,3 +25,5 @@ databaseChangeLog:
       file: db/changelog/changes/0012-add-currency-to-fuel-station-fuel-prices.sql
   - include:
       file: db/changelog/changes/0013-create-fuel-purchases-table.sql
+  - include:
+      file: db/changelog/changes/0014-create-fuel-station-fuel-price-history-table.sql

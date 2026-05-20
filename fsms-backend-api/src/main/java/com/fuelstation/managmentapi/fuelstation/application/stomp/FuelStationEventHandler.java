@@ -14,6 +14,10 @@ import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactiv
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.FuelStationEmailService;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationFuelPriceHistoryEntity;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationFuelPriceHistoryRepository;
+
+import java.time.ZoneOffset;
 
 @Component
 @AllArgsConstructor
@@ -23,6 +27,7 @@ public class FuelStationEventHandler {
     private final SimpMessagingTemplate messagingTemplate;
     private final FuelStationEmailService fuelStationEmailService;
     private final CreateFuelStationEvent createFuelStationEvent;
+    private final FuelStationFuelPriceHistoryRepository fuelPriceHistoryRepository;
 
     @EventListener
     public void handle(FuelStationCreated event) {
@@ -35,10 +40,22 @@ public class FuelStationEventHandler {
     public void handle(FuelPriceChanged event) {
         logger.info("Fuel price was changed ID:{}", event.getFuelStationId());
         createFuelStationEvent.process(event);
+        savePriceHistory(event);
         messagingTemplate.convertAndSend(
                 "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-price-changed",
                 event
         );
+    }
+
+    private void savePriceHistory(FuelPriceChanged event) {
+        var entry = new FuelStationFuelPriceHistoryEntity();
+        entry.setFuelStationId(event.getFuelStationId());
+        entry.setFuelGrade(event.getFuelGrade().toString());
+        entry.setPricePerLiter(event.getPricePerLiter());
+        entry.setCurrency(event.getCurrency() != null ? event.getCurrency().name() : "EUR");
+        entry.setChangedAt(event.getOccurredAt().atOffset(ZoneOffset.UTC));
+        entry.setChangedBy(event.getPerformedBy().isSystem() ? null : event.getPerformedBy().id());
+        fuelPriceHistoryRepository.save(entry);
     }
 
     @EventListener

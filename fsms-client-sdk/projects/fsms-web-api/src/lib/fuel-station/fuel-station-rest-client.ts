@@ -12,6 +12,7 @@ import { FuelGrade } from "../core/fuel-grade.enum";
 import { DomainEventResponse } from "./fuel-station-event-response";
 import { CursorPage } from "../core/cursor-page";
 import { FuelPurchase } from "./fuel-purchase.model";
+import { FuelStationFuelPriceHistoryEntry } from "./fuel-price-history";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationRestClient {
@@ -77,6 +78,12 @@ export class FuelStationRestClient {
 
     getFuelStationFuelPurchases(fuelStationId: number): Observable<FuelPurchase[]> {
         return this.restClient.get<FuelPurchase[]>(`api/fuel-stations/${fuelStationId}/fuel-purchases`);
+    }
+
+    getFuelPriceHistory(fuelStationId: number): Observable<FuelStationFuelPriceHistoryEntry[]> {
+        return this.restClient.get<FuelStationFuelPriceHistoryEntry[]>(
+            `api/fuel-stations/${fuelStationId}/fuel-price-history`
+        );
     }
 
     createFuelStation(street: string, buildingNumber: string, city: string, postalCode: string, country: CountryCode): Observable<FuelStation> {

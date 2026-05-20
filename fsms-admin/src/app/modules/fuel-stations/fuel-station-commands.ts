@@ -58,3 +58,7 @@ export interface GetFuelStationEvents {
 export interface GetFuelStationFuelPurchases {
     fuelStationId: number;
 }
+
+export interface GetFuelPriceHistory {
+    fuelStationId: number;
+}

@@ -1,4 +1,41 @@
 <div class="flex flex-col gap-4">
+    <p-panel>
+        <ng-template #header>
+            <div class="flex flex-col gap-1">
+                <span class="font-semibold text-base">Recommended Prices for {{ countryCode }}</span>
+                <span class="text-sm text-muted-color font-normal">
+                    Based on the latest market price with {{ countryCode }} taxes applied, plus a 10% operating margin.
+                    Formula: <strong>market price × 1.10 = recommended</strong>
+                </span>
+            </div>
+        </ng-template>
+
+        @if (loadingRecommended()) {
+            <p-skeleton height="120px" />
+        } @else if (recommendedRows().length === 0) {
+            <p class="text-center py-4 text-muted-color">No market price data available for {{ countryCode }}.</p>
+        } @else {
+            <p-table [value]="recommendedRows()" size="small" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template #header>
+                    <tr>
+                        <th>Fuel Grade</th>
+                        <th>Market Price (with taxes)</th>
+                        <th>Margin</th>
+                        <th>Recommended Price</th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-row>
+                    <tr>
+                        <td>{{ formatGrade(row.fuelGrade) }}</td>
+                        <td>{{ row.marketPrice | money: row.currency }}</td>
+                        <td class="text-green-500">+10%</td>
+                        <td><strong>{{ row.recommendedPrice | money: row.currency }}</strong></td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        }
+    </p-panel>
+
     <p-panel header="Fuel Prices">
         <p-table
             [value]="fuelPrices()"
@@ -84,38 +121,24 @@
 
     <p-panel>
         <ng-template #header>
-            <div class="flex flex-col gap-1">
-                <span class="font-semibold text-base">Recommended Prices for {{ countryCode }}</span>
-                <span class="text-sm text-muted-color font-normal">
-                    Based on the latest market price with {{ countryCode }} taxes applied, plus a 10% operating margin.
-                    Formula: <strong>market price × 1.10 = recommended</strong>
-                </span>
+            <div class="flex items-center justify-between w-full">
+                <span class="font-semibold text-base">Price History</span>
+                <p-selectbutton
+                    [options]="gradeOptions"
+                    [(ngModel)]="selectedGrades"
+                    [multiple]="true"
+                    optionLabel="label"
+                    optionValue="value"
+                />
             </div>
         </ng-template>
 
-        @if (loadingRecommended()) {
-            <p-skeleton height="120px" />
-        } @else if (recommendedRows().length === 0) {
-            <p class="text-center py-4 text-muted-color">No market price data available for {{ countryCode }}.</p>
+        @if (loadingHistory()) {
+            <p-skeleton height="300px" />
+        } @else if (priceHistory().length === 0) {
+            <p class="text-center py-4 text-muted-color">No price history available yet.</p>
         } @else {
-            <p-table [value]="recommendedRows()" size="small" [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template #header>
-                    <tr>
-                        <th>Fuel Grade</th>
-                        <th>Market Price (with taxes)</th>
-                        <th>Margin</th>
-                        <th>Recommended Price</th>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-row>
-                    <tr>
-                        <td>{{ formatGrade(row.fuelGrade) }}</td>
-                        <td>{{ row.marketPrice | money: row.currency }}</td>
-                        <td class="text-green-500">+10%</td>
-                        <td><strong>{{ row.recommendedPrice | money: row.currency }}</strong></td>
-                    </tr>
-                </ng-template>
-            </p-table>
+            <div echarts [options]="historyChartOptions()" style="height: 300px;"></div>
         }
     </p-panel>
 </div>

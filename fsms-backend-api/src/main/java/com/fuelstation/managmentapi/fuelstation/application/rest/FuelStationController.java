@@ -25,11 +25,13 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelPriceHistoryResponse;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPrice;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.DeactivateFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetAllFuelStations;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelPriceHistory;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationManagers;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationEvents;
@@ -55,6 +57,7 @@ public class FuelStationController {
     private final GetFuelStationManagers getFuelStationManagers;
     private final GetFuelStationOrders getFuelStationOrders;
     private final GetFuelStationEvents getFuelStationEvents;
+    private final GetFuelPriceHistory getFuelPriceHistory;
 
     @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(
@@ -171,6 +174,13 @@ public class FuelStationController {
             @RequestParam(defaultValue = "10") short limit
     ) {
         return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, occurredAfter, limit));
+    }
+
+    @GetMapping("/{id}/fuel-price-history")
+    public ResponseEntity<List<FuelPriceHistoryResponse>> getFuelPriceHistory(
+            @PathVariable("id") long fuelStationId
+    ) {
+        return ResponseEntity.ok(getFuelPriceHistory.process(fuelStationId));
     }
 
 }

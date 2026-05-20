@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.impl;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.*;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationEventEntity;
@@ -73,7 +74,9 @@ public class FuelStationEventRepositoryImpl implements FuelStationEventRepositor
             case FUEL_STATION_FUEL_PRICE_CHANGED:
                 FuelGrade fuelGrade = FuelGrade.fromString(payload.get("fuelGrade").toString());
                 BigDecimal pricePerLiter = new BigDecimal(payload.get("pricePerLiter").toString());
-                return new FuelPriceChanged(fuelStationId, fuelGrade, pricePerLiter, performedBy, occurredAt);
+                Object currencyObj = payload.get("currency");
+                CurrencyCode currency = currencyObj != null ? CurrencyCode.fromString(currencyObj.toString()) : null;
+                return new FuelPriceChanged(fuelStationId, fuelGrade, pricePerLiter, currency, performedBy, occurredAt);
 
             case MANAGER_ASSIGNED_TO_FUEL_STATION:
                 long assignedManagerId = ((Number) payload.get("managerId")).longValue();
