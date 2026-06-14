@@ -1,17 +1,17 @@
 package com.fuelstation.managmentapi.fuelprice.application.query;
 
-import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelgrade.infrastructure.persistence.repository.FuelGradeRepository;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.FuelPriceResponse;
-import com.fuelstation.managmentapi.fuelprice.application.query.model.FuelTaxRuleResponse;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.TaxedFuelPriceResponse;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxType;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxUnit;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.exchangerate.ExchangeRateClient;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.FuelPriceRepository;
-import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.FuelTaxRuleRepository;
+import com.fuelstation.managmentapi.taxrule.application.rest.response.TaxRuleResponse;
+import com.fuelstation.managmentapi.taxrule.domain.TaxType;
+import com.fuelstation.managmentapi.taxrule.domain.TaxUnit;
+import com.fuelstation.managmentapi.taxrule.infrastructure.persistence.repository.TaxRuleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class ListTaxedFuelPriceQuery {
 
     private final FuelPriceRepository fuelPriceRepository;
-    private final FuelTaxRuleRepository fuelTaxRuleRepository;
+    private final TaxRuleRepository taxRuleRepository;
     private final FuelGradeRepository fuelGradeRepository;
 
     private final ExchangeRateClient exchangeRateClient;
@@ -39,13 +39,13 @@ public class ListTaxedFuelPriceQuery {
         var fuelPrices = latest ?
             fuelPriceRepository.findLatestByFuelGrades(availableGrades.stream().map(FuelGrade::getId).toList()) :
             fuelPriceRepository.findByFuelGrades(availableGrades.stream().map(FuelGrade::getId).toList());
-        var fuelTaxRules = fuelTaxRuleRepository.findEffectiveByCountyCode(countryCode);
+        var taxRules = taxRuleRepository.findEffectiveByCountryCode(countryCode);
 
         for (var fuelPrice : fuelPrices) {
             var sourceToTargetRate = exchangeRateClient.getConversionRate(fuelPrice.currency(), currencyCode);
             var price = fuelPrice.price().multiply(sourceToTargetRate.getConversionRate());
 
-            var fuelGradeTaxRules = fuelTaxRules.stream()
+            var fuelGradeTaxRules = taxRules.stream()
                 .filter(rule -> rule.fuelGrade() == fuelPrice.fuelGrade())
                 .sorted(Comparator.comparing(rule -> rule.taxType() == TaxType.VAT))
                 .toList();
@@ -77,7 +77,7 @@ public class ListTaxedFuelPriceQuery {
                 fuelPrice.source(),
                 fuelPrice.fetchedAt()
             );
-            var taxRuleResponses = fuelGradeTaxRules.stream().map(FuelTaxRuleResponse::from).toList();
+            var taxRuleResponses = fuelGradeTaxRules.stream().map(TaxRuleResponse::fromDomain).toList();
             taxedFuelPrices.add(new TaxedFuelPriceResponse(priceResponse, taxRuleResponses));
         }
 

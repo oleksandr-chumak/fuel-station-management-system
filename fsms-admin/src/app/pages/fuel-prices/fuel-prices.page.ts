@@ -9,11 +9,12 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import type { EChartsCoreOption } from 'echarts/core';
-import { FuelPrice, TaxedFuelPrice } from 'fsms-web-api';
+import { FuelPrice, TaxedFuelPrice, TaxRule } from 'fsms-web-api';
 import { MoneyPipe } from '../../modules/common/money.pipe';
 import { GetLatestFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-latest-fuel-prices-handler';
 import { GetAllFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-all-fuel-prices-handler';
 import { GetAllTaxedFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-all-taxed-fuel-prices-handler';
+import { GetTaxRulesByCountryHandler } from '../../modules/tax-rules/handlers/get-tax-rules-by-country-handler';
 
 @Component({
     selector: 'app-fuel-prices-page',
@@ -26,15 +27,18 @@ export class FuelPricesPage implements OnInit {
     private readonly getLatestHandler = inject(GetLatestFuelPricesHandler);
     private readonly getAllHandler = inject(GetAllFuelPricesHandler);
     private readonly getTaxedHandler = inject(GetAllTaxedFuelPricesHandler);
+    private readonly getTaxRulesHandler = inject(GetTaxRulesByCountryHandler);
 
     protected readonly latestPrices = signal<FuelPrice[]>([]);
     protected readonly priceHistory = signal<FuelPrice[]>([]);
     protected readonly taxedPricesCache = signal<Record<string, TaxedFuelPrice[]>>({});
+    protected readonly taxRulesCache = signal<Record<string, TaxRule[]>>({});
     protected readonly selectedTab = signal<string>('no-tax');
 
     protected readonly loadingLatest = toSignal(this.getLatestHandler.loading$, { initialValue: false });
     protected readonly loadingHistory = toSignal(this.getAllHandler.loading$, { initialValue: false });
     protected readonly loadingTaxed = toSignal(this.getTaxedHandler.loading$, { initialValue: false });
+    protected readonly loadingTaxRules = toSignal(this.getTaxRulesHandler.loading$, { initialValue: false });
 
     protected readonly chartTabs = [
         { label: 'Without Taxes', value: 'no-tax' },
@@ -64,12 +68,21 @@ export class FuelPricesPage implements OnInit {
         return Array.from(latestByGrade.values());
     });
 
+    protected readonly displayedTaxRules = computed<TaxRule[]>(() => {
+        const tab = this.selectedTab();
+        if (tab === 'no-tax') return [];
+        return this.taxRulesCache()[tab] ?? [];
+    });
+
+    protected readonly showTaxRulesPanel = computed(() => this.selectedTab() !== 'no-tax');
+
     protected readonly loadingTable = computed(() =>
         this.selectedTab() === 'no-tax' ? this.loadingLatest() : this.loadingTaxed()
     );
 
     protected readonly skeletonRows = new Array(3).fill(null);
     protected readonly skeletonCols = new Array(3).fill(null);
+    protected readonly taxRuleSkeletonCols = new Array(6).fill(null);
 
     ngOnInit(): void {
         this.getLatestHandler
@@ -91,11 +104,21 @@ export class FuelPricesPage implements OnInit {
 
     protected onTabChange(tab: string): void {
         this.selectedTab.set(tab);
-        if (tab === 'no-tax' || this.taxedPricesCache()[tab]) return;
-        this.getTaxedHandler.handle({ countryCode: tab }).pipe(
-            tap(prices => this.taxedPricesCache.update(cache => ({ ...cache, [tab]: prices }))),
-            takeUntilDestroyed(this.destroyRef)
-        ).subscribe();
+        if (tab === 'no-tax') return;
+
+        if (!this.taxedPricesCache()[tab]) {
+            this.getTaxedHandler.handle({ countryCode: tab }).pipe(
+                tap(prices => this.taxedPricesCache.update(cache => ({ ...cache, [tab]: prices }))),
+                takeUntilDestroyed(this.destroyRef)
+            ).subscribe();
+        }
+
+        if (!this.taxRulesCache()[tab]) {
+            this.getTaxRulesHandler.handle({ countryCode: tab, effective: true }).pipe(
+                tap(rules => this.taxRulesCache.update(cache => ({ ...cache, [tab]: rules }))),
+                takeUntilDestroyed(this.destroyRef)
+            ).subscribe();
+        }
     }
 
     protected formatGrade(grade: string): string {
@@ -112,6 +135,25 @@ export class FuelPricesPage implements OnInit {
             day: '2-digit', month: 'short', year: 'numeric',
             hour: '2-digit', minute: '2-digit'
         });
+    }
+
+    protected formatTaxAmount(rule: TaxRule): string {
+        if (rule.valueType === 'PERCENTAGE') {
+            return `${Number(rule.amount)}%`;
+        }
+        const money = new MoneyPipe();
+        const formatted = money.transform(Number(rule.amount), rule.currency ?? '');
+        const unitLabel = rule.unit === 'PER_1000_LITERS' ? '/ 1000 L' : '/ L';
+        return `${formatted} ${unitLabel}`;
+    }
+
+    protected formatTaxType(taxType: string): string {
+        switch (taxType) {
+            case 'EXCISE': return 'Excise';
+            case 'CO2_LEVY': return 'CO₂ Levy';
+            case 'VAT': return 'VAT';
+            default: return taxType;
+        }
     }
 
     private buildLineChartOptions(history: FuelPrice[], currency?: string): EChartsCoreOption {

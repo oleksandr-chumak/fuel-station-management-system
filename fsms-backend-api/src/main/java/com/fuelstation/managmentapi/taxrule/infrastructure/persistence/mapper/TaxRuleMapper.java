@@ -1,20 +1,20 @@
-package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.mapper;
+package com.fuelstation.managmentapi.taxrule.infrastructure.persistence.mapper;
 
-import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelprice.domain.FuelTaxRule;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxType;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxUnit;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxValueType;
-import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model.FuelTaxRuleEntity;
+import com.fuelstation.managmentapi.taxrule.domain.TaxRule;
+import com.fuelstation.managmentapi.taxrule.domain.TaxType;
+import com.fuelstation.managmentapi.taxrule.domain.TaxUnit;
+import com.fuelstation.managmentapi.taxrule.domain.TaxValueType;
+import com.fuelstation.managmentapi.taxrule.infrastructure.persistence.model.TaxRuleEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FuelTaxRuleMapper {
+public class TaxRuleMapper {
 
-    public FuelTaxRule toDomain(FuelTaxRuleEntity entity) {
-        return new FuelTaxRule(
+    public TaxRule toDomain(TaxRuleEntity entity) {
+        return new TaxRule(
                 entity.getTaxRuleId(),
                 CountryCode.fromId(entity.getCountryId()),
                 FuelGrade.fromId(entity.getFuelGradeId()),

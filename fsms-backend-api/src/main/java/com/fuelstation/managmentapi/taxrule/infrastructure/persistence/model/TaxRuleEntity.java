@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model;
+package com.fuelstation.managmentapi.taxrule.infrastructure.persistence.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class FuelTaxRuleEntity {
+public class TaxRuleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,18 +1,18 @@
-package com.fuelstation.managmentapi.fuelprice.application.query.model;
+package com.fuelstation.managmentapi.taxrule.application.rest.response;
 
-import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
-import com.fuelstation.managmentapi.fuelprice.domain.FuelTaxRule;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxType;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxUnit;
-import com.fuelstation.managmentapi.fuelprice.domain.TaxValueType;
+import com.fuelstation.managmentapi.taxrule.domain.TaxRule;
+import com.fuelstation.managmentapi.taxrule.domain.TaxType;
+import com.fuelstation.managmentapi.taxrule.domain.TaxUnit;
+import com.fuelstation.managmentapi.taxrule.domain.TaxValueType;
 import org.jspecify.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-public record FuelTaxRuleResponse(
+public record TaxRuleResponse(
     Long taxRuleId,
     CountryCode countryCode,
     FuelGrade fuelGrade,
@@ -27,8 +27,8 @@ public record FuelTaxRuleResponse(
     OffsetDateTime effectiveFrom,
     @Nullable OffsetDateTime effectiveTo
 ) {
-    public static FuelTaxRuleResponse from(FuelTaxRule domain) {
-        return new FuelTaxRuleResponse(
+    public static TaxRuleResponse fromDomain(TaxRule domain) {
+        return new TaxRuleResponse(
             domain.taxRuleId(),
             domain.countryCode(),
             domain.fuelGrade(),

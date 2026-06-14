@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelprice.domain;
+package com.fuelstation.managmentapi.taxrule.domain;
 
 public enum TaxType {
     EXCISE,

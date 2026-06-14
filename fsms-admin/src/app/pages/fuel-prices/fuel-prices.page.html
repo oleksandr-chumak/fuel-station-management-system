@@ -59,4 +59,57 @@
             <div echarts [options]="chartOptions()" style="height: 350px;"></div>
         }
     </p-panel>
+
+    @if (showTaxRulesPanel()) {
+        <p-panel header="Effective Tax Rules">
+            <p-table
+                [value]="displayedTaxRules()"
+                [loading]="loadingTaxRules()"
+                [showLoader]="false"
+                size="small"
+                [tableStyle]="{ 'min-width': '50rem' }"
+            >
+                <ng-template #header>
+                    <tr>
+                        <th>Fuel Grade</th>
+                        <th>Type</th>
+                        <th>Name</th>
+                        <th>Amount</th>
+                        <th>Effective From</th>
+                        <th>Effective To</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template #body let-rule>
+                    <tr>
+                        <td>{{ formatGrade(rule.fuelGrade) }}</td>
+                        <td>{{ formatTaxType(rule.taxType) }}</td>
+                        <td>
+                            <div>{{ rule.nameEnglish }}</div>
+                            <div class="text-xs text-color-secondary">{{ rule.nameLocal }}</div>
+                        </td>
+                        <td>{{ formatTaxAmount(rule) }}</td>
+                        <td>{{ formatDate(rule.effectiveFrom) }}</td>
+                        <td>{{ rule.effectiveTo ? formatDate(rule.effectiveTo) : '—' }}</td>
+                    </tr>
+                </ng-template>
+
+                <ng-template #loadingbody>
+                    @for (row of skeletonRows; track $index) {
+                        <tr style="height: 46px">
+                            @for (col of taxRuleSkeletonCols; track $index) {
+                                <td><p-skeleton /></td>
+                            }
+                        </tr>
+                    }
+                </ng-template>
+
+                <ng-template #emptymessage>
+                    <tr>
+                        <td colspan="6" class="text-center py-4">No tax rules available.</td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </p-panel>
+    }
 </div>
