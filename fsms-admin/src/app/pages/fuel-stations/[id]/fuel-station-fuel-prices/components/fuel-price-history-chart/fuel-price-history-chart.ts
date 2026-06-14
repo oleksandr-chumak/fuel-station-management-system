@@ -14,7 +14,7 @@ import { GetFuelPriceHistoryHandler } from '../../../../../../modules/fuel-stati
 
 @Component({
     selector: 'app-fuel-price-history-chart',
-    imports: [CommonModule, FormsModule, PanelModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective],
+    imports: [CommonModule, PanelModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective],
     templateUrl: './fuel-price-history-chart.html',
 })
 export class FuelPriceHistoryChart {
@@ -27,16 +27,9 @@ export class FuelPriceHistoryChart {
 
     protected readonly priceHistory = signal<FuelStationFuelPriceHistoryEntry[]>([]);
     protected readonly loadingHistory = toSignal(this.historyHandler.loading$, { initialValue: false });
-    protected selectedGrades = signal<string[]>(['ron-92', 'ron-95', 'diesel']);
-
-    protected readonly gradeOptions = [
-        { label: 'RON 92', value: 'ron-92' },
-        { label: 'RON 95', value: 'ron-95' },
-        { label: 'Diesel', value: 'diesel' },
-    ];
-
+    
     protected readonly chartOptions = computed<EChartsCoreOption>(() =>
-        this.buildChart(this.priceHistory(), this.selectedGrades())
+        this.buildChart(this.priceHistory())
     );
 
     constructor() {
@@ -54,7 +47,7 @@ export class FuelPriceHistoryChart {
         });
     }
 
-    private buildChart(history: FuelStationFuelPriceHistoryEntry[], selectedGrades: string[]): EChartsCoreOption {
+    private buildChart(history: FuelStationFuelPriceHistoryEntry[]): EChartsCoreOption {
         const timeZone = this.timeZoneForCountry(this.countryCode());
         const currency = history[0]?.currency ?? '';
         const money = new MoneyPipe();
@@ -64,7 +57,7 @@ export class FuelPriceHistoryChart {
             { key: 'ron-92', label: 'RON 92', color: '#3B82F6' },
             { key: 'ron-95', label: 'RON 95', color: '#10B981' },
             { key: 'diesel', label: 'Diesel', color: '#F59E0B' },
-        ].filter(g => selectedGrades.includes(g.key));
+        ].filter((grade) => history.some((h) => h.fuelGrade === grade.key));
 
         const seriesData = new Map<string, [number, number][]>();
         for (const entry of history) {
@@ -118,7 +111,7 @@ export class FuelPriceHistoryChart {
                     return header + lines.join('<br/>');
                 },
             },
-            legend: { show: false },
+            legend: { show: true },
             grid: { left: 12, right: 24, top: 28, bottom: 12, containLabel: true },
             xAxis: {
                 type: 'time',

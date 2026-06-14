@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelprice.infrastructure.oilprice;
 
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.common.domain.FuelUnit;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model.FuelPriceEntity;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.jpa.JpaFuelPriceRepository;
@@ -27,7 +27,7 @@ import java.util.Map;
 @AllArgsConstructor
 public class OilPriceFetcher {
 
-    private static final int REFRESH_INTERVAL_HOURS = 6;
+    private static final int REFRESH_INTERVAL_HOURS = 2;
 
     private final JpaFuelPriceRepository jpaFuelPriceRepository;
     private final OilPriceClient oilPriceClient;

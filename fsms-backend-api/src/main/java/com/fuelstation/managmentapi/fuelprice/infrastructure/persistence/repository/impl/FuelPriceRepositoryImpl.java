@@ -22,7 +22,27 @@ public class FuelPriceRepositoryImpl implements FuelPriceRepository {
     }
 
     @Override
+    public List<FuelPrice> findByFuelGrades(List<Long> fuelGradeIds) {
+        if (fuelGradeIds.isEmpty()) {
+            return List.of();
+        }
+        return jpaFuelPriceRepository.findByFuelGradeIds(fuelGradeIds).stream()
+                .map(fuelPriceMapper::toDomain)
+                .toList();
+    }
+
+    @Override
     public List<FuelPrice> findLatest() {
         return jpaFuelPriceRepository.findLatest().stream().map(fuelPriceMapper::toDomain).toList();
+    }
+
+    @Override
+    public List<FuelPrice> findLatestByFuelGrades(List<Long> fuelGradeIds) {
+        if (fuelGradeIds.isEmpty()) {
+            return List.of();
+        }
+        return jpaFuelPriceRepository.findLatestByFuelGradeIds(fuelGradeIds).stream()
+                .map(fuelPriceMapper::toDomain)
+                .toList();
     }
 }

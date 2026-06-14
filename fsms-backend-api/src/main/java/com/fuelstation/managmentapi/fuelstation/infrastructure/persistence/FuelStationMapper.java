@@ -4,8 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.models.*;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelPriceEmbeddable;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationAddressEmbeddable;
@@ -23,7 +24,7 @@ public class FuelStationMapper {
                 addressEmbeddable.getBuildingNumber(),
                 addressEmbeddable.getCity(),
                 addressEmbeddable.getPostalCode(),
-                addressEmbeddable.getCountry()
+                CountryCode.fromId(addressEmbeddable.getCountryId())
         );
 
         List<FuelTank> fuelTanks = entity.getFuelTanks().stream()
@@ -67,7 +68,7 @@ public class FuelStationMapper {
                 address.buildingNumber(),
                 address.city(),
                 address.postalCode(),
-                address.country()
+                address.country().getId()
         );
 
         FuelStationEntity entity = new FuelStationEntity();

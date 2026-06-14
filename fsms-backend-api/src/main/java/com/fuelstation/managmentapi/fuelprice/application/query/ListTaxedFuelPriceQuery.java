@@ -1,7 +1,9 @@
 package com.fuelstation.managmentapi.fuelprice.application.query;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.infrastructure.persistence.repository.FuelGradeRepository;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.FuelPriceResponse;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.FuelTaxRuleResponse;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.TaxedFuelPriceResponse;
@@ -25,6 +27,7 @@ public class ListTaxedFuelPriceQuery {
 
     private final FuelPriceRepository fuelPriceRepository;
     private final FuelTaxRuleRepository fuelTaxRuleRepository;
+    private final FuelGradeRepository fuelGradeRepository;
 
     private final ExchangeRateClient exchangeRateClient;
 
@@ -32,7 +35,10 @@ public class ListTaxedFuelPriceQuery {
         var taxedFuelPrices = new ArrayList<TaxedFuelPriceResponse>();
         var currencyCode = CurrencyCode.fromCountryCode(countryCode);
 
-        var fuelPrices = latest ? fuelPriceRepository.findLatest() : fuelPriceRepository.findAll();
+        var availableGrades = fuelGradeRepository.findAvailableByCountry(countryCode);
+        var fuelPrices = latest ?
+            fuelPriceRepository.findLatestByFuelGrades(availableGrades.stream().map(FuelGrade::getId).toList()) :
+            fuelPriceRepository.findByFuelGrades(availableGrades.stream().map(FuelGrade::getId).toList());
         var fuelTaxRules = fuelTaxRuleRepository.findEffectiveByCountyCode(countryCode);
 
         for (var fuelPrice : fuelPrices) {

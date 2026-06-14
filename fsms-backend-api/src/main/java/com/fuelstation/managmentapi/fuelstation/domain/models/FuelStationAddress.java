@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.domain.models;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 
 public record FuelStationAddress(
     String street,

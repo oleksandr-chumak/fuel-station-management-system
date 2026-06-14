@@ -3,7 +3,7 @@ package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repo
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.ActorType;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.*;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationEventEntity;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationEventRepository;

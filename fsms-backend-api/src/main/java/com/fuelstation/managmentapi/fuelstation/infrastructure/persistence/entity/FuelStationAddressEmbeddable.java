@@ -2,13 +2,9 @@ package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.enti
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import com.fuelstation.managmentapi.common.domain.CountryCode;
 
 @Embeddable
 @Data
@@ -27,7 +23,6 @@ public class FuelStationAddressEmbeddable {
     @Column(name = "postal_code", nullable = false)
     private String postalCode;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "country", nullable = false)
-    private CountryCode country;
+    @Column(name = "country_id", nullable = false)
+    private Long countryId;
 }

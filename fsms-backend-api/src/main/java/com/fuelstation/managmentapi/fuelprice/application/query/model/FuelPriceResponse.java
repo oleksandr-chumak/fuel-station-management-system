@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelprice.application.query.model;
 
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.common.domain.FuelUnit;
 import com.fuelstation.managmentapi.fuelprice.domain.FuelPrice;
 

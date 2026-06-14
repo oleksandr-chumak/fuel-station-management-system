@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest.requests;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

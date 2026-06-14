@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.application.command;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
 import java.math.BigDecimal;
 import java.util.List;

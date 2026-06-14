@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelpurchase.infrastructure.persistence.mapper;
 
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelpurchase.domain.FuelPurchase;
 import com.fuelstation.managmentapi.fuelpurchase.infrastructure.persistence.model.FuelPurchaseEntity;
 import org.springframework.stereotype.Component;

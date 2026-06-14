@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelprice.application.rest;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelprice.application.query.ListFuelPricesQuery;
 import com.fuelstation.managmentapi.fuelprice.application.query.ListTaxedFuelPriceQuery;
 import com.fuelstation.managmentapi.fuelprice.application.query.model.FuelPriceResponse;

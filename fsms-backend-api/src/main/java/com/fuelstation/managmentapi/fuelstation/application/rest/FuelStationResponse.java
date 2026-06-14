@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 

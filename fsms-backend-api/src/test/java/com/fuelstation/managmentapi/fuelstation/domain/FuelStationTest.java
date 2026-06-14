@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationFuelPrice;

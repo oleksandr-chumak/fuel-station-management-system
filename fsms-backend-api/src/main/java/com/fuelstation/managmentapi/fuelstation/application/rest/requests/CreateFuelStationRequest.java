@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest.requests;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

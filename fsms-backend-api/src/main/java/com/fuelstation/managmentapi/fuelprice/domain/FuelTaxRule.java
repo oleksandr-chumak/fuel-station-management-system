@@ -1,8 +1,8 @@
 package com.fuelstation.managmentapi.fuelprice.domain;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import org.jspecify.annotations.Nullable;
 
 import java.math.BigDecimal;

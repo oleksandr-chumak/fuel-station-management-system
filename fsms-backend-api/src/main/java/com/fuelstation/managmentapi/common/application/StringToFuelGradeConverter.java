@@ -3,7 +3,7 @@ package com.fuelstation.managmentapi.common.application;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
 @Component
 public class StringToFuelGradeConverter implements Converter<String, FuelGrade> {

@@ -26,8 +26,10 @@ CREATE TABLE fuel_tax_rules
             (value_type = 'PERCENTAGE' AND currency IS NULL AND unit IS NULL)
             )
 );
-CREATE INDEX ON fuel_tax_rules (country_code, fuel_grade_id, tax_type, effective_from);
-CREATE INDEX ON fuel_tax_rules (effective_from, effective_to);
+CREATE INDEX idx_fuel_tax_rules_country_grade_type_eff
+    ON fuel_tax_rules (country_code, fuel_grade_id, tax_type, effective_from);
+CREATE INDEX idx_fuel_tax_rules_eff_period
+    ON fuel_tax_rules (effective_from, effective_to);
 
 -- ============================================================================
 -- GERMANY (DE)

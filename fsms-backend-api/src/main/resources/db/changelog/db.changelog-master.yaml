@@ -27,3 +27,7 @@ databaseChangeLog:
       file: db/changelog/changes/0013-create-fuel-purchases-table.sql
   - include:
       file: db/changelog/changes/0014-create-fuel-station-fuel-price-history-table.sql
+  - include:
+      file: db/changelog/changes/0015-create-countries-table.sql
+  - include:
+      file: db/changelog/changes/0016-create-available-fuel-grades-table.sql

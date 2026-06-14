@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderProcessed;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderRejected;

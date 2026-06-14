@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
@@ -108,5 +108,21 @@ public class FuelStation extends AggregateRoot {
         for (long credentialsId : cloneAssignedManagersIds) {
             unassignManager(credentialsId, performedBy);
         }
+    }
+
+    public static FuelStation create(
+        FuelStationAddress address,
+        List<FuelTank> fuelTanks,
+        List<FuelStationFuelPrice> fuelPrices
+    ) {
+        return new FuelStation(
+            null,
+            address,
+            fuelTanks,
+            fuelPrices,
+            new ArrayList<>(),
+            FuelStationStatus.ACTIVE,
+            OffsetDateTime.now()
+        );
     }
 }

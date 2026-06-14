@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.common.domain;
+package com.fuelstation.managmentapi.fuelgrade.domain;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;

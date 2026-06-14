@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelorder.domain;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
 import java.math.BigDecimal;
 

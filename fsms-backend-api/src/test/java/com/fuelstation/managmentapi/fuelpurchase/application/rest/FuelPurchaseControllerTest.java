@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelpurchase.application.rest;
 
 import com.fuelstation.managmentapi.common.WithMockCustomUser;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.CreateFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderTestClient;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationTestClient;

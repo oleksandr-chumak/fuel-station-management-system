@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.fuelstation.managmentapi.common.WithMockCustomUser;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderStatus;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationTestClient;

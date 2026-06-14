@@ -1,6 +1,6 @@
 package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.impl;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.fuelprice.domain.FuelTaxRule;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.mapper.FuelTaxRuleMapper;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.FuelTaxRuleRepository;
@@ -20,7 +20,7 @@ public class FuelTaxRuleRepositoryImpl implements FuelTaxRuleRepository {
     @Override
     public List<FuelTaxRule> findEffectiveByCountyCode(CountryCode countryCode) {
         return jpaFuelTaxRuleRepository
-            .findEffectiveByCountryCode(countryCode.name())
+            .findEffectiveByCountryId(countryCode.getId())
             .stream()
             .map(fuelTaxRuleMapper::toDomain)
             .toList();

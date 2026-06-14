@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.application.rest.response;
 
 import com.fuelstation.managmentapi.authentication.application.UserResponse;
 import com.fuelstation.managmentapi.common.application.DomainEventResponse;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationEventType;
 import lombok.Getter;
 

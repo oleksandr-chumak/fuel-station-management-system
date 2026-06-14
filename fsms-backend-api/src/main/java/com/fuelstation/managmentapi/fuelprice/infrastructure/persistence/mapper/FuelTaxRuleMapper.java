@@ -1,8 +1,8 @@
 package com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.mapper;
 
-import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.country.domain.CountryCode;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelprice.domain.FuelTaxRule;
 import com.fuelstation.managmentapi.fuelprice.domain.TaxType;
 import com.fuelstation.managmentapi.fuelprice.domain.TaxUnit;
@@ -16,7 +16,7 @@ public class FuelTaxRuleMapper {
     public FuelTaxRule toDomain(FuelTaxRuleEntity entity) {
         return new FuelTaxRule(
                 entity.getTaxRuleId(),
-                CountryCode.valueOf(entity.getCountryCode()),
+                CountryCode.fromId(entity.getCountryId()),
                 FuelGrade.fromId(entity.getFuelGradeId()),
                 TaxType.valueOf(entity.getTaxType()),
                 entity.getNameLocal(),

@@ -1,5 +1,7 @@
 package com.fuelstation.managmentapi.common.domain;
 
+import com.fuelstation.managmentapi.country.domain.CountryCode;
+
 import java.util.Arrays;
 import java.util.Map;
 

@@ -2,7 +2,7 @@ package com.fuelstation.managmentapi.fuelstation.domain.events;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import lombok.Getter;
 
 import java.math.BigDecimal;

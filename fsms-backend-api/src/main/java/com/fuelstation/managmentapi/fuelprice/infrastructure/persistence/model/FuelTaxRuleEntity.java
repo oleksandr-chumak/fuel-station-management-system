@@ -19,8 +19,8 @@ public class FuelTaxRuleEntity {
     @Column(name = "tax_rule_id")
     private Long taxRuleId;
 
-    @Column(name = "country_code", nullable = false, length = 2)
-    private String countryCode;
+    @Column(name = "country_id", nullable = false)
+    private Long countryId;
 
     @Column(name = "fuel_grade_id", nullable = false)
     private Long fuelGradeId;

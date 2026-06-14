@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.domain.models;
 
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
 import java.math.BigDecimal;
 

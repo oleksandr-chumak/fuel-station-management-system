@@ -8,6 +8,10 @@ public interface FuelPriceRepository {
 
     List<FuelPrice> findAll();
 
+    List<FuelPrice> findByFuelGrades(List<Long> fuelGradeIds);
+
     List<FuelPrice> findLatest();
+
+    List<FuelPrice> findLatestByFuelGrades(List<Long> fuelGradeIds);
 
 }

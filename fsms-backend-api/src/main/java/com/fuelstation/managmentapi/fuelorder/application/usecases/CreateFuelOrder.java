@@ -6,7 +6,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderFactory;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderCreated;

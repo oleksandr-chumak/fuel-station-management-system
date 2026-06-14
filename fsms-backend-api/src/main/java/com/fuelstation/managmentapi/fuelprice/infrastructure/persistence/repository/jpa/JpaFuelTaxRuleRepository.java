@@ -11,9 +11,9 @@ public interface JpaFuelTaxRuleRepository extends JpaRepository<FuelTaxRuleEntit
 
     @Query("""
         SELECT r FROM FuelTaxRuleEntity r
-        WHERE r.countryCode = :countryCode
+        WHERE r.countryId = :countryId
         AND r.effectiveFrom <= CURRENT_TIMESTAMP
         AND (r.effectiveTo IS NULL OR r.effectiveTo >= CURRENT_TIMESTAMP)
         """)
-    List<FuelTaxRuleEntity> findEffectiveByCountryCode(@Param("countryCode") String countryCode);
+    List<FuelTaxRuleEntity> findEffectiveByCountryId(@Param("countryId") Long countryId);
 }

@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 
 import org.springframework.stereotype.Component;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
 @Component
 public class DomainFuelOrderFactory implements FuelOrderFactory {
