@@ -6,6 +6,7 @@ import com.fuelstation.managmentapi.common.domain.FuelUnit;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.model.FuelPriceEntity;
 import com.fuelstation.managmentapi.fuelprice.infrastructure.persistence.repository.jpa.JpaFuelPriceRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,7 +18,10 @@ import java.math.RoundingMode;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Component
 @EnableScheduling
 @AllArgsConstructor
@@ -39,32 +43,48 @@ public class OilPriceFetcher {
         var fuelPrices = jpaFuelPriceRepository.findLatest();
 
         for (var fuelGrade : FuelGrade.values()) {
-            var latestFuelPrice = fuelPrices.stream()
-                .filter((fp) -> fp.getFuelGradeId().equals(fuelGrade.getId()))
-                .findFirst();
-
-            var hasRefreshIntervalPassed = latestFuelPrice
-                .map(fp -> fp.getFetchedAt().isBefore(OffsetDateTime.now(ZoneOffset.UTC).minusHours(REFRESH_INTERVAL_HOURS)))
-                .orElse(true);
-            if(!hasRefreshIntervalPassed) {
-                continue;
+            try {
+                updateFuelGrade(fuelGrade, fuelPrices, apiCache);
+            } catch (IllegalStateException ex) {
+                log.warn("Skipped fuel grade {}: {}", fuelGrade, ex.getMessage());
+            } catch (Exception ex) {
+                log.error("Unexpected error while updating fuel grade {}", fuelGrade, ex);
             }
+        }
+    }
 
-            var benchmark = apiCache.computeIfAbsent(fuelGradeToCode(fuelGrade), oilPriceClient::getBenchmark);
-            var fuelUnit = FuelUnit.fromString(benchmark.getData().getUnit());
-            var normalizedPrice = normalizePrice(fuelUnit, benchmark.getData().getPrice());
-            var newFuelPrice = FuelPriceEntity.builder()
-                .fuelGradeId(fuelGrade.getId())
-                .unit(FuelUnit.LITER)
-                .price(getPriceWithSpread(fuelGrade, normalizedPrice))
-                .currencyCode(CurrencyCode.fromString(benchmark.getData().getCurrency()))
-                .source("OilPriceApi")
-                .fetchedAt(OffsetDateTime.now(ZoneOffset.UTC))
-                .build();
+    private void updateFuelGrade(
+        FuelGrade fuelGrade,
+        List<FuelPriceEntity> fuelPrices,
+        Map<OilPriceCommodity, OilPriceResponse<OilPriceBenchmark>> apiCache
+    ) {
+        var latestFuelPrice = fuelPrices.stream()
+            .filter(fp -> fp.getFuelGradeId().equals(fuelGrade.getId()))
+            .findFirst();
 
-            jpaFuelPriceRepository.save(newFuelPrice);
+        var hasRefreshIntervalPassed = latestFuelPrice
+            .map(fp -> fp.getFetchedAt()
+                .isBefore(OffsetDateTime.now(ZoneOffset.UTC).minusHours(REFRESH_INTERVAL_HOURS)))
+            .orElse(true);
+        if (!hasRefreshIntervalPassed) {
+            return;
         }
 
+        var benchmark = apiCache.computeIfAbsent(fuelGradeToCode(fuelGrade), oilPriceClient::getBenchmark);
+        var fuelUnit = FuelUnit.fromString(benchmark.getData().getUnit());
+        var normalizedPrice = normalizePrice(fuelUnit, benchmark.getData().getPrice());
+        var newFuelPrice = FuelPriceEntity.builder()
+            .fuelGradeId(fuelGrade.getId())
+            .unit(FuelUnit.LITER)
+            .price(getPriceWithSpread(fuelGrade, normalizedPrice))
+            .currencyCode(CurrencyCode.fromString(benchmark.getData().getCurrency()))
+            .source("OilPriceApi")
+            .fetchedAt(OffsetDateTime.now(ZoneOffset.UTC))
+            .build();
+
+        jpaFuelPriceRepository.save(newFuelPrice);
+
+        log.info("Fetched new fuel price from OilPriceApi for {}", fuelGrade.name());
     }
 
     private BigDecimal normalizePrice(FuelUnit fuelUnit, BigDecimal price) {

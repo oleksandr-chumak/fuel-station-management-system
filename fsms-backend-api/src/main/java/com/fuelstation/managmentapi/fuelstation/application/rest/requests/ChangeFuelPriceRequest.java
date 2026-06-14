@@ -1,7 +1,5 @@
 package com.fuelstation.managmentapi.fuelstation.application.rest.requests;
 
-import com.fuelstation.managmentapi.common.domain.FuelGrade;
-
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -15,9 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class ChangeFuelPriceRequest {
 
-    @NotNull(message =  "Fuel grade must not be null")
-    private FuelGrade fuelGrade;
-
+    @NotNull(message = "New price must not be null")
     @Positive(message = "New price must be a positive number")
     private BigDecimal newPrice;
 

@@ -1,0 +1,46 @@
+<p-panel>
+    <ng-template #header>
+        <div class="flex items-start justify-between w-full gap-4">
+            <div class="flex flex-col gap-1">
+                <span class="font-semibold text-base">Recommended Prices for {{ countryCode() }}</span>
+                <span class="text-sm text-muted-color font-normal">
+                    Based on the latest market price(including taxes), plus a 10% operating margin.
+                    Formula: <strong>market price × 1.10 = recommended</strong>
+                </span>
+            </div>
+            <button
+                pButton pRipple
+                type="button"
+                label="Set recommended prices"
+                [disabled]="recommendedRows().length === 0 || loadingRecommended()"
+                [loading]="applyingRecommended()"
+                (click)="onApplyRecommendedPrices()">
+            </button>
+        </div>
+    </ng-template>
+
+    @if (loadingRecommended()) {
+        <p-skeleton height="120px" />
+    } @else if (recommendedRows().length === 0) {
+        <p class="text-center py-4 text-muted-color">No market price data available for {{ countryCode() }}.</p>
+    } @else {
+        <p-table [value]="recommendedRows()" size="small" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template #header>
+                <tr>
+                    <th>Fuel Grade</th>
+                    <th>Market Price</th>
+                    <th>Margin</th>
+                    <th>Recommended Price</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-row>
+                <tr>
+                    <td>{{ formatGrade(row.fuelGrade) }}</td>
+                    <td>{{ row.marketPrice | money: row.currency }}</td>
+                    <td class="text-green-500">+10%</td>
+                    <td><strong>{{ row.recommendedPrice | money: row.currency }}</strong></td>
+                </tr>
+            </ng-template>
+        </p-table>
+    }
+</p-panel>

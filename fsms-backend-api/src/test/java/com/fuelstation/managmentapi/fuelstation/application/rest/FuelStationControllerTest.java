@@ -9,8 +9,9 @@ import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.CreateFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderTestClient;
-import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPricesBulkRequest;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerTestClient;
@@ -218,7 +219,7 @@ public class FuelStationControllerTest {
 
 
     @Nested
-    class ChangeFuelPriceTests {
+    class UpdateFuelPriceTests {
 
         private FuelStationResponse testFuelStation;
 
@@ -229,28 +230,135 @@ public class FuelStationControllerTest {
 
         @Test
         @WithMockCustomUser
-        @DisplayName("Should change fuel price")
-        public void shouldChangeFuelPrice() throws Exception {
-            ChangeFuelPriceRequest changeFuelPriceRequest = new ChangeFuelPriceRequest(FuelGrade.RON_92, BigDecimal.valueOf(10));
-            FuelStationResponse fuelStationResponse = fuelStationTestClient.changeFuelPriceAndReturnResponse(testFuelStation.getFuelStationId(), changeFuelPriceRequest);
+        @DisplayName("Should update fuel price for a single grade")
+        public void shouldUpdateFuelPrice() throws Exception {
+            ChangeFuelPriceRequest request = new ChangeFuelPriceRequest(BigDecimal.valueOf(10));
+            FuelStationResponse fuelStationResponse = fuelStationTestClient.updateFuelPriceAndReturnResponse(
+                    testFuelStation.getFuelStationId(), FuelGrade.RON_92, request);
 
             Optional<FuelStationResponse.FuelPriceResponse> updatedFuelPrice = fuelStationResponse.getFuelPrices()
                     .stream()
                     .filter(fuelPriceResponse -> fuelPriceResponse.fuelGrade().equals(FuelGrade.RON_92.toString()))
                     .findFirst();
 
-            if (updatedFuelPrice.isPresent()) {
-                assertThat(updatedFuelPrice.get().pricePerLiter()).isEqualTo(BigDecimal.valueOf(10));
-            } else {
-                assertThat(updatedFuelPrice).isNotNull();
-            }
+            assertThat(updatedFuelPrice).isPresent();
+            assertThat(updatedFuelPrice.get().pricePerLiter()).isEqualTo(BigDecimal.valueOf(10));
         }
 
         @Test
         @WithMockCustomUser
         @DisplayName("Should return Not Found when the fuel station does not exist")
         public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
-            fuelStationTestClient.changeFuelPrice(99999L, new ChangeFuelPriceRequest(FuelGrade.RON_92, BigDecimal.valueOf(10))).andExpect(status().isNotFound());
+            fuelStationTestClient.updateFuelPrice(99999L, FuelGrade.RON_92, new ChangeFuelPriceRequest(BigDecimal.valueOf(10)))
+                    .andExpect(status().isNotFound());
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Bad Request when the fuel grade in the path is unknown")
+        public void shouldReturnBadRequestWhenFuelGradeUnknown() throws Exception {
+            fuelStationTestClient.updateFuelPriceRaw(testFuelStation.getFuelStationId(), "unknown-grade",
+                    new ChangeFuelPriceRequest(BigDecimal.valueOf(10)))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @ParameterizedTest
+        @MethodSource("invalidUpdateFuelPriceRequests")
+        @WithMockCustomUser
+        @DisplayName("Should return Bad Request for invalid requests")
+        public void shouldReturnBadRequestForInvalidRequests(ChangeFuelPriceRequest request) throws Exception {
+            fuelStationTestClient.updateFuelPrice(testFuelStation.getFuelStationId(), FuelGrade.RON_92, request)
+                    .andExpect(status().isBadRequest());
+        }
+
+        private static Stream<Arguments> invalidUpdateFuelPriceRequests() {
+            return Stream.of(
+                    Arguments.of(new ChangeFuelPriceRequest(null), "null price"),
+                    Arguments.of(new ChangeFuelPriceRequest(BigDecimal.ZERO), "zero price"),
+                    Arguments.of(new ChangeFuelPriceRequest(BigDecimal.valueOf(-1)), "negative price")
+            );
+        }
+
+    }
+
+    @Nested
+    class UpdateFuelPricesTests {
+
+        private FuelStationResponse testFuelStation;
+
+        @BeforeEach
+        public void setup() throws Exception {
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should bulk update fuel prices for all grades")
+        public void shouldBulkUpdateFuelPrices() throws Exception {
+            ChangeFuelPricesBulkRequest request = new ChangeFuelPricesBulkRequest(List.of(
+                    new ChangeFuelPricesBulkRequest.FuelPriceUpdate(FuelGrade.RON_92, BigDecimal.valueOf(11)),
+                    new ChangeFuelPricesBulkRequest.FuelPriceUpdate(FuelGrade.RON_95, BigDecimal.valueOf(12)),
+                    new ChangeFuelPricesBulkRequest.FuelPriceUpdate(FuelGrade.DIESEL, BigDecimal.valueOf(13))
+            ));
+            FuelStationResponse fuelStationResponse = fuelStationTestClient.updateFuelPricesAndReturnResponse(
+                    testFuelStation.getFuelStationId(), request);
+
+            assertThat(priceFor(fuelStationResponse, FuelGrade.RON_92)).isEqualTo(BigDecimal.valueOf(11));
+            assertThat(priceFor(fuelStationResponse, FuelGrade.RON_95)).isEqualTo(BigDecimal.valueOf(12));
+            assertThat(priceFor(fuelStationResponse, FuelGrade.DIESEL)).isEqualTo(BigDecimal.valueOf(13));
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should bulk update only a subset of fuel grades")
+        public void shouldBulkUpdateSubset() throws Exception {
+            BigDecimal originalRon95 = priceFor(testFuelStation, FuelGrade.RON_95);
+            ChangeFuelPricesBulkRequest request = new ChangeFuelPricesBulkRequest(List.of(
+                    new ChangeFuelPricesBulkRequest.FuelPriceUpdate(FuelGrade.RON_92, BigDecimal.valueOf(7))
+            ));
+            FuelStationResponse fuelStationResponse = fuelStationTestClient.updateFuelPricesAndReturnResponse(
+                    testFuelStation.getFuelStationId(), request);
+
+            assertThat(priceFor(fuelStationResponse, FuelGrade.RON_92)).isEqualTo(BigDecimal.valueOf(7));
+            assertThat(priceFor(fuelStationResponse, FuelGrade.RON_95)).isEqualTo(originalRon95);
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Not Found when the fuel station does not exist")
+        public void shouldReturnNotFoundWhenFuelStationDoesNotExist() throws Exception {
+            ChangeFuelPricesBulkRequest request = new ChangeFuelPricesBulkRequest(List.of(
+                    new ChangeFuelPricesBulkRequest.FuelPriceUpdate(FuelGrade.RON_92, BigDecimal.valueOf(10))
+            ));
+            fuelStationTestClient.updateFuelPrices(99999L, request).andExpect(status().isNotFound());
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Bad Request when prices list is empty")
+        public void shouldReturnBadRequestWhenPricesEmpty() throws Exception {
+            fuelStationTestClient.updateFuelPrices(testFuelStation.getFuelStationId(),
+                    new ChangeFuelPricesBulkRequest(List.of()))
+                    .andExpect(status().isBadRequest());
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Bad Request when an item has a non-positive price")
+        public void shouldReturnBadRequestWhenItemPriceInvalid() throws Exception {
+            ChangeFuelPricesBulkRequest request = new ChangeFuelPricesBulkRequest(List.of(
+                    new ChangeFuelPricesBulkRequest.FuelPriceUpdate(FuelGrade.RON_92, BigDecimal.valueOf(-5))
+            ));
+            fuelStationTestClient.updateFuelPrices(testFuelStation.getFuelStationId(), request)
+                    .andExpect(status().isBadRequest());
+        }
+
+        private static BigDecimal priceFor(FuelStationResponse response, FuelGrade grade) {
+            return response.getFuelPrices().stream()
+                    .filter(fp -> fp.fuelGrade().equals(grade.toString()))
+                    .findFirst()
+                    .map(FuelStationResponse.FuelPriceResponse::pricePerLiter)
+                    .orElseThrow();
         }
 
     }

@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.impl;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.common.domain.ActorType;
 import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.*;
@@ -60,7 +61,7 @@ public class FuelStationEventRepositoryImpl implements FuelStationEventRepositor
 
     private FuelStationEvent toFuelStationEvent(FuelStationEventEntity entity) {
         long fuelStationId = entity.getFuelStationId();
-        Actor performedBy = entity.getPerformedBy() == null ? Actor.system() : Actor.user(entity.getPerformedBy());
+        Actor performedBy = entity.getPerformedBy() == null ? Actor.system() : new Actor(entity.getPerformedBy(), ActorType.USER, null);
         Instant occurredAt = entity.getOccurredAt().toInstant();
         Map<String, Object> payload = entity.getPayload() != null ? entity.getPayload() : Map.of();
 

@@ -1,20 +1,18 @@
-package com.fuelstation.managmentapi.manager.application.usecases;
+package com.fuelstation.managmentapi.manager.application.query;
 
 import java.util.List;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.manager.domain.Manager;
 import com.fuelstation.managmentapi.manager.infrastructure.persistence.ManagerRepository;
 
 @Component
-public class GetAllManagers {
-    
-    private final ManagerRepository managerRepository;
+@RequiredArgsConstructor
+public class ListManagersQuery {
 
-    public GetAllManagers(ManagerRepository managerRepository) {
-        this.managerRepository = managerRepository;
-    }
+    private final ManagerRepository managerRepository;
 
     public List<Manager> process() {
         return managerRepository.findAll();

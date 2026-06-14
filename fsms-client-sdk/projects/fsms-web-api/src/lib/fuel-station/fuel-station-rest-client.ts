@@ -43,9 +43,15 @@ export class FuelStationRestClient {
     }
 
     changeFuelPrice(fuelStationId: number, fuelGrade: FuelGrade, newFuelPrice: number): Observable<FuelStation> {
-        // TODO: Change change-fuel-price to fuel-prices/:fuelGrade
-        return this.restClient.put(`api/fuel-stations/${fuelStationId}/change-fuel-price`, 
-            { fuelGrade: this.fuelGradeToSlug(fuelGrade), newPrice: newFuelPrice })
+        return this.restClient.put(`api/fuel-stations/${fuelStationId}/fuel-prices/${this.fuelGradeToSlug(fuelGrade)}`,
+            { newPrice: newFuelPrice })
+            .pipe(map(data => this.fuelStationMapper.fromJson(data)));
+    }
+
+    updateFuelPrices(fuelStationId: number, prices: { fuelGrade: FuelGrade, newPrice: number }[]): Observable<FuelStation> {
+        return this.restClient.put(`api/fuel-stations/${fuelStationId}/fuel-prices`, {
+            prices: prices.map(p => ({ fuelGrade: this.fuelGradeToSlug(p.fuelGrade), newPrice: p.newPrice })),
+        })
             .pipe(map(data => this.fuelStationMapper.fromJson(data)));
     }
 

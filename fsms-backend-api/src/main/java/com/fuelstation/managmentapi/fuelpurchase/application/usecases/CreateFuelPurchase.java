@@ -3,7 +3,7 @@ package com.fuelstation.managmentapi.fuelpurchase.application.usecases;
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.DomainEventPublisher;
 import com.fuelstation.managmentapi.common.domain.FuelUnit;
-import com.fuelstation.managmentapi.fuelorder.application.usecases.GetFuelOrderById;
+import com.fuelstation.managmentapi.fuelorder.application.query.GetFuelOrderByIdQuery;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationRepository;
 import com.fuelstation.managmentapi.fuelprice.application.query.ListTaxedFuelPriceQuery;
@@ -22,7 +22,7 @@ import java.time.OffsetDateTime;
 @AllArgsConstructor
 public class CreateFuelPurchase {
 
-    private final GetFuelOrderById getFuelOrderById;
+    private final GetFuelOrderByIdQuery getFuelOrderByIdQuery;
     private final FuelStationRepository fuelStationRepository;
     private final ListTaxedFuelPriceQuery listTaxedFuelPriceQuery;
     private final FuelPurchaseRepository fuelPurchaseRepository;
@@ -30,7 +30,7 @@ public class CreateFuelPurchase {
 
     @Transactional
     public FuelPurchase process(long fuelOrderId, long fuelStationId, Actor performedBy) {
-        FuelOrder order = getFuelOrderById.process(fuelOrderId);
+        FuelOrder order = getFuelOrderByIdQuery.process(fuelOrderId);
 
         var station = fuelStationRepository.findById(fuelStationId)
                 .orElseThrow(() -> new IllegalStateException("Fuel station not found: " + fuelStationId));

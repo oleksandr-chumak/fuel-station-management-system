@@ -57,8 +57,8 @@ public class SecurityConfig {
                         "/api/fuel-stations/{id}/deactivate",
                         "/api/fuel-stations/{id}/assign-manager",
                         "/api/fuel-stations/{id}/unassign-manager",
-                        "/api/fuel-stations/{id}/change-fuel-price",
-                        "/api/fuel-stations/{id}/unassign-manager",
+                        "/api/fuel-stations/{id}/fuel-prices",
+                        "/api/fuel-stations/{id}/fuel-prices/{fuelGrade}",
                         "/api/fuel-stations/{stationId}/fuel-purchases",
 
                         "/api/managers/",

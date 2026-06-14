@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.fuelstation.application.query.GetActiveFuelStationByIdQuery;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
@@ -11,7 +12,6 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderFactory;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderCreated;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 public class CreateFuelOrder {
     
     private final FuelOrderRepository fuelOrderRepository;
-    private final GetFuelStationById getFuelStationById;
+    private final GetActiveFuelStationByIdQuery getActiveFuelStationByIdQuery;
     private final FuelOrderFactory fuelOrderFactory;
     private final DomainEventPublisher domainEventPublisher;
 
@@ -31,7 +31,7 @@ public class CreateFuelOrder {
      */
     @Transactional
     public FuelOrder process(long fuelStationId, FuelGrade fuelGrade, BigDecimal amount, Actor performedBy) {
-        var fuelStation = getFuelStationById.process(fuelStationId, performedBy);
+        var fuelStation = getActiveFuelStationByIdQuery.process(fuelStationId, performedBy);
 
         var availableVolume = fuelStation.getAvailableVolume(fuelGrade);
         var pendingAmount = fuelOrderRepository.getUnconfirmedFuelAmount(fuelStationId, fuelGrade);

@@ -42,6 +42,11 @@ export interface ChangeFuelPrice {
     newPrice: number;
 }
 
+export interface UpdateFuelPrices {
+    fuelStationId: number;
+    prices: { fuelGrade: FuelGrade, newPrice: number }[];
+}
+
 export interface RejectFuelStationOrder {
     fuelOrderId: number;
 }

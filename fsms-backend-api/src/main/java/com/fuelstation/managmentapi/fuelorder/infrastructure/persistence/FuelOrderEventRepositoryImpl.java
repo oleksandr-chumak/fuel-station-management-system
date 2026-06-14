@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.common.domain.ActorType;
 import com.fuelstation.managmentapi.fuelorder.domain.events.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,7 +58,7 @@ public class FuelOrderEventRepositoryImpl implements FuelOrderEventRepository {
     private FuelOrderEvent toFuelOrderEvent(FuelOrderEventEntity entity) {
         long fuelOrderId = entity.getFuelOrderId();
         long fuelStationId = entity.getFuelStationId();
-        Actor performedBy = entity.getPerformedBy() == null ? Actor.system() : Actor.user(entity.getPerformedBy());
+        Actor performedBy = entity.getPerformedBy() == null ? Actor.system() : new Actor(entity.getPerformedBy(), ActorType.USER, null);
         Instant occurredAt = entity.getOccurredAt().toInstant();
 
         return switch (FuelOrderEventType.valueOf(entity.getEventType())) {

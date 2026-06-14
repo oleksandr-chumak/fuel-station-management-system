@@ -20,22 +20,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
+import com.fuelstation.managmentapi.fuelstation.application.command.ChangeFuelPriceCommand;
+import com.fuelstation.managmentapi.fuelstation.application.command.ChangeFuelPricesBulkCommand;
+import com.fuelstation.managmentapi.fuelstation.application.query.GetFuelStationByIdQuery;
+import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelPriceHistoryQuery;
+import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationEventsQuery;
+import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationManagersQuery;
+import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationOrdersQuery;
+import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationsQuery;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
-import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPricesBulkRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelPriceHistoryResponse;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPrice;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPricesBulk;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.DeactivateFuelStation;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetAllFuelStations;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelPriceHistory;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationById;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationManagers;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationEvents;
-import com.fuelstation.managmentapi.fuelstation.application.usecases.GetFuelStationOrders;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerFromFuelStation;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 
@@ -52,12 +57,14 @@ public class FuelStationController {
     private final AssignManagerToFuelStation assignManagerToFuelStation;
     private final UnassignManagerFromFuelStation unassignManagerFromFuelStation;
     private final ChangeFuelPrice changeFuelPrice;
-    private final GetFuelStationById getFuelStationById;
-    private final GetAllFuelStations getAllFuelStations;
-    private final GetFuelStationManagers getFuelStationManagers;
-    private final GetFuelStationOrders getFuelStationOrders;
-    private final GetFuelStationEvents getFuelStationEvents;
-    private final GetFuelPriceHistory getFuelPriceHistory;
+    private final ChangeFuelPricesBulk changeFuelPricesBulk;
+
+    private final GetFuelStationByIdQuery getFuelStationByIdQuery;
+    private final ListFuelStationsQuery listFuelStationsQuery;
+    private final ListFuelStationManagersQuery listFuelStationManagersQuery;
+    private final ListFuelStationOrdersQuery listFuelStationOrdersQuery;
+    private final ListFuelStationEventsQuery listFuelStationEventsQuery;
+    private final ListFuelPriceHistoryQuery listFuelPriceHistoryQuery;
 
     @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(
@@ -116,18 +123,32 @@ public class FuelStationController {
         return ResponseEntity.ok(ManagerResponse.fromDomain(manager));
     }
 
-    @PutMapping("/{id}/change-fuel-price")
-    public ResponseEntity<FuelStationResponse> changeFuelPrice(
+    @PutMapping("/{id}/fuel-prices/{fuelGrade}")
+    public ResponseEntity<FuelStationResponse> updateFuelPrice(
             @PathVariable("id") long fuelStationId,
+            @PathVariable("fuelGrade") FuelGrade fuelGrade,
             @RequestBody @Valid ChangeFuelPriceRequest request,
             @CurrentUser User user
     ) {
-        var fuelStation = changeFuelPrice.process(
-            fuelStationId,
-            request.getFuelGrade(),
-            request.getNewPrice(),
-            user.getActor()
-        );
+        var fuelStation = changeFuelPrice.process(new ChangeFuelPriceCommand(
+                fuelStationId,
+                fuelGrade,
+                request.getNewPrice(),
+                user.getActor()
+        ));
+        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+    }
+
+    @PutMapping("/{id}/fuel-prices")
+    public ResponseEntity<FuelStationResponse> updateFuelPrices(
+            @PathVariable("id") long fuelStationId,
+            @RequestBody @Valid ChangeFuelPricesBulkRequest request,
+            @CurrentUser User user
+    ) {
+        var updates = request.getPrices().stream()
+                .map(p -> new ChangeFuelPricesBulkCommand.FuelPriceChange(p.getFuelGrade(), p.getNewPrice()))
+                .toList();
+        var fuelStation = changeFuelPricesBulk.process(new ChangeFuelPricesBulkCommand(fuelStationId, updates, user.getActor()));
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
@@ -136,33 +157,33 @@ public class FuelStationController {
             @PathVariable("id") long fuelStationId,
             @CurrentUser User user
     ) {
-        var fuelStation = getFuelStationById.process(fuelStationId, user.getActor());
+        var fuelStation = getFuelStationByIdQuery.process(fuelStationId, user.getActor());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 
     @GetMapping("/")
     public ResponseEntity<List<FuelStationResponse>> getFuelStations() {
-        var fuelStations = getAllFuelStations.process();
+        var fuelStations = listFuelStationsQuery.process();
         var response = fuelStations.stream().map(FuelStationResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/{id}/managers")
     public ResponseEntity<List<ManagerResponse>> getAssignedManagers(
             @PathVariable("id") long fuelStationId,
             @CurrentUser User user
     ) {
-        var managers = getFuelStationManagers.process(fuelStationId, user);
+        var managers = listFuelStationManagersQuery.process(fuelStationId, user.getActor());
         var response = managers.stream().map(ManagerResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
-    
+
     @GetMapping("/{id}/fuel-orders")
     public ResponseEntity<List<FuelOrderResponse>> getFuelOrders(
             @PathVariable("id") long fuelStationId,
             @CurrentUser User user
     ) {
-        List<FuelOrder> orders = getFuelStationOrders.process(fuelStationId, user);
+        List<FuelOrder> orders = listFuelStationOrdersQuery.process(fuelStationId, user.getActor());
         List<FuelOrderResponse> response = orders.stream().map(FuelOrderResponse::fromDomain).toList();
         return ResponseEntity.ok(response);
     }
@@ -173,14 +194,14 @@ public class FuelStationController {
             @RequestParam(required = false) Instant occurredAfter,
             @RequestParam(defaultValue = "10") short limit
     ) {
-        return ResponseEntity.ok(getFuelStationEvents.process(fuelStationId, occurredAfter, limit));
+        return ResponseEntity.ok(listFuelStationEventsQuery.process(fuelStationId, occurredAfter, limit));
     }
 
     @GetMapping("/{id}/fuel-price-history")
     public ResponseEntity<List<FuelPriceHistoryResponse>> getFuelPriceHistory(
             @PathVariable("id") long fuelStationId
     ) {
-        return ResponseEntity.ok(getFuelPriceHistory.process(fuelStationId));
+        return ResponseEntity.ok(listFuelPriceHistoryQuery.process(fuelStationId));
     }
 
 }

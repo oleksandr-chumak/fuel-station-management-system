@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.manager.application.usecases;
+package com.fuelstation.managmentapi.manager.application.query;
 
 import lombok.AllArgsConstructor;
 
@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class GetManagerByCredentialsId {
-    
+public class GetManagerByIdQuery {
+
     private final ManagerRepository managerRepository;
 
     public Manager process(long managerId) {

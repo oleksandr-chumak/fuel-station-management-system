@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelstation.application.usecases;
+package com.fuelstation.managmentapi.fuelstation.application.query;
 
 import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelPriceHistoryResponse;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationFuelPriceHistoryRepository;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class GetFuelPriceHistory {
+public class ListFuelPriceHistoryQuery {
 
     private final FuelStationFuelPriceHistoryRepository repository;
 

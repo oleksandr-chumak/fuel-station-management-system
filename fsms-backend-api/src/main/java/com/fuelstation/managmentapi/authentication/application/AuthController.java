@@ -1,7 +1,7 @@
 package com.fuelstation.managmentapi.authentication.application;
 
-import com.fuelstation.managmentapi.authentication.application.usecases.GetManagerAccessToken;
-import com.fuelstation.managmentapi.authentication.application.usecases.GetMe;
+import com.fuelstation.managmentapi.authentication.application.query.GetManagerAccessTokenQuery;
+import com.fuelstation.managmentapi.authentication.application.query.GetMeQuery;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,8 +18,8 @@ import com.fuelstation.managmentapi.authentication.infrastructure.security.Authe
 public class AuthController {
 
     private final AuthenticationService authService;
-    private final GetManagerAccessToken getManagerAccessToken;
-    private final GetMe getMe;
+    private final GetManagerAccessTokenQuery getManagerAccessTokenQuery;
+    private final GetMeQuery getMeQuery;
 
     @PostMapping("/admins/login")
     public ResponseEntity<String> loginAdmin(@RequestBody @Valid AuthRequest authRequest) {
@@ -39,13 +39,13 @@ public class AuthController {
 
     @GetMapping("/managers/{managerId}/token")
     public ResponseEntity<String> getManagerAccessToken(@PathVariable Long managerId) {
-        var accessToken = getManagerAccessToken.process(managerId);
+        var accessToken = getManagerAccessTokenQuery.process(managerId);
         return new ResponseEntity<>(accessToken, HttpStatus.OK);
     }
 
     @GetMapping("/me")
     public ResponseEntity<UserResponse> getCurrentUser(Authentication authentication) {
-        return ResponseEntity.ok(UserResponse.fromUser(getMe.process(authentication.getName())));
+        return ResponseEntity.ok(UserResponse.fromUser(getMeQuery.process(authentication.getName())));
     }
 
 }

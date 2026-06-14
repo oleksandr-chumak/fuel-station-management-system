@@ -1,9 +1,9 @@
 package com.fuelstation.managmentapi.fuelstation.application.usecases;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
-import com.fuelstation.managmentapi.fuelorder.application.support.FuelOrderFetcher;
+import com.fuelstation.managmentapi.fuelorder.application.query.GetFuelOrderByIdQuery;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
-import com.fuelstation.managmentapi.fuelstation.application.support.FuelStationFetcher;
+import com.fuelstation.managmentapi.fuelstation.application.query.GetActiveFuelStationByIdQuery;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,13 +21,13 @@ public class ProcessFuelDelivery {
     private final FuelOrderRepository fuelOrderRepository;
     private final FuelDeliveryService fuelDeliveryService;
     private final DomainEventPublisher domainEventPublisher;
-    private final FuelStationFetcher fuelStationFetcher;
-    private final FuelOrderFetcher fuelOrderFetcher;
+    private final GetActiveFuelStationByIdQuery getActiveFuelStationByIdQuery;
+    private final GetFuelOrderByIdQuery getFuelOrderByIdQuery;
 
     @Transactional
     public FuelStation process(long fuelOrderId) {
-        var fuelOrder = fuelOrderFetcher.fetchById(fuelOrderId);
-        var fuelStation = fuelStationFetcher.fetchActiveById(fuelOrder.getFuelStationId());
+        var fuelOrder = getFuelOrderByIdQuery.process(fuelOrderId);
+        var fuelStation = getActiveFuelStationByIdQuery.process(fuelOrder.getFuelStationId(), Actor.system());
 
         fuelDeliveryService.processFuelDelivery(fuelStation, fuelOrder);
         fuelOrder.process(Actor.system());

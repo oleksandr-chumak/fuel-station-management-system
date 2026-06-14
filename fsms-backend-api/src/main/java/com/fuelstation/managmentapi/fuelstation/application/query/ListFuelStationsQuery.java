@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelstation.application.usecases;
+package com.fuelstation.managmentapi.fuelstation.application.query;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repos
 
 @Component
 @AllArgsConstructor
-public class GetAllFuelStations {
+public class ListFuelStationsQuery {
 
     private final FuelStationRepository fuelStationRepository;
 
     public List<FuelStation> process() {
-        return fuelStationRepository.findAll(); 
+        return fuelStationRepository.findAll();
     }
-    
+
 }

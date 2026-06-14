@@ -1,0 +1,22 @@
+<p-panel>
+    <ng-template #header>
+        <div class="flex items-center justify-between w-full">
+            <span class="font-semibold text-base">Price History</span>
+            <p-selectbutton
+                [options]="gradeOptions"
+                [(ngModel)]="selectedGrades"
+                [multiple]="true"
+                optionLabel="label"
+                optionValue="value"
+            />
+        </div>
+    </ng-template>
+
+    @if (loadingHistory()) {
+        <p-skeleton height="300px" />
+    } @else if (priceHistory().length === 0) {
+        <p class="text-center py-4 text-muted-color">No price history available yet.</p>
+    } @else {
+        <div echarts [options]="chartOptions()" style="height: 300px;"></div>
+    }
+</p-panel>

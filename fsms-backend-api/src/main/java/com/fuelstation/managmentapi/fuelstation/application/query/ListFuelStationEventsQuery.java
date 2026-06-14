@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelstation.application.usecases;
+package com.fuelstation.managmentapi.fuelstation.application.query;
 
 import com.fuelstation.managmentapi.authentication.application.UserResponse;
 import com.fuelstation.managmentapi.authentication.domain.User;
@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 @Component
 @AllArgsConstructor
-public class GetFuelStationEvents {
+public class ListFuelStationEventsQuery {
 
     private final FuelStationEventRepository fuelStationEventRepository;
     private final FuelOrderEventRepository fuelOrderEventRepository;

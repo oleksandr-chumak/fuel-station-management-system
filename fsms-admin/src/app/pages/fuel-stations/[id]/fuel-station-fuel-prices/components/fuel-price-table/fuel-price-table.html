@@ -1,0 +1,82 @@
+<p-panel header="Fuel Prices">
+    <p-table
+        [value]="fuelPrices()"
+        dataKey="fuelGrade"
+        size="small"
+        [showLoader]="false"
+        [tableStyle]="{ 'min-width': '50rem' }"
+        editMode="row"
+    >
+
+        <ng-template #header>
+            <tr>
+                <th>Fuel Grade</th>
+                <th>Price Per Liter</th>
+                <th>Action</th>
+            </tr>
+        </ng-template>
+
+        <ng-template #body let-fuelPrice let-editing="editing">
+            <tr [pEditableRow]="fuelPrice">
+                <td>{{ getFuelGradeValue(fuelPrice.fuelGrade) }}</td>
+                <td>
+                    <p-cellEditor>
+                        <ng-template #input>
+                            <input pInputText type="text" [(ngModel)]="fuelPrice.pricePerLiter" />
+                        </ng-template>
+                        <ng-template #output>
+                            {{ fuelPrice.pricePerLiter | money: fuelPrice.currency }}
+                        </ng-template>
+                    </p-cellEditor>
+                </td>
+                <td>
+                    <div class="flex items-center justify-center gap-2">
+                        @if (!editing) {
+                            <button
+                                pButton pRipple
+                                type="button"
+                                pInitEditableRow
+                                icon="pi pi-pencil"
+                                (click)="onRowEditInit()"
+                                [loading]="loading()"
+                                text rounded
+                                severity="secondary">
+                            </button>
+                        }
+                        @if (editing) {
+                            <button
+                                pButton pRipple
+                                type="button"
+                                pSaveEditableRow
+                                icon="pi pi-check"
+                                (click)="onRowEditSave(fuelPrice)"
+                                text rounded
+                                severity="secondary">
+                            </button>
+                            <button
+                                pButton pRipple
+                                type="button"
+                                pCancelEditableRow
+                                icon="pi pi-times"
+                                (click)="onRowEditCancel()"
+                                text rounded
+                                severity="secondary">
+                            </button>
+                        }
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+        <ng-template #loadingbody>
+            @for (row of skeletonRows; track $index) {
+                <tr style="height: 46px">
+                    @for (col of skeletonCols; track $index) {
+                        <td><p-skeleton /></td>
+                    }
+                </tr>
+            }
+        </ng-template>
+
+    </p-table>
+</p-panel>

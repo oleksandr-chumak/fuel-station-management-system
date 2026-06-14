@@ -25,6 +25,6 @@ public class User {
    }
 
    public Actor getActor() {
-      return Actor.user(this.userId);
+      return Actor.user(this.userId, role);
    }
 }

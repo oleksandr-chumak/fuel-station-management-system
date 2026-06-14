@@ -1,6 +1,7 @@
 package com.fuelstation.managmentapi.fuelorder.application.usecases;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
+import com.fuelstation.managmentapi.fuelorder.application.query.GetFuelOrderByIdQuery;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -15,11 +16,11 @@ public class ConfirmFuelOrder {
 
     private final FuelOrderRepository fuelOrderRepository;
     private final DomainEventPublisher domainEventPublisher;
-    private final GetFuelOrderById getFuelOrderById;
+    private final GetFuelOrderByIdQuery getFuelOrderByIdQuery;
 
     @Transactional
     public FuelOrder process(long fuelOrderId, Actor performedBy) {
-        FuelOrder fuelOrder = getFuelOrderById.process(fuelOrderId);
+        FuelOrder fuelOrder = getFuelOrderByIdQuery.process(fuelOrderId);
 
         fuelOrder.confirm(performedBy);
 

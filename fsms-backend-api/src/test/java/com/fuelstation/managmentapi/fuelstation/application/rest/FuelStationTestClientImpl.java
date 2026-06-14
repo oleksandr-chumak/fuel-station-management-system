@@ -3,10 +3,12 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 import com.fuelstation.managmentapi.common.domain.CountryCode;
+import com.fuelstation.managmentapi.common.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
-import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPricesBulkRequest;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -80,15 +82,32 @@ public class FuelStationTestClientImpl implements FuelStationTestClient {
     }
 
     @Override
-    public ResultActions changeFuelPrice(long fuelStationId, ChangeFuelPriceRequest request) throws Exception {
-        return this.mockMvc.perform(put("/api/fuel-stations/{id}/change-fuel-price", fuelStationId)
+    public ResultActions updateFuelPrice(long fuelStationId, FuelGrade fuelGrade, ChangeFuelPriceRequest request) throws Exception {
+        return updateFuelPriceRaw(fuelStationId, fuelGrade.toString(), request);
+    }
+
+    @Override
+    public ResultActions updateFuelPriceRaw(long fuelStationId, String fuelGrade, ChangeFuelPriceRequest request) throws Exception {
+        return this.mockMvc.perform(put("/api/fuel-stations/{id}/fuel-prices/{fuelGrade}", fuelStationId, fuelGrade)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)));
     }
 
     @Override
-    public FuelStationResponse changeFuelPriceAndReturnResponse(long fuelStationId, ChangeFuelPriceRequest request) throws Exception {
-        return getResponse(changeFuelPrice(fuelStationId, request), FuelStationResponse.class, status().isOk());
+    public FuelStationResponse updateFuelPriceAndReturnResponse(long fuelStationId, FuelGrade fuelGrade, ChangeFuelPriceRequest request) throws Exception {
+        return getResponse(updateFuelPrice(fuelStationId, fuelGrade, request), FuelStationResponse.class, status().isOk());
+    }
+
+    @Override
+    public ResultActions updateFuelPrices(long fuelStationId, ChangeFuelPricesBulkRequest request) throws Exception {
+        return this.mockMvc.perform(put("/api/fuel-stations/{id}/fuel-prices", fuelStationId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+    }
+
+    @Override
+    public FuelStationResponse updateFuelPricesAndReturnResponse(long fuelStationId, ChangeFuelPricesBulkRequest request) throws Exception {
+        return getResponse(updateFuelPrices(fuelStationId, request), FuelStationResponse.class, status().isOk());
     }
 
     @Override

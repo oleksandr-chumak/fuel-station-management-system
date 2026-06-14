@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.fuelorder.application.usecases;
+package com.fuelstation.managmentapi.fuelorder.application.query;
 
 import java.util.List;
 
@@ -8,11 +8,11 @@ import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderRepository;
 
 @Component
-public class GetAllFuelOrders {
-    
+public class ListFuelOrdersQuery {
+
     private final FuelOrderRepository fuelOrderRepository;
 
-    public GetAllFuelOrders(FuelOrderRepository fuelOrderRepository) {
+    public ListFuelOrdersQuery(FuelOrderRepository fuelOrderRepository) {
         this.fuelOrderRepository = fuelOrderRepository;
     }
 

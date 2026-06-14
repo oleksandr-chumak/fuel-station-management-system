@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fuelstation.managmentapi.fuelorder.application.query.GetFuelOrderByIdQuery;
+import com.fuelstation.managmentapi.fuelorder.application.query.ListFuelOrdersQuery;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.ConfirmFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.CreateFuelOrder;
-import com.fuelstation.managmentapi.fuelorder.application.usecases.GetAllFuelOrders;
-import com.fuelstation.managmentapi.fuelorder.application.usecases.GetFuelOrderById;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.RejectFuelOrder;
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,8 +35,8 @@ public class FuelOrderController {
     private final CreateFuelOrder createFuelOrder;
     private final ConfirmFuelOrder confirmFuelOrder;
     private final RejectFuelOrder rejectFuelOrder;
-    private final GetAllFuelOrders getAllFuelOrders;
-    private final GetFuelOrderById getFuelOrderById;
+    private final ListFuelOrdersQuery listFuelOrdersQuery;
+    private final GetFuelOrderByIdQuery getFuelOrderByIdQuery;
 
     @PostMapping("/")
     public ResponseEntity<FuelOrderResponse> createFuelOrder(
@@ -85,12 +85,12 @@ public class FuelOrderController {
 
     @GetMapping("/")
     public ResponseEntity<List<FuelOrderResponse>> getFuelOrders() {
-        return ResponseEntity.ok(getAllFuelOrders.process().stream().map(FuelOrderResponse::fromDomain).toList());
+        return ResponseEntity.ok(listFuelOrdersQuery.process().stream().map(FuelOrderResponse::fromDomain).toList());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FuelOrderResponse> getFuelOrderById(@PathVariable("id") long fuelOrderId) {
-        return ResponseEntity.ok(FuelOrderResponse.fromDomain(getFuelOrderById.process(fuelOrderId)));
+        return ResponseEntity.ok(FuelOrderResponse.fromDomain(getFuelOrderByIdQuery.process(fuelOrderId)));
     }
 
 

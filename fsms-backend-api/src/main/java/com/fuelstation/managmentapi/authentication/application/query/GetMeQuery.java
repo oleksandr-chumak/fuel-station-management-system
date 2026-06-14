@@ -1,4 +1,4 @@
-package com.fuelstation.managmentapi.authentication.application.usecases;
+package com.fuelstation.managmentapi.authentication.application.query;
 
 
 import com.fuelstation.managmentapi.authentication.application.UserNotFoundException;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @AllArgsConstructor
-public class GetMe {
+public class GetMeQuery {
 
     private final UserRepository userRepository;
 

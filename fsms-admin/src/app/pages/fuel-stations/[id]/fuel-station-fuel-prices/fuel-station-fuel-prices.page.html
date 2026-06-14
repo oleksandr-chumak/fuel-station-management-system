@@ -1,144 +1,18 @@
-<div class="flex flex-col gap-4">
-    <p-panel>
-        <ng-template #header>
-            <div class="flex flex-col gap-1">
-                <span class="font-semibold text-base">Recommended Prices for {{ countryCode }}</span>
-                <span class="text-sm text-muted-color font-normal">
-                    Based on the latest market price with {{ countryCode }} taxes applied, plus a 10% operating margin.
-                    Formula: <strong>market price × 1.10 = recommended</strong>
-                </span>
-            </div>
-        </ng-template>
+@let station = fuelStation();
+@if (station) {
+    <div class="flex flex-col gap-4">
+        <app-fuel-price-recommendation
+            [fuelStationId]="station.fuelStationId!"
+            [countryCode]="station.country"
+            (applied)="onPricesChanged()" />
 
-        @if (loadingRecommended()) {
-            <p-skeleton height="120px" />
-        } @else if (recommendedRows().length === 0) {
-            <p class="text-center py-4 text-muted-color">No market price data available for {{ countryCode }}.</p>
-        } @else {
-            <p-table [value]="recommendedRows()" size="small" [tableStyle]="{ 'min-width': '50rem' }">
-                <ng-template #header>
-                    <tr>
-                        <th>Fuel Grade</th>
-                        <th>Market Price (with taxes)</th>
-                        <th>Margin</th>
-                        <th>Recommended Price</th>
-                    </tr>
-                </ng-template>
-                <ng-template #body let-row>
-                    <tr>
-                        <td>{{ formatGrade(row.fuelGrade) }}</td>
-                        <td>{{ row.marketPrice | money: row.currency }}</td>
-                        <td class="text-green-500">+10%</td>
-                        <td><strong>{{ row.recommendedPrice | money: row.currency }}</strong></td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        }
-    </p-panel>
+        <app-fuel-price-table
+            [fuelStation]="station"
+            (changed)="onPricesChanged()" />
 
-    <p-panel header="Fuel Prices">
-        <p-table
-            [value]="fuelPrices()"
-            dataKey="fuelGrade"
-            size="small"
-            [showLoader]="false"
-            [tableStyle]="{ 'min-width': '50rem' }"
-            editMode="row"
-        >
-
-            <ng-template #header>
-                <tr>
-                    <th>Fuel Grade</th>
-                    <th>Price Per Liter</th>
-                    <th>Action</th>
-                </tr>
-            </ng-template>
-
-            <ng-template #body let-fuelPrice let-editing="editing">
-                <tr [pEditableRow]="fuelPrice">
-                    <td>{{ getFuelGradeValue(fuelPrice.fuelGrade) }}</td>
-                    <td>
-                        <p-cellEditor>
-                            <ng-template #input>
-                                <input pInputText type="text" [(ngModel)]="fuelPrice.pricePerLiter" />
-                            </ng-template>
-                            <ng-template #output>
-                                {{ fuelPrice.pricePerLiter | money: fuelPrice.currency }}
-                            </ng-template>
-                        </p-cellEditor>
-                    </td>
-                    <td>
-                        <div class="flex items-center justify-center gap-2">
-                            @if (!editing) {
-                                <button
-                                    pButton pRipple
-                                    type="button"
-                                    pInitEditableRow
-                                    icon="pi pi-pencil"
-                                    (click)="onRowEditInit()"
-                                    [loading]="loading()"
-                                    text rounded
-                                    severity="secondary">
-                                </button>
-                            }
-                            @if (editing) {
-                                <button
-                                    pButton pRipple
-                                    type="button"
-                                    pSaveEditableRow
-                                    icon="pi pi-check"
-                                    (click)="onRowEditSave(fuelPrice)"
-                                    text rounded
-                                    severity="secondary">
-                                </button>
-                                <button
-                                    pButton pRipple
-                                    type="button"
-                                    pCancelEditableRow
-                                    icon="pi pi-times"
-                                    (click)="onRowEditCancel()"
-                                    text rounded
-                                    severity="secondary">
-                                </button>
-                            }
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-
-            <ng-template #loadingbody>
-                @for (row of skeletonRows; track $index) {
-                    <tr style="height: 46px">
-                        @for (col of skeletonCols; track $index) {
-                            <td><p-skeleton /></td>
-                        }
-                    </tr>
-                }
-            </ng-template>
-
-        </p-table>
-    </p-panel>
-
-    <p-panel>
-        <ng-template #header>
-            <div class="flex items-center justify-between w-full">
-                <span class="font-semibold text-base">Price History</span>
-                <p-selectbutton
-                    [options]="gradeOptions"
-                    [(ngModel)]="selectedGrades"
-                    [multiple]="true"
-                    optionLabel="label"
-                    optionValue="value"
-                />
-            </div>
-        </ng-template>
-
-        @if (loadingHistory()) {
-            <p-skeleton height="300px" />
-        } @else if (priceHistory().length === 0) {
-            <p class="text-center py-4 text-muted-color">No price history available yet.</p>
-        } @else {
-            <div echarts [options]="historyChartOptions()" style="height: 300px;"></div>
-        }
-    </p-panel>
-</div>
+        <app-fuel-price-history-chart
+            [fuelStationId]="station.fuelStationId!"
+            [countryCode]="station.country"
+            [refreshKey]="historyRefresh()" />
+    </div>
+}
