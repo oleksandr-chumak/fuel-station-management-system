@@ -19,9 +19,14 @@ public class FuelTank {
     private BigDecimal currentVolume;
     private BigDecimal maxCapacity;
     private Optional<OffsetDateTime> lastRefillDate;
+    private FuelTankStatus status;
 
     public BigDecimal getAvailableVolume() {
         return this.maxCapacity.subtract(this.currentVolume);
+    }
+
+    public boolean isDecommissioned() {
+        return status == FuelTankStatus.DECOMMISSIONED;
     }
 
     public static FuelTank create(FuelGrade fuelGrade) {
@@ -30,7 +35,8 @@ public class FuelTank {
             fuelGrade,
             BigDecimal.ZERO,
             BigDecimal.valueOf(35000),
-            Optional.empty()
+            Optional.empty(),
+            FuelTankStatus.ACTIVE
         );
     }
 }

@@ -21,3 +21,20 @@ export interface CreateFuelOrder {
     fuelGrade: FuelGrade;
     amount: number;
 }
+
+export interface DispenseFuel {
+    fuelStationId: number;
+    fuelTankId: number;
+    volume: number;
+}
+
+export interface DecommissionFuelTank {
+    fuelStationId: number;
+    fuelTankId: number;
+}
+
+export interface InstallFuelTank {
+    fuelStationId: number;
+    fuelGrade: FuelGrade;
+    maxCapacity: number;
+}

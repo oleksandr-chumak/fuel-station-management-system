@@ -1,0 +1,40 @@
+<p-dialog
+    (visibleChange)="handleStateChange($event)"
+    [visible]="open"
+    [modal]="true"
+    [style]="{ width: '420px' }"
+    [header]="'Dispense fuel from tank ' + fuelTankId">
+    <div class="flex flex-col gap-4">
+        <div class="text-sm opacity-70">
+            Grade: <strong>{{ fuelGradeLabel() }}</strong> &middot;
+            Available: <strong>{{ availableVolume }} L</strong>
+        </div>
+        <div class="flex flex-col gap-1">
+            <label for="volume" class="text-sm">Volume to dispense (L)</label>
+            <p-inputNumber
+                inputId="volume"
+                [(ngModel)]="volume"
+                [min]="0.001"
+                [max]="availableVolume"
+                [maxFractionDigits]="3"
+                placeholder="e.g. 1000"
+                styleClass="w-full"
+                [showButtons]="false">
+            </p-inputNumber>
+            @if (volume !== null && volume > availableVolume) {
+                <span class="text-sm text-red-500">
+                    Cannot dispense more than {{ availableVolume }} L
+                </span>
+            }
+        </div>
+        <div class="flex justify-end gap-2 mt-2">
+            <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="closeDialog()" />
+            <p-button
+                label="Dispense"
+                icon="pi pi-minus-circle"
+                [loading]="loading()"
+                [disabled]="!canSubmit"
+                (onClick)="submit()" />
+        </div>
+    </div>
+</p-dialog>

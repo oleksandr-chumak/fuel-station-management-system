@@ -31,16 +31,23 @@ import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStatio
 import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationManagersQuery;
 import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationOrdersQuery;
 import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationsQuery;
+import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelTankVolumeHistoryQuery;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPricesBulkRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.DispenseFuelRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.InstallFuelTankRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelPriceHistoryResponse;
+import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelTankVolumeHistoryResponse;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.AssignManagerToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPrice;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.ChangeFuelPricesBulk;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStation;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.DeactivateFuelStation;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.DecommissionFuelTank;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.DispenseFuel;
+import com.fuelstation.managmentapi.fuelstation.application.usecases.InstallFuelTank;
 import com.fuelstation.managmentapi.fuelstation.application.usecases.UnassignManagerFromFuelStation;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 
@@ -58,6 +65,9 @@ public class FuelStationController {
     private final UnassignManagerFromFuelStation unassignManagerFromFuelStation;
     private final ChangeFuelPrice changeFuelPrice;
     private final ChangeFuelPricesBulk changeFuelPricesBulk;
+    private final DispenseFuel dispenseFuel;
+    private final DecommissionFuelTank decommissionFuelTank;
+    private final InstallFuelTank installFuelTank;
 
     private final GetFuelStationByIdQuery getFuelStationByIdQuery;
     private final ListFuelStationsQuery listFuelStationsQuery;
@@ -65,6 +75,7 @@ public class FuelStationController {
     private final ListFuelStationOrdersQuery listFuelStationOrdersQuery;
     private final ListFuelStationEventsQuery listFuelStationEventsQuery;
     private final ListFuelPriceHistoryQuery listFuelPriceHistoryQuery;
+    private final ListFuelTankVolumeHistoryQuery listFuelTankVolumeHistoryQuery;
 
     @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(
@@ -202,6 +213,49 @@ public class FuelStationController {
             @PathVariable("id") long fuelStationId
     ) {
         return ResponseEntity.ok(listFuelPriceHistoryQuery.process(fuelStationId));
+    }
+
+    @PostMapping("/{id}/fuel-tanks")
+    public ResponseEntity<FuelStationResponse> installFuelTank(
+            @PathVariable("id") long fuelStationId,
+            @RequestBody @Valid InstallFuelTankRequest request,
+            @CurrentUser User user
+    ) {
+        var fuelStation = installFuelTank.process(
+                fuelStationId,
+                request.getFuelGrade(),
+                request.getMaxCapacity(),
+                user.getActor()
+        );
+        return new ResponseEntity<>(FuelStationResponse.fromDomain(fuelStation), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}/fuel-tanks/{tankId}/dispense")
+    public ResponseEntity<FuelStationResponse> dispenseFuel(
+            @PathVariable("id") long fuelStationId,
+            @PathVariable("tankId") long fuelTankId,
+            @RequestBody @Valid DispenseFuelRequest request,
+            @CurrentUser User user
+    ) {
+        var fuelStation = dispenseFuel.process(fuelStationId, fuelTankId, request.getVolume(), user.getActor());
+        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+    }
+
+    @PutMapping("/{id}/fuel-tanks/{tankId}/decommission")
+    public ResponseEntity<FuelStationResponse> decommissionFuelTank(
+            @PathVariable("id") long fuelStationId,
+            @PathVariable("tankId") long fuelTankId,
+            @CurrentUser User user
+    ) {
+        var fuelStation = decommissionFuelTank.process(fuelStationId, fuelTankId, user.getActor());
+        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+    }
+
+    @GetMapping("/{id}/fuel-tank-volume-history")
+    public ResponseEntity<List<FuelTankVolumeHistoryResponse>> getFuelTankVolumeHistory(
+            @PathVariable("id") long fuelStationId
+    ) {
+        return ResponseEntity.ok(listFuelTankVolumeHistoryQuery.process(fuelStationId));
     }
 
 }

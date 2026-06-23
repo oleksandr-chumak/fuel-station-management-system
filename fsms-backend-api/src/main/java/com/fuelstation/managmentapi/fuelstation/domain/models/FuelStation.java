@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
@@ -11,10 +12,16 @@ import com.fuelstation.managmentapi.common.domain.AggregateRoot;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelTankDecommissioned;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelTankVolumeChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelGradeNotFoundException;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelTankAlreadyDecommissionedException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelTankNotEmptyException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelTankNotFoundException;
+import com.fuelstation.managmentapi.fuelstation.domain.exceptions.InsufficientFuelVolumeException;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.ManagerAlreadyAssignedException;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.TankCapacityExceededException;
 
@@ -79,18 +86,88 @@ public class FuelStation extends AggregateRoot {
         pushDomainEvent(new FuelPriceChanged(fuelStationId, fuelGrade, newPrice, oldPrice.currency(), performedBy));
     }
 
-    public void refillFuelTank(FuelTank fuelTank, BigDecimal volume) {
-        var totalVolume = fuelTank.getCurrentVolume().add(volume);
-        if (totalVolume.compareTo(fuelTank.getMaxCapacity()) > 0) {
+    public void installFuelTank(FuelGrade fuelGrade, BigDecimal maxCapacity, Actor performedBy) {
+        if (maxCapacity == null || maxCapacity.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("maxCapacity must be greater than zero");
+        }
+        this.fuelTanks.add(new FuelTank(
+            null,
+            fuelGrade,
+            BigDecimal.ZERO,
+            maxCapacity,
+            Optional.empty(),
+            FuelTankStatus.ACTIVE
+        ));
+    }
+
+    public void decommissionFuelTank(long fuelTankId, Actor performedBy) {
+        FuelTank fuelTank = findFuelTankById(fuelTankId);
+
+        if (fuelTank.isDecommissioned()) {
+            throw new FuelTankAlreadyDecommissionedException(this.fuelStationId, fuelTankId);
+        }
+
+        if (fuelTank.getCurrentVolume().compareTo(BigDecimal.ZERO) > 0) {
+            throw new FuelTankNotEmptyException(this.fuelStationId, fuelTankId, fuelTank.getCurrentVolume());
+        }
+
+        fuelTank.setStatus(FuelTankStatus.DECOMMISSIONED);
+        pushDomainEvent(new FuelTankDecommissioned(this.fuelStationId, fuelTankId, performedBy));
+    }
+
+    public void refillFuelTank(FuelTank fuelTank, BigDecimal volume, Actor performedBy) {
+        var oldVolume = fuelTank.getCurrentVolume();
+        var newVolume = oldVolume.add(volume);
+        if (newVolume.compareTo(fuelTank.getMaxCapacity()) > 0) {
             throw new TankCapacityExceededException(
                     fuelTank.getId(),
-                    totalVolume,
+                    newVolume,
                     fuelTank.getMaxCapacity()
             );
         }
 
-        fuelTank.setCurrentVolume(totalVolume);
+        fuelTank.setCurrentVolume(newVolume);
         fuelTank.setLastRefillDate(Optional.of(OffsetDateTime.now()));
+        pushDomainEvent(new FuelTankVolumeChanged(
+                this.fuelStationId,
+                fuelTank.getId(),
+                fuelTank.getFuelGrade(),
+                oldVolume,
+                newVolume,
+                FuelTankVolumeChangeReason.REFILL,
+                performedBy
+        ));
+    }
+
+    public void dispenseFuel(long fuelTankId, BigDecimal volume, Actor performedBy) {
+        FuelTank fuelTank = findFuelTankById(fuelTankId);
+        var oldVolume = fuelTank.getCurrentVolume();
+        if (oldVolume.compareTo(volume) < 0) {
+            throw new InsufficientFuelVolumeException(
+                    fuelTank.getId(),
+                    volume,
+                    oldVolume
+            );
+        }
+
+        var newVolume = oldVolume.subtract(volume);
+        fuelTank.setCurrentVolume(newVolume);
+        pushDomainEvent(new FuelTankVolumeChanged(
+                this.fuelStationId,
+                fuelTank.getId(),
+                fuelTank.getFuelGrade(),
+                oldVolume,
+                newVolume,
+                FuelTankVolumeChangeReason.DISPENSE,
+                performedBy
+        ));
+    }
+
+    private FuelTank findFuelTankById(long fuelTankId) {
+        return this.fuelTanks.stream()
+                .filter(t -> Objects.equals(t.getId(), fuelTankId))
+                .findFirst()
+                .orElseThrow(() -> new FuelTankNotFoundException(this.fuelStationId, fuelTankId));
     }
 
     public void deactivate(Actor performedBy) {

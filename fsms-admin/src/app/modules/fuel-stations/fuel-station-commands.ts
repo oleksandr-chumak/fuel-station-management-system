@@ -67,3 +67,20 @@ export interface GetFuelStationFuelPurchases {
 export interface GetFuelPriceHistory {
     fuelStationId: number;
 }
+
+export interface DispenseFuel {
+    fuelStationId: number;
+    fuelTankId: number;
+    volume: number;
+}
+
+export interface DecommissionFuelTank {
+    fuelStationId: number;
+    fuelTankId: number;
+}
+
+export interface InstallFuelTank {
+    fuelStationId: number;
+    fuelGrade: FuelGrade;
+    maxCapacity: number;
+}

@@ -1,28 +1,58 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Signal } from '@angular/core';
+import { Component, DestroyRef, inject, ViewChild } from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { FuelGrade } from 'fsms-web-api';
+import { TooltipModule } from 'primeng/tooltip';
+import { FuelGrade, FuelTank } from 'fsms-web-api';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
+import { DecommissionFuelTankHandler } from '../../../../modules/fuel-station/handlers/decommission-fuel-tank.handler';
+import { DispenseFuelDialogComponent } from '../../../../modules/fuel-station/components/dispense-fuel-dialog/dispense-fuel-dialog.component';
+import { InstallFuelTankDialogComponent } from '../../../../modules/fuel-station/components/install-fuel-tank-dialog/install-fuel-tank-dialog.component';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks-page',
-  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
+  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, TooltipModule, DispenseFuelDialogComponent, InstallFuelTankDialogComponent],
   templateUrl: './fuel-station-fuel-tanks.page.html'
 })
 export class FuelStationFuelTanksPage {
 
   private readonly store = inject(FuelStationStore);
+  private readonly decommissionHandler = inject(DecommissionFuelTankHandler);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly fuelStation = toSignal(this.store.fuelStation$, { initialValue: null });
+  protected readonly decommissionLoading = toSignal(this.decommissionHandler.loading$, { initialValue: false });
 
   protected readonly skeletonRows = new Array(5).fill(null);
-  protected readonly skeletonCols = new Array(4).fill(null);
+  protected readonly skeletonCols = new Array(5).fill(null);
+
+  @ViewChild('dispenseDialog') dispenseDialog!: DispenseFuelDialogComponent;
+  @ViewChild('installDialog') installDialog!: InstallFuelTankDialogComponent;
 
   getFuelGradeValue(fuelGrade: FuelGrade) {
     return FuelGrade[fuelGrade];
+  }
+
+  openDispenseDialog(tank: FuelTank): void {
+    this.dispenseDialog.fuelStationId = this.store.fuelStation.fuelStationId;
+    this.dispenseDialog.fuelTankId = tank.id;
+    this.dispenseDialog.fuelGrade = tank.fuelGrade;
+    this.dispenseDialog.availableVolume = tank.currentVolume;
+    this.dispenseDialog.openDialog();
+  }
+
+  openInstallDialog(): void {
+    this.installDialog.openDialog();
+  }
+
+  decommission(tank: FuelTank): void {
+    const fuelStationId = this.store.fuelStation.fuelStationId;
+    this.decommissionHandler
+      .handle({ fuelStationId, fuelTankId: tank.id })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe();
   }
 }

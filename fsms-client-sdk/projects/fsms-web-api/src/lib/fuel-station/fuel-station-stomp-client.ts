@@ -1,6 +1,6 @@
 import { inject, Injectable } from "@angular/core";
 import { map, Observable } from "rxjs";
-import { FuelPriceChanged, FuelPurchaseCreated, FuelStationCreated, FuelStationDeactivated, FuelStationEvent, FuelStationEventType, ManagerAssignedToFuelStation, ManagerUnassignedFromFuelStation } from "./fuel-station-events";
+import { FuelPriceChanged, FuelPurchaseCreated, FuelStationCreated, FuelStationDeactivated, FuelStationEvent, FuelStationEventType, FuelTankDecommissioned, FuelTankInstalled, ManagerAssignedToFuelStation, ManagerUnassignedFromFuelStation } from "./fuel-station-events";
 import { StompClient } from "../core/stomp-client";
 import { FuelGradeMapper } from "../core/fuel-grade.mapper";
 import { IMessage } from "@stomp/rx-stomp";
@@ -14,6 +14,8 @@ interface IFuelStationStompClient {
     onFuelStationDeactivated(fuelStationId: number): Observable<FuelStationDeactivated>
     onManagerAssignedToFuelStation(fuelStationId: number): Observable<ManagerAssignedToFuelStation>
     onManagerUnassignedFromFuelStation(fuelStationId: number): Observable<ManagerUnassignedFromFuelStation>
+    onFuelTankDecommissioned(fuelStationId: number): Observable<FuelTankDecommissioned>
+    onFuelTankInstalled(fuelStationId: number): Observable<FuelTankInstalled>
     onFuelOrderCreated(fuelStationId: number): Observable<FuelOrderCreated>
     onFuelOrderConfirmed(fuelStationId: number): Observable<FuelOrderConfirmed>
     onFuelOrderRejected(fuelStationId: number): Observable<FuelOrderRejected>
@@ -58,6 +60,18 @@ export class FuelStationStompClient implements IFuelStationStompClient {
         return this.stompClient
             .watch({ destination: `/topic/fuel-stations/${fuelStationId}/manager-unassigned` })
             .pipe(map(this.parseManagerUnassignedFromFuelStation));
+    }
+
+    onFuelTankDecommissioned(fuelStationId: number): Observable<FuelTankDecommissioned> {
+        return this.stompClient
+            .watch({ destination: `/topic/fuel-stations/${fuelStationId}/fuel-tank-decommissioned` })
+            .pipe(map(this.parseFuelTankDecommissioned));
+    }
+
+    onFuelTankInstalled(fuelStationId: number): Observable<FuelTankInstalled> {
+        return this.stompClient
+            .watch({ destination: `/topic/fuel-stations/${fuelStationId}/fuel-tank-installed` })
+            .pipe(map(this.parseFuelTankInstalled.bind(this)));
     }
 
     onFuelOrderCreated(fuelStationId: number): Observable<FuelOrderCreated> {
@@ -117,6 +131,10 @@ export class FuelStationStompClient implements IFuelStationStompClient {
                 return this.parseManagerAssignedToFuelStation(message);
             case FuelStationEventType.MANAGER_UNASSIGNED_FROM_FUEL_STATION:
                 return this.parseManagerUnassignedFromFuelStation(message);
+            case FuelStationEventType.FUEL_TANK_DECOMMISSIONED:
+                return this.parseFuelTankDecommissioned(message);
+            case FuelStationEventType.FUEL_TANK_INSTALLED:
+                return this.parseFuelTankInstalled(message);
             case FuelStationEventType.FUEL_ORDER_CREATED:
                 return this.fuelOrderEventMapper.parseFuelOrderCreated(message);
             case FuelStationEventType.FUEL_ORDER_CONFIRMED:
@@ -188,6 +206,28 @@ export class FuelStationStompClient implements IFuelStationStompClient {
             json.fuelStationId,
             json.fuelPurchaseId,
             json.fuelOrderId,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
+    }
+
+    private parseFuelTankDecommissioned(message: IMessage): FuelTankDecommissioned {
+        const json = JSON.parse(message.body);
+        return new FuelTankDecommissioned(
+            json.fuelStationId,
+            json.fuelTankId,
+            json.occurredAt,
+            new Actor(json.performedBy.id, json.performedBy.type)
+        );
+    }
+
+    private parseFuelTankInstalled(message: IMessage): FuelTankInstalled {
+        const json = JSON.parse(message.body);
+        return new FuelTankInstalled(
+            json.fuelStationId,
+            json.fuelTankId,
+            this.fuelGradeMapper.map(json.fuelGrade),
+            Number(json.maxCapacity),
             json.occurredAt,
             new Actor(json.performedBy.id, json.performedBy.type)
         );

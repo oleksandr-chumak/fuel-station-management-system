@@ -11,11 +11,16 @@ import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelS
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelPriceChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationCreated;
 import com.fuelstation.managmentapi.fuelstation.domain.events.FuelStationDeactivated;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelTankDecommissioned;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelTankInstalled;
+import com.fuelstation.managmentapi.fuelstation.domain.events.FuelTankVolumeChanged;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
+import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTankVolumeHistory;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.FuelStationEmailService;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationFuelPriceHistoryEntity;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationFuelPriceHistoryRepository;
+import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelTankVolumeHistoryRepository;
 
 import java.time.ZoneOffset;
 
@@ -28,6 +33,7 @@ public class FuelStationEventHandler {
     private final FuelStationEmailService fuelStationEmailService;
     private final CreateFuelStationEvent createFuelStationEvent;
     private final FuelStationFuelPriceHistoryRepository fuelPriceHistoryRepository;
+    private final FuelTankVolumeHistoryRepository fuelTankVolumeHistoryRepository;
 
     @EventListener
     public void handle(FuelStationCreated event) {
@@ -96,6 +102,48 @@ public class FuelStationEventHandler {
                 "/topic/managers/" + event.getManagerId() + "/unassigned-from-fuel-station",
                 event
         );
+    }
+
+    @EventListener
+    public void handle(FuelTankInstalled event) {
+        logger.info("Fuel tank was installed STATION ID:{} TANK ID:{} grade:{} capacity:{}",
+                event.getFuelStationId(), event.getFuelTankId(), event.getFuelGrade(), event.getMaxCapacity());
+        createFuelStationEvent.process(event);
+        messagingTemplate.convertAndSend(
+                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-tank-installed",
+                event
+        );
+    }
+
+    @EventListener
+    public void handle(FuelTankDecommissioned event) {
+        logger.info("Fuel tank was decommissioned STATION ID:{} TANK ID:{}", event.getFuelStationId(), event.getFuelTankId());
+        createFuelStationEvent.process(event);
+        messagingTemplate.convertAndSend(
+                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-tank-decommissioned",
+                event
+        );
+    }
+
+    @EventListener
+    public void handle(FuelTankVolumeChanged event) {
+        logger.debug("Fuel tank volume changed STATION ID:{} TANK ID:{} reason:{}",
+                event.getFuelStationId(), event.getFuelTankId(), event.getReason());
+        saveTankVolumeHistory(event);
+    }
+
+    private void saveTankVolumeHistory(FuelTankVolumeChanged event) {
+        fuelTankVolumeHistoryRepository.save(new FuelTankVolumeHistory(
+                null,
+                event.getFuelStationId(),
+                event.getFuelTankId(),
+                event.getFuelGrade(),
+                event.getOldVolume(),
+                event.getNewVolume(),
+                event.getReason(),
+                event.getPerformedBy(),
+                event.getOccurredAt()
+        ));
     }
 
 }

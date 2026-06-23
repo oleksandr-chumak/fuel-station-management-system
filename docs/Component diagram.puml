@@ -40,6 +40,7 @@ package "Frontend" as frontend {
         [Fuel Station Module]  as adminFS
         [Manager Module]       as adminMgr
         [Fuel Order Module]    as adminFO
+        [Fuel Price Module]    as adminFPM
     }
 
     package "fsms-manager\n(Angular)" as manager #F0FFF4 {
@@ -69,10 +70,6 @@ package "Backend — fsms-backend-api\n(Spring Boot)" as backend #FFF8F0 {
     }
 
     package "Use Cases" as useCases #E8F0FF {
-        [Fuel Station Use Cases]    as ucFS
-        [Fuel Order Use Cases]      as ucFO
-        [Manager Use Cases]         as ucMgr
-        [Auth Use Cases]            as ucAuth
     }
 
 
@@ -86,11 +83,15 @@ package "Backend — fsms-backend-api\n(Spring Boot)" as backend #FFF8F0 {
         [Persistence\n(Spring Data JPA / Hibernate)] as persistence
         [Liquibase Migrations]      as liquibase
         [Email Service]             as emailService
+        [Oil Price Client]          as oilPriceClient
+        [Exchange Rate Client]      as exchangeRateClient
     }
 }
 
 database "PostgreSQL" as db
 cloud "SMTP Server" as smtp
+cloud "OilPriceApi" as oilPriceApi
+cloud "ExchangeRateApi" as exchangeRateApi
 
 interface "REST API\n(HTTP/JSON)" as restAPI
 interface "WebSocket\n(STOMP over SockJS)" as wsAPI
@@ -122,5 +123,7 @@ domEvents   --> wsBroker
 persistence --> db
 liquibase   --> db
 emailService --> smtp
+oilPriceClient --> oilPriceApi
+exchangeRateClient --> exchangeRateApi
 
 @enduml

@@ -72,6 +72,27 @@ export class FuelStationRestClient {
             .pipe(map(data => this.fuelStationMapper.fromJson(data)));
     }
 
+    dispenseFuel(fuelStationId: number, fuelTankId: number, volume: number): Observable<FuelStation> {
+        return this.restClient
+            .post(`api/fuel-stations/${fuelStationId}/fuel-tanks/${fuelTankId}/dispense`, { volume })
+            .pipe(map(data => this.fuelStationMapper.fromJson(data)));
+    }
+
+    decommissionFuelTank(fuelStationId: number, fuelTankId: number): Observable<FuelStation> {
+        return this.restClient
+            .put(`api/fuel-stations/${fuelStationId}/fuel-tanks/${fuelTankId}/decommission`)
+            .pipe(map(data => this.fuelStationMapper.fromJson(data)));
+    }
+
+    installFuelTank(fuelStationId: number, fuelGrade: FuelGrade, maxCapacity: number): Observable<FuelStation> {
+        return this.restClient
+            .post(`api/fuel-stations/${fuelStationId}/fuel-tanks`, {
+                fuelGrade: this.fuelGradeToSlug(fuelGrade),
+                maxCapacity,
+            })
+            .pipe(map(data => this.fuelStationMapper.fromJson(data)));
+    }
+
     getFuelStationEvents(fuelStationId: number, limit?: number, occurredAfter?: string): Observable<CursorPage<DomainEventResponse, string>> {
         const params = { occurredAfter, limit };
         (Object.keys(params) as Array<keyof typeof params>)

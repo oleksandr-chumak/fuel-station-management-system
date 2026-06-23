@@ -8,6 +8,8 @@ export enum FuelStationEventType {
     FUEL_STATION_FUEL_PRICE_CHANGED = "FUEL_STATION_FUEL_PRICE_CHANGED",
     MANAGER_ASSIGNED_TO_FUEL_STATION = "MANAGER_ASSIGNED_TO_FUEL_STATION",
     MANAGER_UNASSIGNED_FROM_FUEL_STATION = "MANAGER_UNASSIGNED_FROM_FUEL_STATION",
+    FUEL_TANK_INSTALLED = "FUEL_TANK_INSTALLED",
+    FUEL_TANK_DECOMMISSIONED = "FUEL_TANK_DECOMMISSIONED",
     FUEL_ORDER_CREATED = "FUEL_ORDER_CREATED",
     FUEL_ORDER_CONFIRMED = "FUEL_ORDER_CONFIRMED",
     FUEL_ORDER_REJECTED = "FUEL_ORDER_REJECTED",
@@ -67,6 +69,30 @@ export class FuelPurchaseCreated extends FuelStationEvent {
         fuelStationId: number,
         public fuelPurchaseId: number,
         public fuelOrderId: number,
+        occurredAt: string,
+        performedBy: Actor
+    ) {
+        super(fuelStationId, occurredAt, performedBy);
+    }
+}
+
+export class FuelTankDecommissioned extends FuelStationEvent {
+    constructor(
+        fuelStationId: number,
+        public fuelTankId: number,
+        occurredAt: string,
+        performedBy: Actor
+    ) {
+        super(fuelStationId, occurredAt, performedBy);
+    }
+}
+
+export class FuelTankInstalled extends FuelStationEvent {
+    constructor(
+        fuelStationId: number,
+        public fuelTankId: number,
+        public fuelGrade: FuelGrade,
+        public maxCapacity: number,
         occurredAt: string,
         performedBy: Actor
     ) {

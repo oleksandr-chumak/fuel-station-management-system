@@ -5,6 +5,8 @@ import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPricesBulkRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.DispenseFuelRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.InstallFuelTankRequest;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -42,4 +44,13 @@ public interface FuelStationTestClient {
 
     ResultActions getFuelStationFuelOrders(long fuelStationId) throws Exception;
     List<FuelOrderResponse> getFuelStationFuelOrdersAndReturnResponse(long fuelStationId) throws Exception;
+
+    ResultActions installFuelTank(long fuelStationId, InstallFuelTankRequest request) throws Exception;
+    FuelStationResponse installFuelTankAndReturnResponse(long fuelStationId, InstallFuelTankRequest request) throws Exception;
+
+    ResultActions dispenseFuel(long fuelStationId, long fuelTankId, DispenseFuelRequest request) throws Exception;
+    FuelStationResponse dispenseFuelAndReturnResponse(long fuelStationId, long fuelTankId, DispenseFuelRequest request) throws Exception;
+
+    ResultActions decommissionFuelTank(long fuelStationId, long fuelTankId) throws Exception;
+    FuelStationResponse decommissionFuelTankAndReturnResponse(long fuelStationId, long fuelTankId) throws Exception;
 }

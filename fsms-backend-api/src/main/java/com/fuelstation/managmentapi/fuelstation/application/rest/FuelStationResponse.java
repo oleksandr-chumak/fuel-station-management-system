@@ -66,7 +66,7 @@ public class FuelStationResponse {
         return String.format("%s %s, %s %s, %s", street, buildingNumber, postalCode, city, country);
     }
 
-    private record FuelTankResponse(
+    public record FuelTankResponse(
         Long id,
         String fuelGrade,
         BigDecimal currentVolume,

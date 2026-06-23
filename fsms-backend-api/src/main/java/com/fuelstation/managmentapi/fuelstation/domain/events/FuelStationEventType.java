@@ -7,7 +7,9 @@ public enum FuelStationEventType {
     FUEL_STATION_DEACTIVATED,
     FUEL_STATION_FUEL_PRICE_CHANGED,
     MANAGER_ASSIGNED_TO_FUEL_STATION,
-    MANAGER_UNASSIGNED_FROM_FUEL_STATION;
+    MANAGER_UNASSIGNED_FROM_FUEL_STATION,
+    FUEL_TANK_INSTALLED,
+    FUEL_TANK_DECOMMISSIONED;
 
     public static FuelStationEventType fromString(String value) {
         return Arrays.stream(values())

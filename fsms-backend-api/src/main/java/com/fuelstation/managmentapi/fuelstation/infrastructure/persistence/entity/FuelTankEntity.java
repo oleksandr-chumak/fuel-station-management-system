@@ -41,4 +41,7 @@ public class FuelTankEntity {
 
     @Column(name = "last_refill_date")
     private OffsetDateTime lastRefillDate;
+
+    @Column(name = "fuel_tank_status_id", nullable = false)
+    private Long fuelTankStatusId;
 }

@@ -29,6 +29,7 @@ import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationAddress;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelStationStatus;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTank;
+import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTankStatus;
 import com.fuelstation.managmentapi.manager.domain.Manager;
 
 @ExtendWith(MockitoExtension.class)
@@ -41,9 +42,9 @@ public class FuelStationTest {
         FuelStationAddress address = new FuelStationAddress("Main St", "123", "New York", "10001", CountryCode.UA);
 
         List<FuelTank> fuelTanks = new ArrayList<>();
-        fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), Optional.empty()));
-        fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, BigDecimal.valueOf(2000), BigDecimal.valueOf(8000), Optional.empty()));
-        fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, BigDecimal.valueOf(3000), BigDecimal.valueOf(12000), Optional.empty()));
+        fuelTanks.add(new FuelTank(1L, FuelGrade.RON_92, BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), Optional.empty(), FuelTankStatus.ACTIVE));
+        fuelTanks.add(new FuelTank(2L, FuelGrade.RON_95, BigDecimal.valueOf(2000), BigDecimal.valueOf(8000), Optional.empty(), FuelTankStatus.ACTIVE));
+        fuelTanks.add(new FuelTank(3L, FuelGrade.DIESEL, BigDecimal.valueOf(3000), BigDecimal.valueOf(12000), Optional.empty(), FuelTankStatus.ACTIVE));
 
         List<FuelStationFuelPrice> fuelPrices = new ArrayList<>();
         fuelPrices.add(new FuelStationFuelPrice(FuelGrade.RON_92, BigDecimal.valueOf(3.5f), CurrencyCode.EUR));

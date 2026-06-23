@@ -64,6 +64,26 @@ export class FuelStation {
     this.assignedManagersIds = this.assignedManagersIds.filter((id) => id !== managerId);
   }
 
+  removeFuelTank(fuelTankId: number): void {
+    this.fuelTanks = this.fuelTanks.filter((tank) => tank.id !== fuelTankId);
+  }
+
+  addFuelTank(tank: FuelTank): void {
+    if (this.fuelTanks.some((t) => t.id === tank.id)) {
+      return;
+    }
+    this.fuelTanks = [...this.fuelTanks, tank];
+  }
+
+  updateFuelTankVolume(fuelTankId: number, newVolume: number): void {
+    this.fuelTanks = this.fuelTanks.map((tank) => {
+      if (tank.id === fuelTankId) {
+        tank.currentVolume = newVolume;
+      }
+      return tank;
+    });
+  }
+
   updateFuelPrice(fuelGrade: FuelGrade, newPricePerLiter: number) {
     this.fuelPrices = this.fuelPrices.map((price) => {
         if (price.fuelGrade === fuelGrade) {

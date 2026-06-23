@@ -11,6 +11,9 @@ import {
     FuelStationEvent,
     FuelStationRestClient,
     FuelStationStompClient,
+    FuelTank,
+    FuelTankDecommissioned,
+    FuelTankInstalled,
     ManagerAssignedToFuelStation,
     ManagerUnassignedFromFuelStation,
 } from "fsms-web-api";
@@ -45,6 +48,10 @@ export class FuelStationEventHandler {
                     this.handleManagerAssigned(event);
                 } else if (event instanceof ManagerUnassignedFromFuelStation) {
                     this.handleManagerUnassigned(event);
+                } else if (event instanceof FuelTankDecommissioned) {
+                    this.handleFuelTankDecommissioned(event);
+                } else if (event instanceof FuelTankInstalled) {
+                    this.handleFuelTankInstalled(event);
                 } else if (event instanceof FuelOrderCreated) {
                     this.handleFuelOrderCreated(event);
                 } else if (event instanceof FuelOrderConfirmed) {
@@ -82,6 +89,30 @@ export class FuelStationEventHandler {
                 })
             )
             .subscribe();
+    }
+
+    private handleFuelTankDecommissioned(event: FuelTankDecommissioned): void {
+        if (!this.fuelStationStore.hasFuelStation) {
+            return;
+        }
+        const newFuelStation = this.fuelStationStore.fuelStation.clone();
+        newFuelStation.removeFuelTank(event.fuelTankId);
+        this.fuelStationStore.fuelStation = newFuelStation;
+    }
+
+    private handleFuelTankInstalled(event: FuelTankInstalled): void {
+        if (!this.fuelStationStore.hasFuelStation) {
+            return;
+        }
+        const newFuelStation = this.fuelStationStore.fuelStation.clone();
+        newFuelStation.addFuelTank(new FuelTank(
+            event.fuelTankId,
+            0,
+            event.maxCapacity,
+            event.fuelGrade,
+            null
+        ));
+        this.fuelStationStore.fuelStation = newFuelStation;
     }
 
     private async handleManagerUnassigned(event: ManagerUnassignedFromFuelStation): Promise<void> {

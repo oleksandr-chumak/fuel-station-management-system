@@ -9,6 +9,8 @@ import com.fuelstation.managmentapi.fuelstation.application.rest.requests.Assign
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPricesBulkRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.DispenseFuelRequest;
+import com.fuelstation.managmentapi.fuelstation.application.rest.requests.InstallFuelTankRequest;
 import com.fuelstation.managmentapi.manager.application.rest.ManagerResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -148,6 +150,40 @@ public class FuelStationTestClientImpl implements FuelStationTestClient {
     @Override
     public List<FuelOrderResponse> getFuelStationFuelOrdersAndReturnResponse(long fuelStationId) throws Exception {
         return getResponse(getFuelStationFuelOrders(fuelStationId), new TypeReference<>() {}, status().isOk());
+    }
+
+    @Override
+    public ResultActions installFuelTank(long fuelStationId, InstallFuelTankRequest request) throws Exception {
+        return this.mockMvc.perform(post("/api/fuel-stations/{id}/fuel-tanks", fuelStationId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+    }
+
+    @Override
+    public FuelStationResponse installFuelTankAndReturnResponse(long fuelStationId, InstallFuelTankRequest request) throws Exception {
+        return getResponse(installFuelTank(fuelStationId, request), FuelStationResponse.class, status().isCreated());
+    }
+
+    @Override
+    public ResultActions dispenseFuel(long fuelStationId, long fuelTankId, DispenseFuelRequest request) throws Exception {
+        return this.mockMvc.perform(post("/api/fuel-stations/{id}/fuel-tanks/{tankId}/dispense", fuelStationId, fuelTankId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
+    }
+
+    @Override
+    public FuelStationResponse dispenseFuelAndReturnResponse(long fuelStationId, long fuelTankId, DispenseFuelRequest request) throws Exception {
+        return getResponse(dispenseFuel(fuelStationId, fuelTankId, request), FuelStationResponse.class, status().isOk());
+    }
+
+    @Override
+    public ResultActions decommissionFuelTank(long fuelStationId, long fuelTankId) throws Exception {
+        return this.mockMvc.perform(put("/api/fuel-stations/{id}/fuel-tanks/{tankId}/decommission", fuelStationId, fuelTankId));
+    }
+
+    @Override
+    public FuelStationResponse decommissionFuelTankAndReturnResponse(long fuelStationId, long fuelTankId) throws Exception {
+        return getResponse(decommissionFuelTank(fuelStationId, fuelTankId), FuelStationResponse.class, status().isOk());
     }
 
     // TODO make it reusable

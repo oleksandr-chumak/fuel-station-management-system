@@ -28,6 +28,7 @@ public class FuelStationMapper {
         );
 
         List<FuelTank> fuelTanks = entity.getFuelTanks().stream()
+                .filter(tankEntity -> FuelTankStatus.fromId(tankEntity.getFuelTankStatusId()) == FuelTankStatus.ACTIVE)
                 .map(tankEntity -> new FuelTank(
                         tankEntity.getFuelTankId(),
                         FuelGrade.fromId(tankEntity.getFuelGradeId()),
@@ -35,7 +36,8 @@ public class FuelStationMapper {
                         tankEntity.getMaxCapacity(),
                         tankEntity.getLastRefillDate() != null ?
                                 Optional.of(tankEntity.getLastRefillDate()) :
-                                Optional.empty()
+                                Optional.empty(),
+                        FuelTankStatus.fromId(tankEntity.getFuelTankStatusId())
                 ))
                 .collect(Collectors.toList());
 
@@ -95,7 +97,8 @@ public class FuelStationMapper {
                         tank.getCurrentVolume(),
                         tank.getMaxCapacity(),
                         entity,
-                        tank.getLastRefillDate().orElse(null)
+                        tank.getLastRefillDate().orElse(null),
+                        tank.getStatus().getId()
                 ))
                 .collect(Collectors.toList());
 

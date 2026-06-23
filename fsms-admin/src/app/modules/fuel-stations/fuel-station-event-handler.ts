@@ -11,6 +11,9 @@ import {
   FuelStationEvent,
   FuelStationRestClient,
   FuelStationStompClient,
+  FuelTank,
+  FuelTankDecommissioned,
+  FuelTankInstalled,
   ManagerAssignedToFuelStation,
   ManagerRestClient,
   ManagerUnassignedFromFuelStation,
@@ -52,6 +55,10 @@ export class FuelStationEventHandler {
           this.handleManagerAssigned(event);
         } else if (event instanceof ManagerUnassignedFromFuelStation) {
           this.handleManagerUnassigned(event);
+        } else if (event instanceof FuelTankDecommissioned) {
+          this.handleFuelTankDecommissioned(event);
+        } else if (event instanceof FuelTankInstalled) {
+          this.handleFuelTankInstalled(event);
         } else if (event instanceof FuelOrderCreated) {
           this.handleFuelOrderCreated(event);
         } else if (event instanceof FuelOrderConfirmed) {
@@ -98,6 +105,24 @@ export class FuelStationEventHandler {
         this.fuelStationStore.managers = [...this.fuelStationStore.managers, manager];
       }))
       .subscribe();
+  }
+
+  private handleFuelTankDecommissioned(event: FuelTankDecommissioned): void {
+    const newFuelStation = this.fuelStationStore.fuelStation.clone();
+    newFuelStation.removeFuelTank(event.fuelTankId);
+    this.fuelStationStore.fuelStation = newFuelStation;
+  }
+
+  private handleFuelTankInstalled(event: FuelTankInstalled): void {
+    const newFuelStation = this.fuelStationStore.fuelStation.clone();
+    newFuelStation.addFuelTank(new FuelTank(
+      event.fuelTankId,
+      0,
+      event.maxCapacity,
+      event.fuelGrade,
+      null
+    ));
+    this.fuelStationStore.fuelStation = newFuelStation;
   }
 
   private handleManagerUnassigned(event: ManagerUnassignedFromFuelStation): void {

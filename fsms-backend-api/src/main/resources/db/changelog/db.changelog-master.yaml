@@ -31,3 +31,7 @@ databaseChangeLog:
       file: db/changelog/changes/0015-create-countries-table.sql
   - include:
       file: db/changelog/changes/0016-create-available-fuel-grades-table.sql
+  - include:
+      file: db/changelog/changes/0017-add-status-to-fuel-station-fuel-tanks.sql
+  - include:
+      file: db/changelog/changes/0018-create-fuel-tank-volume-history-table.sql

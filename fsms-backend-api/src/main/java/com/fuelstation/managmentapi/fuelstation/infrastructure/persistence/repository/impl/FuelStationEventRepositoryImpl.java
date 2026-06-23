@@ -87,6 +87,16 @@ public class FuelStationEventRepositoryImpl implements FuelStationEventRepositor
                 long unassignedManagerId = ((Number) payload.get("managerId")).longValue();
                 return new ManagerUnassignedFromFuelStation(fuelStationId, unassignedManagerId, performedBy, occurredAt);
 
+            case FUEL_TANK_DECOMMISSIONED:
+                long decommissionedTankId = ((Number) payload.get("fuelTankId")).longValue();
+                return new FuelTankDecommissioned(fuelStationId, decommissionedTankId, performedBy, occurredAt);
+
+            case FUEL_TANK_INSTALLED:
+                long installedTankId = ((Number) payload.get("fuelTankId")).longValue();
+                FuelGrade installedGrade = FuelGrade.fromString(payload.get("fuelGrade").toString());
+                BigDecimal installedMaxCapacity = new BigDecimal(payload.get("maxCapacity").toString());
+                return new FuelTankInstalled(fuelStationId, installedTankId, installedGrade, installedMaxCapacity, performedBy, occurredAt);
+
             default:
                 throw new IllegalArgumentException("Unknown event type: " + entity.getEventType());
         }
