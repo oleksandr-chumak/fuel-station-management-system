@@ -1,4 +1,4 @@
-import { Component, inject, Signal } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -26,25 +26,36 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
 
   protected readonly loading = toSignal(this.handler.loading$, { initialValue: false });
 
-  protected readonly fuelGrades = [
-    { label: "Diesel", value: FuelGrade.Diesel },
-    { label: "RON 95", value: FuelGrade.RON_95 },
-    { label: "RON 92", value: FuelGrade.RON_92 }
-  ];
+  private readonly fuelStation = toSignal(this.store.fuelStation$, { initialValue: null });
+
+  protected readonly fuelGrades = computed(() => {
+    const tanks = this.fuelStation()?.fuelTanks ?? [];
+    const uniqueGrades = Array.from(new Set(tanks.map(t => t.fuelGrade)));
+    return uniqueGrades.map(grade => ({
+      label: this.gradeLabel(grade),
+      value: grade
+    }));
+  });
+
+  protected readonly hasFuelGrades = computed(() => this.fuelGrades().length > 0);
 
   protected readonly createFuelOrderForm = new FormGroup({
     fuelGrade: new FormControl<FuelGrade | null>(null, Validators.required),
     amount: new FormControl<number>(0, Validators.required)
   });
 
+  override openDialog(): void {
+    this.createFuelOrderForm.reset({ fuelGrade: null, amount: 0 });
+    super.openDialog();
+  }
+
   handleFormSubmission() {
     if (this.createFuelOrderForm.valid) {
-        console.log(this.createFuelOrderForm.value);
       this.handler
-        .handle({ 
-          fuelStationId: this.store.fuelStation.fuelStationId, 
-          fuelGrade: this.createFuelOrderForm.value.fuelGrade!, 
-          amount: this.createFuelOrderForm.value.amount! 
+        .handle({
+          fuelStationId: this.store.fuelStation.fuelStationId,
+          fuelGrade: this.createFuelOrderForm.value.fuelGrade!,
+          amount: this.createFuelOrderForm.value.amount!
         })
         .pipe(tap(() => this.closeDialog()))
         .subscribe();
@@ -63,5 +74,9 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
 
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {
     return !!(formGroup.get(fieldName)?.touched && formGroup.get(fieldName)?.invalid);
+  }
+
+  private gradeLabel(grade: FuelGrade): string {
+    return FuelGrade[grade].replace('_', ' ');
   }
 }

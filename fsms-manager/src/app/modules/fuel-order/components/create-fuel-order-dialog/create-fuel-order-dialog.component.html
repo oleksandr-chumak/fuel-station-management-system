@@ -1,7 +1,12 @@
 <p-dialog (visibleChange)="handleStateChange($event)" [visible]="open" header="Create fuel order">
     <form class="flex flex-col gap-4" [formGroup]="createFuelOrderForm" (submit)="handleFormSubmission()">
+        @if (!hasFuelGrades()) {
+            <p-message severity="warn" variant="simple" size="small">
+                This station has no fuel tanks installed. Install a tank before creating an order.
+            </p-message>
+        }
         <div class="flex flex-col gap-1">
-            <p-select [options]="fuelGrades" formControlName="fuelGrade"  placeholder="Select Fuel Grade" class="w-full">
+            <p-select [options]="fuelGrades()" formControlName="fuelGrade" placeholder="Select Fuel Grade" class="w-full" [disabled]="!hasFuelGrades()">
                 <ng-template #selectedItem let-selectedOption>
                     <div *ngIf="selectedOption">{{ selectedOption.label }}</div>
                 </ng-template>
@@ -15,6 +20,6 @@
             <p-input-number inputId="amount" suffix="L" formControlName="amount" placeholder="Amount"></p-input-number>
             <p-message *ngIf="amountInvalid" severity="error" variant="simple" size="small">Amount is invalid</p-message>
         </div>
-        <p-button type="submit" styleClass="w-full" label="Create Fuel Order" [loading]="loading()"/>
+        <p-button type="submit" styleClass="w-full" label="Create Fuel Order" [loading]="loading()" [disabled]="!hasFuelGrades()"/>
     </form>
 </p-dialog>
