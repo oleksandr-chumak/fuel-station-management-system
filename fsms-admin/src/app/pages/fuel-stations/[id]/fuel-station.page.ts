@@ -110,7 +110,7 @@ export class FuelStationPage implements OnInit, OnDestroy {
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-prices`
         },
         {
-          label: "Fuel Purchases",
+          label: "Finance",
           icon: "pi pi-receipt",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-purchases`
         },

@@ -60,6 +60,7 @@ public class SecurityConfig {
                         "/api/fuel-stations/{id}/fuel-prices",
                         "/api/fuel-stations/{id}/fuel-prices/{fuelGrade}",
                         "/api/fuel-stations/{stationId}/fuel-purchases",
+                        "/api/fuel-stations/{stationId}/fuel-sales",
 
                         "/api/managers/",
                         "/api/managers/{id}/terminate",

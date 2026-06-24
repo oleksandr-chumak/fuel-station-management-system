@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core"
 import { CommandHandler } from "../../common/command-handler";
 import { ConfirmFuelStationOrder } from "../fuel-station-commands";
-import { FuelOrder, FuelOrderRestClient } from "fsms-web-api";
+import { FuelOrder, FuelOrderRestClient, FuelStationRestClient } from "fsms-web-api";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { FuelStationStore } from "../stores/fuel-station-store";
 import { MessageService } from "primeng/api";
@@ -14,6 +14,7 @@ export class ConfirmFuelStationOrderHandler
 
     private readonly store = inject(FuelStationStore);
     private readonly api = inject(FuelOrderRestClient);
+    private readonly fuelStationApi = inject(FuelStationRestClient);
     private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
 
     private readonly messageService = inject(MessageService);
@@ -22,24 +23,26 @@ export class ConfirmFuelStationOrderHandler
         return this.api.confirmFuelOrder(command.fuelOrderId)
             .pipe(
                 catchError((e) => {
-                    this.messageService.add({ 
-                        severity: 'error', 
-                        summary: 'Error', 
-                        detail: 'Failed to confirm fuel order' 
+                    this.messageService.add({
+                        severity: 'error',
+                        summary: 'Error',
+                        detail: 'Failed to confirm fuel order'
                     });
                     return throwError(() => e);
                 }),
                 tap((fuelOrder) => {
-                    if(this.store.fuelOrders == null) {
-                        return;
+                    if(this.store.fuelOrders != null) {
+                        this.store.fuelOrders = this.fuelOrderEventHandler
+                            .handleFuelOrderConfirmed(fuelOrder.fuelOrderId, this.store.fuelOrders);
                     }
 
-                    this.store.fuelOrders = this.fuelOrderEventHandler
-                        .handleFuelOrderConfirmed(fuelOrder.fuelOrderId, this.store.fuelOrders);
+                    this.fuelStationApi.getFuelStationById(fuelOrder.fuelStationId)
+                        .subscribe(station => this.store.fuelStation = station);
+
                     this.messageService.add({
-                        severity: 'success', 
-                        summary: 'Order Confirmed', 
-                        detail: 'The fuel order has been confirmed'  
+                        severity: 'success',
+                        summary: 'Order Confirmed',
+                        detail: 'The fuel order has been confirmed'
                     });
                 })
             )

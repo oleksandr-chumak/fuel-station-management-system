@@ -64,6 +64,10 @@ export interface GetFuelStationFuelPurchases {
     fuelStationId: number;
 }
 
+export interface GetFuelStationFuelSales {
+    fuelStationId: number;
+}
+
 export interface GetFuelPriceHistory {
     fuelStationId: number;
 }

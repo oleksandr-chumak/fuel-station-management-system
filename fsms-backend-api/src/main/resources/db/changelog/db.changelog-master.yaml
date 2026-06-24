@@ -35,3 +35,5 @@ databaseChangeLog:
       file: db/changelog/changes/0017-add-status-to-fuel-station-fuel-tanks.sql
   - include:
       file: db/changelog/changes/0018-create-fuel-tank-volume-history-table.sql
+  - include:
+      file: db/changelog/changes/0019-create-fuel-sales-table.sql

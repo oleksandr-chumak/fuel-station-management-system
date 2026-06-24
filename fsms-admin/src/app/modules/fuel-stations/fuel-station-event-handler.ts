@@ -7,6 +7,7 @@ import {
   FuelOrderRejected,
   FuelPriceChanged,
   FuelPurchaseCreated,
+  FuelSaleCreated,
   FuelStationDeactivated,
   FuelStationEvent,
   FuelStationRestClient,
@@ -69,6 +70,8 @@ export class FuelStationEventHandler {
           this.handleFuelOrderProcessed(event);
         } else if (event instanceof FuelPurchaseCreated) {
           this.handleFuelPurchaseCreated(event);
+        } else if (event instanceof FuelSaleCreated) {
+          this.handleFuelSaleCreated(event);
         }
       })
     );
@@ -172,6 +175,15 @@ export class FuelStationEventHandler {
     }
     this.fuelStationRestClient.getFuelStationFuelPurchases(event.fuelStationId)
       .pipe(tap(purchases => this.fuelStationStore.fuelPurchases = purchases))
+      .subscribe();
+  }
+
+  private handleFuelSaleCreated(event: FuelSaleCreated): void {
+    if (this.fuelStationStore.fuelSales === null) {
+      return;
+    }
+    this.fuelStationRestClient.getFuelStationFuelSales(event.fuelStationId)
+      .pipe(tap(sales => this.fuelStationStore.fuelSales = sales))
       .subscribe();
   }
 

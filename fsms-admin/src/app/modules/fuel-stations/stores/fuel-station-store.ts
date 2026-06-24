@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { FuelOrder, FuelPurchase, FuelStation, Manager } from "fsms-web-api";
+import { FuelOrder, FuelPurchase, FuelSale, FuelStation, Manager } from "fsms-web-api";
 
 @Injectable({ providedIn: "root" })
 export class FuelStationStore {
@@ -8,6 +8,7 @@ export class FuelStationStore {
   private _managers = new BehaviorSubject<Manager[] | null>(null);
   private _fuelOrders = new BehaviorSubject<FuelOrder[] | null>(null);
   private _fuelPurchases = new BehaviorSubject<FuelPurchase[] | null>(null);
+  private _fuelSales = new BehaviorSubject<FuelSale[] | null>(null);
 
   get fuelStation(): FuelStation {
     const value = this._fuelStation.getValue();
@@ -68,6 +69,22 @@ export class FuelStationStore {
     this._fuelPurchases.next(null);
   }
 
+  get fuelSales(): FuelSale[] | null {
+    return this._fuelSales.getValue();
+  }
+
+  set fuelSales(value: FuelSale[]) {
+    this._fuelSales.next(value);
+  }
+
+  get fuelSales$() {
+    return this._fuelSales.asObservable();
+  }
+
+  resetFuelSales(): void {
+    this._fuelSales.next(null);
+  }
+
   resetManagers(): void {
     this._managers.next(null);
   }
@@ -81,6 +98,7 @@ export class FuelStationStore {
     this.resetManagers();
     this.resetFuelOrders();
     this.resetFuelPurchases();
+    this.resetFuelSales();
   }
 
 }
