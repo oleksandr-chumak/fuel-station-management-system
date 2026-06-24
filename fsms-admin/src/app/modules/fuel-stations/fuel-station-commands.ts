@@ -70,6 +70,7 @@ export interface GetFuelStationFuelSales {
 
 export interface GetFuelPriceHistory {
     fuelStationId: number;
+    from?: string;
 }
 
 export interface DispenseFuel {

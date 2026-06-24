@@ -6,6 +6,7 @@ import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repos
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -22,6 +23,11 @@ public class FuelStationFuelPriceHistoryRepositoryImpl implements FuelStationFue
     @Override
     public List<FuelStationFuelPriceHistoryEntity> findByFuelStationId(long fuelStationId) {
         return jpaRepository.findByFuelStationIdOrderByChangedAtDesc(fuelStationId);
+    }
+
+    @Override
+    public List<FuelStationFuelPriceHistoryEntity> findRealChanges(long fuelStationId, Instant from) {
+        return jpaRepository.findRealPriceChanges(fuelStationId, from);
     }
 
 }

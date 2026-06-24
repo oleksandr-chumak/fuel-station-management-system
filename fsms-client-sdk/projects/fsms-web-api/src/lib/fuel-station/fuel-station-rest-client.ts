@@ -112,9 +112,12 @@ export class FuelStationRestClient {
         return this.restClient.get<FuelSale[]>(`api/fuel-stations/${fuelStationId}/fuel-sales`);
     }
 
-    getFuelPriceHistory(fuelStationId: number): Observable<FuelStationFuelPriceHistoryEntry[]> {
+    getFuelPriceHistory(fuelStationId: number, from?: string): Observable<FuelStationFuelPriceHistoryEntry[]> {
+        const params: Record<string, string> = {};
+        if (from) params['from'] = from;
         return this.restClient.get<FuelStationFuelPriceHistoryEntry[]>(
-            `api/fuel-stations/${fuelStationId}/fuel-price-history`
+            `api/fuel-stations/${fuelStationId}/fuel-price-history`,
+            { params }
         );
     }
 

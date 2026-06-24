@@ -210,9 +210,10 @@ public class FuelStationController {
 
     @GetMapping("/{id}/fuel-price-history")
     public ResponseEntity<List<FuelPriceHistoryResponse>> getFuelPriceHistory(
-            @PathVariable("id") long fuelStationId
+            @PathVariable("id") long fuelStationId,
+            @RequestParam(required = false) Instant from
     ) {
-        return ResponseEntity.ok(listFuelPriceHistoryQuery.process(fuelStationId));
+        return ResponseEntity.ok(listFuelPriceHistoryQuery.process(fuelStationId, from));
     }
 
     @PostMapping("/{id}/fuel-tanks")
