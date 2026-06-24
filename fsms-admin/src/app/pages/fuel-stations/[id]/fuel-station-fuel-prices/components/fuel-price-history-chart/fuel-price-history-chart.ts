@@ -12,9 +12,24 @@ import { FuelStationFuelPriceHistoryEntry } from 'fsms-web-api';
 import { MoneyPipe } from '../../../../../../modules/common/money.pipe';
 import { GetFuelPriceHistoryHandler } from '../../../../../../modules/fuel-stations/handlers/get-fuel-price-history-handler';
 
+type RangeKey = '24h' | '7d' | '30d' | 'all';
+type Bucket = 'none' | 'hour' | 'day';
+
+interface RangeOption {
+    label: string;
+    value: RangeKey;
+}
+
+const RANGE_WINDOWS: Record<RangeKey, { ms: number | null; bucket: Bucket }> = {
+    '24h': { ms: 24 * 60 * 60 * 1000, bucket: 'none' },
+    '7d':  { ms: 7  * 24 * 60 * 60 * 1000, bucket: 'hour' },
+    '30d': { ms: 30 * 24 * 60 * 60 * 1000, bucket: 'day'  },
+    'all': { ms: null, bucket: 'none' },
+};
+
 @Component({
     selector: 'app-fuel-price-history-chart',
-    imports: [CommonModule, PanelModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective],
+    imports: [CommonModule, FormsModule, PanelModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective],
     templateUrl: './fuel-price-history-chart.html',
 })
 export class FuelPriceHistoryChart {
@@ -25,20 +40,32 @@ export class FuelPriceHistoryChart {
     private readonly destroyRef = inject(DestroyRef);
     private readonly historyHandler = inject(GetFuelPriceHistoryHandler);
 
+    protected readonly rangeOptions: RangeOption[] = [
+        { label: '24h', value: '24h' },
+        { label: '7d',  value: '7d'  },
+        { label: '30d', value: '30d' },
+        { label: 'All', value: 'all' },
+    ];
+    protected readonly selectedRange = signal<RangeKey>('7d');
+
     protected readonly priceHistory = signal<FuelStationFuelPriceHistoryEntry[]>([]);
     protected readonly loadingHistory = toSignal(this.historyHandler.loading$, { initialValue: false });
-    
+
     protected readonly chartOptions = computed<EChartsCoreOption>(() =>
-        this.buildChart(this.priceHistory())
+        this.buildChart(this.priceHistory(), this.selectedRange())
     );
 
     constructor() {
         effect(() => {
             const id = this.fuelStationId();
+            const range = this.selectedRange();
             this.refreshKey();
 
+            const window = RANGE_WINDOWS[range];
+            const from = window.ms != null ? new Date(Date.now() - window.ms).toISOString() : undefined;
+
             this.historyHandler
-                .handle({ fuelStationId: id })
+                .handle({ fuelStationId: id, from })
                 .pipe(
                     tap(history => this.priceHistory.set(history)),
                     takeUntilDestroyed(this.destroyRef)
@@ -47,11 +74,17 @@ export class FuelPriceHistoryChart {
         });
     }
 
-    private buildChart(history: FuelStationFuelPriceHistoryEntry[]): EChartsCoreOption {
+    protected onRangeChange(value: RangeKey | null): void {
+        if (value != null) this.selectedRange.set(value);
+    }
+
+    private buildChart(history: FuelStationFuelPriceHistoryEntry[], range: RangeKey): EChartsCoreOption {
         const timeZone = this.timeZoneForCountry(this.countryCode());
         const currency = history[0]?.currency ?? '';
         const money = new MoneyPipe();
         const nowMs = Date.now();
+        const { ms: rangeMs, bucket } = RANGE_WINDOWS[range];
+        const fromMs = rangeMs != null ? nowMs - rangeMs : null;
 
         const gradeConfig = [
             { key: 'ron-92', label: 'RON 92', color: '#3B82F6' },
@@ -66,6 +99,12 @@ export class FuelPriceHistoryChart {
             seriesData.set(entry.fuelGrade, arr);
         }
         for (const arr of seriesData.values()) arr.sort((a, b) => a[0] - b[0]);
+
+        if (bucket !== 'none') {
+            for (const [key, points] of seriesData) {
+                seriesData.set(key, this.downsampleLastPerBucket(points, bucket));
+            }
+        }
 
         const tzParts = (ts: number) => {
             const parts = new Intl.DateTimeFormat('en-GB', {
@@ -99,7 +138,7 @@ export class FuelPriceHistoryChart {
         return {
             tooltip: {
                 trigger: 'axis',
-                axisPointer: { type: 'line' },
+                axisPointer: { type: 'line', snap: true },
                 formatter: (params: any) => {
                     const arr = params as any[];
                     if (!arr.length) return '';
@@ -112,9 +151,15 @@ export class FuelPriceHistoryChart {
                 },
             },
             legend: { show: true },
-            grid: { left: 12, right: 24, top: 28, bottom: 12, containLabel: true },
+            grid: { left: 12, right: 24, top: 28, bottom: 56, containLabel: true },
+            dataZoom: [
+                { type: 'inside', xAxisIndex: 0, filterMode: 'none', zoomOnMouseWheel: true, moveOnMouseMove: true, moveOnMouseWheel: false },
+                { type: 'slider', xAxisIndex: 0, filterMode: 'none', height: 20, bottom: 8, brushSelect: false },
+            ],
             xAxis: {
                 type: 'time',
+                min: fromMs ?? undefined,
+                max: nowMs,
                 axisLabel: {
                     formatter: formatAxisLabel,
                     hideOverlap: true,
@@ -138,14 +183,37 @@ export class FuelPriceHistoryChart {
                 return {
                     name: label,
                     type: 'line',
-                    smooth: true,
+                    step: 'end' as const,
                     color,
-                    showSymbol: true,
+                    showSymbol: false,
+                    symbol: 'circle',
                     symbolSize: 6,
+                    emphasis: { focus: 'series' },
+                    lineStyle: { width: 2 },
                     data,
                 };
             }),
         };
+    }
+
+    private downsampleLastPerBucket(points: [number, number][], bucket: Bucket): [number, number][] {
+        if (bucket === 'none' || points.length === 0) return points;
+
+        const bucketKey = (ts: number): number => {
+            const d = new Date(ts);
+            if (bucket === 'hour') {
+                d.setMinutes(0, 0, 0);
+            } else {
+                d.setHours(0, 0, 0, 0);
+            }
+            return d.getTime();
+        };
+
+        const lastPerBucket = new Map<number, [number, number]>();
+        for (const p of points) {
+            lastPerBucket.set(bucketKey(p[0]), p);
+        }
+        return Array.from(lastPerBucket.values()).sort((a, b) => a[0] - b[0]);
     }
 
     private timeZoneForCountry(country: string): string {

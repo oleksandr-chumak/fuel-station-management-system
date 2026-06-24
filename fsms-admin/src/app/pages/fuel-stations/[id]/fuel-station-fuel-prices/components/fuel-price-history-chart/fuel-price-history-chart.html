@@ -1,15 +1,24 @@
 <p-panel>
     <ng-template #header>
-        <div class="flex items-center justify-between w-full">
+        <div class="flex items-center justify-between w-full gap-4">
             <span class="font-semibold text-base">Price History</span>
+            <p-selectButton
+                [options]="rangeOptions"
+                [ngModel]="selectedRange()"
+                (ngModelChange)="onRangeChange($event)"
+                optionLabel="label"
+                optionValue="value"
+                [allowEmpty]="false"
+                size="small"
+            />
         </div>
     </ng-template>
 
     @if (loadingHistory()) {
-        <p-skeleton height="300px" />
+        <p-skeleton height="340px" />
     } @else if (priceHistory().length === 0) {
-        <p class="text-center py-4 text-muted-color">No price history available yet.</p>
+        <p class="text-center py-4 text-muted-color">No price changes in the selected range.</p>
     } @else {
-        <div echarts [options]="chartOptions()" style="height: 300px;"></div>
+        <div echarts [options]="chartOptions()" style="height: 340px;"></div>
     }
 </p-panel>

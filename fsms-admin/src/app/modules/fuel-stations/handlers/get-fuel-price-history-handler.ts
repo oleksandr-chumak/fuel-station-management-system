@@ -12,8 +12,8 @@ export class GetFuelPriceHistoryHandler
     private readonly api = inject(FuelStationRestClient);
     private readonly messageService = inject(MessageService);
 
-    execute({ fuelStationId }: GetFuelPriceHistory): Observable<FuelStationFuelPriceHistoryEntry[]> {
-        return this.api.getFuelPriceHistory(fuelStationId).pipe(
+    execute({ fuelStationId, from }: GetFuelPriceHistory): Observable<FuelStationFuelPriceHistoryEntry[]> {
+        return this.api.getFuelPriceHistory(fuelStationId, from).pipe(
             catchError((e) => {
                 this.messageService.add({
                     severity: 'error',
