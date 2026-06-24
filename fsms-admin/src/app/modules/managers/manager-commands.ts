@@ -3,10 +3,6 @@
 export interface GetManagers {
 }
 
-export interface GetManagerAccessToken {
-    managerId: number;
-}
-
 export interface GetManagerById {
     managerId: number;
 }

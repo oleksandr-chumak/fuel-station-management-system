@@ -14,7 +14,9 @@
             @if (showStatus()) {
                 <th>Status</th>
             }
-            <th class="flex items-center justify-center">Actions</th>
+            @if (actionsTemplate()) {
+                <th class="flex items-center justify-center">Actions</th>
+            }
         </tr>
     </ng-template>
 
@@ -27,13 +29,13 @@
             @if (showStatus()) {
                 <td><p-tag [value]="manager.status.toString()" [severity]="getStatusSeverity(manager)" /></td>
             }
-            <td>
-                <div class="flex items-center justify-center">
-                    @if (actionsTemplate(); as tmpl) {
+            @if (actionsTemplate(); as tmpl) {
+                <td>
+                    <div class="flex items-center justify-center">
                         <ng-container *ngTemplateOutlet="tmpl; context: { $implicit: manager }" />
-                    }
-                </div>
-            </td>
+                    </div>
+                </td>
+            }
         </tr>
     </ng-template>
 
