@@ -7,10 +7,5 @@
         [managers]="managers"
         [loading]="loading()"
         [showStatus]="true"
-        [actionsTemplate]="actions"
     />
 </p-panel>
-
-<ng-template managerTemplate #actions let-manager>
-    <app-sign-in-as-manager-button [managerId]="manager.managerId" />
-</ng-template>

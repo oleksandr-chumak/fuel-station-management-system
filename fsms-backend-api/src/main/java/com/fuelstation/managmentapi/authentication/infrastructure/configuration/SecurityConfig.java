@@ -51,8 +51,6 @@ public class SecurityConfig {
                         "/api/auth/managers/login"
                     ).permitAll()
                     .requestMatchers(
-                        "/api/auth/managers/{managerId}/token",
-
                         "/api/fuel-stations/",
                         "/api/fuel-stations/{id}/deactivate",
                         "/api/fuel-stations/{id}/assign-manager",

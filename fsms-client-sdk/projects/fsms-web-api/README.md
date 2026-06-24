@@ -95,7 +95,7 @@ import { ManagerRestClient, ManagerStompClient } from 'fsms-web-api';
 import { AuthRestClient } from 'fsms-web-api';
 ```
 
-`AuthRestClient` — `loginAdmin(req)`, `loginManager(req)`, `getManagerToken(managerId)`, `getMe()`
+`AuthRestClient` — `loginAdmin(req)`, `loginManager(req)`, `getMe()`
 
 ## Models & Types
 

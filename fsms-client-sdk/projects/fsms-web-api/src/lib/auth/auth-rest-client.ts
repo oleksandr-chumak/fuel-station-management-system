@@ -18,10 +18,6 @@ export class AuthRestClient {
         return this.restClient.post<string>("api/auth/managers/login", { email, password }, { responseType: "text" });
     }
 
-    getManagerAccessToken(managerId: number): Observable<String> {
-        return this.restClient.get<string>(`api/auth/managers/${managerId}/token`, { responseType: "text" });
-    }
-
     getMe(): Observable<User> {
         return this.restClient.get("api/auth/me")
             .pipe(map((user) => this.userMapper.fromJson(user)));

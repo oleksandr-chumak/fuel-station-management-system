@@ -1,6 +1,5 @@
 package com.fuelstation.managmentapi.authentication.application;
 
-import com.fuelstation.managmentapi.authentication.application.query.GetManagerAccessTokenQuery;
 import com.fuelstation.managmentapi.authentication.application.query.GetMeQuery;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -18,7 +17,6 @@ import com.fuelstation.managmentapi.authentication.infrastructure.security.Authe
 public class AuthController {
 
     private final AuthenticationService authService;
-    private final GetManagerAccessTokenQuery getManagerAccessTokenQuery;
     private final GetMeQuery getMeQuery;
 
     @PostMapping("/admins/login")
@@ -34,12 +32,6 @@ public class AuthController {
     @PostMapping("/managers/login")
     public ResponseEntity<String> loginManager(@RequestBody @Valid AuthRequest authRequest) {
         var accessToken = authService.authenticate(authRequest.getEmail(), authRequest.getPassword(), UserRole.MANAGER);
-        return new ResponseEntity<>(accessToken, HttpStatus.OK);
-    }
-
-    @GetMapping("/managers/{managerId}/token")
-    public ResponseEntity<String> getManagerAccessToken(@PathVariable Long managerId) {
-        var accessToken = getManagerAccessTokenQuery.process(managerId);
         return new ResponseEntity<>(accessToken, HttpStatus.OK);
     }
 

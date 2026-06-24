@@ -15,10 +15,13 @@ export class ManagerTable {
     managers = input<Manager[]>([]);
     loading = input<boolean>(false);
     showStatus = input<boolean>(false);
-    actionsTemplate = input.required<TemplateRef<{ $implicit: Manager }>>();
+    actionsTemplate = input<TemplateRef<{ $implicit: Manager }>>();
 
     protected readonly skeletonRows = new Array(5).fill(null);
-    protected readonly skeletonCols = computed(() => new Array(this.showStatus() ? 6 : 5).fill(null));
+    protected readonly skeletonCols = computed(() => {
+        const baseCols = this.showStatus() ? 5 : 4;
+        return new Array(baseCols + (this.actionsTemplate() ? 1 : 0)).fill(null);
+    });
 
     protected getStatusSeverity(manager: Manager): 'success' | undefined {
         return manager.status === ManagerStatus.Active ? 'success' : undefined;
