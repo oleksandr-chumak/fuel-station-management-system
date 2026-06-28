@@ -4,6 +4,7 @@ import com.fuelstation.managmentapi.common.WithMockCustomUser;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.application.rest.CreateFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderTestClient;
+import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationTestClient;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -35,6 +36,23 @@ public class FuelPurchaseControllerTest {
     @Autowired
     private FuelOrderTestClient fuelOrderTestClient;
 
+    private static long tankIdByGrade(FuelStationResponse station, FuelGrade grade) {
+        return station.getFuelTanks().stream()
+                .filter(t -> t.fuelGrade().equals(grade.toString()))
+                .findFirst()
+                .orElseThrow()
+                .id();
+    }
+
+    private static CreateFuelOrderRequest singleAllocation(
+            long fuelStationId, FuelGrade grade, long tankId, BigDecimal volume) {
+        return new CreateFuelOrderRequest(
+                fuelStationId,
+                grade,
+                List.of(new CreateFuelOrderRequest.AllocationRequest(tankId, volume))
+        );
+    }
+
     @Nested
     class GetFuelPurchasesByStation {
 
@@ -43,9 +61,12 @@ public class FuelPurchaseControllerTest {
         @DisplayName("Should return purchase after fuel order is confirmed")
         void shouldReturnPurchaseAfterOrderConfirmed() throws Exception {
             var station = fuelStationTestClient.createFuelStationAndReturnResponse();
-            var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(
-                    new CreateFuelOrderRequest(station.getFuelStationId(), FuelGrade.RON_95, BigDecimal.valueOf(100))
-            );
+            var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    station.getFuelStationId(),
+                    FuelGrade.RON_95,
+                    tankIdByGrade(station, FuelGrade.RON_95),
+                    BigDecimal.valueOf(100)
+            ));
             fuelOrderTestClient.confirmFuelOrder(order.getFuelOrderId())
                     .andExpect(status().isOk());
 
@@ -78,9 +99,12 @@ public class FuelPurchaseControllerTest {
             var station = fuelStationTestClient.createFuelStationAndReturnResponse();
 
             for (var grade : List.of(FuelGrade.RON_95, FuelGrade.DIESEL)) {
-                var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(
-                        new CreateFuelOrderRequest(station.getFuelStationId(), grade, BigDecimal.valueOf(50))
-                );
+                var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                        station.getFuelStationId(),
+                        grade,
+                        tankIdByGrade(station, grade),
+                        BigDecimal.valueOf(50)
+                ));
                 fuelOrderTestClient.confirmFuelOrder(order.getFuelOrderId());
             }
 
@@ -94,9 +118,12 @@ public class FuelPurchaseControllerTest {
         @DisplayName("Should not create purchase when order is rejected")
         void shouldNotCreatePurchaseWhenOrderRejected() throws Exception {
             var station = fuelStationTestClient.createFuelStationAndReturnResponse();
-            var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(
-                    new CreateFuelOrderRequest(station.getFuelStationId(), FuelGrade.RON_95, BigDecimal.valueOf(100))
-            );
+            var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    station.getFuelStationId(),
+                    FuelGrade.RON_95,
+                    tankIdByGrade(station, FuelGrade.RON_95),
+                    BigDecimal.valueOf(100)
+            ));
             fuelOrderTestClient.rejectFuelOrder(order.getFuelOrderId())
                     .andExpect(status().isOk());
 

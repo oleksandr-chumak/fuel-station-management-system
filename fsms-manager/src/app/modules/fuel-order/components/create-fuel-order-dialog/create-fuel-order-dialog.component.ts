@@ -1,20 +1,24 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, DestroyRef, inject } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import BasicDialog from '../../../common/basic-dialog.component';
-import { FuelGrade } from 'fsms-web-api';
+import { FuelGrade, FuelOrderAllocation, FuelTank } from 'fsms-web-api';
 import { CreateFuelOrderHandler } from '../../../fuel-station/handlers/create-fuel-order.handler';
 import { FuelStationStore } from '../../../fuel-station/fuel-station-store';
-import { tap } from 'rxjs';
+import { startWith, tap } from 'rxjs';
 
+type AllocationFormGroup = FormGroup<{
+  fuelTankId: FormControl<number | null>;
+  volume: FormControl<number | null>;
+}>;
 
 @Component({
   selector: 'app-create-fuel-order-dialog',
@@ -24,10 +28,23 @@ import { tap } from 'rxjs';
 export class CreateFuelOrderDialogComponent extends BasicDialog {
   private readonly handler = inject(CreateFuelOrderHandler);
   private readonly store = inject(FuelStationStore);
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly loading = toSignal(this.handler.loading$, { initialValue: false });
 
   private readonly fuelStation = toSignal(this.store.fuelStation$, { initialValue: null });
+
+  protected readonly createFuelOrderForm = new FormGroup({
+    fuelGrade: new FormControl<FuelGrade | null>(null, Validators.required),
+    allocations: new FormArray<AllocationFormGroup>([], Validators.required)
+  });
+
+  private readonly formValue = toSignal(
+    this.createFuelOrderForm.valueChanges.pipe(startWith(this.createFuelOrderForm.getRawValue())),
+    { initialValue: this.createFuelOrderForm.getRawValue() }
+  );
+
+  protected readonly selectedGrade = computed(() => this.formValue().fuelGrade ?? null);
 
   protected readonly fuelGrades = computed(() => {
     const tanks = this.fuelStation()?.fuelTanks ?? [];
@@ -40,23 +57,77 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
 
   protected readonly hasFuelGrades = computed(() => this.fuelGrades().length > 0);
 
-  protected readonly createFuelOrderForm = new FormGroup({
-    fuelGrade: new FormControl<FuelGrade | null>(null, Validators.required),
-    amount: new FormControl<number>(0, Validators.required)
+  protected readonly tanksOfGrade = computed<FuelTank[]>(() => {
+    const grade = this.selectedGrade();
+    if (grade === null) return [];
+    return (this.fuelStation()?.fuelTanks ?? []).filter(t => t.fuelGrade === grade);
   });
 
+  protected readonly canAddAllocation = computed(() => {
+    if (this.selectedGrade() === null) return false;
+    return this.allocations.length < this.tanksOfGrade().length;
+  });
+
+  constructor() {
+    super();
+    this.createFuelOrderForm.controls.fuelGrade.valueChanges
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.resetAllocations());
+  }
+
+  get allocations(): FormArray<AllocationFormGroup> {
+    return this.createFuelOrderForm.controls.allocations;
+  }
+
   override openDialog(): void {
-    this.createFuelOrderForm.reset({ fuelGrade: null, amount: 0 });
+    this.createFuelOrderForm.reset({ fuelGrade: null });
+    this.allocations.clear();
     super.openDialog();
   }
 
-  handleFormSubmission() {
-    if (this.createFuelOrderForm.valid) {
+  protected addAllocation(): void {
+    this.allocations.push(this.buildAllocationGroup());
+  }
+
+  protected removeAllocation(index: number): void {
+    if (this.allocations.length > 1) {
+      this.allocations.removeAt(index);
+    }
+  }
+
+  protected tankOptionsFor(rowIndex: number): { label: string; value: number }[] {
+    const tanks = this.tanksOfGrade();
+    const selectedInOtherRows = this.allocations.controls
+      .map((row, i) => i === rowIndex ? null : row.value.fuelTankId)
+      .filter((id): id is number => id !== null && id !== undefined);
+    return tanks
+      .filter(t => !selectedInOtherRows.includes(t.id))
+      .map(t => ({
+        label: this.tankLabel(t),
+        value: t.id
+      }));
+  }
+
+  protected isAllocationFieldInvalid(rowIndex: number, fieldName: 'fuelTankId' | 'volume'): boolean {
+    const control = this.allocations.at(rowIndex).get(fieldName);
+    return !!(control?.touched && control?.invalid);
+  }
+
+  get fuelGradeInvalid(): boolean {
+    return this.isFieldInvalid(this.createFuelOrderForm, "fuelGrade");
+  }
+
+  handleFormSubmission(): void {
+    if (this.createFuelOrderForm.valid && this.allocations.length > 0) {
+      const allocations = this.allocations.controls.map(group => new FuelOrderAllocation(
+        group.value.fuelTankId!,
+        group.value.volume!
+      ));
       this.handler
         .handle({
           fuelStationId: this.store.fuelStation.fuelStationId,
           fuelGrade: this.createFuelOrderForm.value.fuelGrade!,
-          amount: this.createFuelOrderForm.value.amount!
+          allocations
         })
         .pipe(tap(() => this.closeDialog()))
         .subscribe();
@@ -65,12 +136,23 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
     this.createFuelOrderForm.markAllAsTouched();
   }
 
-  get fuelGradeInvalid() {
-    return this.isFieldInvalid(this.createFuelOrderForm, "fuelGrade");
+  private resetAllocations(): void {
+    this.allocations.clear();
+    if (this.selectedGrade() !== null) {
+      this.addAllocation();
+    }
   }
 
-  get amountInvalid() {
-    return this.isFieldInvalid(this.createFuelOrderForm, "amount");
+  private buildAllocationGroup(): AllocationFormGroup {
+    return new FormGroup({
+      fuelTankId: new FormControl<number | null>(null, Validators.required),
+      volume: new FormControl<number | null>(null, [Validators.required, Validators.min(0.001)])
+    });
+  }
+
+  private tankLabel(tank: FuelTank): string {
+    const free = tank.maxCapacity - tank.currentVolume;
+    return `#${tank.id} (${free}L / ${tank.maxCapacity}L)`;
   }
 
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {

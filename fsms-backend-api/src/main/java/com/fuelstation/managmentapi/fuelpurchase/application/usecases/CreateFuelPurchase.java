@@ -46,14 +46,14 @@ public class CreateFuelPurchase {
                         + " in country " + station.getAddress().country()));
 
         BigDecimal pricePerLiter = taxedPrice.fuelPrice().price();
-        BigDecimal total = order.getAmount().multiply(pricePerLiter);
+        BigDecimal total = order.getVolume().multiply(pricePerLiter);
 
         FuelPurchase purchase = new FuelPurchase(
                 null,
                 fuelOrderId,
                 fuelStationId,
                 order.getGrade(),
-                order.getAmount(),
+                order.getVolume(),
                 pricePerLiter,
                 taxedPrice.fuelPrice().currency(),
                 total,

@@ -5,6 +5,8 @@ import com.fuelstation.managmentapi.common.domain.DomainException;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+import java.util.Map;
+
 /**
  * Base exception for all fuel station domain exceptions
  */
@@ -15,9 +17,16 @@ public abstract class FuelStationDomainException extends DomainException {
         super(message, HttpStatus.CONFLICT, "FUEL_STATION_" + code);
     }
 
-    public FuelStationDomainException(String message,HttpStatus httpStatus, String code) {
+    public FuelStationDomainException(String message, HttpStatus httpStatus, String code) {
         super(message, httpStatus, "FUEL_STATION_" + code);
     }
 
-}
+    public FuelStationDomainException(String message, String code, Map<String, Object> details) {
+        super(message, HttpStatus.CONFLICT, "FUEL_STATION_" + code, details);
+    }
 
+    public FuelStationDomainException(String message, HttpStatus httpStatus, String code, Map<String, Object> details) {
+        super(message, httpStatus, "FUEL_STATION_" + code, details);
+    }
+
+}

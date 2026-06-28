@@ -37,3 +37,5 @@ databaseChangeLog:
       file: db/changelog/changes/0018-create-fuel-tank-volume-history-table.sql
   - include:
       file: db/changelog/changes/0019-create-fuel-sales-table.sql
+  - include:
+      file: db/changelog/changes/0020-create-fuel-order-allocations.sql

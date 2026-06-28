@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.fuelstation.managmentapi.authentication.application.CurrentUser;
 import com.fuelstation.managmentapi.authentication.domain.User;
-import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderAmountExceedsLimitException;
+import com.fuelstation.managmentapi.fuelorder.application.usecases.command.CreateFuelOrderCommand;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeConfirmedException;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeRejectedException;
 import jakarta.validation.Valid;
@@ -40,27 +40,24 @@ public class FuelOrderController {
 
     @PostMapping("/")
     public ResponseEntity<FuelOrderResponse> createFuelOrder(
-            @RequestBody @Valid CreateFuelOrderRequest request,
-            @CurrentUser User user
-            ) {
-        try{
-            FuelOrder fuelOrder = createFuelOrder.process(
-                    request.getFuelStationId(),
-                    request.getFuelGrade(),
-                    request.getAmount(),
-                    user.getActor()
-            );
+        @RequestBody @Valid CreateFuelOrderRequest request,
+        @CurrentUser User user
+    ) {
+        var command = new CreateFuelOrderCommand(
+            request.fuelStationId(),
+            request.fuelGrade(),
+            request.allocations().stream().map(CreateFuelOrderRequest.AllocationRequest::toDomain).toList(),
+            user.getActor()
+        );
+        var fuelOrder = FuelOrderResponse.fromDomain(createFuelOrder.process(command));
 
-            return new ResponseEntity<>(FuelOrderResponse.fromDomain(fuelOrder), HttpStatus.CREATED);
-        } catch (FuelOrderAmountExceedsLimitException e) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
-        }
+        return new ResponseEntity<>(fuelOrder, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/confirm")
     public ResponseEntity<FuelOrderResponse> confirmFuelOrder(
-            @PathVariable("id") long fuelOrderId,
-            @CurrentUser User user
+        @PathVariable("id") long fuelOrderId,
+        @CurrentUser User user
     ) {
         try {
             FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId, user.getActor());
@@ -72,8 +69,8 @@ public class FuelOrderController {
 
     @PutMapping("/{id}/reject")
     public ResponseEntity<FuelOrderResponse> rejectFuelOrder(
-            @PathVariable("id") long fuelOrderId,
-            @CurrentUser User user
+        @PathVariable("id") long fuelOrderId,
+        @CurrentUser User user
     ) {
         try {
             FuelOrder fuelOrder = rejectFuelOrder.process(fuelOrderId, user.getActor());

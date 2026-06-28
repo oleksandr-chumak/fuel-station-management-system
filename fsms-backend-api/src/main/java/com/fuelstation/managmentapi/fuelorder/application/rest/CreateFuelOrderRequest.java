@@ -2,27 +2,43 @@ package com.fuelstation.managmentapi.fuelorder.application.rest;
 
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 
+import com.fuelstation.managmentapi.fuelorder.domain.FuelOrderAllocation;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class CreateFuelOrderRequest {
-
+public record CreateFuelOrderRequest(
     @NotNull(message = "Fuel station id must not be null")
-    private Long fuelStationId;
+    Long fuelStationId,
 
     @NotNull(message = "Fuel grade must not be null")
-    private FuelGrade fuelGrade;
+    FuelGrade fuelGrade,
 
-    @NotNull(message = "Amount must not be null")
-    @Positive(message = "Amount must be a positive number")
-    private BigDecimal amount;
+    @Valid
+    @NotEmpty(message = "Must include at least one fuel tank")
+    List<AllocationRequest> allocations
+) {
+
+    public record AllocationRequest(
+        @NotNull(message = "Fuel Tank Id must not be null")
+        Long fuelTankId,
+
+        @NotNull(message = "Amount must not be null")
+        @Positive(message = "Amount should be a positive value")
+        BigDecimal volume
+    ) {
+
+        public FuelOrderAllocation toDomain() {
+            return new FuelOrderAllocation(
+                fuelTankId,
+                volume
+            );
+        }
+
+    }
 
 }

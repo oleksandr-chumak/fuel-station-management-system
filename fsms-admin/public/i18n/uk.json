@@ -353,6 +353,8 @@
       "fuelStationNotFoundSummary": "Не знайдено",
       "fuelStationNotFoundDetail": "АЗС з ID {{fuelStationId}} не існує",
       "fuelStationErrorDetail": "Не вдалося отримати АЗС з ID {{fuelStationId}}",
+      "fuelStationDeactivatedSummary": "АЗС деактивовано",
+      "fuelStationDeactivatedDetail": "АЗС з ID {{fuelStationId}} було деактивовано. Жодні операції не дозволені.",
       "managersErrorDetail": "Сталася помилка під час завантаження менеджерів",
       "managerErrorDetail": "Не вдалося отримати менеджера з ID {{managerId}}",
       "fuelOrdersErrorDetail": "Сталася помилка під час завантаження замовлень палива",

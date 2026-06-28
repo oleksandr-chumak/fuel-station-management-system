@@ -8,6 +8,12 @@ import { CommandHandler } from "../../common/command-handler";
 import { DecommissionFuelTank } from "../fuel-station-commands";
 import { FuelStationStore } from "../fuel-station-store";
 
+interface ApiErrorBody {
+    code?: string;
+    message?: string;
+    details?: Record<string, unknown>;
+}
+
 @Injectable({ providedIn: "root" })
 export class DecommissionFuelTankHandler extends CommandHandler<DecommissionFuelTank, FuelStation> {
 
@@ -19,13 +25,10 @@ export class DecommissionFuelTankHandler extends CommandHandler<DecommissionFuel
     execute({ fuelStationId, fuelTankId }: DecommissionFuelTank): Observable<FuelStation> {
         return this.api.decommissionFuelTank(fuelStationId, fuelTankId).pipe(
             catchError((e) => {
-                const detail = e instanceof HttpErrorResponse && e.status === 403
-                    ? this.translate.instant("toasts.decommissionFuelTankForbidden")
-                    : this.translate.instant("toasts.decommissionFuelTank.errorDetail");
                 this.messageService.add({
                     severity: "error",
                     summary: this.translate.instant("common.error"),
-                    detail
+                    detail: this.resolveErrorDetail(e)
                 });
                 return throwError(() => e);
             }),
@@ -38,5 +41,24 @@ export class DecommissionFuelTankHandler extends CommandHandler<DecommissionFuel
                 this.store.fuelStation = fuelStation;
             })
         );
+    }
+
+    private resolveErrorDetail(error: unknown): string {
+        if (error instanceof HttpErrorResponse) {
+            if (error.status === 403) {
+                return this.translate.instant("toasts.decommissionFuelTankForbidden");
+            }
+            const body = error.error as ApiErrorBody | null;
+            if (body?.code === "FUEL_STATION_TANK_HAS_PENDING_FUEL_ORDERS") {
+                const details = body.details ?? {};
+                const pendingIds = details["pendingFuelOrderIds"] as number[] | undefined;
+                return this.translate.instant("toasts.decommissionFuelTank.hasPendingOrdersDetail", {
+                    fuelTankId: details["fuelTankId"],
+                    pendingOrderIds: (pendingIds ?? []).join(", "),
+                    count: pendingIds?.length ?? 0
+                });
+            }
+        }
+        return this.translate.instant("toasts.decommissionFuelTank.errorDetail");
     }
 }

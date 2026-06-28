@@ -3,6 +3,7 @@ import { inject, Injectable } from "@angular/core"
 import { RestClient } from "../core/rest-client";
 import { FuelOrderMapper } from "./fuel-order.mapper";
 import { FuelOrder } from "./fuel-order.model";
+import { FuelOrderAllocation } from "./fuel-order-allocation.model";
 import { FuelGrade } from "../core/fuel-grade.enum";
 
 @Injectable({ providedIn: "root"})
@@ -31,11 +32,11 @@ export class FuelOrderRestClient {
             .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
     }
 
-    createFuelOrder(fuelStationId: number, fuelGrade: FuelGrade, amount: number): Observable<FuelOrder> {
-        return this.restClient.post("api/fuel-orders/", { 
-            fuelStationId, 
-            fuelGrade: this.fuelGradeToSlug(fuelGrade), 
-            amount
+    createFuelOrder(fuelStationId: number, fuelGrade: FuelGrade, allocations: FuelOrderAllocation[]): Observable<FuelOrder> {
+        return this.restClient.post("api/fuel-orders/", {
+            fuelStationId,
+            fuelGrade: this.fuelGradeToSlug(fuelGrade),
+            allocations: allocations.map(a => ({ fuelTankId: a.fuelTankId, volume: a.volume }))
         })
         .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
     }

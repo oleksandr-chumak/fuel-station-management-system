@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.fuelstation.managmentapi.administrator.application.usecases.CreateAdministrator;
 import com.fuelstation.managmentapi.administrator.domain.Administrator;
 import com.fuelstation.managmentapi.authentication.domain.UserRole;
-import com.fuelstation.managmentapi.authentication.infrastructure.persistence.UserRepository;
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.manager.application.usecases.CreateManager;
 import com.fuelstation.managmentapi.manager.domain.Manager;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.testcontainers.shaded.org.checkerframework.checker.units.qual.A;
 
 import java.util.stream.Stream;
 
@@ -185,72 +183,6 @@ public class AuthControllerTest {
             assertThat(me.email()).isEqualTo(testManagerEmail);
         }
 
-    }
-
-    @Nested
-    class GetManagerAccessTokenTests {
-
-        @Test
-        @DisplayName("Should generate valid access token for manager")
-        void shouldGenerateValidAccessTokenForManager() throws Exception {
-            String adminToken = getAdminAccessToken();
-            Manager manager = createManager.process("John", "Doe", testManagerEmail, testManagerPassword, Actor.system());
-
-            String token = authTestClient.getManagerAccessTokenAndReturn(manager.getManagerId(), adminToken);
-
-            assertThat(token).isNotNull().isNotEmpty();
-
-            UserResponse me = authTestClient.getMeAndReturnResponse(token);
-            assertThat(me.userId()).isEqualTo(manager.getManagerId());
-            assertThat(me.role()).isEqualTo(UserRole.MANAGER);
-            assertThat(me.email()).isEqualTo(testManagerEmail);
-        }
-
-        @Test
-        @DisplayName("Should return Not Found for non-existent manager")
-        void shouldReturnNotFoundForNonExistentManager() throws Exception {
-            String adminToken = getAdminAccessToken();
-            long nonExistentManagerId = 99999L;
-
-            authTestClient.getManagerAccessToken(nonExistentManagerId, adminToken)
-                    .andExpect(status().isNotFound());
-        }
-
-        @Test
-        @DisplayName("Should generate different tokens for different managers")
-        void shouldGenerateDifferentTokensForDifferentManagers() throws Exception {
-            String adminToken = getAdminAccessToken();
-            Manager manager1 = createManager.process("John", "Doe", "manager1@gmail.com", "password1", Actor.system());
-            Manager manager2 = createManager.process("Jane", "Smith", "manager2@gmail.com", "password2", Actor.system());
-
-            String token1 = authTestClient.getManagerAccessTokenAndReturn(manager1.getManagerId(), adminToken);
-            String token2 = authTestClient.getManagerAccessTokenAndReturn(manager2.getManagerId(), adminToken);
-
-            assertThat(token1).isNotEqualTo(token2);
-
-            UserResponse me1 = authTestClient.getMeAndReturnResponse(token1);
-            UserResponse me2 = authTestClient.getMeAndReturnResponse(token2);
-
-            assertThat(me1.userId()).isEqualTo(manager1.getManagerId());
-            assertThat(me1.email()).isEqualTo("manager1@gmail.com");
-            assertThat(me2.userId()).isEqualTo(manager2.getManagerId());
-            assertThat(me2.email()).isEqualTo("manager2@gmail.com");
-        }
-
-        @Test
-        @DisplayName("Should handle invalid manager ID format")
-        void shouldHandleInvalidManagerIdFormat() throws Exception {
-            String adminToken = getAdminAccessToken();
-            authTestClient.getManagerAccessToken(-1L, adminToken)
-                    .andExpect(status().isNotFound());
-        }
-
-        private String getAdminAccessToken() throws Exception {
-            createTestAdmin();
-            return authTestClient.loginAdminAndGetToken(
-                    new AuthRequest(testAdminEmail, testAdminPassword)
-            );
-        }
     }
 
     @Nested

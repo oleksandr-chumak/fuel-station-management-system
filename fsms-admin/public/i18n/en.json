@@ -353,6 +353,8 @@
       "fuelStationNotFoundSummary": "Not found",
       "fuelStationNotFoundDetail": "Fuel station with id {{fuelStationId}} doesn't exist",
       "fuelStationErrorDetail": "Failed to fetch fuel station with id {{fuelStationId}}",
+      "fuelStationDeactivatedSummary": "Fuel station deactivated",
+      "fuelStationDeactivatedDetail": "Fuel station with id {{fuelStationId}} has been deactivated. No operations are allowed.",
       "managersErrorDetail": "An error occurred while fetching managers",
       "managerErrorDetail": "Failed to retrieve manager with id {{managerId}}",
       "fuelOrdersErrorDetail": "An error occurred while fetching fuel orders",

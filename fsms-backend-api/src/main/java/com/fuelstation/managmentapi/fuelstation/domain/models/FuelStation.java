@@ -51,12 +51,6 @@ public class FuelStation extends AggregateRoot {
                 .toList();
     }
 
-    public BigDecimal getAvailableVolume(FuelGrade fuelGrade) {
-        return getFuelTanksByFuelGrade(fuelGrade).stream()
-                .map(FuelTank::getAvailableVolume)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     public void assignManager(long managerId, Actor performedBy) {
         if (isManagerAssigned(managerId)) {
             throw new ManagerAlreadyAssignedException(managerId, fuelStationId);
@@ -113,6 +107,10 @@ public class FuelStation extends AggregateRoot {
 
         fuelTank.setStatus(FuelTankStatus.DECOMMISSIONED);
         pushDomainEvent(new FuelTankDecommissioned(this.fuelStationId, fuelTankId, performedBy));
+    }
+
+    public void refillFuelTank(long fuelTankId, BigDecimal volume, Actor performedBy) {
+        refillFuelTank(findFuelTankById(fuelTankId), volume, performedBy);
     }
 
     public void refillFuelTank(FuelTank fuelTank, BigDecimal volume, Actor performedBy) {

@@ -223,6 +223,12 @@
     "fuelGradeInvalid": "Некоректна марка палива",
     "amountInvalid": "Некоректна кількість",
     "amountPlaceholder": "Кількість",
+    "allocations": "Розподіл по резервуарах",
+    "addAllocation": "Додати резервуар",
+    "selectTank": "Оберіть резервуар",
+    "volumePlaceholder": "Об'єм",
+    "tankInvalid": "Оберіть резервуар",
+    "volumeInvalid": "Об'єм має бути більший за нуль",
     "noFuelTanksWarning": "На цій АЗС не встановлено резервуарів. Встановіть резервуар перед створенням замовлення."
   },
   "finance": {
@@ -303,7 +309,8 @@
     "createFuelOrder": {
       "successSummary": "Створено",
       "successDetail": "Замовлення палива успішно створено.",
-      "errorDetail": "Сталася помилка під час створення замовлення палива"
+      "errorDetail": "Сталася помилка під час створення замовлення палива",
+      "allocationExceedsLimitDetail": "Резервуар #{{fuelTankId}} не може прийняти {{requestedVolume}} л — після поточних замовлень вільно лише {{allowedVolume}} л."
     },
     "decommissionFuelTankForbidden": "Лише адміністратори можуть демонтувати резервуари",
     "installFuelTank": {
@@ -314,7 +321,8 @@
     "decommissionFuelTank": {
       "successSummary": "Демонтовано",
       "successDetail": "Резервуар {{fuelTankId}} демонтовано",
-      "errorDetail": "Сталася помилка під час демонтажу резервуара"
+      "errorDetail": "Сталася помилка під час демонтажу резервуара",
+      "hasPendingOrdersDetail": "Резервуар #{{fuelTankId}} неможливо демонтувати — на нього посилається {{count}} активне замовлення палива: {{pendingOrderIds}}. Спочатку підтвердьте або відхиліть їх."
     },
     "dispenseFuel": {
       "successSummary": "Видано",
@@ -371,6 +379,8 @@
       "fuelStationNotFoundSummary": "Не знайдено",
       "fuelStationNotFoundDetail": "АЗС з ID {{fuelStationId}} не існує",
       "fuelStationErrorDetail": "Не вдалося отримати АЗС з ID {{fuelStationId}}",
+      "fuelStationDeactivatedSummary": "АЗС деактивовано",
+      "fuelStationDeactivatedDetail": "АЗС з ID {{fuelStationId}} було деактивовано. Жодні операції не дозволені.",
       "managersErrorDetail": "Сталася помилка під час завантаження менеджерів",
       "managerErrorDetail": "Не вдалося отримати менеджера з ID {{managerId}}",
       "fuelOrdersErrorDetail": "Сталася помилка під час завантаження замовлень палива",

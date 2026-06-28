@@ -31,7 +31,7 @@
                 }
                 <td><app-fuel-order-status-tag [status]="order.status" /></td>
                 <td><app-fuel-grade-label [grade]="order.fuelGrade" /></td>
-                <td>{{ order.amount }}</td>
+                <td>{{ order.volume }}</td>
                 <td>{{ order.createdAt | appDate }}</td>
                 <td>
                     <div class="flex items-center gap-2">

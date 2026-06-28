@@ -1,14 +1,16 @@
 import { FuelGrade } from "../core/fuel-grade.enum";
+import { FuelOrderAllocation } from "./fuel-order-allocation.model";
 import { FuelOrderStatus } from "./fuel-order-status.enum";
 
 export class FuelOrder {
 
     constructor(
-        public fuelOrderId: number, 
-        public status: FuelOrderStatus, 
-        public fuelGrade: FuelGrade, 
-        public amount: number, 
-        public fuelStationId: number, 
+        public fuelOrderId: number,
+        public status: FuelOrderStatus,
+        public fuelGrade: FuelGrade,
+        public volume: number,
+        public allocations: FuelOrderAllocation[],
+        public fuelStationId: number,
         public createdAt: Date
     ) {}
 
@@ -39,5 +41,5 @@ export class FuelOrder {
     process(): void {
         this.status = FuelOrderStatus.Processed;
     }
-    
+
 }

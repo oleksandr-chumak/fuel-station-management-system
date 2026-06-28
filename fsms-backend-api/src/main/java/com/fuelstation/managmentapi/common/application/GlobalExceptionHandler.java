@@ -33,7 +33,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         var error = new ErrorResponse(
                 ex.getMessage(),
                 ex.getCode(),
-                ex.getHttpStatus()
+                ex.getHttpStatus(),
+                ex.getDetails()
         );
         return ResponseEntity.status(ex.getHttpStatus()).body(error);
     }

@@ -1,4 +1,4 @@
-import { FuelGrade } from "fsms-web-api";
+import { FuelGrade, FuelOrderAllocation } from "fsms-web-api";
 
 export interface GetAssignedFuelStations {
     managerId: number;
@@ -19,7 +19,7 @@ export interface GetFuelStationOrders {
 export interface CreateFuelOrder {
     fuelStationId: number;
     fuelGrade: FuelGrade;
-    amount: number;
+    allocations: FuelOrderAllocation[];
 }
 
 export interface DispenseFuel {

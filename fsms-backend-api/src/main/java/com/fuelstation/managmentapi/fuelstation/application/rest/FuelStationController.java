@@ -7,6 +7,7 @@ import com.fuelstation.managmentapi.authentication.application.CurrentUser;
 import com.fuelstation.managmentapi.authentication.domain.User;
 import com.fuelstation.managmentapi.common.application.CursorPage;
 import com.fuelstation.managmentapi.common.application.DomainEventResponse;
+import com.fuelstation.managmentapi.fuelstation.application.query.*;
 import com.fuelstation.managmentapi.fuelstation.domain.exceptions.FuelStationAlreadyDeactivatedException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,13 +26,6 @@ import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderResponse
 import com.fuelstation.managmentapi.fuelorder.domain.FuelOrder;
 import com.fuelstation.managmentapi.fuelstation.application.command.ChangeFuelPriceCommand;
 import com.fuelstation.managmentapi.fuelstation.application.command.ChangeFuelPricesBulkCommand;
-import com.fuelstation.managmentapi.fuelstation.application.query.GetFuelStationByIdQuery;
-import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelPriceHistoryQuery;
-import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationEventsQuery;
-import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationManagersQuery;
-import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationOrdersQuery;
-import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelStationsQuery;
-import com.fuelstation.managmentapi.fuelstation.application.query.ListFuelTankVolumeHistoryQuery;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.AssignManagerRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.CreateFuelStationRequest;
 import com.fuelstation.managmentapi.fuelstation.application.rest.requests.ChangeFuelPriceRequest;
@@ -69,7 +63,7 @@ public class FuelStationController {
     private final DecommissionFuelTank decommissionFuelTank;
     private final InstallFuelTank installFuelTank;
 
-    private final GetFuelStationByIdQuery getFuelStationByIdQuery;
+    private final GetActiveFuelStationByIdQuery getActiveFuelStationByIdQuery;
     private final ListFuelStationsQuery listFuelStationsQuery;
     private final ListFuelStationManagersQuery listFuelStationManagersQuery;
     private final ListFuelStationOrdersQuery listFuelStationOrdersQuery;
@@ -168,7 +162,7 @@ public class FuelStationController {
             @PathVariable("id") long fuelStationId,
             @CurrentUser User user
     ) {
-        var fuelStation = getFuelStationByIdQuery.process(fuelStationId, user.getActor());
+        var fuelStation = getActiveFuelStationByIdQuery.process(fuelStationId, user.getActor());
         return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
     }
 

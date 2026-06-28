@@ -218,6 +218,12 @@
     "fuelGradeInvalid": "Fuel grade is invalid",
     "amountInvalid": "Amount is invalid",
     "amountPlaceholder": "Amount",
+    "allocations": "Tank allocations",
+    "addAllocation": "Add tank",
+    "selectTank": "Select tank",
+    "volumePlaceholder": "Volume",
+    "tankInvalid": "Tank is required",
+    "volumeInvalid": "Volume must be greater than zero",
     "noFuelTanksWarning": "This station has no fuel tanks installed. Install a tank before creating an order.",
     "statusPending": "Pending",
     "statusConfirmed": "Confirmed",
@@ -303,7 +309,8 @@
     "createFuelOrder": {
       "successSummary": "Created",
       "successDetail": "Fuel order was created successfully.",
-      "errorDetail": "An error occurred while creating fuel order"
+      "errorDetail": "An error occurred while creating fuel order",
+      "allocationExceedsLimitDetail": "Tank #{{fuelTankId}} cannot accept {{requestedVolume}} L — only {{allowedVolume}} L is free after pending orders."
     },
     "decommissionFuelTankForbidden": "Only administrators can decommission tanks",
     "installFuelTank": {
@@ -314,7 +321,8 @@
     "decommissionFuelTank": {
       "successSummary": "Decommissioned",
       "successDetail": "Fuel tank {{fuelTankId}} was decommissioned",
-      "errorDetail": "An error occurred while decommissioning fuel tank"
+      "errorDetail": "An error occurred while decommissioning fuel tank",
+      "hasPendingOrdersDetail": "Tank #{{fuelTankId}} cannot be decommissioned — {{count}} pending fuel order(s) reference it: {{pendingOrderIds}}. Confirm or reject them first."
     },
     "dispenseFuel": {
       "successSummary": "Dispensed",
@@ -371,6 +379,8 @@
       "fuelStationNotFoundSummary": "Not found",
       "fuelStationNotFoundDetail": "Fuel station with id {{fuelStationId}} doesn't exist",
       "fuelStationErrorDetail": "Failed to fetch fuel station with id {{fuelStationId}}",
+      "fuelStationDeactivatedSummary": "Fuel station deactivated",
+      "fuelStationDeactivatedDetail": "Fuel station with id {{fuelStationId}} has been deactivated. No operations are allowed.",
       "managersErrorDetail": "An error occurred while fetching managers",
       "managerErrorDetail": "Failed to retrieve manager with id {{managerId}}",
       "fuelOrdersErrorDetail": "An error occurred while fetching fuel orders",

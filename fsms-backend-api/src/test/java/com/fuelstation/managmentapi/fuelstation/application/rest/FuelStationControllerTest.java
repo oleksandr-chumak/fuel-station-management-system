@@ -53,6 +53,23 @@ public class FuelStationControllerTest {
     @Autowired
     private ManagerTestClient managerTestClient;
 
+    private static long tankIdByGrade(FuelStationResponse station, FuelGrade grade) {
+        return station.getFuelTanks().stream()
+                .filter(t -> t.fuelGrade().equals(grade.toString()))
+                .findFirst()
+                .orElseThrow()
+                .id();
+    }
+
+    private static CreateFuelOrderRequest singleAllocation(
+            long fuelStationId, FuelGrade grade, long tankId, BigDecimal volume) {
+        return new CreateFuelOrderRequest(
+                fuelStationId,
+                grade,
+                List.of(new CreateFuelOrderRequest.AllocationRequest(tankId, volume))
+        );
+    }
+
     @Nested
     class CreateFuelStation {
 
@@ -477,9 +494,10 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should dispense fuel from a tank")
         public void shouldDispenseFuel() throws Exception {
-            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(
+            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
                     testFuelStation.getFuelStationId(),
                     FuelGrade.RON_92,
+                    tankIdByGrade(testFuelStation, FuelGrade.RON_92),
                     BigDecimal.valueOf(100)
             ));
             fuelOrderTestClient.confirmFuelOrderAndReturnResponse(order.getFuelOrderId());
@@ -521,9 +539,10 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should return Conflict when requested volume exceeds available volume after a partial refill")
         public void shouldReturnConflictWhenRequestedVolumeExceedsAvailable() throws Exception {
-            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(
+            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
                     testFuelStation.getFuelStationId(),
                     FuelGrade.RON_92,
+                    tankIdByGrade(testFuelStation, FuelGrade.RON_92),
                     BigDecimal.valueOf(500)
             ));
             fuelOrderTestClient.confirmFuelOrderAndReturnResponse(order.getFuelOrderId());
@@ -676,9 +695,10 @@ public class FuelStationControllerTest {
         @WithMockCustomUser
         @DisplayName("Should return Conflict when the tank is not empty")
         public void shouldReturnConflictWhenTankIsNotEmpty() throws Exception {
-            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(new CreateFuelOrderRequest(
+            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
                     testFuelStation.getFuelStationId(),
                     FuelGrade.RON_92,
+                    tankIdByGrade(testFuelStation, FuelGrade.RON_92),
                     BigDecimal.valueOf(100)
             ));
             fuelOrderTestClient.confirmFuelOrderAndReturnResponse(order.getFuelOrderId());
@@ -689,6 +709,22 @@ public class FuelStationControllerTest {
                     .findFirst()
                     .orElseThrow()
                     .id();
+
+            fuelStationTestClient.decommissionFuelTank(testFuelStation.getFuelStationId(), ron92TankId)
+                    .andExpect(status().isConflict());
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Conflict when the tank has pending fuel orders")
+        public void shouldReturnConflictWhenTankHasPendingFuelOrders() throws Exception {
+            long ron92TankId = tankIdByGrade(testFuelStation, FuelGrade.RON_92);
+            fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    testFuelStation.getFuelStationId(),
+                    FuelGrade.RON_92,
+                    ron92TankId,
+                    BigDecimal.valueOf(100)
+            ));
 
             fuelStationTestClient.decommissionFuelTank(testFuelStation.getFuelStationId(), ron92TankId)
                     .andExpect(status().isConflict());
@@ -723,8 +759,16 @@ public class FuelStationControllerTest {
     public void shouldGetAllFuelOrdersRelatedToFuelStation() throws Exception {
         FuelStationResponse testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
 
-        fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getFuelStationId(), FuelGrade.RON_92, BigDecimal.valueOf(10)));
-        fuelOrderTestClient.createFuelOrder(new CreateFuelOrderRequest(testFuelStation.getFuelStationId(), FuelGrade.DIESEL, BigDecimal.valueOf(10)));
+        fuelOrderTestClient.createFuelOrder(singleAllocation(
+                testFuelStation.getFuelStationId(),
+                FuelGrade.RON_92,
+                tankIdByGrade(testFuelStation, FuelGrade.RON_92),
+                BigDecimal.valueOf(10)));
+        fuelOrderTestClient.createFuelOrder(singleAllocation(
+                testFuelStation.getFuelStationId(),
+                FuelGrade.DIESEL,
+                tankIdByGrade(testFuelStation, FuelGrade.DIESEL),
+                BigDecimal.valueOf(10)));
 
         List<FuelOrderResponse> fuelOrders = fuelStationTestClient.getFuelStationFuelOrdersAndReturnResponse(testFuelStation.getFuelStationId());
         assertThat(fuelOrders.size()).isEqualTo(2);

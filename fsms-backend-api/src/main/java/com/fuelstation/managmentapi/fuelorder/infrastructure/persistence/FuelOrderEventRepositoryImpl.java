@@ -47,12 +47,12 @@ public class FuelOrderEventRepositoryImpl implements FuelOrderEventRepository {
     @Override
     public Page<FuelOrderEvent> findByFuelStationIdAfter(Long fuelStationId, Instant occurredAfter, int limit) {
         return jpaFuelOrderEventRepository
-                .findByFuelStationIdAndOccurredAt(
-                        fuelStationId,
-                        occurredAfter.atOffset(ZoneOffset.UTC),
-                        PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "occurredAt"))
-                )
-                .map(this::toFuelOrderEvent);
+            .findByFuelStationIdAndOccurredAt(
+                fuelStationId,
+                occurredAfter.atOffset(ZoneOffset.UTC),
+                PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "occurredAt"))
+            )
+            .map(this::toFuelOrderEvent);
     }
 
     private FuelOrderEvent toFuelOrderEvent(FuelOrderEventEntity entity) {

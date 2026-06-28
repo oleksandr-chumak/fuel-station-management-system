@@ -1,12 +1,14 @@
-<p-dialog (visibleChange)="handleStateChange($event)" [visible]="open" [header]="'fuelOrders.createDialogTitle' | translate">
+<p-dialog (visibleChange)="handleStateChange($event)" [visible]="open" [header]="'fuelOrders.createDialogTitle' | translate" [style]="{ width: '32rem' }">
     <form class="flex flex-col gap-4" [formGroup]="createFuelOrderForm" (submit)="handleFormSubmission()">
         @if (!hasFuelGrades()) {
             <p-message severity="warn" variant="simple" size="small">
                 {{ 'fuelOrders.noFuelTanksWarning' | translate }}
             </p-message>
         }
+
         <div class="flex flex-col gap-1">
-            <p-select [options]="fuelGrades()" formControlName="fuelGrade" [placeholder]="'fuelOrders.selectFuelGrade' | translate" class="w-full" [disabled]="!hasFuelGrades()">
+            <label for="fuelGrade" class="text-sm font-medium">{{ 'fuelOrders.fuelGrade' | translate }}</label>
+            <p-select inputId="fuelGrade" [options]="fuelGrades()" formControlName="fuelGrade" [placeholder]="'fuelOrders.selectFuelGrade' | translate" class="w-full" [disabled]="!hasFuelGrades()" appendTo="body">
                 <ng-template #selectedItem let-selectedOption>
                     <div *ngIf="selectedOption">{{ selectedOption.labelKey | translate }}</div>
                 </ng-template>
@@ -14,12 +16,59 @@
                     <div>{{ fuelGrade.labelKey | translate }}</div>
                 </ng-template>
             </p-select>
-            <p-message *ngIf="fuelGradeInvalid" severity="error" variant="simple" size="small">{{ 'fuelOrders.fuelGradeInvalid' | translate }}</p-message>
+            @if (fuelGradeInvalid) {
+                <p-message severity="error" variant="simple" size="small">{{ 'fuelOrders.fuelGradeInvalid' | translate }}</p-message>
+            }
         </div>
-        <div class="flex flex-col gap-1">
-            <p-input-number inputId="amount" suffix="L" formControlName="amount" [placeholder]="'fuelOrders.amountPlaceholder' | translate"></p-input-number>
-            <p-message *ngIf="amountInvalid" severity="error" variant="simple" size="small">{{ 'fuelOrders.amountInvalid' | translate }}</p-message>
-        </div>
+
+        @if (selectedGrade() !== null) {
+            <div class="flex flex-col gap-2">
+                <label class="text-sm font-medium">{{ 'fuelOrders.allocations' | translate }}</label>
+                <div formArrayName="allocations" class="flex flex-col gap-2">
+                    @for (row of allocations.controls; track $index; let i = $index) {
+                        <div [formGroupName]="i" class="flex flex-col gap-1">
+                            <div class="flex gap-2 items-start">
+                                <p-select
+                                    class="flex-1"
+                                    [options]="tankOptionsFor(i)"
+                                    optionLabel="label"
+                                    optionValue="value"
+                                    formControlName="fuelTankId"
+                                    [placeholder]="'fuelOrders.selectTank' | translate"
+                                    appendTo="body"></p-select>
+                                <p-input-number
+                                    formControlName="volume"
+                                    suffix="L"
+                                    [min]="0"
+                                    [placeholder]="'fuelOrders.volumePlaceholder' | translate"></p-input-number>
+                                <p-button
+                                    type="button"
+                                    icon="pi pi-times"
+                                    severity="secondary"
+                                    [text]="true"
+                                    [disabled]="allocations.length === 1"
+                                    (onClick)="removeAllocation(i)"></p-button>
+                            </div>
+                            @if (isAllocationFieldInvalid(i, 'fuelTankId')) {
+                                <p-message severity="error" variant="simple" size="small">{{ 'fuelOrders.tankInvalid' | translate }}</p-message>
+                            }
+                            @if (isAllocationFieldInvalid(i, 'volume')) {
+                                <p-message severity="error" variant="simple" size="small">{{ 'fuelOrders.volumeInvalid' | translate }}</p-message>
+                            }
+                        </div>
+                    }
+                </div>
+                <p-button
+                    type="button"
+                    icon="pi pi-plus"
+                    [label]="'fuelOrders.addAllocation' | translate"
+                    severity="secondary"
+                    [outlined]="true"
+                    [disabled]="!canAddAllocation()"
+                    (onClick)="addAllocation()"></p-button>
+            </div>
+        }
+
         <p-button type="submit" styleClass="w-full" [label]="'fuelOrders.createSubmit' | translate" [loading]="loading()" [disabled]="!hasFuelGrades()"/>
     </form>
 </p-dialog>

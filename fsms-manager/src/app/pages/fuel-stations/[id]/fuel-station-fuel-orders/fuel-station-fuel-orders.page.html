@@ -19,7 +19,7 @@
                 <td>{{ fuelOrder.fuelOrderId }}</td>
                 <td><app-fuel-order-status-tag [status]="fuelOrder.status" /></td>
                 <td><app-fuel-grade-label [grade]="fuelOrder.fuelGrade" /></td>
-                <td>{{ fuelOrder.amount }}{{ 'fuelTanks.litres' | translate }}</td>
+                <td>{{ fuelOrder.volume }}{{ 'fuelTanks.litres' | translate }}</td>
                 <td>{{ fuelOrder.createdAt | appDate }}</td>
             </tr>
         </ng-template>

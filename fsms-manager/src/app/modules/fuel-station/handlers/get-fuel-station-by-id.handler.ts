@@ -25,13 +25,19 @@ export class GetFuelStationByIdHandler extends CommandHandler<GetFuelStationById
                         summary: this.translate.instant("toasts.fetch.fuelStationNotFoundSummary"),
                         detail: this.translate.instant("toasts.fetch.fuelStationNotFoundDetail", { fuelStationId })
                     });
+                } else if (e instanceof HttpErrorResponse && e.error?.code === "FUEL_STATION_DEACTIVATED") {
+                    this.messageService.add({
+                        severity: "warn",
+                        summary: this.translate.instant("toasts.fetch.fuelStationDeactivatedSummary"),
+                        detail: this.translate.instant("toasts.fetch.fuelStationDeactivatedDetail", { fuelStationId })
+                    });
+                } else {
+                    this.messageService.add({
+                        severity: "error",
+                        summary: this.translate.instant("common.error"),
+                        detail: this.translate.instant("toasts.fetch.fuelStationErrorDetail", { fuelStationId })
+                    });
                 }
-
-                this.messageService.add({
-                    severity: "error",
-                    summary: this.translate.instant("common.error"),
-                    detail: this.translate.instant("toasts.fetch.fuelStationErrorDetail", { fuelStationId })
-                });
 
                 return throwError(() => e);
             }),
