@@ -1,4 +1,4 @@
-<p-select appendTo="body" [options]="managers" [(ngModel)]="selectedManager" (onChange)="handleChange($event)" placeholder="Select Item" class="w-full">
+<p-select appendTo="body" [options]="managers" [(ngModel)]="selectedManager" (onChange)="handleChange($event)" [placeholder]="'managers.selectItem' | translate" class="w-full">
     <ng-template #selectedItem let-selectedOption>
         @if(selectedOption) {
             <div>{{ selectedOption.fullName }}</div>

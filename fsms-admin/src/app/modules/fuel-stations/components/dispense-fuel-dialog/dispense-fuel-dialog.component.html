@@ -3,14 +3,14 @@
     [visible]="open"
     [modal]="true"
     [style]="{ width: '420px' }"
-    [header]="'Dispense fuel from tank ' + fuelTankId">
+    [header]="('fuelTanks.dispenseTitle' | translate) + ' ' + fuelTankId">
     <div class="flex flex-col gap-4">
         <div class="text-sm opacity-70">
-            Grade: <strong>{{ fuelGradeLabel() }}</strong> &middot;
-            Available: <strong>{{ availableVolume }} L</strong>
+            {{ 'fuelTanks.grade' | translate }}: <strong><app-fuel-grade-label [grade]="fuelGrade" /></strong> &middot;
+            {{ 'fuelTanks.available' | translate }}: <strong>{{ availableVolume }} {{ 'fuelTanks.litres' | translate }}</strong>
         </div>
         <div class="flex flex-col gap-1">
-            <label for="volume" class="text-sm">Volume to dispense (L)</label>
+            <label for="volume" class="text-sm">{{ 'fuelTanks.volumeToDispenseLabel' | translate }}</label>
             <p-inputNumber
                 inputId="volume"
                 [(ngModel)]="volume"
@@ -23,14 +23,14 @@
             </p-inputNumber>
             @if (volume !== null && volume > availableVolume) {
                 <span class="text-sm text-red-500">
-                    Cannot dispense more than {{ availableVolume }} L
+                    {{ 'fuelTanks.volumeExceedsAvailable' | translate }} {{ availableVolume }} {{ 'fuelTanks.litres' | translate }}
                 </span>
             }
         </div>
         <div class="flex justify-end gap-2 mt-2">
-            <p-button label="Cancel" severity="secondary" [text]="true" (onClick)="closeDialog()" />
+            <p-button [label]="'common.cancel' | translate" severity="secondary" [text]="true" (onClick)="closeDialog()" />
             <p-button
-                label="Dispense"
+                [label]="'fuelTanks.dispense' | translate"
                 icon="pi pi-minus-circle"
                 [loading]="loading()"
                 [disabled]="!canSubmit"

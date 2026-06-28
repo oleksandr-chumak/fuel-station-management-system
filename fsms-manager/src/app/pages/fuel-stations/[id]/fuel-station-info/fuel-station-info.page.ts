@@ -4,11 +4,12 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FuelStation } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-info-page',
-  imports: [PanelModule, InputTextModule, IftaLabelModule],
+  imports: [PanelModule, InputTextModule, IftaLabelModule, TranslatePipe],
   templateUrl: './fuel-station-info.page.html'
 })
 export class FuelStationInfoPage {

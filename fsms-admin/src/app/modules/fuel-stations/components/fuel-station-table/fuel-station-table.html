@@ -7,10 +7,10 @@
 
     <ng-template #header>
         <tr>
-            <th>Id</th>
-            <th>Address</th>
-            <th>Status</th>
-            <th class="w-60 !text-center">Action</th>
+            <th>{{ 'common.id' | translate }}</th>
+            <th>{{ 'fuelStations.address' | translate }}</th>
+            <th>{{ 'fuelStations.status' | translate }}</th>
+            <th class="w-60 !text-center">{{ 'common.action' | translate }}</th>
         </tr>
     </ng-template>
 
@@ -20,15 +20,15 @@
             <td>{{ fuelStation.address }}</td>
             <td><p-tag [value]="fuelStation.status" [severity]="getSeverity(fuelStation)" /></td>
             <td>
-                    @if(fuelStation.active) { 
+                    @if(fuelStation.active) {
                         <div class="flex items-center justify-center gap-2">
-                            <p-button 
-                                size="small" 
-                                severity="secondary" 
+                            <p-button
+                                size="small"
+                                severity="secondary"
                                 [outlined]="true"
-                                (onClick)="viewClicked.emit(fuelStation.fuelStationId)" 
+                                (onClick)="viewClicked.emit(fuelStation.fuelStationId)"
                             >
-                                View
+                                {{ 'common.view' | translate }}
                             </p-button>
                             <p-button
                                 size="small"
@@ -37,11 +37,11 @@
                                 [loading]="deactivateLoading()"
                                 (onClick)="deactivate(fuelStation.fuelStationId)"
                             >
-                                Deactivate Station
+                                {{ 'fuelStations.deactivate' | translate }}
                             </p-button>
                         </div>
                     } @else {
-                        <div class="flex justify-center">No actions</div>
+                        <div class="flex justify-center">{{ 'common.noActions' | translate }}</div>
                     }
             </td>
             <td>

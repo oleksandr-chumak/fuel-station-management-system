@@ -12,10 +12,12 @@ import BasicDialog from '../../../common/basic-dialog.component';
 import { InstallFuelTankHandler } from '../../handlers/install-fuel-tank-handler';
 import { FuelStationStore } from '../../stores/fuel-station-store';
 import { FuelGrade } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FuelGradeLabel } from '../../../fuel-prices/components/fuel-grade-label/fuel-grade-label';
 
 @Component({
   selector: 'app-install-fuel-tank-dialog',
-  imports: [CommonModule, ReactiveFormsModule, DialogModule, ButtonModule, MessageModule, SelectModule, InputNumberModule],
+  imports: [CommonModule, ReactiveFormsModule, DialogModule, ButtonModule, MessageModule, SelectModule, InputNumberModule, TranslatePipe, FuelGradeLabel],
   templateUrl: './install-fuel-tank-dialog.component.html'
 })
 export class InstallFuelTankDialogComponent extends BasicDialog {
@@ -26,9 +28,9 @@ export class InstallFuelTankDialogComponent extends BasicDialog {
   protected readonly loading = toSignal(this.handler.loading$, { initialValue: false });
 
   protected readonly fuelGrades = [
-    { label: 'Diesel', value: FuelGrade.Diesel },
-    { label: 'RON 95', value: FuelGrade.RON_95 },
-    { label: 'RON 92', value: FuelGrade.RON_92 }
+    { value: FuelGrade.Diesel },
+    { value: FuelGrade.RON_95 },
+    { value: FuelGrade.RON_92 }
   ];
 
   protected readonly form = new FormGroup({

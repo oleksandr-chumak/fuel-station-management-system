@@ -7,9 +7,11 @@ import { Manager } from 'fsms-web-api';
 import { GetManagersHandler } from '../../handlers/get-managers-handler';
 import { toSignal } from '@angular/core/rxjs-interop';
 
+import { TranslatePipe } from '@ngx-translate/core';
+
 @Component({
   selector: 'app-manager-select',
-  imports: [CommonModule ,FormsModule, Select],
+  imports: [CommonModule, FormsModule, Select, TranslatePipe],
   templateUrl: './manager-select.component.html'
 })
 export class ManagerSelectComponent implements OnInit {

@@ -5,10 +5,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { ButtonModule } from 'primeng/button';
 import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-fuel-station-info-page',
-  imports: [CommonModule, PanelModule, InputTextModule, IftaLabelModule, ButtonModule],
+  imports: [CommonModule, PanelModule, InputTextModule, IftaLabelModule, ButtonModule, TranslatePipe],
   templateUrl: './fuel-station-info.page.html'
 })
 export class FuelStationInfoPage {

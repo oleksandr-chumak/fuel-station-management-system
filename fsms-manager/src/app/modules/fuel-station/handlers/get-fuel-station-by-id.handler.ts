@@ -3,6 +3,7 @@ import { catchError, Observable, tap, throwError } from "rxjs";
 import { FuelStation, FuelStationRestClient } from "fsms-web-api";
 import { HttpErrorResponse } from "@angular/common/http";
 import { MessageService } from "primeng/api";
+import { TranslateService } from "@ngx-translate/core";
 import { CommandHandler } from "../../common/command-handler";
 import { GetFuelStationById } from "../fuel-station-commands";
 import { FuelStationStore } from "../fuel-station-store";
@@ -13,6 +14,7 @@ export class GetFuelStationByIdHandler extends CommandHandler<GetFuelStationById
     private readonly api = inject(FuelStationRestClient);
     private readonly store = inject(FuelStationStore);
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
 
     execute({ fuelStationId }: GetFuelStationById): Observable<FuelStation> {
         return this.api.getFuelStationById(fuelStationId).pipe(
@@ -20,15 +22,15 @@ export class GetFuelStationByIdHandler extends CommandHandler<GetFuelStationById
                 if (e instanceof HttpErrorResponse && e.status == 404) {
                     this.messageService.add({
                         severity: "error",
-                        summary: "Not found",
-                        detail: "Fuel station with id: " + fuelStationId + " doesn't exist"
+                        summary: this.translate.instant("toasts.fetch.fuelStationNotFoundSummary"),
+                        detail: this.translate.instant("toasts.fetch.fuelStationNotFoundDetail", { fuelStationId })
                     });
                 }
 
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error",
-                    detail: "Failed to fetch fuel station with id: " + fuelStationId
+                    summary: this.translate.instant("common.error"),
+                    detail: this.translate.instant("toasts.fetch.fuelStationErrorDetail", { fuelStationId })
                 });
 
                 return throwError(() => e);

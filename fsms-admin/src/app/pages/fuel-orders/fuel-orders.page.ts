@@ -8,10 +8,11 @@ import { FuelOrdersStore } from '../../modules/fuel-orders/fuel-orders-store';
 import { tap } from 'rxjs';
 import { FuelOrderTable } from "../../modules/fuel-orders/components/fuel-order-table/fuel-order-table";
 import { FuelOrderEventHandler } from '../../modules/fuel-orders/fuel-order-event-handler';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-fuel-orders',
-  imports: [PanelModule, FuelOrderTable],
+  imports: [PanelModule, FuelOrderTable, TranslatePipe],
   templateUrl: './fuel-orders.page.html'
 })
 export class FuelOrdersPage implements OnInit, OnDestroy {

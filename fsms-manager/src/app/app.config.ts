@@ -7,8 +7,11 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 import { MessageService } from 'primeng/api';
 import { AppConfigService } from './modules/common/app-config.service';
+import { LanguageService } from './modules/common/language.service';
 import { StompClient, WEB_API_CONFIG, WebApiConfig, WebApiModule } from 'fsms-web-api';
 import { AuthService, SecurityModule } from 'fsms-security';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,8 +19,10 @@ export const appConfig: ApplicationConfig = {
       const appConfigService = inject(AppConfigService);
       const stompClient = inject(StompClient);
       const authService = inject(AuthService);
+      const languageService = inject(LanguageService);
 
       await appConfigService.loadConfig();
+      languageService.init();
       stompClient.activate();
       return authService.loadUserData();
     }),
@@ -38,6 +43,15 @@ export const appConfig: ApplicationConfig = {
 
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
+
+    provideTranslateService({
+      fallbackLang: 'en',
+      lang: 'en',
+    }),
+    provideTranslateHttpLoader({
+      prefix: '/assets/i18n/',
+      suffix: '.json',
+    }),
 
     MessageService,
     provideAnimationsAsync(),

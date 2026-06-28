@@ -2,10 +2,10 @@
     <p-panel>
         <ng-template #header>
             <div class="flex justify-between items-center w-full">
-                <span class="font-semibold">Fuel tanks</span>
+                <span class="font-semibold">{{ 'fuelTanks.title' | translate }}</span>
                 <p-button
                     icon="pi pi-plus"
-                    label="Install fuel tank"
+                    [label]="'fuelTanks.install' | translate"
                     size="small"
                     severity="primary"
                     (onClick)="openInstallDialog()">
@@ -16,12 +16,12 @@
             [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #header>
                 <tr>
-                    <th>Id</th>
-                    <th>Current Volume</th>
-                    <th>Max Capacity</th>
-                    <th>Fuel Grade</th>
-                    <th>Last Refill Date</th>
-                    <th style="width: 12rem">Actions</th>
+                    <th>{{ 'common.id' | translate }}</th>
+                    <th>{{ 'fuelTanks.currentVolume' | translate }}</th>
+                    <th>{{ 'fuelTanks.maxCapacity' | translate }}</th>
+                    <th>{{ 'fuelTanks.grade' | translate }}</th>
+                    <th>{{ 'fuelTanks.lastRefillDate' | translate }}</th>
+                    <th style="width: 12rem">{{ 'common.actions' | translate }}</th>
                 </tr>
             </ng-template>
             <ng-template #body let-fuelTank>
@@ -29,8 +29,8 @@
                     <td>{{ fuelTank.id }}</td>
                     <td>{{ fuelTank.currentVolume }}</td>
                     <td>{{ fuelTank.maxCapacity }}</td>
-                    <td>{{ getFuelGradeValue(fuelTank.fuelGrade) }}</td>
-                    <td>{{ fuelTank.lastRefillDate | date: 'mediumDate' }}</td>
+                    <td><app-fuel-grade-label [grade]="fuelTank.fuelGrade" /></td>
+                    <td>{{ fuelTank.lastRefillDate | appDate:false }}</td>
                     <td>
                         <div class="flex gap-2">
                             <p-button
@@ -38,7 +38,7 @@
                                 size="small"
                                 severity="secondary"
                                 [outlined]="true"
-                                pTooltip="Dispense fuel"
+                                [pTooltip]="'fuelTanks.dispenseTooltip' | translate"
                                 [disabled]="fuelTank.currentVolume <= 0"
                                 (onClick)="openDispenseDialog(fuelTank)">
                             </p-button>
@@ -47,7 +47,7 @@
                                 size="small"
                                 severity="danger"
                                 [outlined]="true"
-                                [pTooltip]="fuelTank.currentVolume > 0 ? 'Tank must be empty (' + fuelTank.currentVolume + ' L) before it can be decommissioned' : 'Decommission tank'"
+                                [pTooltip]="fuelTank.currentVolume > 0 ? ('fuelTanks.decommissionDisabledTooltip' | translate: { volume: fuelTank.currentVolume }) : ('fuelTanks.decommission' | translate)"
                                 [loading]="decommissionLoading()"
                                 [disabled]="fuelTank.currentVolume > 0"
                                 (onClick)="decommission(fuelTank)">

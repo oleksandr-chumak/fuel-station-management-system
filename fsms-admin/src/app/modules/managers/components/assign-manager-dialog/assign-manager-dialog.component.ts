@@ -12,10 +12,11 @@ import { Manager } from 'fsms-web-api';
 import { AssignManagerHandler } from '../../../fuel-stations/handlers/assign-manager-handler';
 import { FuelStationStore } from '../../../fuel-stations/stores/fuel-station-store';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-assign-manager-dialog',
-  imports: [CommonModule, ReactiveFormsModule, DialogModule, ManagerSelectComponent, ButtonModule, MessageModule, InputTextModule],
+  imports: [CommonModule, ReactiveFormsModule, DialogModule, ManagerSelectComponent, ButtonModule, MessageModule, InputTextModule, TranslatePipe],
   templateUrl: './assign-manager-dialog.component.html'
 })
 export class AssignManagerDialogComponent extends BasicDialog {

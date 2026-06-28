@@ -8,6 +8,9 @@ import { MoneyPipe } from '../../../../modules/common/money.pipe';
 import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 import { GetFuelStationFuelPurchasesHandler } from '../../../../modules/fuel-stations/handlers/get-fuel-station-fuel-purchases-handler';
 import { GetFuelStationFuelSalesHandler } from '../../../../modules/fuel-stations/handlers/get-fuel-station-fuel-sales-handler';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FuelGradeLabel } from '../../../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
+import { AppDatePipe } from '../../../../modules/common/app-date.pipe';
 
 interface GradeProfitRow {
     fuelGrade: string;
@@ -29,7 +32,7 @@ interface CurrencyProfitSummary {
 
 @Component({
     selector: 'app-fuel-station-fuel-purchases-page',
-    imports: [CommonModule, PanelModule, TableModule, SkeletonModule, MoneyPipe],
+    imports: [CommonModule, PanelModule, TableModule, SkeletonModule, MoneyPipe, TranslatePipe, FuelGradeLabel, AppDatePipe],
     templateUrl: './fuel-station-finance.page.html'
 })
 export class FuelStationFinancePage implements OnInit, OnDestroy {
@@ -137,17 +140,6 @@ export class FuelStationFinancePage implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.fuelStationStore.resetFuelPurchases();
         this.fuelStationStore.resetFuelSales();
-    }
-
-    protected formatGrade(grade: string): string {
-        return grade.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
-
-    protected formatDate(iso: string): string {
-        return new Date(iso).toLocaleString('en-GB', {
-            day: '2-digit', month: 'short', year: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
     }
 
     protected profitClass(value: number): string {

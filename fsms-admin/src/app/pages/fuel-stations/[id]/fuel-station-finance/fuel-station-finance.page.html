@@ -1,15 +1,15 @@
 <div class="flex flex-col gap-4">
 
-    <p-panel header="Profit & Loss Summary">
+    <p-panel [header]="'finance.summaryTitle' | translate">
         @if (purchasesLoading() || salesLoading()) {
             <p-table [value]="skeletonRows" size="small" [tableStyle]="{ 'min-width': '55rem' }">
                 <ng-template #header>
                     <tr>
-                        <th>Fuel Grade</th>
-                        <th>Volume Sold (L)</th>
-                        <th>Revenue</th>
-                        <th>Cost</th>
-                        <th>Profit / Loss</th>
+                        <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                        <th>{{ 'finance.volumeSold' | translate }}</th>
+                        <th>{{ 'finance.revenue' | translate }}</th>
+                        <th>{{ 'finance.cost' | translate }}</th>
+                        <th>{{ 'finance.profitLoss' | translate }}</th>
                     </tr>
                 </ng-template>
                 <ng-template #body>
@@ -23,7 +23,7 @@
                 </ng-template>
             </p-table>
         } @else if (profitSummary().length === 0) {
-            <p class="text-center py-4 text-muted-color m-0">No sales or purchases recorded for this station yet.</p>
+            <p class="text-center py-4 text-muted-color m-0">{{ 'finance.noSalesOrPurchases' | translate }}</p>
         } @else {
             @for (block of profitSummary(); track block.currency) {
                 <p-table
@@ -33,21 +33,21 @@
                     styleClass="mb-3"
                 >
                     <ng-template #caption>
-                        <span class="font-semibold">Currency: {{ block.currency }}</span>
+                        <span class="font-semibold">{{ 'finance.currencyLabel' | translate }} {{ block.currency }}</span>
                     </ng-template>
                     <ng-template #header>
                         <tr>
-                            <th>Fuel Grade</th>
-                            <th>Volume Sold (L)</th>
-                            <th>Revenue</th>
-                            <th>Cost</th>
-                            <th>Profit / Loss</th>
+                            <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                            <th>{{ 'finance.volumeSold' | translate }}</th>
+                            <th>{{ 'finance.revenue' | translate }}</th>
+                            <th>{{ 'finance.cost' | translate }}</th>
+                            <th>{{ 'finance.profitLoss' | translate }}</th>
                         </tr>
                     </ng-template>
                     <ng-template #body let-row>
                         <tr>
-                            <td>{{ formatGrade(row.fuelGrade) }}</td>
-                            <td>{{ row.volumeSold | number: '1.2-2' }} L</td>
+                            <td><app-fuel-grade-label [grade]="row.fuelGrade" /></td>
+                            <td>{{ row.volumeSold | number: '1.2-2' }} {{ 'fuelTanks.litres' | translate }}</td>
                             <td>{{ row.revenue | money: block.currency }}</td>
                             <td>{{ row.cost | money: block.currency }}</td>
                             <td [class]="profitClass(row.profit)">{{ row.profit | money: block.currency }}</td>
@@ -55,8 +55,8 @@
                     </ng-template>
                     <ng-template #footer>
                         <tr>
-                            <td class="font-semibold">Total</td>
-                            <td><strong>{{ block.totalVolumeSold | number: '1.2-2' }} L</strong></td>
+                            <td class="font-semibold">{{ 'common.total' | translate }}</td>
+                            <td><strong>{{ block.totalVolumeSold | number: '1.2-2' }} {{ 'fuelTanks.litres' | translate }}</strong></td>
                             <td><strong>{{ block.totalRevenue | money: block.currency }}</strong></td>
                             <td><strong>{{ block.totalCost | money: block.currency }}</strong></td>
                             <td [class]="profitClass(block.totalProfit)">
@@ -69,7 +69,7 @@
         }
     </p-panel>
 
-    <p-panel header="Fuel Sales">
+    <p-panel [header]="'finance.fuelSales' | translate">
         <p-table
             [value]="sales() ?? []"
             [loading]="salesLoading()"
@@ -79,23 +79,23 @@
         >
             <ng-template #header>
                 <tr>
-                    <th>ID</th>
-                    <th>Fuel Grade</th>
-                    <th>Volume (L)</th>
-                    <th>Price / L</th>
-                    <th>Revenue</th>
-                    <th>Sold At</th>
+                    <th>{{ 'common.id' | translate }}</th>
+                    <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                    <th>{{ 'finance.volumeL' | translate }}</th>
+                    <th>{{ 'finance.pricePerL' | translate }}</th>
+                    <th>{{ 'finance.revenue' | translate }}</th>
+                    <th>{{ 'finance.soldAt' | translate }}</th>
                 </tr>
             </ng-template>
 
             <ng-template #body let-sale>
                 <tr>
                     <td>{{ sale.fuelSaleId }}</td>
-                    <td>{{ formatGrade(sale.fuelGrade) }}</td>
-                    <td>{{ sale.volume | number: '1.2-2' }} L</td>
+                    <td><app-fuel-grade-label [grade]="sale.fuelGrade" /></td>
+                    <td>{{ sale.volume | number: '1.2-2' }} {{ 'fuelTanks.litres' | translate }}</td>
                     <td>{{ sale.pricePerLiter | money: sale.currency }}</td>
                     <td><strong>{{ sale.totalRevenue | money: sale.currency }}</strong></td>
-                    <td>{{ formatDate(sale.soldAt) }}</td>
+                    <td>{{ sale.soldAt | appDate }}</td>
                 </tr>
             </ng-template>
 
@@ -112,7 +112,7 @@
             <ng-template #footer>
                 @for (row of totalRevenueByCurrency(); track row.currency) {
                     <tr>
-                        <td colspan="4" class="text-right font-semibold">Total revenue</td>
+                        <td colspan="4" class="text-right font-semibold">{{ 'finance.totalRevenue' | translate }}</td>
                         <td><strong>{{ row.total | money: row.currency }}</strong></td>
                         <td></td>
                     </tr>
@@ -121,13 +121,13 @@
 
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-muted-color">No fuel sales recorded for this station yet.</td>
+                    <td colspan="6" class="text-center py-4 text-muted-color">{{ 'finance.noSales' | translate }}</td>
                 </tr>
             </ng-template>
         </p-table>
     </p-panel>
 
-    <p-panel header="Fuel Purchases">
+    <p-panel [header]="'finance.fuelPurchases' | translate">
         <p-table
             [value]="purchases() ?? []"
             [loading]="purchasesLoading()"
@@ -137,23 +137,23 @@
         >
             <ng-template #header>
                 <tr>
-                    <th>ID</th>
-                    <th>Fuel Grade</th>
-                    <th>Amount (L)</th>
-                    <th>Price / L</th>
-                    <th>Total</th>
-                    <th>Purchased At</th>
+                    <th>{{ 'common.id' | translate }}</th>
+                    <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                    <th>{{ 'finance.amountL' | translate }}</th>
+                    <th>{{ 'finance.pricePerL' | translate }}</th>
+                    <th>{{ 'common.total' | translate }}</th>
+                    <th>{{ 'finance.purchasedAt' | translate }}</th>
                 </tr>
             </ng-template>
 
             <ng-template #body let-purchase>
                 <tr>
                     <td>{{ purchase.fuelPurchaseId }}</td>
-                    <td>{{ formatGrade(purchase.fuelGrade) }}</td>
-                    <td>{{ purchase.amount | number: '1.2-2' }} L</td>
+                    <td><app-fuel-grade-label [grade]="purchase.fuelGrade" /></td>
+                    <td>{{ purchase.amount | number: '1.2-2' }} {{ 'fuelTanks.litres' | translate }}</td>
                     <td>{{ purchase.pricePerLiter | money: purchase.currency }}</td>
                     <td><strong>{{ purchase.totalPrice | money: purchase.currency }}</strong></td>
-                    <td>{{ formatDate(purchase.purchasedAt) }}</td>
+                    <td>{{ purchase.purchasedAt | appDate }}</td>
                 </tr>
             </ng-template>
 
@@ -170,7 +170,7 @@
             <ng-template #footer>
                 @for (row of totalSpentByCurrency(); track row.currency) {
                     <tr>
-                        <td colspan="4" class="text-right font-semibold">Total spent</td>
+                        <td colspan="4" class="text-right font-semibold">{{ 'finance.totalSpent' | translate }}</td>
                         <td><strong>{{ row.total | money: row.currency }}</strong></td>
                         <td></td>
                     </tr>
@@ -179,7 +179,7 @@
 
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="6" class="text-center py-4 text-muted-color">No fuel purchases found for this station.</td>
+                    <td colspan="6" class="text-center py-4 text-muted-color">{{ 'finance.noPurchases' | translate }}</td>
                 </tr>
             </ng-template>
         </p-table>

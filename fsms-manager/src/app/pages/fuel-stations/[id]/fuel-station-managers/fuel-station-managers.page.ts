@@ -5,12 +5,13 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 import { GetAssignedManagersHandler } from '../../../../modules/fuel-station/handlers/get-assigned-managers.handler';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 
 @Component({
   selector: 'app-fuel-station-managers-page',
-  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule],
+  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, TranslatePipe],
   templateUrl: './fuel-station-managers.page.html'
 })
 export class FuelStationManagersPage implements OnInit {

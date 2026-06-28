@@ -6,6 +6,7 @@ import { catchError, Observable, tap, throwError } from "rxjs";
 import { FuelStationStore } from "../stores/fuel-station-store";
 import { MessageService } from "primeng/api";
 import { FuelOrderEventHandler } from "../../fuel-orders/fuel-order-event-handler";
+import { TranslateService } from "@ngx-translate/core";
 
 
 @Injectable({ providedIn: "root" })
@@ -18,6 +19,7 @@ export class ConfirmFuelStationOrderHandler
     private readonly fuelOrderEventHandler = inject(FuelOrderEventHandler);
 
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
 
     execute(command: ConfirmFuelStationOrder): Observable<FuelOrder> {
         return this.api.confirmFuelOrder(command.fuelOrderId)
@@ -25,8 +27,8 @@ export class ConfirmFuelStationOrderHandler
                 catchError((e) => {
                     this.messageService.add({
                         severity: 'error',
-                        summary: 'Error',
-                        detail: 'Failed to confirm fuel order'
+                        summary: this.translate.instant('common.error'),
+                        detail: this.translate.instant('toasts.confirmFuelOrder.errorDetail')
                     });
                     return throwError(() => e);
                 }),
@@ -41,8 +43,8 @@ export class ConfirmFuelStationOrderHandler
 
                     this.messageService.add({
                         severity: 'success',
-                        summary: 'Order Confirmed',
-                        detail: 'The fuel order has been confirmed'
+                        summary: this.translate.instant('toasts.confirmFuelOrder.successSummary'),
+                        detail: this.translate.instant('toasts.confirmFuelOrder.successDetail')
                     });
                 })
             )

@@ -1,7 +1,7 @@
 @if (!token) {
     <div class="h-screen flex items-center justify-center">
-        <p-panel header="Login">
+        <p-panel [header]="'login.title' | translate">
             <fsms-security-login-form [loading]="loading" (formSubmitted)="handleFormSubmission($event)"/>
         </p-panel>
     </div>
-} 
+}

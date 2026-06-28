@@ -4,17 +4,19 @@ import { MessageService } from 'primeng/api';
 import { catchError, EMPTY, finalize, tap } from 'rxjs';
 import { PanelModule } from 'primeng/panel';
 import { AuthService, LoginFormComponent } from 'fsms-security';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-manager-login-page',
-  imports: [LoginFormComponent, PanelModule],  
+  imports: [LoginFormComponent, PanelModule, TranslatePipe],
   templateUrl: './login.page.html'
 })
 export class LoginPage implements OnInit {
   private router = inject(Router);
-  private route = inject(ActivatedRoute); 
+  private route = inject(ActivatedRoute);
   private authService = inject(AuthService);
   private messageService = inject(MessageService);
+  private translate = inject(TranslateService);
 
   loading: boolean = false;
   token: string | null = null;
@@ -36,18 +38,18 @@ export class LoginPage implements OnInit {
       .loginManager(data.email, data.password)
       .pipe(
         catchError(() => {
-          this.messageService.add({ 
-            severity: "error", 
-            summary: "Error", 
-            detail: "Invalid credentials"
+          this.messageService.add({
+            severity: "error",
+            summary: this.translate.instant('common.error'),
+            detail: this.translate.instant('login.invalidCredentials')
           });
           return EMPTY;
         }),
         tap(() => {
-          this.messageService.add({ 
-            severity: 'success', 
-            summary: 'Success', 
-            detail: "Login successful" 
+          this.messageService.add({
+            severity: 'success',
+            summary: this.translate.instant('common.success'),
+            detail: this.translate.instant('login.successDetail')
           });
           this.router.navigate(['/']);
         }),

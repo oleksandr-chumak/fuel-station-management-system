@@ -3,24 +3,24 @@
     [visible]="open"
     [modal]="true"
     [style]="{ width: '420px' }"
-    header="Install fuel tank">
+    [header]="'fuelTanks.installDialogTitle' | translate">
     <form class="flex flex-col gap-4" [formGroup]="form" (submit)="submit()">
         <div class="flex flex-col gap-1">
-            <label class="text-sm">Fuel grade</label>
-            <p-select [options]="fuelGrades" formControlName="fuelGrade" placeholder="Select fuel grade" styleClass="w-full">
+            <label class="text-sm">{{ 'fuelTanks.grade' | translate }}</label>
+            <p-select [options]="fuelGrades" formControlName="fuelGrade" [placeholder]="'fuelTanks.selectGrade' | translate" styleClass="w-full">
                 <ng-template #selectedItem let-selectedOption>
-                    <div *ngIf="selectedOption">{{ selectedOption.label }}</div>
+                    <div *ngIf="selectedOption">{{ selectedOption.labelKey | translate }}</div>
                 </ng-template>
                 <ng-template let-fuelGrade #item>
-                    <div>{{ fuelGrade.label }}</div>
+                    <div>{{ fuelGrade.labelKey | translate }}</div>
                 </ng-template>
             </p-select>
             @if (fuelGradeInvalid) {
-                <p-message severity="error" variant="simple" size="small">Fuel grade is required</p-message>
+                <p-message severity="error" variant="simple" size="small">{{ 'fuelTanks.gradeRequired' | translate }}</p-message>
             }
         </div>
         <div class="flex flex-col gap-1">
-            <label class="text-sm">Max capacity (L)</label>
+            <label class="text-sm">{{ 'fuelTanks.maxCapacityLabel' | translate }}</label>
             <p-inputNumber
                 formControlName="maxCapacity"
                 [min]="0.001"
@@ -30,12 +30,12 @@
                 [showButtons]="false">
             </p-inputNumber>
             @if (maxCapacityInvalid) {
-                <p-message severity="error" variant="simple" size="small">Max capacity must be greater than zero</p-message>
+                <p-message severity="error" variant="simple" size="small">{{ 'fuelTanks.maxCapacityInvalid' | translate }}</p-message>
             }
         </div>
         <div class="flex justify-end gap-2 mt-2">
-            <p-button label="Cancel" severity="secondary" [text]="true" type="button" (onClick)="closeDialog()" />
-            <p-button label="Install" icon="pi pi-plus-circle" type="submit" [loading]="loading()" />
+            <p-button [label]="'common.cancel' | translate" severity="secondary" [text]="true" type="button" (onClick)="closeDialog()" />
+            <p-button [label]="'fuelTanks.installButton' | translate" icon="pi pi-plus-circle" type="submit" [loading]="loading()" />
         </div>
     </form>
 </p-dialog>

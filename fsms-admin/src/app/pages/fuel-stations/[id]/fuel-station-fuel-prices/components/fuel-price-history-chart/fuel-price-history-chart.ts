@@ -11,6 +11,7 @@ import { tap } from 'rxjs';
 import { FuelStationFuelPriceHistoryEntry } from 'fsms-web-api';
 import { MoneyPipe } from '../../../../../../modules/common/money.pipe';
 import { GetFuelPriceHistoryHandler } from '../../../../../../modules/fuel-stations/handlers/get-fuel-price-history-handler';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 type RangeKey = '24h' | '7d' | '30d' | 'all';
 type Bucket = 'none' | 'hour' | 'day';
@@ -29,7 +30,7 @@ const RANGE_WINDOWS: Record<RangeKey, { ms: number | null; bucket: Bucket }> = {
 
 @Component({
     selector: 'app-fuel-price-history-chart',
-    imports: [CommonModule, FormsModule, PanelModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective],
+    imports: [CommonModule, FormsModule, PanelModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective, TranslatePipe],
     templateUrl: './fuel-price-history-chart.html',
 })
 export class FuelPriceHistoryChart {
@@ -39,13 +40,16 @@ export class FuelPriceHistoryChart {
 
     private readonly destroyRef = inject(DestroyRef);
     private readonly historyHandler = inject(GetFuelPriceHistoryHandler);
+    private readonly translate = inject(TranslateService);
 
-    protected readonly rangeOptions: RangeOption[] = [
-        { label: '24h', value: '24h' },
-        { label: '7d',  value: '7d'  },
-        { label: '30d', value: '30d' },
-        { label: 'All', value: 'all' },
-    ];
+    protected get rangeOptions(): RangeOption[] {
+        return [
+            { label: '24h', value: '24h' },
+            { label: '7d',  value: '7d'  },
+            { label: '30d', value: '30d' },
+            { label: this.translate.instant('fuelPrices.rangeAll'), value: 'all' },
+        ];
+    }
     protected readonly selectedRange = signal<RangeKey>('7d');
 
     protected readonly priceHistory = signal<FuelStationFuelPriceHistoryEntry[]>([]);

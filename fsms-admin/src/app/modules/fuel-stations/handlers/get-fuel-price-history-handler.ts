@@ -4,6 +4,7 @@ import { FuelStationFuelPriceHistoryEntry, FuelStationRestClient } from 'fsms-we
 import { CommandHandler } from '../../common/command-handler';
 import { GetFuelPriceHistory } from '../fuel-station-commands';
 import { MessageService } from 'primeng/api';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({ providedIn: 'root' })
 export class GetFuelPriceHistoryHandler
@@ -11,14 +12,15 @@ export class GetFuelPriceHistoryHandler
 
     private readonly api = inject(FuelStationRestClient);
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
 
     execute({ fuelStationId, from }: GetFuelPriceHistory): Observable<FuelStationFuelPriceHistoryEntry[]> {
         return this.api.getFuelPriceHistory(fuelStationId, from).pipe(
             catchError((e) => {
                 this.messageService.add({
                     severity: 'error',
-                    summary: 'Error',
-                    detail: 'An error occurred while fetching price history'
+                    summary: this.translate.instant('common.error'),
+                    detail: this.translate.instant('toasts.fetch.fuelPriceHistoryErrorDetail')
                 });
                 return throwError(() => e);
             })

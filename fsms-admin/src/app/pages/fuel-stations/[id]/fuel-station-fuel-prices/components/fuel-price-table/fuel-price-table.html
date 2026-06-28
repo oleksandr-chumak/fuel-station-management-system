@@ -1,4 +1,4 @@
-<p-panel header="Fuel Prices">
+<p-panel [header]="'fuelPrices.title' | translate">
     <p-table
         [value]="fuelPrices()"
         dataKey="fuelGrade"
@@ -10,15 +10,15 @@
 
         <ng-template #header>
             <tr>
-                <th>Fuel Grade</th>
-                <th>Price Per Liter</th>
-                <th>Action</th>
+                <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                <th>{{ 'fuelPrices.pricePerLiter' | translate }}</th>
+                <th>{{ 'common.action' | translate }}</th>
             </tr>
         </ng-template>
 
         <ng-template #body let-fuelPrice let-editing="editing">
             <tr [pEditableRow]="fuelPrice">
-                <td>{{ getFuelGradeValue(fuelPrice.fuelGrade) }}</td>
+                <td><app-fuel-grade-label [grade]="fuelPrice.fuelGrade" /></td>
                 <td>
                     <p-cellEditor>
                         <ng-template #input>

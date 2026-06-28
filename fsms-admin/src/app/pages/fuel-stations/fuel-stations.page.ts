@@ -8,10 +8,11 @@ import { FuelStation, FuelStationCreated, FuelStationDeactivated, FuelStationEve
 import { GetFuelStationsHandler } from '../../modules/fuel-stations/handlers/get-fuel-stations-handler';
 import { tap } from 'rxjs';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-fuel-stations-page',
-  imports: [PanelModule, ButtonModule, CreateFuelStationDialogComponent, FuelStationTable],
+  imports: [PanelModule, ButtonModule, CreateFuelStationDialogComponent, FuelStationTable, TranslatePipe],
   templateUrl: './fuel-stations.page.html',
 })
 export class FuelStationsPage implements OnInit {

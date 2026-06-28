@@ -5,10 +5,11 @@ import { tap } from 'rxjs';
 import BasicDialog from '../../../common/basic-dialog.component';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { CreateFuelStationHandler } from '../../handlers/create-fuel-station-handler';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-fuel-station-dialog',
-  imports: [DialogModule, FuelStationFormComponent],
+  imports: [DialogModule, FuelStationFormComponent, TranslatePipe],
   templateUrl: './create-fuel-station-dialog.component.html'
 })
 export class CreateFuelStationDialogComponent extends BasicDialog {

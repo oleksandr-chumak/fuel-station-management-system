@@ -6,14 +6,17 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FuelGrade, FuelOrderStatus } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CreateFuelOrderDialogComponent } from '../../../../modules/fuel-order/components/create-fuel-order-dialog/create-fuel-order-dialog.component';
 import { GetFuelStationOrdersHandler } from '../../../../modules/fuel-station/handlers/get-fuel-station-orders.handler';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
+import { FuelGradeLabel } from '../../../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
+import { FuelOrderStatusTag } from '../../../../modules/fuel-order/components/fuel-order-status-tag/fuel-order-status-tag';
+import { AppDatePipe } from '../../../../modules/common/app-date.pipe';
 
 @Component({
   selector: 'app-fuel-station-fuel-orders-page',
-  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, CreateFuelOrderDialogComponent],
+  imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, CreateFuelOrderDialogComponent, TranslatePipe, FuelGradeLabel, FuelOrderStatusTag, AppDatePipe],
   templateUrl: './fuel-station-fuel-orders.page.html'
 })
 export class FuelStationFuelOrdersPage implements OnInit {
@@ -32,26 +35,5 @@ export class FuelStationFuelOrdersPage implements OnInit {
     this.getFuelStationOrdersHandler
       .handle({ fuelStationId })
       .subscribe();
-  }
-
-  getSeverity(fuelOrderStatus: FuelOrderStatus): "success" | "info" | "danger" | undefined {
-    switch (fuelOrderStatus) {
-      case FuelOrderStatus.Confirmed:
-        return "success";
-      case FuelOrderStatus.Pending:
-        return "info";
-      case FuelOrderStatus.Rejected:
-        return "danger";
-      default:
-        return undefined;
-    }
-  }
-
-  getValue(fuelOrderStatus: FuelOrderStatus) {
-    return FuelOrderStatus[fuelOrderStatus];
-  }
-
-  getFuelGradeValue(fuelGrade: FuelGrade) {
-    return FuelGrade[fuelGrade];
   }
 }

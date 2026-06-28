@@ -1,4 +1,4 @@
-<p-panel header="Fuel Orders">
+<p-panel [header]="'fuelOrders.title' | translate">
     <app-fuel-order-table
         [showFuelStation]="true"
         [fuelOrders]="fuelOrders()"

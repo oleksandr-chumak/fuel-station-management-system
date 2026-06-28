@@ -8,6 +8,7 @@ import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 import BasicDialog from '../../../common/basic-dialog.component';
 import { FuelGrade } from 'fsms-web-api';
 import { CreateFuelOrderHandler } from '../../../fuel-station/handlers/create-fuel-order.handler';
@@ -17,7 +18,7 @@ import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-create-fuel-order-dialog',
-  imports: [CommonModule, ReactiveFormsModule, DialogModule, ButtonModule, MessageModule, InputTextModule, SelectModule, InputNumberModule],
+  imports: [CommonModule, ReactiveFormsModule, DialogModule, ButtonModule, MessageModule, InputTextModule, SelectModule, InputNumberModule, TranslatePipe],
   templateUrl: './create-fuel-order-dialog.component.html'
 })
 export class CreateFuelOrderDialogComponent extends BasicDialog {
@@ -32,7 +33,7 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
     const tanks = this.fuelStation()?.fuelTanks ?? [];
     const uniqueGrades = Array.from(new Set(tanks.map(t => t.fuelGrade)));
     return uniqueGrades.map(grade => ({
-      label: this.gradeLabel(grade),
+      labelKey: this.gradeLabelKey(grade),
       value: grade
     }));
   });
@@ -76,7 +77,13 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
     return !!(formGroup.get(fieldName)?.touched && formGroup.get(fieldName)?.invalid);
   }
 
-  private gradeLabel(grade: FuelGrade): string {
-    return FuelGrade[grade].replace('_', ' ');
+  private gradeLabelKey(grade: FuelGrade): string {
+    const name = FuelGrade[grade];
+    switch (name.toLowerCase().replace(/[-_\s]/g, '')) {
+      case 'ron92': return 'fuelGrades.ron92';
+      case 'ron95': return 'fuelGrades.ron95';
+      case 'diesel': return 'fuelGrades.diesel';
+      default: return 'fuelGrades.unknown';
+    }
   }
 }

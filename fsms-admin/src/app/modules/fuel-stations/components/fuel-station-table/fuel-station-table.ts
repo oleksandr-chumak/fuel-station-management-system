@@ -7,10 +7,11 @@ import { TagModule } from "primeng/tag";
 import { FuelStationTemplate } from "../../directives/fuel-station-template-directive";
 import { DeactivateFuelStationHandler } from "../../handlers/deactivate-fuel-station-handler";
 import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
     selector: 'app-fuel-station-table',
-    imports: [TableModule, TagModule, SkeletonModule, ButtonModule, FuelStationTemplate],
+    imports: [TableModule, TagModule, SkeletonModule, ButtonModule, FuelStationTemplate, TranslatePipe],
     templateUrl: './fuel-station-table.html'
 })
 export class FuelStationTable {

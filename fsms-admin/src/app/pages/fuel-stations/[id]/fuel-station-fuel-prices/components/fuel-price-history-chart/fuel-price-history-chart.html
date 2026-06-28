@@ -1,7 +1,7 @@
 <p-panel>
     <ng-template #header>
         <div class="flex items-center justify-between w-full gap-4">
-            <span class="font-semibold text-base">Price History</span>
+            <span class="font-semibold text-base">{{ 'fuelPrices.historyTitle' | translate }}</span>
             <p-selectButton
                 [options]="rangeOptions"
                 [ngModel]="selectedRange()"
@@ -17,7 +17,7 @@
     @if (loadingHistory()) {
         <p-skeleton height="340px" />
     } @else if (priceHistory().length === 0) {
-        <p class="text-center py-4 text-muted-color">No price changes in the selected range.</p>
+        <p class="text-center py-4 text-muted-color">{{ 'fuelPrices.noChangesInRange' | translate }}</p>
     } @else {
         <div echarts [options]="chartOptions()" style="height: 340px;"></div>
     }

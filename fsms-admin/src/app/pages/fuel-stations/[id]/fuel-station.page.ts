@@ -9,13 +9,15 @@ import { catchError, EMPTY } from 'rxjs';
 import { FuelStationStore } from '../../../modules/fuel-stations/stores/fuel-station-store';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FuelStationEventHandler } from '../../../modules/fuel-stations/fuel-station-event-handler';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-fuel-station-page',
-  imports: [RouterModule, TabsModule, CommonModule, SkeletonModule],
+  imports: [RouterModule, TabsModule, CommonModule, SkeletonModule, TranslatePipe],
   templateUrl: './fuel-station.page.html'
 })
 export class FuelStationPage implements OnInit, OnDestroy {
+  private readonly translate = inject(TranslateService);
   private readonly destroyRef = inject(DestroyRef)
   private paramsFuelStationId = "";
   private readonly router = inject(Router);
@@ -51,10 +53,10 @@ export class FuelStationPage implements OnInit, OnDestroy {
       this.paramsFuelStationId = params["id"];
       const fuelStationId = Number(this.paramsFuelStationId);
       if (Number.isNaN(fuelStationId)) {
-        this.messageService.add({ 
-          severity: "error", 
-          summary: "Unable to parse id", 
-          detail: "Unable to parse fuel station id: " + params["id"]
+        this.messageService.add({
+          severity: "error",
+          summary: this.translate.instant('fuelStations.errors.unableToParseId'),
+          detail: this.translate.instant('fuelStations.errors.unableToParseIdDetail') + " " + params["id"]
         });
         this.router.navigate(["/"]);
         return null;
@@ -85,37 +87,37 @@ export class FuelStationPage implements OnInit, OnDestroy {
     return (
       [
         {
-          label: "Info",
+          label: this.translate.instant('fuelStations.info'),
           icon: "pi pi-info-circle",
           route: `/fuel-stations/${this.paramsFuelStationId}/info`
         },
         {
-          label: "Managers",
+          label: this.translate.instant('header.managers'),
           icon: "pi pi-users",
           route: `/fuel-stations/${this.paramsFuelStationId}/managers`
         },
         {
-          label: "Fuel Orders",
+          label: this.translate.instant('fuelStations.fuelOrders'),
           icon: "pi pi-list",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-orders`
         },
         {
-          label: "Fuel Tanks",
+          label: this.translate.instant('fuelStations.fuelTanks'),
           icon: "pi pi-box",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-tanks`
         },
         {
-          label: "Fuel Prices",
+          label: this.translate.instant('fuelStations.fuelPrices'),
           icon: "pi pi-dollar",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-prices`
         },
         {
-          label: "Finance",
+          label: this.translate.instant('fuelStations.finance'),
           icon: "pi pi-receipt",
           route: `/fuel-stations/${this.paramsFuelStationId}/fuel-purchases`
         },
         {
-          label: "Events",
+          label: this.translate.instant('fuelStations.events'),
           icon: "pi pi-history",
           route: `/fuel-stations/${this.paramsFuelStationId}/events`
         }

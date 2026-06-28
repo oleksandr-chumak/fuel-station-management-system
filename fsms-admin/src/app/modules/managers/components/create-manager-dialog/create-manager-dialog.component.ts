@@ -6,10 +6,11 @@ import { CreateManagerHandler } from '../../handlers/create-manager-handler';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
 import { Manager } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-create-manager-dialog',
-  imports: [DialogModule, ManagerFormComponent],
+  imports: [DialogModule, ManagerFormComponent, TranslatePipe],
   templateUrl: './create-manager-dialog.component.html'
 })
 export class CreateManagerDialogComponent extends BasicDialog {

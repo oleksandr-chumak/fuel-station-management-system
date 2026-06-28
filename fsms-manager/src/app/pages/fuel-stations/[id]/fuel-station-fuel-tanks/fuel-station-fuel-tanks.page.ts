@@ -6,15 +6,18 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { FuelGrade, FuelTank } from 'fsms-web-api';
+import { FuelTank } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FuelStationStore } from '../../../../modules/fuel-station/fuel-station-store';
 import { DecommissionFuelTankHandler } from '../../../../modules/fuel-station/handlers/decommission-fuel-tank.handler';
 import { DispenseFuelDialogComponent } from '../../../../modules/fuel-station/components/dispense-fuel-dialog/dispense-fuel-dialog.component';
 import { InstallFuelTankDialogComponent } from '../../../../modules/fuel-station/components/install-fuel-tank-dialog/install-fuel-tank-dialog.component';
+import { FuelGradeLabel } from '../../../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
+import { AppDatePipe } from '../../../../modules/common/app-date.pipe';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks-page',
-  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, TooltipModule, DispenseFuelDialogComponent, InstallFuelTankDialogComponent],
+  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, TooltipModule, DispenseFuelDialogComponent, InstallFuelTankDialogComponent, TranslatePipe, FuelGradeLabel, AppDatePipe],
   templateUrl: './fuel-station-fuel-tanks.page.html'
 })
 export class FuelStationFuelTanksPage {
@@ -31,10 +34,6 @@ export class FuelStationFuelTanksPage {
 
   @ViewChild('dispenseDialog') dispenseDialog!: DispenseFuelDialogComponent;
   @ViewChild('installDialog') installDialog!: InstallFuelTankDialogComponent;
-
-  getFuelGradeValue(fuelGrade: FuelGrade) {
-    return FuelGrade[fuelGrade];
-  }
 
   openDispenseDialog(tank: FuelTank): void {
     this.dispenseDialog.fuelStationId = this.store.fuelStation.fuelStationId;

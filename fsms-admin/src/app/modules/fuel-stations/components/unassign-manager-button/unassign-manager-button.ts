@@ -3,10 +3,11 @@ import { takeUntilDestroyed, toSignal } from "@angular/core/rxjs-interop";
 import { ButtonModule } from "primeng/button";
 import { FuelStationStore } from "../../stores/fuel-station-store";
 import { UnassignManagerHandler } from "../../handlers/unassign-manager-handler";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
     selector: 'app-unassign-manager-button',
-    imports: [ButtonModule],
+    imports: [ButtonModule, TranslatePipe],
     templateUrl: './unassign-manager-button.html'
 })
 export class UnassignManagerButton {

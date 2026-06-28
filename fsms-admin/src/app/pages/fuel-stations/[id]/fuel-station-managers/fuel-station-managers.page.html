@@ -1,7 +1,7 @@
 <app-assign-manager-dialog #dialog></app-assign-manager-dialog>
-<p-panel header="Assigned Managers">
+<p-panel [header]="'managers.assignedManagers' | translate">
     <ng-template #icons>
-        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Assign manager" />
+        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" [label]="'managers.assignManager' | translate" />
     </ng-template>
     <app-manager-table
         [managers]="managers() || []"

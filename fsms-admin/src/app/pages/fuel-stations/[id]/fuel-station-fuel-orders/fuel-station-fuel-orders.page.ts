@@ -11,10 +11,11 @@ import { GetFuelStationOrdersHandler } from '../../../../modules/fuel-stations/h
 import { ConfirmFuelStationOrderHandler } from '../../../../modules/fuel-stations/handlers/confirm-fuel-station-order-handler';
 import { RejectFuelStationOrderHandler } from '../../../../modules/fuel-stations/handlers/reject-fuel-station-order-handler';
 import { FuelOrderTable } from "../../../../modules/fuel-orders/components/fuel-order-table/fuel-order-table";
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-fuel-station-fuel-orders-page',
-    imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelOrderTable],
+    imports: [CommonModule, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelOrderTable, TranslatePipe],
     templateUrl: './fuel-station-fuel-orders.page.html'
 })
 export class FuelStationFuelOrdersPage implements OnInit, OnDestroy {

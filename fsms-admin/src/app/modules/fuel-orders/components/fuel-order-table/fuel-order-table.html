@@ -7,15 +7,15 @@
 
         <ng-template #header>
             <tr>
-                <th>Order ID</th>
+                <th>{{ 'fuelOrders.id' | translate }}</th>
                 @if (showFuelStation()) {
-                    <th>Fuel Station</th>
+                    <th>{{ 'fuelOrders.fuelStation' | translate }}</th>
                 }
-                <th>Status</th>
-                <th>Fuel Grade</th>
-                <th>Amount</th>
-                <th>Created At</th>
-                <th>Actions</th>
+                <th>{{ 'fuelOrders.status' | translate }}</th>
+                <th>{{ 'fuelOrders.fuelGrade' | translate }}</th>
+                <th>{{ 'fuelOrders.amount' | translate }}</th>
+                <th>{{ 'fuelOrders.createdAt' | translate }}</th>
+                <th>{{ 'common.actions' | translate }}</th>
             </tr>
         </ng-template>
 
@@ -25,14 +25,14 @@
                 @if (showFuelStation()) {
                     <td>
                         <a class="underline underline-offset-4" [routerLink]="['/fuel-stations', order.fuelStationId, 'info']">
-                            Fuel station ID: {{ order.fuelStationId }}
+                            {{ 'fuelOrders.fuelStationIdLabel' | translate }} {{ order.fuelStationId }}
                         </a>
                     </td>
                 }
-                <td><p-tag [value]="getFuelOrderStatusValue(order.status)" [severity]="getSeverity(order.status)" /></td>
-                <td>{{ getFuelGradeValue(order.fuelGrade) }}</td>
+                <td><app-fuel-order-status-tag [status]="order.status" /></td>
+                <td><app-fuel-grade-label [grade]="order.fuelGrade" /></td>
                 <td>{{ order.amount }}</td>
-                <td>{{ order.createdAt | date:'dd MMM yyyy, HH:mm' }}</td>
+                <td>{{ order.createdAt | appDate }}</td>
                 <td>
                     <div class="flex items-center gap-2">
                         @if (order.pending) {
@@ -55,7 +55,7 @@
                                 text rounded>
                             </button>
                         } @else {
-                            No actions
+                            {{ 'common.noActions' | translate }}
                         }
                     </div>
                 </td>

@@ -1,7 +1,7 @@
 <app-create-manager-dialog #dialog (managerCreated)="handleManagerCreated($event)"></app-create-manager-dialog>
-<p-panel header="Managers">
+<p-panel [header]="'managers.title' | translate">
     <ng-template #icons>
-        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" label="Create Manager" />
+        <p-button (onClick)="dialog.openDialog()" severity="secondary" [outlined]="true" [label]="'managers.createManager' | translate" />
     </ng-template>
     <app-manager-table
         [managers]="managers"

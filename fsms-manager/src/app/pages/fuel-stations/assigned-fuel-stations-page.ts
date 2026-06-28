@@ -8,6 +8,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { Router } from '@angular/router';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FuelStation } from 'fsms-web-api';
 import { AuthService } from 'fsms-security';
 import { GetAssignedFuelStationsHandler } from '../../modules/fuel-station/handlers/get-assigned-fuel-stations.handler';
@@ -16,7 +17,7 @@ import { ManagerEventHandler } from '../../modules/manager/manager-event-handler
 
 @Component({
   selector: 'app-dashboard-page',
-  imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule, DialogModule, SkeletonModule],
+  imports: [CommonModule, PanelModule, TableModule, TagModule, ButtonModule, DialogModule, SkeletonModule, TranslatePipe],
   templateUrl: './assigned-fuel-stations-page.html',
 })
 export class AssignedFuelStationsPage implements OnInit {

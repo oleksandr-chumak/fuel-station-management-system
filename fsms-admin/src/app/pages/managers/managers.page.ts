@@ -7,10 +7,11 @@ import { Manager, ManagerCreated, ManagerRestClient, ManagerStompClient } from '
 import { GetManagersHandler } from '../../modules/managers/handlers/get-managers-handler';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { tap } from 'rxjs';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-managers-page',
-  imports: [PanelModule, ButtonModule, CreateManagerDialogComponent, ManagerTable],
+  imports: [PanelModule, ButtonModule, CreateManagerDialogComponent, ManagerTable, TranslatePipe],
   templateUrl: './managers.page.html'
 })
 export class ManagersPage implements OnInit {

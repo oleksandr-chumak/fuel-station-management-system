@@ -7,6 +7,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 import { TabsModule } from 'primeng/tabs';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FuelStation } from 'fsms-web-api';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { GetFuelStationByIdHandler } from '../../../modules/fuel-station/handlers/get-fuel-station-by-id.handler';
 import { FuelStationStore } from '../../../modules/fuel-station/fuel-station-store';
 import { FuelStationEventHandler } from '../../../modules/fuel-station/fuel-station-event-handler';
@@ -14,7 +15,7 @@ import { catchError, EMPTY } from 'rxjs';
 
 @Component({
   selector: 'app-fuel-station-page',
-  imports: [RouterModule, TabsModule, CommonModule, SkeletonModule],
+  imports: [RouterModule, TabsModule, CommonModule, SkeletonModule, TranslatePipe],
   templateUrl: './fuel-station.page.html'
 })
 export class FuelStationPage implements OnInit, OnDestroy {
@@ -28,6 +29,7 @@ export class FuelStationPage implements OnInit, OnDestroy {
   private readonly store = inject(FuelStationStore);
 
   private readonly messageService = inject(MessageService);
+  private readonly translate = inject(TranslateService);
 
   protected readonly initialRoute = this.router.url;
   protected readonly fuelStation = toSignal(this.store.fuelStation$, { initialValue: null });
@@ -38,7 +40,11 @@ export class FuelStationPage implements OnInit, OnDestroy {
       const stationId = Number(this.paramsStationId);
 
       if (Number.isNaN(stationId)) {
-        this.messageService.add({ severity: "error", summary: "Unable to parse id", detail: "Unable to parse fuel station id: " + params["id"] });
+        this.messageService.add({
+          severity: "error",
+          summary: this.translate.instant('fuelStations.errors.unableToParseId'),
+          detail: this.translate.instant('fuelStations.errors.unableToParseIdDetail') + ' ' + params["id"]
+        });
         console.log("redirect");
         this.router.navigate(["/"]);
         return;
@@ -71,27 +77,27 @@ export class FuelStationPage implements OnInit, OnDestroy {
   get tabs() {
     return [
       {
-        label: 'Info',
+        label: this.translate.instant('fuelStations.info'),
         icon: 'pi pi-info-circle',
         route: `/fuel-station/${this.paramsStationId}/info`
       },
       {
-        label: 'Managers',
+        label: this.translate.instant('header.managers'),
         icon: 'pi pi-users',
         route: `/fuel-station/${this.paramsStationId}/managers`
       },
       {
-        label: 'Fuel Orders',
+        label: this.translate.instant('fuelStations.fuelOrders'),
         icon: 'pi pi-shopping-cart',
         route: `/fuel-station/${this.paramsStationId}/fuel-orders`
       },
       {
-        label: "Fuel Tanks",
+        label: this.translate.instant('fuelStations.fuelTanks'),
         icon: "pi pi-box",
         route: `/fuel-station/${this.paramsStationId}/fuel-tanks`
       },
       {
-        label: "Fuel Prices",
+        label: this.translate.instant('fuelStations.fuelPrices'),
         icon: "pi pi-dollar",
         route: `/fuel-station/${this.paramsStationId}/fuel-prices`
       }

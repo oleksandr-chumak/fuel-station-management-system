@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface ManagerFormData {
     firstName: string;
@@ -17,8 +18,9 @@ export interface ManagerFormData {
     CommonModule, 
     MessageModule, 
     ReactiveFormsModule, 
-    ButtonModule, 
-    InputTextModule
+    ButtonModule,
+    InputTextModule,
+    TranslatePipe
   ],
   templateUrl: './manager-form.component.html'
 })

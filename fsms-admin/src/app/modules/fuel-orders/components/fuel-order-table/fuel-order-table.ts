@@ -1,17 +1,20 @@
 import { CommonModule } from "@angular/common";
 import { Component, computed, input, output } from "@angular/core";
 import { RouterLink } from "@angular/router";
-import { FuelGrade, FuelOrder, FuelOrderStatus } from "fsms-web-api";
+import { FuelOrder } from "fsms-web-api";
 import { ButtonModule } from "primeng/button";
 import { PanelModule } from "primeng/panel";
 import { SkeletonModule } from "primeng/skeleton";
 import { TableModule } from "primeng/table";
-import { TagModule } from "primeng/tag";
 import { FuelTankTemplate } from "../../directives/fuel-order-template-directive";
+import { TranslatePipe } from "@ngx-translate/core";
+import { FuelOrderStatusTag } from "../fuel-order-status-tag/fuel-order-status-tag";
+import { FuelGradeLabel } from "../../../fuel-prices/components/fuel-grade-label/fuel-grade-label";
+import { AppDatePipe } from "../../../common/app-date.pipe";
 
 @Component({
   selector: 'app-fuel-order-table',
-  imports: [CommonModule, RouterLink, TagModule, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelTankTemplate],
+  imports: [CommonModule, RouterLink, TableModule, PanelModule, SkeletonModule, ButtonModule, FuelTankTemplate, TranslatePipe, FuelOrderStatusTag, FuelGradeLabel, AppDatePipe],
   templateUrl: './fuel-order-table.html'
 })
 export class FuelOrderTable {
@@ -26,23 +29,6 @@ export class FuelOrderTable {
 
     protected readonly skeletonRows = new Array(5).fill(null);
     protected readonly skeletonCols = computed(() => new Array(this.showFuelStation() ? 7 : 6).fill(null));
-
-    protected getSeverity(status: FuelOrderStatus): 'success' | 'info' | 'danger' | undefined {
-        switch (status) {
-            case FuelOrderStatus.Confirmed: return 'success';
-            case FuelOrderStatus.Pending:   return 'info';
-            case FuelOrderStatus.Rejected:  return 'danger';
-            default:                        return undefined;
-        }
-    }
-
-    protected getFuelOrderStatusValue(status: FuelOrderStatus): string {
-        return FuelOrderStatus[status];
-    }
-
-    protected getFuelGradeValue(fuelGrade: FuelGrade): string {
-        return FuelGrade[fuelGrade];
-    }
 
     protected confirmFuelOrder(fuelOrderId: number) {
         this.confirmFuelOrderClicked.emit(fuelOrderId);

@@ -6,16 +6,18 @@ import { PanelModule } from 'primeng/panel';
 import { SkeletonModule } from 'primeng/skeleton';
 import { TableModule } from 'primeng/table';
 import { TooltipModule } from 'primeng/tooltip';
-import { FuelGrade, FuelTank } from 'fsms-web-api';
+import { FuelTank } from 'fsms-web-api';
+import { FuelGradeLabel } from '../../../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
 import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 import { FuelTankTemplate } from "../../../../modules/fuel-stations/directives/fuel-tank-template-directive";
 import { DecommissionFuelTankHandler } from '../../../../modules/fuel-stations/handlers/decommission-fuel-tank-handler';
 import { DispenseFuelDialogComponent } from '../../../../modules/fuel-stations/components/dispense-fuel-dialog/dispense-fuel-dialog.component';
 import { InstallFuelTankDialogComponent } from '../../../../modules/fuel-stations/components/install-fuel-tank-dialog/install-fuel-tank-dialog.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-fuel-station-fuel-tanks-page',
-  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, TooltipModule, FuelTankTemplate, DispenseFuelDialogComponent, InstallFuelTankDialogComponent],
+  imports: [CommonModule, TableModule, PanelModule, ButtonModule, SkeletonModule, TooltipModule, FuelTankTemplate, DispenseFuelDialogComponent, InstallFuelTankDialogComponent, TranslatePipe, FuelGradeLabel],
   templateUrl: './fuel-station-fuel-tanks.component.html'
 })
 export class FuelStationFuelTanksPage {
@@ -29,10 +31,6 @@ export class FuelStationFuelTanksPage {
 
   @ViewChild('dispenseDialog') dispenseDialog!: DispenseFuelDialogComponent;
   @ViewChild('installDialog') installDialog!: InstallFuelTankDialogComponent;
-
-  getFuelGradeValue(fuelGrade: FuelGrade) {
-    return FuelGrade[fuelGrade];
-  }
 
   openDispenseDialog(tank: FuelTank): void {
     this.dispenseDialog.fuelStationId = this.fuelStationStore.fuelStation.fuelStationId;

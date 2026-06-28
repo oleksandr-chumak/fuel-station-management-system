@@ -9,13 +9,15 @@ import { ButtonModule } from 'primeng/button';
 import { MessageService } from 'primeng/api';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { catchError, EMPTY, tap } from 'rxjs';
-import { FuelGrade, FuelStation, FuelStationFuelPrice } from 'fsms-web-api';
+import { FuelStation, FuelStationFuelPrice } from 'fsms-web-api';
 import { MoneyPipe } from '../../../../../../modules/common/money.pipe';
 import { ChangeFuelPriceHandler } from '../../../../../../modules/fuel-stations/handlers/change-fuel-price-handler';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FuelGradeLabel } from '../../../../../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
 
 @Component({
     selector: 'app-fuel-price-table',
-    imports: [CommonModule, FormsModule, InputTextModule, PanelModule, SkeletonModule, TableModule, ButtonModule, MoneyPipe],
+    imports: [CommonModule, FormsModule, InputTextModule, PanelModule, SkeletonModule, TableModule, ButtonModule, MoneyPipe, TranslatePipe, FuelGradeLabel],
     templateUrl: './fuel-price-table.html',
 })
 export class FuelPriceTable {
@@ -24,6 +26,7 @@ export class FuelPriceTable {
 
     private readonly changeFuelPriceHandler = inject(ChangeFuelPriceHandler);
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
 
     protected readonly fuelPrices = signal<FuelStationFuelPrice[]>([]);
     protected readonly loading = toSignal(this.changeFuelPriceHandler.loading$, { initialValue: false });
@@ -37,10 +40,6 @@ export class FuelPriceTable {
         });
     }
 
-    protected getFuelGradeValue(fuelGrade: FuelGrade): string {
-        return FuelGrade[fuelGrade];
-    }
-
     protected onRowEditInit(): void {
         this.resetFuelPrices();
     }
@@ -52,8 +51,8 @@ export class FuelPriceTable {
             this.resetFuelPrices();
             this.messageService.add({
                 severity: 'error',
-                summary: 'Validation',
-                detail: 'Fuel price must be a number',
+                summary: this.translate.instant('fuelPrices.validation'),
+                detail: this.translate.instant('fuelPrices.validationFuelPriceNumber'),
             });
             return;
         }

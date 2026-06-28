@@ -1,12 +1,12 @@
-<p-panel header="Assigned Managers">
+<p-panel [header]="'managers.assignedManagers' | translate">
     <p-table [value]="managers()" size="small" [loading]="loading()" [showLoader]="false"
         [tableStyle]="{ 'min-width': '50rem' }">
         <ng-template #header>
             <tr>
-                <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Full Name</th>
+                <th>{{ 'common.id' | translate }}</th>
+                <th>{{ 'managers.firstName' | translate }}</th>
+                <th>{{ 'managers.lastName' | translate }}</th>
+                <th>{{ 'managers.fullName' | translate }}</th>
             </tr>
         </ng-template>
         <ng-template #body let-manager>

@@ -1,5 +1,5 @@
 <p-panel class="relative">
-    <h2 class="absolute top-4 left-5 z-1 font-bold">Fuel Station Events</h2>
+    <h2 class="absolute top-4 left-5 z-1 font-bold">{{ 'events.title' | translate }}</h2>
     <p-table
         [value]="events()"
         [loading]="loading()"
@@ -10,7 +10,7 @@
         paginatorPosition="top"
         [pageLinks]="paginationRange"
         [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} events"
+        [currentPageReportTemplate]="'events.showingReport' | translate"
         [showFirstLastIcon]="false"
         [lazy]="true"
         [rows]="eventsPerPage"
@@ -20,16 +20,16 @@
 
         <ng-template #header>
             <tr>
-                <th>Time</th>
-                <th>Event</th>
-                <th>Details</th>
-                <th>Performed By</th>
+                <th>{{ 'events.time' | translate }}</th>
+                <th>{{ 'events.event' | translate }}</th>
+                <th>{{ 'events.details' | translate }}</th>
+                <th>{{ 'events.performedBy' | translate }}</th>
             </tr>
         </ng-template>
 
         <ng-template #body let-event>
             <tr class="h-16">
-                <td>{{ formatDate(event.occurredAt) }}</td>
+                <td>{{ event.occurredAt | appDate }}</td>
                 <td>
                     <p-tag [value]="eventLabel(event.type)" [severity]="eventSeverity(event.type)" />
                 </td>
@@ -46,10 +46,10 @@
                     @case ("FUEL_ORDER_CREATED")
                     @case ("FUEL_ORDER_CONFIRMED")
                     @case ("FUEL_ORDER_PROCESSED") {
-                    Order #{{event.fuelOrderId}}
+                    {{ 'events.orderNumberPrefix' | translate }}{{event.fuelOrderId}}
                     }
                     @case ("FUEL_STATION_FUEL_PRICE_CHANGED") {
-                    {{event.fuelGrade}}: {{event.pricePerLiter}}/L
+                    <app-fuel-grade-label [grade]="event.fuelGrade" />: {{event.pricePerLiter}}/{{ 'fuelTanks.litres' | translate }}
                     }
                     @default {
                     —
@@ -60,9 +60,9 @@
                     @if (event.performedBy; as performer) {
                     <div class="flex items-center gap-2">
                         @if (performer.role === 'administrator') {
-                        <p-tag value="Admin" severity="warn" class="w-18" />
+                        <p-tag [value]="'events.actor.admin' | translate" severity="warn" class="w-28" />
                         } @else if (performer.role === 'manager') {
-                        <p-tag value="Manager" severity="info" class="w-18" />
+                        <p-tag [value]="'events.actor.manager' | translate" severity="info" class="w-28" />
                         }
                         <div>
                             <span>{{ performer.fullName }}</span>
@@ -71,7 +71,7 @@
                         </div>
                     </div>
                     } @else {
-                    <p-tag value="System" severity="secondary" class="w-18" />
+                    <p-tag [value]="'events.actor.system' | translate" severity="secondary" class="w-28" />
                     }
                 </td>
             </tr>
@@ -89,7 +89,7 @@
 
         <ng-template #emptymessage>
             <tr>
-                <td colspan="4" class="text-center py-4">No events found for this fuel station.</td>
+                <td colspan="4" class="text-center py-4">{{ 'events.noEvents' | translate }}</td>
             </tr>
         </ng-template>
 

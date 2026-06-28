@@ -5,10 +5,11 @@ import { SkeletonModule } from "primeng/skeleton";
 import { TableModule } from "primeng/table";
 import { TagModule } from "primeng/tag";
 import { ManagerTemplateDirective } from "../../directives/manager-template-directive";
+import { TranslatePipe } from "@ngx-translate/core";
 
 @Component({
     selector: 'app-manager-table',
-    imports: [NgTemplateOutlet, TableModule, TagModule, SkeletonModule, ManagerTemplateDirective],
+    imports: [NgTemplateOutlet, TableModule, TagModule, SkeletonModule, ManagerTemplateDirective, TranslatePipe],
     templateUrl: './manager-table.html'
 })
 export class ManagerTable {

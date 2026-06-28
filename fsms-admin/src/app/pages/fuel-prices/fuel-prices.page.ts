@@ -15,11 +15,14 @@ import { GetLatestFuelPricesHandler } from '../../modules/fuel-prices/handlers/g
 import { GetAllFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-all-fuel-prices-handler';
 import { GetAllTaxedFuelPricesHandler } from '../../modules/fuel-prices/handlers/get-all-taxed-fuel-prices-handler';
 import { GetTaxRulesByCountryHandler } from '../../modules/tax-rules/handlers/get-tax-rules-by-country-handler';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FuelGradeLabel } from '../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
+import { AppDatePipe } from '../../modules/common/app-date.pipe';
 
 @Component({
     selector: 'app-fuel-prices-page',
     standalone: true,
-    imports: [CommonModule, FormsModule, PanelModule, TableModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective, MoneyPipe],
+    imports: [CommonModule, FormsModule, PanelModule, TableModule, SkeletonModule, SelectButtonModule, NgxEchartsDirective, MoneyPipe, TranslatePipe, FuelGradeLabel, AppDatePipe],
     templateUrl: './fuel-prices.page.html',
 })
 export class FuelPricesPage implements OnInit {
@@ -28,6 +31,7 @@ export class FuelPricesPage implements OnInit {
     private readonly getAllHandler = inject(GetAllFuelPricesHandler);
     private readonly getTaxedHandler = inject(GetAllTaxedFuelPricesHandler);
     private readonly getTaxRulesHandler = inject(GetTaxRulesByCountryHandler);
+    private readonly translate = inject(TranslateService);
 
     protected readonly latestPrices = signal<FuelPrice[]>([]);
     protected readonly priceHistory = signal<FuelPrice[]>([]);
@@ -40,12 +44,14 @@ export class FuelPricesPage implements OnInit {
     protected readonly loadingTaxed = toSignal(this.getTaxedHandler.loading$, { initialValue: false });
     protected readonly loadingTaxRules = toSignal(this.getTaxRulesHandler.loading$, { initialValue: false });
 
-    protected readonly chartTabs = [
-        { label: 'Without Taxes', value: 'no-tax' },
-        { label: 'Ukraine', value: 'UA' },
-        { label: 'Norway', value: 'NO' },
-        { label: 'Germany', value: 'DE' },
-    ];
+    protected get chartTabs() {
+        return [
+            { label: this.translate.instant('fuelPrices.withoutTaxes'), value: 'no-tax' },
+            { label: this.translate.instant('fuelPrices.ukraine'), value: 'UA' },
+            { label: this.translate.instant('fuelPrices.norway'), value: 'NO' },
+            { label: this.translate.instant('fuelPrices.germany'), value: 'DE' },
+        ];
+    }
 
     protected readonly chartOptions = computed<EChartsCoreOption>(() => {
         const tab = this.selectedTab();
@@ -121,37 +127,22 @@ export class FuelPricesPage implements OnInit {
         }
     }
 
-    protected formatGrade(grade: string): string {
-        switch (grade) {
-            case 'ron-92': return 'RON 92';
-            case 'ron-95': return 'RON 95';
-            case 'diesel': return 'Diesel';
-            default: return grade;
-        }
-    }
-
-    protected formatDate(iso: string): string {
-        return new Date(iso).toLocaleString('en-GB', {
-            day: '2-digit', month: 'short', year: 'numeric',
-            hour: '2-digit', minute: '2-digit'
-        });
-    }
-
     protected formatTaxAmount(rule: TaxRule): string {
         if (rule.valueType === 'PERCENTAGE') {
             return `${Number(rule.amount)}%`;
         }
         const money = new MoneyPipe();
         const formatted = money.transform(Number(rule.amount), rule.currency ?? '');
-        const unitLabel = rule.unit === 'PER_1000_LITERS' ? '/ 1000 L' : '/ L';
+        const litres = this.translate.instant('fuelTanks.litres');
+        const unitLabel = rule.unit === 'PER_1000_LITERS' ? `/ 1000 ${litres}` : `/ ${litres}`;
         return `${formatted} ${unitLabel}`;
     }
 
     protected formatTaxType(taxType: string): string {
         switch (taxType) {
-            case 'EXCISE': return 'Excise';
-            case 'CO2_LEVY': return 'CO₂ Levy';
-            case 'VAT': return 'VAT';
+            case 'EXCISE': return this.translate.instant('taxTypes.excise');
+            case 'CO2_LEVY': return this.translate.instant('taxTypes.co2Levy');
+            case 'VAT': return this.translate.instant('taxTypes.vat');
             default: return taxType;
         }
     }

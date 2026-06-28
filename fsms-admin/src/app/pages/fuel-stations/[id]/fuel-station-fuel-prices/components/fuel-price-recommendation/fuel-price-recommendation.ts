@@ -10,10 +10,12 @@ import { FuelGrade, TaxedFuelPrice } from 'fsms-web-api';
 import { MoneyPipe } from '../../../../../../modules/common/money.pipe';
 import { GetLatestTaxedFuelPricesHandler } from '../../../../../../modules/fuel-prices/handlers/get-latest-taxed-fuel-prices-handler';
 import { UpdateFuelPricesHandler } from '../../../../../../modules/fuel-stations/handlers/update-fuel-prices-handler';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FuelGradeLabel } from '../../../../../../modules/fuel-prices/components/fuel-grade-label/fuel-grade-label';
 
 @Component({
     selector: 'app-fuel-price-recommendation',
-    imports: [CommonModule, PanelModule, TableModule, SkeletonModule, ButtonModule, MoneyPipe],
+    imports: [CommonModule, PanelModule, TableModule, SkeletonModule, ButtonModule, MoneyPipe, TranslatePipe, FuelGradeLabel],
     templateUrl: './fuel-price-recommendation.html',
 })
 export class FuelPriceRecommendation implements OnInit {
@@ -46,10 +48,6 @@ export class FuelPriceRecommendation implements OnInit {
                 takeUntilDestroyed(this.destroyRef)
             )
             .subscribe();
-    }
-
-    protected formatGrade(grade: string): string {
-        return grade.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
 
     protected onApplyRecommendedPrices(): void {

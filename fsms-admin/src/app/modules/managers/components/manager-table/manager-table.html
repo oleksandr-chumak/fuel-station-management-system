@@ -7,15 +7,15 @@
     >
     <ng-template #header>
         <tr>
-            <th>Id</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Full Name</th>
+            <th>{{ 'common.id' | translate }}</th>
+            <th>{{ 'managers.firstName' | translate }}</th>
+            <th>{{ 'managers.lastName' | translate }}</th>
+            <th>{{ 'managers.fullName' | translate }}</th>
             @if (showStatus()) {
-                <th>Status</th>
+                <th>{{ 'managers.status' | translate }}</th>
             }
             @if (actionsTemplate()) {
-                <th class="flex items-center justify-center">Actions</th>
+                <th class="flex items-center justify-center">{{ 'common.actions' | translate }}</th>
             }
         </tr>
     </ng-template>

@@ -10,7 +10,7 @@
         />
     </div>
 
-    <p-panel header="Latest Fuel Prices">
+    <p-panel [header]="'fuelPrices.latestTitle' | translate">
         <p-table
             [value]="displayedLatestPrices()"
             [loading]="loadingTable()"
@@ -20,17 +20,17 @@
         >
             <ng-template #header>
                 <tr>
-                    <th>Fuel Grade</th>
-                    <th>Price</th>
-                    <th>Fetched At</th>
+                    <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                    <th>{{ 'fuelPrices.price' | translate }}</th>
+                    <th>{{ 'fuelPrices.fetchedAt' | translate }}</th>
                 </tr>
             </ng-template>
 
             <ng-template #body let-item>
                 <tr>
-                    <td>{{ formatGrade(item.fuelGrade) }}</td>
+                    <td><app-fuel-grade-label [grade]="item.fuelGrade" /></td>
                     <td>{{ item.price | money: item.currency }}</td>
-                    <td>{{ formatDate(item.fetchedAt) }}</td>
+                    <td>{{ item.fetchedAt | appDate }}</td>
                 </tr>
             </ng-template>
 
@@ -46,13 +46,13 @@
 
             <ng-template #emptymessage>
                 <tr>
-                    <td colspan="3" class="text-center py-4">No fuel price data available.</td>
+                    <td colspan="3" class="text-center py-4">{{ 'fuelPrices.noPriceData' | translate }}</td>
                 </tr>
             </ng-template>
         </p-table>
     </p-panel>
 
-    <p-panel header="Price History">
+    <p-panel [header]="'fuelPrices.historyTitle' | translate">
         @if (loadingHistory() || loadingTaxed()) {
             <p-skeleton height="300px" />
         } @else {
@@ -61,7 +61,7 @@
     </p-panel>
 
     @if (showTaxRulesPanel()) {
-        <p-panel header="Effective Tax Rules">
+        <p-panel [header]="'fuelPrices.taxRulesTitle' | translate">
             <p-table
                 [value]="displayedTaxRules()"
                 [loading]="loadingTaxRules()"
@@ -71,26 +71,26 @@
             >
                 <ng-template #header>
                     <tr>
-                        <th>Fuel Grade</th>
-                        <th>Type</th>
-                        <th>Name</th>
-                        <th>Amount</th>
-                        <th>Effective From</th>
-                        <th>Effective To</th>
+                        <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                        <th>{{ 'fuelPrices.type' | translate }}</th>
+                        <th>{{ 'fuelPrices.name' | translate }}</th>
+                        <th>{{ 'fuelPrices.amount' | translate }}</th>
+                        <th>{{ 'fuelPrices.effectiveFrom' | translate }}</th>
+                        <th>{{ 'fuelPrices.effectiveTo' | translate }}</th>
                     </tr>
                 </ng-template>
 
                 <ng-template #body let-rule>
                     <tr>
-                        <td>{{ formatGrade(rule.fuelGrade) }}</td>
+                        <td><app-fuel-grade-label [grade]="rule.fuelGrade" /></td>
                         <td>{{ formatTaxType(rule.taxType) }}</td>
                         <td>
                             <div>{{ rule.nameEnglish }}</div>
                             <div class="text-xs text-color-secondary">{{ rule.nameLocal }}</div>
                         </td>
                         <td>{{ formatTaxAmount(rule) }}</td>
-                        <td>{{ formatDate(rule.effectiveFrom) }}</td>
-                        <td>{{ rule.effectiveTo ? formatDate(rule.effectiveTo) : '—' }}</td>
+                        <td>{{ rule.effectiveFrom | appDate }}</td>
+                        <td>{{ rule.effectiveTo ? (rule.effectiveTo | appDate) : '—' }}</td>
                     </tr>
                 </ng-template>
 
@@ -106,7 +106,7 @@
 
                 <ng-template #emptymessage>
                     <tr>
-                        <td colspan="6" class="text-center py-4">No tax rules available.</td>
+                        <td colspan="6" class="text-center py-4">{{ 'fuelPrices.noTaxRules' | translate }}</td>
                     </tr>
                 </ng-template>
             </p-table>

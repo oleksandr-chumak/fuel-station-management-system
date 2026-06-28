@@ -4,6 +4,7 @@ import { inject, Injectable } from "@angular/core";
 import { catchError, Observable, tap, throwError } from "rxjs";
 import { MessageService } from "primeng/api";
 import { CreateFuelStation } from "../fuel-station-commands";
+import { TranslateService } from "@ngx-translate/core";
 
 
 @Injectable({ providedIn: "root" })
@@ -12,6 +13,7 @@ export class CreateFuelStationHandler extends CommandHandler<CreateFuelStation, 
     private readonly api = inject(FuelStationRestClient);
 
     private readonly messageService = inject(MessageService);
+    private readonly translate = inject(TranslateService);
 
     execute(command: CreateFuelStation): Observable<FuelStation> {
         return this.api.createFuelStation(
@@ -24,16 +26,16 @@ export class CreateFuelStationHandler extends CommandHandler<CreateFuelStation, 
             catchError((e) => {
                 this.messageService.add({
                     severity: "error",
-                    summary: "Error",
-                    detail: "An error occurred while creating fuel station"
+                    summary: this.translate.instant('common.error'),
+                    detail: this.translate.instant('toasts.createFuelStation.errorDetail')
                 });
                 return throwError(() => e);
             }),
             tap(() => {
                 this.messageService.add({
                     severity: "success",
-                    summary: "Created",
-                    detail: "A new fuel station was created"
+                    summary: this.translate.instant('toasts.createFuelStation.successSummary'),
+                    detail: this.translate.instant('toasts.createFuelStation.successDetail')
                 });
             })
         )

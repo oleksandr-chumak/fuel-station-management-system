@@ -6,6 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { Select } from 'primeng/select';
 import { CountryCode } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export interface FuelStationFormData {
     street: string,
@@ -26,6 +27,7 @@ export interface FuelStationFormData {
     ButtonModule,
     InputTextModule,
     Select,
+    TranslatePipe,
   ],
   templateUrl: './fuel-station-form.component.html'
 })

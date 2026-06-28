@@ -9,10 +9,12 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import BasicDialog from '../../../common/basic-dialog.component';
 import { DispenseFuelHandler } from '../../handlers/dispense-fuel-handler';
 import { FuelGrade } from 'fsms-web-api';
+import { TranslatePipe } from '@ngx-translate/core';
+import { FuelGradeLabel } from '../../../fuel-prices/components/fuel-grade-label/fuel-grade-label';
 
 @Component({
   selector: 'app-dispense-fuel-dialog',
-  imports: [CommonModule, FormsModule, DialogModule, ButtonModule, InputNumberModule],
+  imports: [CommonModule, FormsModule, DialogModule, ButtonModule, InputNumberModule, TranslatePipe, FuelGradeLabel],
   templateUrl: './dispense-fuel-dialog.component.html'
 })
 export class DispenseFuelDialogComponent extends BasicDialog {
@@ -26,10 +28,6 @@ export class DispenseFuelDialogComponent extends BasicDialog {
   readonly loading = toSignal(this.handler.loading$, { initialValue: false });
 
   volume: number | null = null;
-
-  fuelGradeLabel(): string {
-    return FuelGrade[this.fuelGrade];
-  }
 
   override openDialog(): void {
     this.volume = null;

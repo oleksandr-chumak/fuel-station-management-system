@@ -8,10 +8,11 @@ import { UnassignManagerButton } from '../../../../modules/fuel-stations/compone
 import { FuelStationStore } from '../../../../modules/fuel-stations/stores/fuel-station-store';
 import { GetAssignedManagersHandler } from '../../../../modules/fuel-stations/handlers/get-assigned-managers-handler';
 import { ManagerTemplateDirective } from "../../../../modules/managers/directives/manager-template-directive";
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-fuel-station-managers-page',
-  imports: [PanelModule, ButtonModule, AssignManagerDialogComponent, ManagerTable, UnassignManagerButton, ManagerTemplateDirective],
+  imports: [PanelModule, ButtonModule, AssignManagerDialogComponent, ManagerTable, UnassignManagerButton, ManagerTemplateDirective, TranslatePipe],
   templateUrl: './fuel-station-managers.page.html'
 })
 export class FuelStationManagersPage implements OnInit, OnDestroy {

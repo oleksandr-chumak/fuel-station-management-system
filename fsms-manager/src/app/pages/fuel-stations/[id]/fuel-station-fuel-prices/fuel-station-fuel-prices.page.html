@@ -1,15 +1,15 @@
 @if (fuelStation(); as fs) {
-    <p-panel header="Fuel Prices">
+    <p-panel [header]="'fuelPrices.title' | translate">
         <p-table [value]="fs.fuelPrices" size="small" [showLoader]="false" [tableStyle]="{ 'min-width': '50rem' }">
             <ng-template #header>
                 <tr>
-                    <th>Fuel Grade</th>
-                    <th>Price Per Liter</th>
+                    <th>{{ 'fuelPrices.fuelGrade' | translate }}</th>
+                    <th>{{ 'fuelPrices.pricePerLiter' | translate }}</th>
                 </tr>
             </ng-template>
             <ng-template #body let-fuelPrice let-editing="editing" let-ri="rowIndex">
                 <tr [pEditableRow]="fuelPrice">
-                    <td>{{ getFuelGradeValue(fuelPrice.fuelGrade) }}</td>
+                    <td><app-fuel-grade-label [grade]="fuelPrice.fuelGrade" /></td>
                     <td>{{ fuelPrice.pricePerLiter | money: fuelPrice.currency }}</td>
                 </tr>
             </ng-template>
