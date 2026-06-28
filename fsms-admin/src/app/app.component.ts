@@ -7,6 +7,7 @@ import { HeaderComponent } from './modules/ui/components/layout/header/header.co
 import { ToastModule } from 'primeng/toast';
 import { User } from 'fsms-web-api';
 import { AuthService, NotLoggedInHeaderComponent } from 'fsms-security';
+import { AppLanguage, LanguageService } from './modules/common/language.service';
 
 @Component({
   selector: 'app-root',
@@ -24,9 +25,14 @@ export class AppComponent implements OnInit {
   user$!: Observable<User | null>;
   isLoading = new BehaviorSubject<boolean>(true);
   isLoading$ = this.isLoading.asObservable();
-  private authService: AuthService = inject(AuthService); 
-  
+  private authService: AuthService = inject(AuthService);
+  private languageService: LanguageService = inject(LanguageService);
+
   ngOnInit(): void {
     this.user$ = this.authService.getUser();
+  }
+
+  onLanguageChange(lang: string): void {
+    this.languageService.set(lang as AppLanguage);
   }
 }

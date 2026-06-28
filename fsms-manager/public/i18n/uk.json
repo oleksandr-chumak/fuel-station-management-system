@@ -46,7 +46,13 @@
     "password": "Пароль",
     "submit": "Увійти",
     "successDetail": "Вхід виконано успішно",
-    "invalidCredentials": "Недійсні облікові дані"
+    "invalidCredentials": "Недійсні облікові дані",
+    "emailInvalid": "Невірна електронна пошта",
+    "passwordInvalid": "Невірний пароль"
+  },
+  "notLoggedInHeader": {
+    "brand": "Паливна система",
+    "login": "Увійти"
   },
   "fuelStations": {
     "title": "АЗС",

@@ -3,24 +3,24 @@
         <p-inputgroup>
             <p-inputgroup-addon>
                 <i class="pi pi-user"></i>
-            </p-inputgroup-addon>    
-            <input 
+            </p-inputgroup-addon>
+            <input
                 type="email"
                 pInputText
-                placeholder="Email"
-                formControlName="email" 
+                [placeholder]="'login.email' | translate"
+                formControlName="email"
             />
         </p-inputgroup>
-        <p-message *ngIf="emailInvalid" severity="error" variant="simple" size="small">Email is invalid</p-message>
+        <p-message *ngIf="emailInvalid" severity="error" variant="simple" size="small">{{ 'login.emailInvalid' | translate }}</p-message>
     </div>
     <div class="flex flex-col gap-1">
         <p-inputgroup>
             <p-inputgroup-addon>
                 <i class="pi pi-user"></i>
-            </p-inputgroup-addon>    
-            <input pInputText type="password" class="!rounded-l-none" formControlName="password" placeholder="Password" />
+            </p-inputgroup-addon>
+            <input pInputText type="password" class="!rounded-l-none" formControlName="password" [placeholder]="'login.password' | translate" />
         </p-inputgroup>
-        <p-message *ngIf="passwordInvalid" severity="error" variant="simple" size="small">Password is invalid</p-message>
+        <p-message *ngIf="passwordInvalid" severity="error" variant="simple" size="small">{{ 'login.passwordInvalid' | translate }}</p-message>
     </div>
-    <p-button type="submit" icon="pi pi-sign-in" styleClass="w-full" label="Login" [loading]="loading"/> 
+    <p-button type="submit" icon="pi pi-sign-in" styleClass="w-full" [label]="'login.submit' | translate" [loading]="loading"/>
 </form>

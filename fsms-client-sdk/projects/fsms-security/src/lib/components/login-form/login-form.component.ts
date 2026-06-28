@@ -6,18 +6,20 @@ import { CommonModule } from '@angular/common';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
   selector: 'fsms-security-login-form',
   standalone: true,
   imports: [
-    CommonModule, 
-    MessageModule, 
-    ReactiveFormsModule, 
-    ButtonModule, 
-    InputGroupModule, 
-    InputGroupAddonModule, 
-    InputTextModule
+    CommonModule,
+    MessageModule,
+    ReactiveFormsModule,
+    ButtonModule,
+    InputGroupModule,
+    InputGroupAddonModule,
+    InputTextModule,
+    TranslatePipe,
   ],
   templateUrl: './login-form.component.html'
 })

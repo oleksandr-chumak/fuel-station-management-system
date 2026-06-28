@@ -46,7 +46,13 @@
     "password": "Password",
     "submit": "Login",
     "successDetail": "Login successful",
-    "invalidCredentials": "Invalid credentials"
+    "invalidCredentials": "Invalid credentials",
+    "emailInvalid": "Email is invalid",
+    "passwordInvalid": "Password is invalid"
+  },
+  "notLoggedInHeader": {
+    "brand": "Fuel System",
+    "login": "Login"
   },
   "fuelStations": {
     "title": "Fuel stations",
