@@ -1,0 +1,99 @@
+<div class="flex flex-col gap-3 border border-surface-700 rounded-lg p-4" [formGroup]="form">
+    <div class="flex gap-2 items-center">
+        <p-select
+            class="flex-[2]"
+            [options]="tankOptions"
+            optionValue="id"
+            formControlName="fuelTankId"
+            [placeholder]="'fuelOrders.selectTank' | translate"
+            appendTo="body">
+            <ng-template let-selected #selectedItem>
+                <span *ngIf="selected">#{{ selected.tank.id }}</span>
+            </ng-template>
+            <ng-template let-option #item>
+                <div class="flex items-center gap-3 w-full">
+                    <span class="font-medium">#{{ option.tank.id }}</span>
+                    <span class="text-xs opacity-70">
+                        {{ optionInStockLabel(option.tank) }} {{ 'fuelOrders.optionInStockShort' | translate }} ·
+                        {{ optionPendingLabel(option.tank) }} {{ 'fuelOrders.optionPendingShort' | translate }}
+                    </span>
+                    <span class="text-xs font-medium ml-auto" [ngClass]="optionFreeClass(option.tank)">
+                        {{ optionFreeLabel(option.tank) }} {{ 'fuelOrders.optionFreeShort' | translate }}
+                    </span>
+                </div>
+            </ng-template>
+        </p-select>
+
+        <p-input-number
+            class="flex-1"
+            styleClass="w-full"
+            inputStyleClass="w-full"
+            formControlName="volume"
+            mode="decimal"
+            suffix=" L"
+            [min]="0.001"
+            [minFractionDigits]="0"
+            [maxFractionDigits]="3"
+            [placeholder]="'fuelOrders.volumePlaceholder' | translate"></p-input-number>
+
+        <p-button
+            type="button"
+            icon="pi pi-times"
+            severity="secondary"
+            [text]="true"
+            [disabled]="!canRemove"
+            (onClick)="remove.emit()"></p-button>
+    </div>
+
+    @if (selectedTank) {
+        <div class="w-full flex h-2 bg-white/10 rounded-full overflow-hidden">
+            <div [style.width.%]="barSegments.inStock" class="bg-slate-500 h-full"></div>
+            <div [style.width.%]="barSegments.pending" class="bg-amber-500 h-full"></div>
+            <div [style.width.%]="barSegments.thisOrder" [ngClass]="thisOrderColorClass" class="h-full"></div>
+        </div>
+
+        <div class="flex items-center justify-between text-xs flex-wrap gap-x-4 gap-y-1">
+            <div class="flex items-center gap-4 flex-wrap">
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-sm bg-slate-500"></span>
+                    <span class="opacity-80">{{ 'fuelOrders.inStock' | translate }}</span>
+                    <b>{{ inStockLabel }}</b>
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-sm bg-amber-500"></span>
+                    <span class="opacity-80">{{ 'fuelOrders.pending' | translate }}</span>
+                    <b>{{ pendingLabel }}</b>
+                </span>
+                <span class="flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-sm bg-emerald-500"></span>
+                    <span class="opacity-80">{{ 'fuelOrders.thisOrder' | translate }}</span>
+                    <b>{{ thisOrderLabel }}</b>
+                </span>
+            </div>
+            <div>
+                <b [ngClass]="freeClass">{{ freeLabel }}</b>
+                <span class="opacity-70"> {{ 'fuelOrders.freeOfSuffix' | translate }} </span>
+                <b>{{ capacityLabel }}</b>
+            </div>
+        </div>
+    }
+
+    @if (showTankRequiredMessage) {
+        <div class="flex items-center gap-1.5 text-xs text-red-500">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ 'fuelOrders.tankInvalid' | translate }}</span>
+        </div>
+    }
+    @if (showVolumeRequiredMessage) {
+        <div class="flex items-center gap-1.5 text-xs text-red-500">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ 'fuelOrders.volumeInvalid' | translate }}</span>
+        </div>
+    }
+    @if (overCapacityMessage; as params) {
+        <div class="flex items-center gap-1.5 text-xs text-red-500">
+            <i class="pi pi-exclamation-circle"></i>
+            <span>{{ 'fuelOrders.overCapacity' | translate: params }}</span>
+        </div>
+    }
+</div>

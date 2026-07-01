@@ -14,21 +14,21 @@ export class FuelOrderStatusTag {
 
     protected readonly label = computed(() => {
         switch (this.status()) {
-            case FuelOrderStatus.Pending:   return 'fuelOrders.statusPending';
+            case FuelOrderStatus.Pending: return 'fuelOrders.statusPending';
             case FuelOrderStatus.Confirmed: return 'fuelOrders.statusConfirmed';
-            case FuelOrderStatus.Rejected:  return 'fuelOrders.statusRejected';
+            case FuelOrderStatus.Rejected: return 'fuelOrders.statusRejected';
             case FuelOrderStatus.Processed: return 'fuelOrders.statusProcessed';
-            default:                        return '';
+            default: return '';
         }
     });
 
     protected readonly severity = computed<'success' | 'info' | 'danger' | 'warn' | undefined>(() => {
         switch (this.status()) {
-            case FuelOrderStatus.Pending:   return 'info';
+            case FuelOrderStatus.Pending: return 'info';
             case FuelOrderStatus.Confirmed: return 'success';
-            case FuelOrderStatus.Rejected:  return 'danger';
+            case FuelOrderStatus.Rejected: return 'danger';
             case FuelOrderStatus.Processed: return 'success';
-            default:                        return undefined;
+            default: return undefined;
         }
     });
 }

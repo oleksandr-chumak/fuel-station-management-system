@@ -1,0 +1,72 @@
+<form class="flex flex-col gap-4" [formGroup]="createFuelOrderForm" (submit)="handleFormSubmission()">
+    @if (!hasFuelGrades()) {
+        <p-message severity="warn" variant="simple" size="small">
+            {{ 'fuelOrders.noFuelTanksWarning' | translate }}
+        </p-message>
+    }
+
+    <div class="flex flex-col gap-1">
+        <label for="fuelGrade" class="text-sm font-medium">{{ 'fuelOrders.fuelGrade' | translate }}</label>
+        <p-select inputId="fuelGrade" [options]="fuelGrades()" formControlName="fuelGrade" [placeholder]="'fuelOrders.selectFuelGrade' | translate" class="w-full" [disabled]="!hasFuelGrades()" appendTo="body">
+            <ng-template #selectedItem let-selectedOption>
+                <div *ngIf="selectedOption" class="flex items-center justify-between gap-2 w-full">
+                    <span>{{ selectedOption.labelKey | translate }}</span>
+                    <span class="text-xs opacity-70">
+                        {{ tanksCountKey(selectedOption.tankCount) | translate: { count: selectedOption.tankCount } }}
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template let-fuelGrade #item>
+                <div class="flex items-center justify-between gap-2 w-full">
+                    <span>{{ fuelGrade.labelKey | translate }}</span>
+                    <span class="text-xs opacity-70">
+                        {{ tanksCountKey(fuelGrade.tankCount) | translate: { count: fuelGrade.tankCount } }}
+                    </span>
+                </div>
+            </ng-template>
+        </p-select>
+        @if (fuelGradeInvalid) {
+            <p-message severity="error" variant="simple" size="small">{{ 'fuelOrders.fuelGradeInvalid' | translate }}</p-message>
+        }
+    </div>
+
+    @if (selectedGrade() !== null) {
+        <div class="flex flex-col gap-2">
+            <label class="text-sm font-medium">{{ 'fuelOrders.allocations' | translate }}</label>
+            <div class="flex flex-col gap-3">
+                @for (row of allocations.controls; track $index; let i = $index) {
+                    <app-fuel-order-allocation-form
+                        [form]="row"
+                        [tankOptions]="tankOptionsByRow().get(i) ?? []"
+                        [selectedTank]="selectedTankByRow().get(i) ?? null"
+                        [canRemove]="allocations.length > 1"
+                        (remove)="removeAllocation(i)" />
+                }
+            </div>
+            <p-button
+                type="button"
+                icon="pi pi-plus"
+                [label]="'fuelOrders.addAllocation' | translate"
+                severity="secondary"
+                [outlined]="true"
+                [disabled]="!canAddAllocation()"
+                (onClick)="addAllocation()"
+                styleClass="self-start"></p-button>
+        </div>
+
+        <div class="border-t border-surface-700 pt-3 flex items-center justify-between">
+            <span class="text-sm opacity-80">{{ 'fuelOrders.totalOrderVolume' | translate }}</span>
+            <span class="text-base font-semibold">{{ totalVolumeLabel() }}</span>
+        </div>
+    }
+
+    <div class="flex flex-col gap-2">
+        <p-button type="submit" styleClass="w-full" severity="success" [label]="'fuelOrders.createSubmit' | translate" [loading]="loadingSignal()" [disabled]="submitDisabled()"/>
+        @if (blockingReasonKey(); as key) {
+            <div class="flex items-center justify-center gap-1.5 text-xs opacity-70">
+                <i class="pi pi-info-circle"></i>
+                <span>{{ key | translate }}</span>
+            </div>
+        }
+    </div>
+</form>

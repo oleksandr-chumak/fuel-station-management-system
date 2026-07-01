@@ -229,7 +229,27 @@
     "statusConfirmed": "Confirmed",
     "statusRejected": "Rejected",
     "statusProcessed": "Processed",
-    "statusDelivered": "Delivered"
+    "statusDelivered": "Delivered",
+    "inStock": "In stock",
+    "pending": "Pending",
+    "thisOrder": "This order",
+    "freeOfSuffix": "free of",
+    "totalOrderVolume": "Total order volume",
+    "overCapacity": "Only {{free}} free in tank #{{tankId}} — reduce this volume.",
+    "optionInStockShort": "in stock",
+    "optionPendingShort": "pending",
+    "optionFreeShort": "free",
+    "tanksCountOne": "{{count}} tank",
+    "tanksCountFew": "{{count}} tanks",
+    "tanksCountMany": "{{count}} tanks",
+    "helper": {
+      "noTanks": "Install a fuel tank before creating an order.",
+      "noGrade": "Select a fuel grade to continue.",
+      "noAllocation": "Add at least one tank allocation.",
+      "missingTank": "Select a tank for every allocation.",
+      "missingVolume": "Enter a volume greater than 0 for every tank.",
+      "overCapacity": "Reduce a volume that exceeds tank capacity."
+    }
   },
   "finance": {
     "title": "Finance",

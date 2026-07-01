@@ -8,6 +8,7 @@ import {
     FuelOrderRejected,
     FuelOrderRestClient,
     FuelPriceChanged,
+    FuelSaleCreated,
     FuelStationEvent,
     FuelStationRestClient,
     FuelStationStompClient,
@@ -60,9 +61,23 @@ export class FuelStationEventHandler {
                     this.handleFuelOrderRejected(event);
                 } else if (event instanceof FuelOrderProcessed) {
                     this.handleFuelOrderProcessed(event);
+                } else if (event instanceof FuelSaleCreated) {
+                    this.handleFuelSaleCreated(event);
                 }
             })
         );
+    }
+
+    private handleFuelSaleCreated(event: FuelSaleCreated): void {
+        this.fuelStationRestClient.getFuelStationById(event.fuelStationId)
+            .pipe(
+                tap((fuelStation) => this.fuelStationStore.fuelStation = fuelStation),
+                catchError((e) => {
+                    this.logger.error('[FuelStationEventHandler] Error refreshing fuel station after fuel sale:', e);
+                    return EMPTY;
+                })
+            )
+            .subscribe();
     }
 
     private handleFuelPriceChanged(event: FuelPriceChanged): void {
@@ -141,6 +156,16 @@ export class FuelStationEventHandler {
         this.fuelOrderRestClient.getFuelOrderById(event.fuelOrderId)
             .pipe(
                 tap((fuelOrder) => this.fuelStationStore.fuelOrders = [fuelOrder, ...this.fuelStationStore.fuelOrders])
+            )
+            .subscribe();
+
+        this.fuelStationRestClient.getFuelStationById(event.fuelStationId)
+            .pipe(
+                tap((fuelStation) => this.fuelStationStore.fuelStation = fuelStation),
+                catchError((e) => {
+                    this.logger.error('[FuelStationEventHandler] Error refreshing fuel station after fuel order created:', e);
+                    return EMPTY;
+                })
             )
             .subscribe();
     }
