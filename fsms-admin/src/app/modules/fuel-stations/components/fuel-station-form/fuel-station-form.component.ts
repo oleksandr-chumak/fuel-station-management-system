@@ -39,11 +39,35 @@ export class FuelStationFormComponent {
 
   protected readonly countryCodes = Object.values(CountryCode);
 
+  private static readonly STREET_PATTERN = /^[\p{L}0-9\s\-.,']+$/u;
+  private static readonly BUILDING_NUMBER_PATTERN = /^[\p{L}0-9\-/]+$/u;
+  private static readonly CITY_PATTERN = /^[\p{L}\s\-']+$/u;
+  private static readonly POSTAL_CODE_PATTERN =
+    /^(?:[0-9]{4,6}|[A-Za-z][0-9][A-Za-z]\s?[0-9][A-Za-z][0-9]|[0-9]{5}-[0-9]{4})$/;
+
   fuelStationForm = new FormGroup({
-     street: new FormControl('', Validators.required),
-     buildingNumber: new FormControl('', Validators.required),
-     city: new FormControl('', Validators.required),
-     postalCode: new FormControl('', Validators.required),
+     street: new FormControl('', [
+       Validators.required,
+       Validators.minLength(2),
+       Validators.maxLength(100),
+       Validators.pattern(FuelStationFormComponent.STREET_PATTERN),
+     ]),
+     buildingNumber: new FormControl('', [
+       Validators.required,
+       Validators.minLength(1),
+       Validators.maxLength(20),
+       Validators.pattern(FuelStationFormComponent.BUILDING_NUMBER_PATTERN),
+     ]),
+     city: new FormControl('', [
+       Validators.required,
+       Validators.minLength(2),
+       Validators.maxLength(50),
+       Validators.pattern(FuelStationFormComponent.CITY_PATTERN),
+     ]),
+     postalCode: new FormControl('', [
+       Validators.required,
+       Validators.pattern(FuelStationFormComponent.POSTAL_CODE_PATTERN),
+     ]),
      country: new FormControl<CountryCode | null>(null, Validators.required),
   })
   

@@ -71,6 +71,8 @@ public class FuelStationController {
     private final ListFuelPriceHistoryQuery listFuelPriceHistoryQuery;
     private final ListFuelTankVolumeHistoryQuery listFuelTankVolumeHistoryQuery;
 
+    private final FuelStationResponseBuilder fuelStationResponseBuilder;
+
     @PostMapping("/")
     public ResponseEntity<FuelStationResponse> createFuelStation(
             @RequestBody @Valid CreateFuelStationRequest request,
@@ -84,7 +86,7 @@ public class FuelStationController {
             request.getCountry(),
             user.getActor()
         );
-        return new ResponseEntity<>(FuelStationResponse.fromDomain(fuelStation), HttpStatus.CREATED);
+        return new ResponseEntity<>(fuelStationResponseBuilder.build(fuelStation), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}/deactivate")
@@ -94,7 +96,7 @@ public class FuelStationController {
     ) {
         try {
             var fuelStation = deactivateFuelStation.process(fuelStationId, user.getActor());
-            return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+            return ResponseEntity.ok(fuelStationResponseBuilder.build(fuelStation));
         } catch (FuelStationAlreadyDeactivatedException fuelStationAlreadyDeactivatedException) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, fuelStationAlreadyDeactivatedException.getMessage());
         }
@@ -141,7 +143,7 @@ public class FuelStationController {
                 request.getNewPrice(),
                 user.getActor()
         ));
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(fuelStationResponseBuilder.build(fuelStation));
     }
 
     @PutMapping("/{id}/fuel-prices")
@@ -154,7 +156,7 @@ public class FuelStationController {
                 .map(p -> new ChangeFuelPricesBulkCommand.FuelPriceChange(p.getFuelGrade(), p.getNewPrice()))
                 .toList();
         var fuelStation = changeFuelPricesBulk.process(new ChangeFuelPricesBulkCommand(fuelStationId, updates, user.getActor()));
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(fuelStationResponseBuilder.build(fuelStation));
     }
 
     @GetMapping("/{id}")
@@ -163,14 +165,13 @@ public class FuelStationController {
             @CurrentUser User user
     ) {
         var fuelStation = getActiveFuelStationByIdQuery.process(fuelStationId, user.getActor());
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(fuelStationResponseBuilder.build(fuelStation));
     }
 
     @GetMapping("/")
     public ResponseEntity<List<FuelStationResponse>> getFuelStations() {
         var fuelStations = listFuelStationsQuery.process();
-        var response = fuelStations.stream().map(FuelStationResponse::fromDomain).toList();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(fuelStationResponseBuilder.buildAll(fuelStations));
     }
 
     @GetMapping("/{id}/managers")
@@ -222,7 +223,7 @@ public class FuelStationController {
                 request.getMaxCapacity(),
                 user.getActor()
         );
-        return new ResponseEntity<>(FuelStationResponse.fromDomain(fuelStation), HttpStatus.CREATED);
+        return new ResponseEntity<>(fuelStationResponseBuilder.build(fuelStation), HttpStatus.CREATED);
     }
 
     @PostMapping("/{id}/fuel-tanks/{tankId}/dispense")
@@ -233,7 +234,7 @@ public class FuelStationController {
             @CurrentUser User user
     ) {
         var fuelStation = dispenseFuel.process(fuelStationId, fuelTankId, request.getVolume(), user.getActor());
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(fuelStationResponseBuilder.build(fuelStation));
     }
 
     @PutMapping("/{id}/fuel-tanks/{tankId}/decommission")
@@ -243,7 +244,7 @@ public class FuelStationController {
             @CurrentUser User user
     ) {
         var fuelStation = decommissionFuelTank.process(fuelStationId, fuelTankId, user.getActor());
-        return ResponseEntity.ok(FuelStationResponse.fromDomain(fuelStation));
+        return ResponseEntity.ok(fuelStationResponseBuilder.build(fuelStation));
     }
 
     @GetMapping("/{id}/fuel-tank-volume-history")

@@ -13,7 +13,7 @@
             <label for="volume" class="text-sm">{{ 'fuelTanks.volumeToDispenseLabel' | translate }}</label>
             <p-inputNumber
                 inputId="volume"
-                [(ngModel)]="volume"
+                [formControl]="volumeControl"
                 [min]="0.001"
                 [max]="availableVolume"
                 [maxFractionDigits]="3"
@@ -21,9 +21,13 @@
                 styleClass="w-full"
                 [showButtons]="false">
             </p-inputNumber>
-            @if (volume !== null && volume > availableVolume) {
+            @if (volumeInvalid && exceedsAvailable) {
                 <span class="text-sm text-red-500">
                     {{ 'fuelTanks.volumeExceedsAvailable' | translate }} {{ availableVolume }} {{ 'fuelTanks.litres' | translate }}
+                </span>
+            } @else if (volumeInvalid && belowMinimum) {
+                <span class="text-sm text-red-500">
+                    {{ 'fuelTanks.volumeInvalid' | translate }}
                 </span>
             }
         </div>
@@ -33,7 +37,7 @@
                 [label]="'fuelTanks.dispense' | translate"
                 icon="pi pi-minus-circle"
                 [loading]="loading()"
-                [disabled]="!canSubmit"
+                [disabled]="volumeControl.invalid"
                 (onClick)="submit()" />
         </div>
     </div>

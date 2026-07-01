@@ -19,8 +19,8 @@ export class ConfirmFuelOrderHandler
     private readonly messageService = inject(MessageService);
     private readonly translate = inject(TranslateService);
 
-    execute({ fuelOrderId }: ConfirmFuelOrder): Observable<FuelOrder> {
-        return this.api.confirmFuelOrder(fuelOrderId).pipe(
+    execute({ fuelOrderId, pricePerLiter }: ConfirmFuelOrder): Observable<FuelOrder> {
+        return this.api.confirmFuelOrder(fuelOrderId, pricePerLiter).pipe(
             catchError((e) => {
                 this.messageService.add({
                     severity: 'error',

@@ -2,6 +2,7 @@ package com.fuelstation.managmentapi.fuelorder.infrastructure.persistence;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.ActorType;
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.fuelorder.domain.events.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.Map;
@@ -30,6 +32,7 @@ public class FuelOrderEventRepositoryImpl implements FuelOrderEventRepository {
         payload.remove("performedBy");
         payload.remove("fuelOrderId");
         payload.remove("fuelStationId");
+        payload.remove("domainEvents");
 
         var entity = new FuelOrderEventEntity();
         entity.setFuelOrderId(event.getFuelOrderId());
@@ -63,7 +66,14 @@ public class FuelOrderEventRepositoryImpl implements FuelOrderEventRepository {
 
         return switch (FuelOrderEventType.valueOf(entity.getEventType())) {
             case FUEL_ORDER_CREATED -> new FuelOrderCreated(fuelOrderId, fuelStationId, performedBy, occurredAt);
-            case FUEL_ORDER_CONFIRMED -> new FuelOrderConfirmed(fuelOrderId, fuelStationId, performedBy, occurredAt);
+            case FUEL_ORDER_CONFIRMED -> {
+                Map<String, Object> payload = entity.getPayload() == null ? Map.of() : entity.getPayload();
+                Object priceRaw = payload.get("pricePerLiter");
+                Object currencyRaw = payload.get("currency");
+                BigDecimal pricePerLiter = priceRaw == null ? null : new BigDecimal(priceRaw.toString());
+                CurrencyCode currency = currencyRaw == null ? null : CurrencyCode.fromString(currencyRaw.toString());
+                yield new FuelOrderConfirmed(fuelOrderId, fuelStationId, pricePerLiter, currency, performedBy, occurredAt);
+            }
             case FUEL_ORDER_REJECTED -> new FuelOrderRejected(fuelOrderId, fuelStationId, performedBy, occurredAt);
             case FUEL_ORDER_PROCESSED -> new FuelOrderProcessed(fuelOrderId, fuelStationId, performedBy, occurredAt);
         };

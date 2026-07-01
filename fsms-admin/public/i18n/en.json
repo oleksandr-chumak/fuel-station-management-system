@@ -111,6 +111,7 @@
     "available": "Available",
     "volumeToDispenseLabel": "Volume to dispense (L)",
     "volumeExceedsAvailable": "Cannot dispense more than",
+    "volumeInvalid": "Volume must be greater than zero",
     "decommission": "Decommission tank",
     "decommissionDisabledTooltip": "Tank must be empty ({{volume}} L) before it can be decommissioned",
     "volume": "Volume",
@@ -210,6 +211,15 @@
     "confirming": "Confirming...",
     "rejecting": "Rejecting...",
     "noOrders": "No fuel orders",
+    "confirmDialogTitle": "Confirm fuel order",
+    "allocations": "Tank allocations",
+    "tank": "Tank",
+    "pricePerLiterLabel": "Price per liter",
+    "pricePerLiterInvalid": "Price per liter must be positive",
+    "recommendedPrice": "Recommended price",
+    "recommendedPriceLoading": "Loading recommended price...",
+    "recommendedPriceUnavailable": "Recommended price is unavailable for this order.",
+    "useRecommended": "Use recommended",
     "statusPending": "Pending",
     "statusConfirmed": "Confirmed",
     "statusRejected": "Rejected",
@@ -296,8 +306,10 @@
     "decommissionFuelTank": {
       "successSummary": "Decommissioned",
       "successDetail": "Fuel tank {{fuelTankId}} was decommissioned",
-      "errorDetail": "An error occurred while decommissioning fuel tank"
+      "errorDetail": "An error occurred while decommissioning fuel tank",
+      "hasPendingOrdersDetail": "Tank #{{fuelTankId}} cannot be decommissioned — {{count}} pending fuel order(s) reference it: {{pendingOrderIds}}. Confirm or reject them first."
     },
+    "decommissionFuelTankForbidden": "Only administrators can decommission tanks",
     "dispenseFuel": {
       "successSummary": "Dispensed",
       "successDetail": "{{volume}} L dispensed from tank {{fuelTankId}}",

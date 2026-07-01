@@ -38,8 +38,11 @@
                                     appendTo="body"></p-select>
                                 <p-input-number
                                     formControlName="volume"
-                                    suffix="L"
-                                    [min]="0"
+                                    mode="decimal"
+                                    suffix=" L"
+                                    [min]="0.001"
+                                    [minFractionDigits]="0"
+                                    [maxFractionDigits]="3"
                                     [placeholder]="'fuelOrders.volumePlaceholder' | translate"></p-input-number>
                                 <p-button
                                     type="button"

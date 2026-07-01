@@ -7,6 +7,7 @@ import java.util.Objects;
 
 import com.fuelstation.managmentapi.common.domain.Actor;
 import com.fuelstation.managmentapi.common.domain.AggregateRoot;
+import com.fuelstation.managmentapi.common.domain.CurrencyCode;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderConfirmed;
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderProcessed;
@@ -53,12 +54,17 @@ public class FuelOrder extends AggregateRoot {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public void confirm(Actor performedBy) {
+    public void confirm(Actor performedBy, BigDecimal pricePerLiter, CurrencyCode currency) {
+        Objects.requireNonNull(pricePerLiter, "pricePerLiter must not be null");
+        Objects.requireNonNull(currency, "currency must not be null");
+        if (pricePerLiter.signum() <= 0) {
+            throw new IllegalArgumentException("pricePerLiter must be positive");
+        }
         if (status != FuelOrderStatus.PENDING) {
             throw new FuelOrderCannotBeConfirmedException(fuelOrderId, status);
         }
         status = FuelOrderStatus.CONFIRMED;
-        pushDomainEvent(new FuelOrderConfirmed(fuelOrderId, fuelStationId, performedBy));
+        pushDomainEvent(new FuelOrderConfirmed(fuelOrderId, fuelStationId, pricePerLiter, currency, performedBy));
     }
 
     public void reject(Actor performedBy) {

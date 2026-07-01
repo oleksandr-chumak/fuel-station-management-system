@@ -55,6 +55,20 @@ public class FuelOrderRepositoryImpl implements FuelOrderRepository {
     }
 
     @Override
+    public List<FuelOrder> findPendingByFuelStationIds(List<Long> fuelStationIds) {
+        if (fuelStationIds.isEmpty()) {
+            return List.of();
+        }
+        return jpaFuelOrderRepository.findByFuelStationIdsAndStatus(
+                fuelStationIds,
+                FuelOrderStatus.PENDING.getId()
+            )
+            .stream()
+            .map(fuelOrderMapper::toDomain)
+            .toList();
+    }
+
+    @Override
     public List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId) {
         return jpaFuelOrderRepository.findByFuelStationId(fuelStationId).stream().map(fuelOrderMapper::toDomain).toList();
     }

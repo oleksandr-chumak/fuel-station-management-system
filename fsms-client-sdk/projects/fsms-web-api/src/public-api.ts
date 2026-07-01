@@ -29,6 +29,7 @@ export * from './lib/fuel-station/fuel-station-stomp-client';
 export * from './lib/fuel-order/fuel-order-status.enum';
 export * from './lib/fuel-order/fuel-order.model';
 export * from './lib/fuel-order/fuel-order-allocation.model';
+export * from './lib/fuel-order/fuel-order-recommended-price';
 export * from './lib/fuel-order/fuel-order-events';
 export * from './lib/fuel-order/fuel-order-rest-client';
 export * from './lib/fuel-order/fuel-order-stomp-client';

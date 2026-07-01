@@ -111,6 +111,7 @@
     "available": "Доступно",
     "volumeToDispenseLabel": "Об'єм для видачі (л)",
     "volumeExceedsAvailable": "Не можна видати більше ніж",
+    "volumeInvalid": "Об'єм має бути більше нуля",
     "decommission": "Демонтувати резервуар",
     "decommissionDisabledTooltip": "Резервуар повинен бути порожнім ({{volume}} л), щоб його можна було демонтувати",
     "volume": "Об'єм",
@@ -210,6 +211,15 @@
     "confirming": "Підтвердження...",
     "rejecting": "Відхилення...",
     "noOrders": "Замовлення відсутні",
+    "confirmDialogTitle": "Підтвердження замовлення",
+    "allocations": "Розподіл по резервуарах",
+    "tank": "Резервуар",
+    "pricePerLiterLabel": "Ціна за літр",
+    "pricePerLiterInvalid": "Ціна за літр повинна бути додатньою",
+    "recommendedPrice": "Рекомендована ціна",
+    "recommendedPriceLoading": "Завантаження рекомендованої ціни...",
+    "recommendedPriceUnavailable": "Рекомендована ціна недоступна для цього замовлення.",
+    "useRecommended": "Застосувати",
     "statusPending": "Очікує",
     "statusConfirmed": "Підтверджено",
     "statusRejected": "Відхилено",
@@ -296,8 +306,10 @@
     "decommissionFuelTank": {
       "successSummary": "Демонтовано",
       "successDetail": "Резервуар {{fuelTankId}} демонтовано",
-      "errorDetail": "Сталася помилка під час демонтажу резервуара"
+      "errorDetail": "Сталася помилка під час демонтажу резервуара",
+      "hasPendingOrdersDetail": "Резервуар #{{fuelTankId}} неможливо демонтувати — на нього посилається {{count}} активне замовлення палива: {{pendingOrderIds}}. Спочатку підтвердьте або відхиліть їх."
     },
+    "decommissionFuelTankForbidden": "Лише адміністратори можуть демонтувати резервуари",
     "dispenseFuel": {
       "successSummary": "Видано",
       "successDetail": "{{volume}} л видано з резервуара {{fuelTankId}}",

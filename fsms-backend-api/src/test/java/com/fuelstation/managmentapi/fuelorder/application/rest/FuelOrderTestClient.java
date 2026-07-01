@@ -9,7 +9,12 @@ public interface FuelOrderTestClient {
     FuelOrderResponse createFuelOrderAndReturnResponse(CreateFuelOrderRequest request) throws Exception;
 
     ResultActions confirmFuelOrder(long fuelOrderId) throws Exception;
+    ResultActions confirmFuelOrder(long fuelOrderId, ConfirmFuelOrderRequest request) throws Exception;
     FuelOrderResponse confirmFuelOrderAndReturnResponse(long fuelOrderId) throws Exception;
+    FuelOrderResponse confirmFuelOrderAndReturnResponse(long fuelOrderId, ConfirmFuelOrderRequest request) throws Exception;
+
+    ResultActions getRecommendedPrice(long fuelOrderId) throws Exception;
+    FuelOrderRecommendedPriceResponse getRecommendedPriceAndReturnResponse(long fuelOrderId) throws Exception;
 
     ResultActions rejectFuelOrder(long fuelOrderId) throws Exception;
     FuelOrderResponse rejectFuelOrderAndReturnResponse(long fuelOrderId) throws Exception;

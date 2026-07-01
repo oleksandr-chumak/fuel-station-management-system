@@ -151,8 +151,10 @@ export class CreateFuelOrderDialogComponent extends BasicDialog {
   }
 
   private tankLabel(tank: FuelTank): string {
-    const free = tank.maxCapacity - tank.currentVolume;
-    return `#${tank.id} (${free}L / ${tank.maxCapacity}L)`;
+    const free = tank.availableVolume;
+    return tank.pendingVolume > 0
+      ? `#${tank.id} (${free}L free / ${tank.maxCapacity}L, ${tank.pendingVolume}L pending)`
+      : `#${tank.id} (${free}L free / ${tank.maxCapacity}L)`;
   }
 
   private isFieldInvalid(formGroup: FormGroup, fieldName: string): boolean {

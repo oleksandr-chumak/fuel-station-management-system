@@ -1,3 +1,4 @@
+<app-confirm-fuel-order-dialog (confirmed)="onConfirmed($event)"></app-confirm-fuel-order-dialog>
 <p-table
         [value]="fuelOrders()"
         [loading]="fetchingFuelOrders()"
@@ -42,7 +43,7 @@
                                 icon="pi pi-check"
                                 severity="success"
                                 [loading]="rejectingFuelOrder() || confirmingFuelOrder()"
-                                (click)="confirmFuelOrder(order.fuelOrderId)"
+                                (click)="openConfirmDialog(order)"
                                 text rounded>
                             </button>
                             <button

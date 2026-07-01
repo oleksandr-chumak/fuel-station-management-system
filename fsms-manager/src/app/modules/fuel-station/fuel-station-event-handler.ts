@@ -108,6 +108,7 @@ export class FuelStationEventHandler {
         newFuelStation.addFuelTank(new FuelTank(
             event.fuelTankId,
             0,
+            0,
             event.maxCapacity,
             event.fuelGrade,
             null

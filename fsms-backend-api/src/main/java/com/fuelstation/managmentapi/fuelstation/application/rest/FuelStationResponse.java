@@ -3,6 +3,7 @@ package com.fuelstation.managmentapi.fuelstation.application.rest;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,6 +31,10 @@ public class FuelStationResponse {
     private String status;
 
     public static FuelStationResponse fromDomain(FuelStation fuelStation) {
+        return fromDomain(fuelStation, Map.of());
+    }
+
+    public static FuelStationResponse fromDomain(FuelStation fuelStation, Map<Long, BigDecimal> pendingByTankId) {
         FuelStationResponse response = new FuelStationResponse();
         response.setFuelStationId(fuelStation.getFuelStationId());
         response.setStreet(fuelStation.getAddress().street());
@@ -40,6 +45,7 @@ public class FuelStationResponse {
                     t.getId(),
                     t.getFuelGrade().toString(),
                     t.getCurrentVolume(),
+                    pendingByTankId.getOrDefault(t.getId(), BigDecimal.ZERO),
                     t.getMaxCapacity(),
                     t.getLastRefillDate()))
                 .toList());
@@ -70,6 +76,7 @@ public class FuelStationResponse {
         Long id,
         String fuelGrade,
         BigDecimal currentVolume,
+        BigDecimal pendingVolume,
         BigDecimal maxCapacity,
         Optional<OffsetDateTime> lastRefillDate) {
     }

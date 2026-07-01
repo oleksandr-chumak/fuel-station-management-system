@@ -54,9 +54,9 @@ export class FuelOrdersPage implements OnInit, OnDestroy {
       .subscribe()
   }
 
-  protected confirmFuelOrder(fuelOrderId: number) {
+  protected confirmFuelOrder(event: { fuelOrderId: number; pricePerLiter: number }) {
     this.confirmFuelOrderHandler
-      .handle({ fuelOrderId })
+      .handle(event)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe();
   }

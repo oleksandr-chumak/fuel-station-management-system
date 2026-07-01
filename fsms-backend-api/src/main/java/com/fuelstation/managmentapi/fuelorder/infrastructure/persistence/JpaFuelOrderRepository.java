@@ -35,4 +35,14 @@ public interface JpaFuelOrderRepository extends JpaRepository<FuelOrderEntity, L
         @Param("fuelTankId") Long fuelTankId,
         @Param("statusId") Long statusId
     );
+
+    @Query("""
+            SELECT f FROM FuelOrderEntity f
+            WHERE f.fuelStationId IN :fuelStationIds
+            AND f.fuelOrderStatusId = :statusId
+        """)
+    List<FuelOrderEntity> findByFuelStationIdsAndStatus(
+        @Param("fuelStationIds") List<Long> fuelStationIds,
+        @Param("statusId") Long statusId
+    );
 }

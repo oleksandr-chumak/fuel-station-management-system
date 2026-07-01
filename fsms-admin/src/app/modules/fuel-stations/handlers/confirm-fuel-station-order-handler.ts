@@ -22,7 +22,7 @@ export class ConfirmFuelStationOrderHandler
     private readonly translate = inject(TranslateService);
 
     execute(command: ConfirmFuelStationOrder): Observable<FuelOrder> {
-        return this.api.confirmFuelOrder(command.fuelOrderId)
+        return this.api.confirmFuelOrder(command.fuelOrderId, command.pricePerLiter)
             .pipe(
                 catchError((e) => {
                     this.messageService.add({

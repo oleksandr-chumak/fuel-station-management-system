@@ -4,26 +4,31 @@ import { RestClient } from "../core/rest-client";
 import { FuelOrderMapper } from "./fuel-order.mapper";
 import { FuelOrder } from "./fuel-order.model";
 import { FuelOrderAllocation } from "./fuel-order-allocation.model";
+import { FuelOrderRecommendedPrice } from "./fuel-order-recommended-price";
 import { FuelGrade } from "../core/fuel-grade.enum";
 
 @Injectable({ providedIn: "root"})
 export class FuelOrderRestClient {
-      
+
     private restClient = inject(RestClient);
     private fuelOrderMapper = inject(FuelOrderMapper);
-    
+
     getFuelOrders(): Observable<FuelOrder[]> {
         return this.restClient.get("api/fuel-orders/")
             .pipe(map(data => this.restClient.assertArray(data, this.fuelOrderMapper.fromJson.bind(this.fuelOrderMapper))));
-    } 
+    }
 
     getFuelOrderById(fuelOrderId: number): Observable<FuelOrder> {
         return this.restClient.get(`api/fuel-orders/${fuelOrderId}`)
             .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
     }
-    
-    confirmFuelOrder(fuelOrderId: number): Observable<FuelOrder> {
-        return this.restClient.put(`api/fuel-orders/${fuelOrderId}/confirm`)
+
+    getRecommendedPrice(fuelOrderId: number): Observable<FuelOrderRecommendedPrice> {
+        return this.restClient.get(`api/fuel-orders/${fuelOrderId}/recommended-price`);
+    }
+
+    confirmFuelOrder(fuelOrderId: number, pricePerLiter: number): Observable<FuelOrder> {
+        return this.restClient.put(`api/fuel-orders/${fuelOrderId}/confirm`, { pricePerLiter })
             .pipe(map(data => this.fuelOrderMapper.fromJson(data)));
     }
 

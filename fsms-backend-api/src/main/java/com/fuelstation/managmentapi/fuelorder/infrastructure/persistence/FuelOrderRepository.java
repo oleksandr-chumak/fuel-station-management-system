@@ -13,4 +13,5 @@ public interface FuelOrderRepository {
      List<FuelOrder> findFuelOrdersByFuelStationId(long fuelStationId);
      List<FuelOrder> findPendingByFuelTankIdsAndGrade(List<Long> fuelTankIds, FuelGrade fuelGrade);
      List<FuelOrder> findPendingByFuelTankId(long fuelTankId);
+     List<FuelOrder> findPendingByFuelStationIds(List<Long> fuelStationIds);
 }

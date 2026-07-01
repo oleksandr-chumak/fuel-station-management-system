@@ -2,6 +2,7 @@ package com.fuelstation.managmentapi.fuelpurchase.application.rest;
 
 import com.fuelstation.managmentapi.common.WithMockCustomUser;
 import com.fuelstation.managmentapi.fuelgrade.domain.FuelGrade;
+import com.fuelstation.managmentapi.fuelorder.application.rest.ConfirmFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.CreateFuelOrderRequest;
 import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderTestClient;
 import com.fuelstation.managmentapi.fuelstation.application.rest.FuelStationResponse;
@@ -111,6 +112,28 @@ public class FuelPurchaseControllerTest {
             var purchases = fuelPurchaseTestClient.getPurchasesByStationAndReturnResponse(station.getFuelStationId());
 
             assertThat(purchases).hasSize(2);
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should store the price per liter supplied by the manager on confirmation")
+        void shouldStoreSuppliedPricePerLiter() throws Exception {
+            var station = fuelStationTestClient.createFuelStationAndReturnResponse();
+            var order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    station.getFuelStationId(),
+                    FuelGrade.RON_95,
+                    tankIdByGrade(station, FuelGrade.RON_95),
+                    BigDecimal.valueOf(200)
+            ));
+
+            fuelOrderTestClient.confirmFuelOrder(order.getFuelOrderId(),
+                    new ConfirmFuelOrderRequest(BigDecimal.valueOf(42.5)))
+                    .andExpect(status().isOk());
+
+            var purchases = fuelPurchaseTestClient.getPurchasesByStationAndReturnResponse(station.getFuelStationId());
+            assertThat(purchases).hasSize(1);
+            assertThat(purchases.getFirst().pricePerLiter()).isEqualByComparingTo(BigDecimal.valueOf(42.5));
+            assertThat(purchases.getFirst().totalPrice()).isEqualByComparingTo(BigDecimal.valueOf(42.5).multiply(BigDecimal.valueOf(200)));
         }
 
         @Test

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fuelstation.managmentapi.authentication.application.CurrentUser;
 import com.fuelstation.managmentapi.authentication.domain.User;
+import com.fuelstation.managmentapi.fuelorder.application.query.GetFuelOrderRecommendedPriceQuery;
 import com.fuelstation.managmentapi.fuelorder.application.usecases.command.CreateFuelOrderCommand;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeConfirmedException;
 import com.fuelstation.managmentapi.fuelorder.domain.exceptions.FuelOrderCannotBeRejectedException;
@@ -37,6 +38,7 @@ public class FuelOrderController {
     private final RejectFuelOrder rejectFuelOrder;
     private final ListFuelOrdersQuery listFuelOrdersQuery;
     private final GetFuelOrderByIdQuery getFuelOrderByIdQuery;
+    private final GetFuelOrderRecommendedPriceQuery getFuelOrderRecommendedPriceQuery;
 
     @PostMapping("/")
     public ResponseEntity<FuelOrderResponse> createFuelOrder(
@@ -57,10 +59,11 @@ public class FuelOrderController {
     @PutMapping("/{id}/confirm")
     public ResponseEntity<FuelOrderResponse> confirmFuelOrder(
         @PathVariable("id") long fuelOrderId,
+        @RequestBody @Valid ConfirmFuelOrderRequest request,
         @CurrentUser User user
     ) {
         try {
-            FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId, user.getActor());
+            FuelOrder fuelOrder = confirmFuelOrder.process(fuelOrderId, request.pricePerLiter(), user.getActor());
             return ResponseEntity.ok(FuelOrderResponse.fromDomain(fuelOrder));
         } catch (FuelOrderCannotBeConfirmedException e) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage());
@@ -90,5 +93,13 @@ public class FuelOrderController {
         return ResponseEntity.ok(FuelOrderResponse.fromDomain(getFuelOrderByIdQuery.process(fuelOrderId)));
     }
 
+    @GetMapping("/{id}/recommended-price")
+    public ResponseEntity<FuelOrderRecommendedPriceResponse> getRecommendedPrice(
+        @PathVariable("id") long fuelOrderId,
+        @CurrentUser User user
+    ) {
+        var result = getFuelOrderRecommendedPriceQuery.process(fuelOrderId, user.getActor());
+        return ResponseEntity.ok(FuelOrderRecommendedPriceResponse.fromResult(result));
+    }
 
 }

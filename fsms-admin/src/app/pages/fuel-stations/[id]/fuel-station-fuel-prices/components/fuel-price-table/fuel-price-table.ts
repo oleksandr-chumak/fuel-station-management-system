@@ -30,6 +30,7 @@ export class FuelPriceTable {
 
     protected readonly fuelPrices = signal<FuelStationFuelPrice[]>([]);
     protected readonly loading = toSignal(this.changeFuelPriceHandler.loading$, { initialValue: false });
+    protected readonly editingInvalid = signal<Record<string, boolean>>({});
 
     protected readonly skeletonRows = new Array(5).fill(null);
     protected readonly skeletonCols = new Array(3).fill(null);
@@ -42,13 +43,29 @@ export class FuelPriceTable {
 
     protected onRowEditInit(): void {
         this.resetFuelPrices();
+        this.editingInvalid.set({});
+    }
+
+    protected onPriceInput(fuelPrice: FuelStationFuelPrice): void {
+        const parsed = Number(fuelPrice.pricePerLiter);
+        const invalid = fuelPrice.pricePerLiter === null
+            || fuelPrice.pricePerLiter === undefined
+            || (fuelPrice.pricePerLiter as unknown as string) === ''
+            || Number.isNaN(parsed)
+            || parsed <= 0;
+        this.editingInvalid.update((state) => ({ ...state, [fuelPrice.fuelGrade]: invalid }));
+    }
+
+    protected isEditingInvalid(fuelPrice: FuelStationFuelPrice): boolean {
+        return !!this.editingInvalid()[fuelPrice.fuelGrade];
     }
 
     protected onRowEditSave(fuelPrice: FuelStationFuelPrice): void {
         const newFuelPrice = Number(fuelPrice.pricePerLiter);
 
-        if (Number.isNaN(newFuelPrice)) {
+        if (Number.isNaN(newFuelPrice) || newFuelPrice <= 0) {
             this.resetFuelPrices();
+            this.editingInvalid.set({});
             this.messageService.add({
                 severity: 'error',
                 summary: this.translate.instant('fuelPrices.validation'),
@@ -56,6 +73,8 @@ export class FuelPriceTable {
             });
             return;
         }
+
+        this.editingInvalid.update((state) => ({ ...state, [fuelPrice.fuelGrade]: false }));
 
         this.changeFuelPriceHandler
             .handle({
@@ -75,6 +94,7 @@ export class FuelPriceTable {
 
     protected onRowEditCancel(): void {
         this.resetFuelPrices();
+        this.editingInvalid.set({});
     }
 
     private resetFuelPrices(): void {

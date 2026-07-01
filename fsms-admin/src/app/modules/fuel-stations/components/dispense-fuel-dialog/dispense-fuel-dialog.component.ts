@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -14,10 +14,10 @@ import { FuelGradeLabel } from '../../../fuel-prices/components/fuel-grade-label
 
 @Component({
   selector: 'app-dispense-fuel-dialog',
-  imports: [CommonModule, FormsModule, DialogModule, ButtonModule, InputNumberModule, TranslatePipe, FuelGradeLabel],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DialogModule, ButtonModule, InputNumberModule, TranslatePipe, FuelGradeLabel],
   templateUrl: './dispense-fuel-dialog.component.html'
 })
-export class DispenseFuelDialogComponent extends BasicDialog {
+export class DispenseFuelDialogComponent extends BasicDialog implements OnChanges {
 
   @Input() fuelStationId!: number;
   @Input() fuelTankId!: number;
@@ -27,27 +27,48 @@ export class DispenseFuelDialogComponent extends BasicDialog {
   private readonly handler = inject(DispenseFuelHandler);
   readonly loading = toSignal(this.handler.loading$, { initialValue: false });
 
-  volume: number | null = null;
+  readonly volumeControl = new FormControl<number | null>(null, [
+    Validators.required,
+    Validators.min(0.001),
+  ]);
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['availableVolume']) {
+      this.volumeControl.setValidators([
+        Validators.required,
+        Validators.min(0.001),
+        Validators.max(this.availableVolume),
+      ]);
+      this.volumeControl.updateValueAndValidity({ emitEvent: false });
+    }
+  }
 
   override openDialog(): void {
-    this.volume = null;
+    this.volumeControl.reset(null);
     super.openDialog();
   }
 
-  get canSubmit(): boolean {
-    return this.volume !== null
-        && this.volume > 0
-        && this.volume <= this.availableVolume;
+  get volumeInvalid(): boolean {
+    return this.volumeControl.touched && this.volumeControl.invalid;
+  }
+
+  get exceedsAvailable(): boolean {
+    return this.volumeControl.hasError('max');
+  }
+
+  get belowMinimum(): boolean {
+    return this.volumeControl.hasError('min') || this.volumeControl.hasError('required');
   }
 
   submit(): void {
-    if (!this.canSubmit) {
+    if (this.volumeControl.invalid) {
+      this.volumeControl.markAsTouched();
       return;
     }
     this.handler.handle({
       fuelStationId: this.fuelStationId,
       fuelTankId: this.fuelTankId,
-      volume: this.volume!,
+      volume: this.volumeControl.value!,
     })
       .pipe(tap(() => this.closeDialog()))
       .subscribe();

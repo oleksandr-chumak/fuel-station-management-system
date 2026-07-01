@@ -53,6 +53,7 @@ export interface RejectFuelStationOrder {
 
 export interface ConfirmFuelStationOrder {
     fuelOrderId: number;
+    pricePerLiter: number;
 }
 
 export interface GetFuelStationEvents {

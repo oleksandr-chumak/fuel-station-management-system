@@ -22,7 +22,13 @@ public class FuelPurchaseEventHandler {
     @EventListener
     public void handle(FuelOrderConfirmed event) {
         try {
-            createFuelPurchase.process(event.getFuelOrderId(), event.getFuelStationId(), event.getPerformedBy());
+            createFuelPurchase.process(
+                event.getFuelOrderId(),
+                event.getFuelStationId(),
+                event.getPricePerLiter(),
+                event.getCurrency(),
+                event.getPerformedBy()
+            );
         } catch (Exception e) {
             log.error("Failed to create fuel purchase for order {} at station {}: {}",
                     event.getFuelOrderId(), event.getFuelStationId(), e.getMessage());

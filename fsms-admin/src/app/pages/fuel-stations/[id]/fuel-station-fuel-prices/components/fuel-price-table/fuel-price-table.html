@@ -22,7 +22,17 @@
                 <td>
                     <p-cellEditor>
                         <ng-template #input>
-                            <input pInputText type="text" [(ngModel)]="fuelPrice.pricePerLiter" />
+                            <input
+                                pInputText
+                                type="text"
+                                [(ngModel)]="fuelPrice.pricePerLiter"
+                                (ngModelChange)="onPriceInput(fuelPrice)"
+                            />
+                            @if (isEditingInvalid(fuelPrice)) {
+                                <div class="text-sm text-red-500 mt-1">
+                                    {{ 'fuelPrices.validationFuelPriceNumber' | translate }}
+                                </div>
+                            }
                         </ng-template>
                         <ng-template #output>
                             {{ fuelPrice.pricePerLiter | money: fuelPrice.currency }}
@@ -50,6 +60,7 @@
                                 pSaveEditableRow
                                 icon="pi pi-check"
                                 (click)="onRowEditSave(fuelPrice)"
+                                [disabled]="isEditingInvalid(fuelPrice)"
                                 text rounded
                                 severity="secondary">
                             </button>

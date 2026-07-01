@@ -407,6 +407,63 @@ public class FuelStationControllerTest {
             fuelStationTestClient.getFuelStationById(99999L).andExpect(status().isNotFound());
         }
 
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should expose pendingVolume per tank aggregated from pending fuel orders")
+        public void shouldExposePendingVolumePerTank() throws Exception {
+            long ron92TankId = tankIdByGrade(testFuelStation, FuelGrade.RON_92);
+
+            fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    testFuelStation.getFuelStationId(),
+                    FuelGrade.RON_92,
+                    ron92TankId,
+                    BigDecimal.valueOf(120)
+            ));
+            fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    testFuelStation.getFuelStationId(),
+                    FuelGrade.RON_92,
+                    ron92TankId,
+                    BigDecimal.valueOf(80)
+            ));
+
+            FuelStationResponse response = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
+            FuelStationResponse.FuelTankResponse ron92Tank = response.getFuelTanks().stream()
+                    .filter(t -> t.id().equals(ron92TankId))
+                    .findFirst()
+                    .orElseThrow();
+            assertThat(ron92Tank.pendingVolume()).isEqualByComparingTo(BigDecimal.valueOf(200));
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should report zero pendingVolume for tanks without pending orders")
+        public void shouldReportZeroPendingVolumeForUnusedTanks() throws Exception {
+            FuelStationResponse response = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
+            assertThat(response.getFuelTanks()).allSatisfy(tank ->
+                    assertThat(tank.pendingVolume()).isEqualByComparingTo(BigDecimal.ZERO));
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should drop pendingVolume after the order is rejected")
+        public void shouldDropPendingVolumeAfterRejection() throws Exception {
+            long ron92TankId = tankIdByGrade(testFuelStation, FuelGrade.RON_92);
+            FuelOrderResponse order = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    testFuelStation.getFuelStationId(),
+                    FuelGrade.RON_92,
+                    ron92TankId,
+                    BigDecimal.valueOf(150)
+            ));
+            fuelOrderTestClient.rejectFuelOrderAndReturnResponse(order.getFuelOrderId());
+
+            FuelStationResponse response = fuelStationTestClient.getFuelStationByIdAndReturnResponse(testFuelStation.getFuelStationId());
+            FuelStationResponse.FuelTankResponse ron92Tank = response.getFuelTanks().stream()
+                    .filter(t -> t.id().equals(ron92TankId))
+                    .findFirst()
+                    .orElseThrow();
+            assertThat(ron92Tank.pendingVolume()).isEqualByComparingTo(BigDecimal.ZERO);
+        }
+
     }
 
     @Nested

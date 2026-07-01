@@ -30,7 +30,7 @@ export class LoginFormComponent {
 
   loginForm: FormGroup = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.minLength(5), Validators.maxLength(254), Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(32)])
+    password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(100)])
   })
 
   handleSubmit(): void {

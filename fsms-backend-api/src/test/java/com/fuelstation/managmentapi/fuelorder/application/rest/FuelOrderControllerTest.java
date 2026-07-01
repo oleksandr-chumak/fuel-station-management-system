@@ -449,6 +449,59 @@ public class FuelOrderControllerTest {
             fuelOrderTestClient.confirmFuelOrder(99999L).andExpect(status().isNotFound());
         }
 
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Bad Request when pricePerLiter is missing or non-positive")
+        public void shouldReturnBadRequestForInvalidPrice() throws Exception {
+            fuelOrderTestClient.confirmFuelOrder(testFuelOrder.getFuelOrderId(),
+                    new ConfirmFuelOrderRequest(null))
+                    .andExpect(status().isBadRequest());
+            fuelOrderTestClient.confirmFuelOrder(testFuelOrder.getFuelOrderId(),
+                    new ConfirmFuelOrderRequest(BigDecimal.ZERO))
+                    .andExpect(status().isBadRequest());
+            fuelOrderTestClient.confirmFuelOrder(testFuelOrder.getFuelOrderId(),
+                    new ConfirmFuelOrderRequest(BigDecimal.valueOf(-1)))
+                    .andExpect(status().isBadRequest());
+        }
+
+    }
+
+    @Nested
+    class GetRecommendedPriceTests {
+
+        private FuelStationResponse testFuelStation;
+        private FuelOrderResponse testFuelOrder;
+
+        @BeforeEach
+        public void beforeEach() throws Exception {
+            testFuelStation = fuelStationTestClient.createFuelStationAndReturnResponse();
+            testFuelOrder = fuelOrderTestClient.createFuelOrderAndReturnResponse(singleAllocation(
+                    testFuelStation.getFuelStationId(),
+                    FuelGrade.RON_92,
+                    tankIdByGrade(testFuelStation, FuelGrade.RON_92),
+                    BigDecimal.valueOf(10)
+            ));
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return a positive recommended price for the order's fuel grade")
+        public void shouldReturnRecommendedPrice() throws Exception {
+            FuelOrderRecommendedPriceResponse response = fuelOrderTestClient.getRecommendedPriceAndReturnResponse(testFuelOrder.getFuelOrderId());
+
+            assertThat(response.pricePerLiter()).isNotNull();
+            assertThat(response.pricePerLiter().signum()).isPositive();
+            assertThat(response.fuelGrade()).isEqualTo(FuelGrade.RON_92.toString());
+            assertThat(response.currency()).isNotNull();
+        }
+
+        @Test
+        @WithMockCustomUser
+        @DisplayName("Should return Not Found when the fuel order does not exist")
+        public void shouldReturnNotFoundWhenOrderDoesNotExist() throws Exception {
+            fuelOrderTestClient.getRecommendedPrice(99999L).andExpect(status().isNotFound());
+        }
+
     }
 
     @Nested

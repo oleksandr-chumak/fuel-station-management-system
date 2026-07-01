@@ -30,10 +30,26 @@ export class ManagerFormComponent {
   @Input() buttonText: string = "";
   @Output() formSubmitted = new EventEmitter<ManagerFormData>();
 
+  private static readonly NAME_PATTERN = /^[\p{L}\s'-]+$/u;
+
   managerForm = new FormGroup({
-     firstName: new FormControl('', Validators.required),
-     lastName: new FormControl('', Validators.required),
-     email: new FormControl('', [Validators.required, Validators.email]),
+     firstName: new FormControl('', [
+       Validators.required,
+       Validators.minLength(2),
+       Validators.maxLength(50),
+       Validators.pattern(ManagerFormComponent.NAME_PATTERN),
+     ]),
+     lastName: new FormControl('', [
+       Validators.required,
+       Validators.minLength(2),
+       Validators.maxLength(50),
+       Validators.pattern(ManagerFormComponent.NAME_PATTERN),
+     ]),
+     email: new FormControl('', [
+       Validators.required,
+       Validators.email,
+       Validators.maxLength(100),
+     ]),
   })
   
   handleSubmit() {

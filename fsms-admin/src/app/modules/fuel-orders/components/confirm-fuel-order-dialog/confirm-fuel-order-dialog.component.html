@@ -1,0 +1,80 @@
+<p-dialog
+    (visibleChange)="handleStateChange($event)"
+    [visible]="open"
+    [modal]="true"
+    [style]="{ width: '420px' }"
+    [header]="'fuelOrders.confirmDialogTitle' | translate">
+    @if (fuelOrder(); as order) {
+        <div class="flex flex-col gap-4">
+            <div class="text-sm opacity-70">
+                {{ 'fuelOrders.id' | translate }}: <strong>#{{ order.fuelOrderId }}</strong> &middot;
+                {{ 'fuelOrders.amount' | translate }}: <strong>{{ order.volume }} {{ 'fuelTanks.litres' | translate }}</strong>
+            </div>
+
+            <div class="flex flex-col gap-1">
+                <span class="text-sm font-medium">{{ 'fuelOrders.allocations' | translate }}</span>
+                <ul class="text-sm flex flex-col gap-1 pl-0">
+                    @for (allocation of order.allocations; track allocation.fuelTankId) {
+                        <li class="flex items-center justify-between px-2 py-1 rounded border border-surface-300 dark:border-surface-700">
+                            <span>{{ 'fuelOrders.tank' | translate }} #{{ allocation.fuelTankId }}</span>
+                            <strong>{{ allocation.volume }} {{ 'fuelTanks.litres' | translate }}</strong>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            @if (loadingRecommendation()) {
+                <p-message severity="info" variant="simple" size="small">
+                    {{ 'fuelOrders.recommendedPriceLoading' | translate }}
+                </p-message>
+            } @else if (recommendationFailed()) {
+                <p-message severity="warn" variant="simple" size="small">
+                    {{ 'fuelOrders.recommendedPriceUnavailable' | translate }}
+                </p-message>
+            } @else if (recommendation(); as rec) {
+                <div class="flex items-center justify-between gap-2 p-2 rounded border border-surface-300 dark:border-surface-700">
+                    <span class="text-sm">
+                        {{ 'fuelOrders.recommendedPrice' | translate }}:
+                        <strong>{{ rec.pricePerLiter | number: '1.2-4' }} {{ rec.currency }}</strong>
+                    </span>
+                    <p-button
+                        type="button"
+                        size="small"
+                        severity="secondary"
+                        [text]="true"
+                        [label]="'fuelOrders.useRecommended' | translate"
+                        (onClick)="useRecommendation()" />
+                </div>
+            }
+
+            <div class="flex flex-col gap-1">
+                <label for="pricePerLiter" class="text-sm">
+                    {{ 'fuelOrders.pricePerLiterLabel' | translate }}
+                </label>
+                <p-inputNumber
+                    inputId="pricePerLiter"
+                    [(ngModel)]="pricePerLiter"
+                    [min]="0.0001"
+                    [maxFractionDigits]="4"
+                    placeholder="0.00"
+                    styleClass="w-full">
+                </p-inputNumber>
+                @if (pricePerLiter !== null && pricePerLiter <= 0) {
+                    <span class="text-sm text-red-500">
+                        {{ 'fuelOrders.pricePerLiterInvalid' | translate }}
+                    </span>
+                }
+            </div>
+
+            <div class="flex justify-end gap-2 mt-2">
+                <p-button [label]="'common.cancel' | translate" severity="secondary" [text]="true" (onClick)="closeDialog()" />
+                <p-button
+                    [label]="'fuelOrders.confirm' | translate"
+                    icon="pi pi-check"
+                    severity="success"
+                    [disabled]="!canSubmit"
+                    (onClick)="submit()" />
+            </div>
+        </div>
+    }
+</p-dialog>

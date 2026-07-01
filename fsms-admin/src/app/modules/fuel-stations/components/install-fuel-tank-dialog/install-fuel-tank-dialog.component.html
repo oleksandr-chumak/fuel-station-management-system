@@ -9,10 +9,10 @@
             <label class="text-sm">{{ 'fuelTanks.grade' | translate }}</label>
             <p-select [options]="fuelGrades" formControlName="fuelGrade" [placeholder]="'fuelTanks.selectGrade' | translate" styleClass="w-full">
                 <ng-template #selectedItem let-selectedOption>
-                    <div *ngIf="selectedOption"><app-fuel-grade-label [grade]="selectedOption.value" /></div>
+                    <div *ngIf="selectedOption">{{ selectedOption.labelKey | translate }}</div>
                 </ng-template>
                 <ng-template let-fuelGrade #item>
-                    <div><app-fuel-grade-label [grade]="fuelGrade.value" /></div>
+                    <div>{{ fuelGrade.labelKey | translate }}</div>
                 </ng-template>
             </p-select>
             @if (fuelGradeInvalid) {

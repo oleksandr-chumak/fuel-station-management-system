@@ -9,6 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -37,12 +38,34 @@ public class FuelOrderTestClientImpl implements FuelOrderTestClient {
 
     @Override
     public ResultActions confirmFuelOrder(long fuelOrderId) throws Exception {
-        return this.mockMvc.perform(put("/api/fuel-orders/{id}/confirm", fuelOrderId));
+        return confirmFuelOrder(fuelOrderId, new ConfirmFuelOrderRequest(BigDecimal.valueOf(50)));
+    }
+
+    @Override
+    public ResultActions confirmFuelOrder(long fuelOrderId, ConfirmFuelOrderRequest request) throws Exception {
+        return this.mockMvc.perform(put("/api/fuel-orders/{id}/confirm", fuelOrderId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)));
     }
 
     @Override
     public FuelOrderResponse confirmFuelOrderAndReturnResponse(long fuelOrderId) throws Exception {
         return getResponse(confirmFuelOrder(fuelOrderId), FuelOrderResponse.class, status().isOk());
+    }
+
+    @Override
+    public FuelOrderResponse confirmFuelOrderAndReturnResponse(long fuelOrderId, ConfirmFuelOrderRequest request) throws Exception {
+        return getResponse(confirmFuelOrder(fuelOrderId, request), FuelOrderResponse.class, status().isOk());
+    }
+
+    @Override
+    public ResultActions getRecommendedPrice(long fuelOrderId) throws Exception {
+        return this.mockMvc.perform(get("/api/fuel-orders/{id}/recommended-price", fuelOrderId));
+    }
+
+    @Override
+    public FuelOrderRecommendedPriceResponse getRecommendedPriceAndReturnResponse(long fuelOrderId) throws Exception {
+        return getResponse(getRecommendedPrice(fuelOrderId), FuelOrderRecommendedPriceResponse.class, status().isOk());
     }
 
     @Override
