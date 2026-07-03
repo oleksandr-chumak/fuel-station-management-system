@@ -289,7 +289,8 @@
       "manager": "Manager",
       "system": "System"
     },
-    "orderNumberPrefix": "Order #"
+    "orderNumberPrefix": "Order #",
+    "tankNumberPrefix": "Tank #"
   },
   "validation": {
     "required": "This field is required",

@@ -11,6 +11,8 @@ import com.fuelstation.managmentapi.fuelorder.application.rest.FuelOrderEventRes
 import com.fuelstation.managmentapi.fuelorder.domain.events.FuelOrderEvent;
 import com.fuelstation.managmentapi.fuelorder.infrastructure.persistence.FuelOrderEventRepository;
 import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelPriceChangedResponse;
+import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelTankDecommissionedResponse;
+import com.fuelstation.managmentapi.fuelstation.application.rest.response.FuelTankInstalledResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.response.ManagerAssignedToFuelStationResponse;
 import com.fuelstation.managmentapi.fuelstation.application.rest.response.ManagerUnassignedFromFuelStationResponse;
 import com.fuelstation.managmentapi.fuelstation.domain.events.*;
@@ -89,6 +91,18 @@ public class ListFuelStationEventsQuery {
                                 performerResponse,
                                 e.getFuelGrade(),
                                 e.getPricePerLiter()
+                        );
+                        case FuelTankInstalled e -> new FuelTankInstalledResponse(
+                                e.getOccurredAt(),
+                                performerResponse,
+                                e.getFuelTankId(),
+                                e.getFuelGrade(),
+                                e.getMaxCapacity()
+                        );
+                        case FuelTankDecommissioned e -> new FuelTankDecommissionedResponse(
+                                e.getOccurredAt(),
+                                performerResponse,
+                                e.getFuelTankId()
                         );
                         case FuelOrderEvent e -> new FuelOrderEventResponse(
                                 e.getType().name(),

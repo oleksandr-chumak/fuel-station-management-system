@@ -25,3 +25,13 @@ export interface FuelOrderDomainEventResponse extends DomainEventResponse {
     fuelOrderId: number;
     fuelStationId: number;
 }
+
+export interface FuelTankInstalledEventResponse extends DomainEventResponse {
+    fuelTankId: number;
+    fuelGrade: string;
+    maxCapacity: number;
+}
+
+export interface FuelTankDecommissionedEventResponse extends DomainEventResponse {
+    fuelTankId: number;
+}

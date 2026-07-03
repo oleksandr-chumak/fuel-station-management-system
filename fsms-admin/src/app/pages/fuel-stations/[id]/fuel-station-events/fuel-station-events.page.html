@@ -51,6 +51,16 @@
                     @case ("FUEL_STATION_FUEL_PRICE_CHANGED") {
                     <app-fuel-grade-label [grade]="event.fuelGrade" />: {{event.pricePerLiter}}/{{ 'fuelTanks.litres' | translate }}
                     }
+                    @case ("FUEL_TANK_INSTALLED") {
+                    <span>{{ 'events.tankNumberPrefix' | translate }}{{ event.fuelTankId }}</span>
+                    <br>
+                    <small class="text-gray-500">
+                        <app-fuel-grade-label [grade]="event.fuelGrade" /> · {{ event.maxCapacity }} {{ 'fuelTanks.litres' | translate }}
+                    </small>
+                    }
+                    @case ("FUEL_TANK_DECOMMISSIONED") {
+                    <span>{{ 'events.tankNumberPrefix' | translate }}{{ event.fuelTankId }}</span>
+                    }
                     @default {
                     —
                     }
