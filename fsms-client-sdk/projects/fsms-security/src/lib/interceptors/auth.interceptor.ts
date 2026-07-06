@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
         return next.handle(authReq).pipe(
             catchError((error: HttpErrorResponse) => {
-                if (error.status === 401) {
+                if (error.status === 401 && token) {
                     this.messageService.add({ summary: "Token Expired", severity: "error", detail: "You were logged out of your account." });
                     this.authService.logout();
                     this.router.navigate(["/login"]);
