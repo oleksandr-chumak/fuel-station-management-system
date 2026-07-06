@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.math.BigDecimal;
 
@@ -47,7 +49,7 @@ public class FuelSaleEventHandler {
         }
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(FuelSaleCreated event) {
         log.info("Fuel sale was created ID:{}", event.getFuelSaleId());
         messagingTemplate.convertAndSend("/topic/fuel-sales", event);

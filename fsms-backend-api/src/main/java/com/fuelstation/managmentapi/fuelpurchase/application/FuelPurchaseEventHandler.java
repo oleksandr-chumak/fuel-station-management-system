@@ -9,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.event.TransactionPhase;
+import org.springframework.transaction.event.TransactionalEventListener;
 
 @Component
 @AllArgsConstructor
@@ -35,7 +37,7 @@ public class FuelPurchaseEventHandler {
         }
     }
 
-    @EventListener
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     public void handle(FuelPurchaseCreated event) {
         log.info("Fuel purchase was created ID:{}", event.getFuelPurchaseId());
         messagingTemplate.convertAndSend("/topic/fuel-purchases", event);

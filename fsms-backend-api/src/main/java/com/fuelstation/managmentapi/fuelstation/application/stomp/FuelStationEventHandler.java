@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.event.EventListener;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 
 import com.fuelstation.managmentapi.fuelstation.application.usecases.CreateFuelStationEvent;
@@ -17,7 +16,6 @@ import com.fuelstation.managmentapi.fuelstation.domain.events.FuelTankVolumeChan
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerAssignedToFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.events.ManagerUnassignedFromFuelStation;
 import com.fuelstation.managmentapi.fuelstation.domain.models.FuelTankVolumeHistory;
-import com.fuelstation.managmentapi.fuelstation.infrastructure.FuelStationEmailService;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.entity.FuelStationFuelPriceHistoryEntity;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelStationFuelPriceHistoryRepository;
 import com.fuelstation.managmentapi.fuelstation.infrastructure.persistence.repository.FuelTankVolumeHistoryRepository;
@@ -29,8 +27,6 @@ import java.time.ZoneOffset;
 public class FuelStationEventHandler {
 
     private final Logger logger = LoggerFactory.getLogger(FuelStationEventHandler.class);
-    private final SimpMessagingTemplate messagingTemplate;
-    private final FuelStationEmailService fuelStationEmailService;
     private final CreateFuelStationEvent createFuelStationEvent;
     private final FuelStationFuelPriceHistoryRepository fuelPriceHistoryRepository;
     private final FuelTankVolumeHistoryRepository fuelTankVolumeHistoryRepository;
@@ -39,7 +35,6 @@ public class FuelStationEventHandler {
     public void handle(FuelStationCreated event) {
         logger.info("Fuel station was created ID:{}", event.getFuelStationId());
         createFuelStationEvent.process(event);
-        messagingTemplate.convertAndSend("/topic/fuel-stations/created", event);
     }
 
     @EventListener
@@ -47,10 +42,6 @@ public class FuelStationEventHandler {
         logger.info("Fuel price was changed ID:{}", event.getFuelStationId());
         createFuelStationEvent.process(event);
         savePriceHistory(event);
-        messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-price-changed",
-                event
-        );
     }
 
     private void savePriceHistory(FuelPriceChanged event) {
@@ -68,40 +59,18 @@ public class FuelStationEventHandler {
     public void handle(FuelStationDeactivated event) {
         logger.info("Fuel station was deactivated ID:{}", event.getFuelStationId());
         createFuelStationEvent.process(event);
-        messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.getFuelStationId() + "/deactivated",
-                event
-        );
     }
 
     @EventListener
     public void handle(ManagerAssignedToFuelStation event) {
         logger.info("Manager was assigned to fuel station ID:{} MANAGER ID:{}", event.getFuelStationId(), event.getManagerId());
         createFuelStationEvent.process(event);
-        this.fuelStationEmailService.sendManagerAssigned(event.getManagerId(), event.getFuelStationId());
-        messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.getFuelStationId() + "/manager-assigned",
-                event
-        );
-        messagingTemplate.convertAndSend(
-                "/topic/managers/" + event.getManagerId() + "/assigned-to-fuel-station",
-                event
-        );
     }
 
     @EventListener
     public void handle(ManagerUnassignedFromFuelStation event) {
         logger.info("Manager was unassigned from fuel station ID:{} MANAGER ID:{}", event.getFuelStationId(), event.getManagerId());
         createFuelStationEvent.process(event);
-        this.fuelStationEmailService.sendManagerUnassigned(event.getManagerId(), event.getFuelStationId());
-        messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.getFuelStationId() + "/manager-unassigned",
-                event
-        );
-        messagingTemplate.convertAndSend(
-                "/topic/managers/" + event.getManagerId() + "/unassigned-from-fuel-station",
-                event
-        );
     }
 
     @EventListener
@@ -109,20 +78,12 @@ public class FuelStationEventHandler {
         logger.info("Fuel tank was installed STATION ID:{} TANK ID:{} grade:{} capacity:{}",
                 event.getFuelStationId(), event.getFuelTankId(), event.getFuelGrade(), event.getMaxCapacity());
         createFuelStationEvent.process(event);
-        messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-tank-installed",
-                event
-        );
     }
 
     @EventListener
     public void handle(FuelTankDecommissioned event) {
         logger.info("Fuel tank was decommissioned STATION ID:{} TANK ID:{}", event.getFuelStationId(), event.getFuelTankId());
         createFuelStationEvent.process(event);
-        messagingTemplate.convertAndSend(
-                "/topic/fuel-stations/" + event.getFuelStationId() + "/fuel-tank-decommissioned",
-                event
-        );
     }
 
     @EventListener
