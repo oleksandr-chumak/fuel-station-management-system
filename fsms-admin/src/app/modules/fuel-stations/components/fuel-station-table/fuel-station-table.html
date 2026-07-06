@@ -18,7 +18,7 @@
         <tr>
             <td>{{ fuelStation.fuelStationId }}</td>
             <td>{{ fuelStation.address }}</td>
-            <td><p-tag [value]="fuelStation.status" [severity]="getSeverity(fuelStation)" /></td>
+            <td><p-tag [value]="(fuelStation.active ? 'fuelStations.statusActive' : 'fuelStations.statusDeactivated') | translate" [severity]="getSeverity(fuelStation)" /></td>
             <td>
                     @if(fuelStation.active) {
                         <div class="flex items-center justify-center gap-2">

@@ -64,6 +64,8 @@
     "currency": "Валюта",
     "manager": "Менеджер",
     "status": "Статус",
+    "statusActive": "Активна",
+    "statusDeactivated": "Деактивована",
     "noFuelStations": "АЗС відсутні",
     "info": "Інформація",
     "fuelTanks": "Резервуари",

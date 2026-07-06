@@ -13,7 +13,7 @@
             <tr>
                 <td>{{ fuelStation.fuelStationId }}</td>
                 <td>{{ fuelStation.address }}</td>
-                <td><p-tag [value]="fuelStation.status.toString()" [severity]="getSeverity(fuelStation)" /></td>
+                <td><p-tag [value]="(fuelStation.active ? 'fuelStations.statusActive' : 'fuelStations.statusDeactivated') | translate" [severity]="getSeverity(fuelStation)" /></td>
                 <td>
                     <div class="flex items-center justify-center">
                         <p-button (onClick)="handleViewClick(fuelStation.fuelStationId)" size="small" severity="secondary" [outlined]="true">{{ 'common.view' | translate }}</p-button>

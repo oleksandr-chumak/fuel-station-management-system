@@ -64,6 +64,8 @@
     "currency": "Currency",
     "manager": "Manager",
     "status": "Status",
+    "statusActive": "Active",
+    "statusDeactivated": "Deactivated",
     "noFuelStations": "No fuel stations",
     "info": "Info",
     "fuelTanks": "Fuel Tanks",
