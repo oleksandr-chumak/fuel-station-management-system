@@ -1,0 +1,21 @@
+Тема: Програмна система для управління роботою та моніторингу стану мережі автозаправних станцій
+Здобувач: Чумак Олександр Анатолійович, група ПЗПІз-22-1
+Керівник: старший викладач Сокорчук Ігор Петрович
+Рік випуску: 2026
+
+Перелік назв файлів та посилання:
+
+1) 2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А_архів.pdf.p7s.p7s — повний текст пояснювальної записки, підписаний ЕЦП здобувача і керівника
+   https://github.com/oleksandr-chumak/fuel-station-management-system/blob/main/archiving/2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А_архів.pdf.p7s.p7s
+
+2) 2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.zip — повний вихідний код програмного застосування
+   https://github.com/oleksandr-chumak/fuel-station-management-system/blob/main/archiving/2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.zip
+
+3) 2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.docx — специфікація програмного продукту (засобу, забезпечення)
+   https://github.com/oleksandr-chumak/fuel-station-management-system/blob/main/archiving/2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.docx
+
+4) 2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.mp4 — відеозапис роботи програмного продукту
+   https://github.com/oleksandr-chumak/fuel-station-management-system/blob/main/archiving/2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.mp4
+
+5) 2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.ppt — презентація
+   https://github.com/oleksandr-chumak/fuel-station-management-system/blob/main/archiving/2026_Б_ПІ_ПЗПІз-22-1_Чумак_О_А.ppt
